@@ -502,7 +502,7 @@ public class AlertRec
      */
     public void setName(String val_)
     {
-        _name = (val_ == null) ? "" : val_;
+        _name = (val_ == null) ? "" : val_.replaceAll("[\"\\r\\n]", "");
     }
 
     /**

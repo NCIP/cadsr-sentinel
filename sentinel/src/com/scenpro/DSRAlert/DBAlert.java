@@ -1127,7 +1127,7 @@ public class DBAlert
             String sep = (flag_ == 0) ? ", " : "\" OR \"";
             while (rs.next())
             {
-                temp = temp + sep + rs.getString(1);
+                temp = temp + sep + rs.getString(1).replaceAll("[\\r\\n]", " ");
             }
             rs.close();
             pstmt.close();
@@ -3165,6 +3165,7 @@ public class DBAlert
                 // have to escape them or it causes
                 // problems downstream.
                 _formsList[ndx] = _formsList[ndx].replaceAll("\"", "\\\\\"");
+                _formsList[ndx] = _formsList[ndx].replaceAll("[\\r\\n]", " ");
             }
             _formsVals = rec._id2;
             _formsContext = rec._id1;

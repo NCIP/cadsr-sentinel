@@ -8,6 +8,8 @@ package com.scenpro.DSRAlert.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.util.MessageResources;
@@ -47,13 +49,11 @@ public class DSRAlertTestCase extends MockStrutsTestCase
     super.setUp();
 
     // Grab the useris/password combos from the properties file
-    Properties testProperties = new Properties();
-    testProperties.load(new FileInputStream(new File(System
-        .getProperty("test.propfile"))));
-    _validUserid = testProperties.getProperty("valid.userid", "pfowler");
-    _validPswd = testProperties.getProperty("valid.pswd", "pfowler");
-    _invalidUserid = testProperties.getProperty("invalid.userid", "invalid");
-    _invalidPswd = testProperties.getProperty("invalid.pswd", "invalid");
+    ResourceBundle testProperties = PropertyResourceBundle.getBundle("com.scenpro.DSRAlert.test.DSRAlertTest");
+    _validUserid = testProperties.getString("valid.userid");
+    _validPswd = testProperties.getString("valid.pswd");
+    _invalidUserid = testProperties.getString("invalid.userid");
+    _invalidPswd = testProperties.getString("invalid.pswd");
 
     // Setup the MessageResources object since we are only in a mock environment
     getSession().getServletContext().setAttribute(
