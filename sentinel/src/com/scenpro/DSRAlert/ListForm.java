@@ -71,10 +71,8 @@ public class ListForm extends ActionForm
     /**
      * Validate the List form.
      * 
-     * @param ActionMapping
-     *        mapping_; The action map from struts-config.xml.
-     * @param HttpServletRequest
-     *        request_; The servlet request object.
+     * @param mapping_ The action map from struts-config.xml.
+     * @param request_ The servlet request object.
      * @return ActionErrors when an error is found, otherwise null.
      */
     public ActionErrors validate(ActionMapping mapping_,

@@ -212,7 +212,7 @@ public class AutoProcessAlerts
      * @param pos_
      *        The position in the recipient array to insert the new email
      *        address.
-     * @param name_
+     * @param email_
      *        The email address to store.
      */
     private void insertRecipient(int pos_, String email_)
@@ -248,10 +248,8 @@ public class AutoProcessAlerts
     /**
      * Save the report with the list of recipients for later.
      * 
-     * @param list_
-     *        The recipients.
-     * @param id_
-     *        The Alert id.
+     * @param rec_
+     *        The process record.
      */
     private void queueReport(ProcessRec rec_)
     {
@@ -1059,8 +1057,6 @@ public class AutoProcessAlerts
     /**
      * Get the list of Alert definitions that are active for the date specified.
      * 
-     * @param target_
-     *        The target date.
      * @return The list of alerts.
      */
     private AlertRec[] getAlertList()
@@ -1155,8 +1151,6 @@ public class AutoProcessAlerts
      * 
      * @param txt_
      *        The message to log.
-     * @param flag_
-     *        The error flag setting.
      */
     private void logError(String txt_)
     {

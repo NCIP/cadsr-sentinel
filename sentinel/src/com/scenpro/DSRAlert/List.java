@@ -31,15 +31,11 @@ public class List extends Action
     /**
      * Action process for a List of Alert Definitions.
      * 
-     * @param ActionMapping
-     *        mapping_; The struts action mapping defined for this action in the
+     * @param mapping_ The struts action mapping defined for this action in the
      *        struts-config.xml file.
-     * @param ActionForm
-     *        form_; The struts form defined in the struts-config.xml file.
-     * @param HttpServletRequest
-     *        request_; The servlet request object.
-     * @param HttpServletResponse
-     *        response_; The servlet response object.
+     * @param form_ The struts form defined in the struts-config.xml file.
+     * @param request_ The servlet request object.
+     * @param response_ The servlet response object.
      */
     public ActionForward execute(ActionMapping mapping_, ActionForm form_,
         HttpServletRequest request_, HttpServletResponse response_)

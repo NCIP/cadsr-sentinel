@@ -114,10 +114,8 @@ public class CreateForm extends ActionForm
     /**
      * Validate the state of the page.
      * 
-     * @param ActionMapping
-     *        mapping_; The action mapping from the struts-config.xml.
-     * @param HttpServletRequest
-     *        request_; The servlet request object.
+     * @param mapping_ The action mapping from the struts-config.xml.
+     * @param request_ The servlet request object.
      * @return ActionErrors if something isn't quite right.
      */
     public ActionErrors validate(ActionMapping mapping_,

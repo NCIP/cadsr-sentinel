@@ -102,7 +102,7 @@ public class CreateTag extends TagSupport
     /**
      * Process the field section. Insert the necessary dynamic form fields.
      * 
-     * @return
+     * @return Hidden and other required field definitions.
      */
     private String getField()
     {

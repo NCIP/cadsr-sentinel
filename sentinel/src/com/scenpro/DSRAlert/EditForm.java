@@ -80,7 +80,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String[] getInfoSearchFor()
     {
@@ -100,7 +100,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String[] getInfoConceptDomain()
     {
@@ -225,7 +225,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String[] getInfoRegStatus()
     {
@@ -266,7 +266,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String[] getInfoWorkflowStatus()
     {
@@ -307,7 +307,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getInfoSearchIn()
     {
@@ -327,7 +327,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String[] getRepAttributes()
     {
@@ -410,7 +410,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getInfoVerNum()
     {
@@ -430,7 +430,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getInfoVersion()
     {
@@ -450,7 +450,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getInfoContextUse()
     {
@@ -470,7 +470,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getActDependantChg()
     {
@@ -490,7 +490,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getActContextUse()
     {
@@ -531,7 +531,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getActVDT()
     {
@@ -593,7 +593,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getPropEmail()
     {
@@ -613,7 +613,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getFreqAck()
     {
@@ -738,7 +738,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getInfoVDTN()
     {
@@ -758,7 +758,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getInfoVDTE()
     {
@@ -778,7 +778,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getInfoSearchTerm()
     {
@@ -899,7 +899,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getRepStyle()
     {
