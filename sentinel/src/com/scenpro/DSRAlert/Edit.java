@@ -100,15 +100,15 @@ public class Edit extends Action
                         request_.setAttribute(Constants._ACTSAVE, db
                             .getErrorMsg(true));
                 }
-
-                // Always close the connection.
-                db.close();
             }
             else
             {
                 // We couldn't connect.
                 request_.setAttribute(Constants._ACTSAVE, db.getErrorMsg(true));
             }
+
+            // Always close the connection.
+            db.close();
             ub.setWorking(rec);
         }
 

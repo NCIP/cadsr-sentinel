@@ -131,7 +131,6 @@ public class LogonForm extends ActionForm
                     if (_userName == null || _userName.length() == 0)
                         errors.add("logon", new ActionMessage(
                             "error.logon.blankname"));
-                    db.close();
                 }
                 else
                 {
@@ -141,6 +140,7 @@ public class LogonForm extends ActionForm
                         am = new ActionMessage("error.logon.baduser");
                     errors.add("logon", am);
                 }
+                db.close();
             }
         }
         else

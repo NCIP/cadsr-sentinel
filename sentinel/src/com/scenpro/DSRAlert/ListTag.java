@@ -197,9 +197,8 @@ public class ListTag extends TagSupport
 
             if (database != null && database.length > 0)
                 count = database.length;
-
-            db.close();
         }
+        db.close();
         pageContext.getRequest().setAttribute("alertList", database);
         pageContext.getRequest().setAttribute("count", Integer.toString(count));
 

@@ -134,8 +134,8 @@ public class EditTag extends TagSupport
             db.getRegistrations();
             _regstatusList = db.getRegStatusList();
             _regstatusVals = db.getRegStatusVals();
-            db.close();
         }
+        db.close();
 
         return null;
     }

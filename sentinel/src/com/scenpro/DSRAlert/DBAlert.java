@@ -18,7 +18,6 @@ import java.util.Vector;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.sql.PooledConnection;
 
 import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 import oracle.jdbc.pool.OracleDataSource;
@@ -57,6 +56,8 @@ public class DBAlert
         _nameID[0] = "";
         _nameText = new String[1];
         _nameText[0] = "";
+        _conn = null;
+        _sc = null;
     }
 
     /**
@@ -82,6 +83,10 @@ public class DBAlert
      */
     public int open(ServletContext sc_, String user_, String pswd_)
     {
+        // If we already have a connection, don't bother.
+        if (_conn != null)
+            return 0;
+
         try
         {
             // Get a connection from the pool, if anything unexpected happens
@@ -90,8 +95,7 @@ public class DBAlert
             _sc = sc_;
             OracleConnectionPoolDataSource ocpds = (OracleConnectionPoolDataSource) _sc
                 .getAttribute(_DBPOOL);
-            PooledConnection ocp = ocpds.getPooledConnection(user_, pswd_);
-            _conn = ocp.getConnection();
+            _conn = ocpds.getConnection(user_, pswd_);
 
             // We handle the commit once in the close.
             _conn.setAutoCommit(false);
@@ -126,6 +130,10 @@ public class DBAlert
      */
     public int open(String driver_, String tnsname_, String user_, String pswd_)
     {
+        // If we already have a connection, don't bother.
+        if (_conn != null)
+            return 0;
+
         try
         {
             OracleDataSource ods = new OracleDataSource();
@@ -134,6 +142,7 @@ public class DBAlert
             _conn = ods.getConnection(user_, pswd_);
             _conn.setAutoCommit(false);
             _needCommit = false;
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -142,7 +151,6 @@ public class DBAlert
             System.err.println(_errorMsg);
             return _errorCode;
         }
-        return 0;
     }
 
     /**
@@ -191,6 +199,17 @@ public class DBAlert
                 if (_needCommit)
                     _conn.commit();
 
+            }
+            catch (SQLException ex)
+            {
+                // There seems to be a problem.
+                _errorCode = ex.getErrorCode();
+                _errorMsg = "\n\nDBAlert 3: " + _errorCode + ": "
+                    + ex.toString();
+                System.err.println(_errorMsg);
+            }
+            try
+            {
                 // Close the connection and release all pointers.
                 _conn.close();
                 _conn = null;
@@ -203,6 +222,8 @@ public class DBAlert
                 _errorMsg = "\n\nDBAlert 3: " + _errorCode + ": "
                     + ex.toString();
                 System.err.println(_errorMsg);
+                _conn = null;
+                _sc = null;
                 return _errorCode;
             }
         }

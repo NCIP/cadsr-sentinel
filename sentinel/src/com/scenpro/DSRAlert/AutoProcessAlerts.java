@@ -1126,7 +1126,9 @@ public class AutoProcessAlerts
         ResourceBundle prb = PropertyResourceBundle.getBundle(_RESOURCES);
         if (prb == null)
         {
-            System.err.println("DSRAlert: AutoProcessAlerts: Can not find properties resource " + _RESOURCES);
+            System.err
+                .println("DSRAlert: AutoProcessAlerts: Can not find properties resource "
+                    + _RESOURCES);
             return -1;
         }
         _driver = prb.getString(Constants._DBDRIVER);
@@ -1343,6 +1345,26 @@ public class AutoProcessAlerts
         // we wait to close the file here.
         try
         {
+            // Report the processing time.
+            Date now = new Date();
+            Timestamp today = new Timestamp(now.getTime());
+            long elapsed = today.getTime() - _today.getTime();
+            int hrs = (int) (elapsed / (1000 * 60 * 60));
+            elapsed -= hrs * 1000 * 60 * 60;
+            int mins = (int) (elapsed / (1000 * 60));
+            elapsed -= mins * 1000 * 60;
+            int secs = (int) (elapsed / 1000);
+            elapsed -= secs * 1000;
+            elapsed += 1000;
+            String msg = String.valueOf(hrs) + ":" + String.valueOf(mins) + ":"
+                + String.valueOf(secs) + "."
+                + String.valueOf(elapsed).substring(1);
+            msg = "\nEnd timestamp: " + today.toString()
+                + "\nElapsed processing time: " + msg + "\n";
+            _log.write(msg.getBytes());
+            msg = "\ncaDSR Sentinel " + _version + "\n";
+            _log.write(msg.getBytes());
+
             // Close the file and make it permanent.
             _log.flush();
             _log.close();

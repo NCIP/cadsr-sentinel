@@ -99,10 +99,10 @@ public class Create extends Action
                 else
                     request_
                         .setAttribute(Constants._ACTSAVE, db.getErrorMsg(true));
-                db.close();
             }
             else
                 request_.setAttribute(Constants._ACTSAVE, db.getErrorMsg(true));
+            db.close();
         }
 
         // Transfer to the next screen.
