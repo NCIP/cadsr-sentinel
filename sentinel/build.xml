@@ -87,7 +87,7 @@
     </target>
 
     <target name="build" depends="setup">
-        <javac srcdir="${java}" destdir="${oclasses}" tempdir="${temp}">
+        <javac srcdir="${java}" destdir="${oclasses}" tempdir="${temp}" debug="${jdebug}">
             <compilerarg line="-deprecation"/>
             <classpath path="${lib}/antlr.jar"/>
             <classpath path="${lib}/commons-beanutils.jar"/>
@@ -142,30 +142,35 @@
     <target name="build-proto">
         <antcall target="deploy">
             <param name="conf" value="conf/proto"/>
+            <param name="jdebug" value="on"/>
         </antcall>
     </target>
 
     <target name="build-dev">
         <antcall target="deploy">
             <param name="conf" value="conf/dev"/>
+            <param name="jdebug" value="on"/>
         </antcall>
     </target>
 
     <target name="build-qa">
         <antcall target="deploy">
             <param name="conf" value="conf/qa"/>
+            <param name="jdebug" value="off"/>
         </antcall>
     </target>
 
     <target name="build-stage">
         <antcall target="deploy">
             <param name="conf" value="conf/stage"/>
+            <param name="jdebug" value="off"/>
         </antcall>
     </target>
 
     <target name="build-prod">
         <antcall target="deploy">
             <param name="conf" value="conf/prod"/>
+            <param name="jdebug" value="off"/>
         </antcall>
     </target>
 

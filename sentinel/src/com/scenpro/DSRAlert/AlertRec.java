@@ -227,7 +227,7 @@ public class AlertRec
      * prefixing a "0" if necessary.
      * 
      * @param x_
-     * @return
+     * @return integer in String format
      */
     static private String formatInt(int x_)
     {
@@ -262,7 +262,7 @@ public class AlertRec
      *        true for the date and time, false for the date only.
      * @param html_
      *        true to include HTML tags, false for a simple string.
-     * @return
+     * @return String date in String format
      */
     static public String dateToString(Timestamp var_, boolean flag_,
         boolean html_)
@@ -1063,7 +1063,7 @@ public class AlertRec
      */
     public void setAVersion(String val_)
     {
-        _aVersion = (val_ == null) ? AlertRec._VERANYCHG : val_.charAt(0);
+        _aVersion = (val_ == null) ? DBAlert._VERANYCHG : val_.charAt(0);
     }
 
     /**
@@ -1405,6 +1405,11 @@ public class AlertRec
     public void setRecipients(String val_[])
     {
         _recipients = val_;
+    }
+    public void setRecipients(int ndx_, String val_)
+    {
+        if (ndx_ < _recipients.length)
+            _recipients[ndx_] = val_;
     }
 
     /**
@@ -2301,7 +2306,7 @@ public class AlertRec
      */
     public boolean isAVersionANY()
     {
-        return (_aVersion == _VERANYCHG);
+        return (_aVersion == DBAlert._VERANYCHG);
     }
 
     /**
@@ -2439,12 +2444,4 @@ public class AlertRec
 
     private static final String weekdays[] = { "Sun", "Mon", "Tue", "Wed",
         "Thu", "Fri", "Sat"               };
-
-    public static final char    _VERANYCHG = 'C';
-
-    public static final char    _VERMAJCHG = 'M';
-
-    public static final char    _VERIGNCHG = 'I';
-
-    public static final char    _VERSPECHG = 'S';
 }

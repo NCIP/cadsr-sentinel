@@ -447,16 +447,16 @@ public class EditTag extends TagSupport
 
         switch (_ub.getWorking().getAVersion())
         {
-            case AlertRec._VERANYCHG:
+            case DBAlert._VERANYCHG:
                 temp[72] = "editForm.actVersion[0].checked = true;\n";
                 break;
-            case AlertRec._VERMAJCHG:
+            case DBAlert._VERMAJCHG:
                 temp[72] = "editForm.actVersion[1].checked = true;\n";
                 break;
-            case AlertRec._VERIGNCHG:
+            case DBAlert._VERIGNCHG:
                 temp[72] = "editForm.actVersion[2].checked = true;\n";
                 break;
-            case AlertRec._VERSPECHG:
+            case DBAlert._VERSPECHG:
                 temp[72] = "editForm.actVersion[3].checked = true;\n";
                 break;
             default:

@@ -874,7 +874,7 @@ public class ACData
      *        The dominant list.
      * @param list2_
      *        The subordinate list.
-     * @return
+     * @return ACData[] The merged list.
      */
     static public ACData[] merge(ACData list1_[], ACData list2_[])
     {

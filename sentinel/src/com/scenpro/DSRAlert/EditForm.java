@@ -798,7 +798,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getActAdminNew()
     {
@@ -818,7 +818,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getActAdminDel()
     {
@@ -838,7 +838,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getActAdminCopy()
     {
@@ -858,7 +858,7 @@ public class EditForm extends ActionForm
     /**
      * TBD
      * 
-     * @return
+     * @return TBD
      */
     public String getActAdminChg()
     {

@@ -225,7 +225,7 @@ public class DBAlert
      * To use this from non-browser servlet logic use the method which requires
      * the driver as the first argument.
      * 
-     * @param session__
+     * @param session_
      *        The session object.
      * @param driver_
      *        The driver, for Oracle "oci8".
@@ -702,6 +702,7 @@ public class DBAlert
             + "end_date = ?, " + "status_reason = ?, " + "auto_freq_value = ? "
             + "where al_idseq = ?";
 
+        cleanRec(rec_);
         PreparedStatement pstmt = null;
         try
         {
@@ -997,6 +998,11 @@ public class DBAlert
                 {
                     // It must be an email address.
                     insert = insert + "(rep_idseq, email)";
+                    if (temp.length() > DBAlert._MAXEMAILLEN)
+                    {
+                        temp = temp.substring(0, DBAlert._MAXEMAILLEN);
+                        rec_.setRecipients(ndx, temp);
+                    }
                 }
                 else
                 {
@@ -1290,25 +1296,25 @@ public class DBAlert
                 specific += 2;
             }
         }
-        if (rec_.getAVersion() != AlertRec._VERIGNCHG)
+        if (rec_.getAVersion() != DBAlert._VERIGNCHG)
         {
-            if (rec_.getAVersion() == AlertRec._VERANYCHG)
+            if (rec_.getAVersion() == DBAlert._VERANYCHG)
                 specific += 4;
             if (monitors.length() > 0)
                 monitors = monitors + " OR\n";
             switch (rec_.getAVersion())
             {
-                case AlertRec._VERANYCHG:
+                case DBAlert._VERANYCHG:
                     monitors = monitors + "Version changes to anything\n";
                     break;
-                case AlertRec._VERMAJCHG:
+                case DBAlert._VERMAJCHG:
                     monitors = monitors
                         + "Version Major Revision changes to anything\n";
                     break;
-                case AlertRec._VERIGNCHG:
+                case DBAlert._VERIGNCHG:
                     monitors = monitors + "";
                     break; // "Version changes are ignored\n"; break;
-                case AlertRec._VERSPECHG:
+                case DBAlert._VERSPECHG:
                     monitors = monitors + "Version changes to \""
                         + rec_.getActVerNum() + "\"\n";
                     break;
@@ -1690,7 +1696,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getAVersion() != AlertRec._VERANYCHG)
+            if (rec_.getAVersion() != DBAlert._VERANYCHG)
             {
                 marker = 8;
                 pstmt.setString(3, _VERSION);
@@ -1717,6 +1723,68 @@ public class DBAlert
     }
 
     /**
+     * Clean the name of any illegal characters and truncate if needed.
+     * @param name_ The name of the Alert.
+     * @return The corrected name. 
+     */
+    private String cleanName(String name_)
+    {
+        String name = null;
+        if (name_ != null)
+        {
+            name = name_.replaceAll("[\"]", "");
+            if (name.length() > DBAlert._MAXNAMELEN)
+                name = name.substring(0, DBAlert._MAXNAMELEN);
+        }
+        return name;
+    }
+    
+    /**
+     * Clean the inactive reason and truncate if needed.
+     * @param reason_ The reason message.
+     * @return The corrected message.
+     */
+    private String cleanReason(String reason_)
+    {
+        String reason = reason_;
+        if (reason != null && reason.length() > DBAlert._MAXREASONLEN)
+        {
+            reason = reason.substring(0, DBAlert._MAXREASONLEN);
+        }
+        return reason;
+    }
+    
+    /**
+     * Clean the Alert Report introduction and truncate if needed.
+     * @param intro_ The introduction.
+     * @return The cleaned introduction.
+     */
+    private String cleanIntro(String intro_)
+    {
+        String intro = intro_;
+        if (intro != null && intro.length() > DBAlert._MAXINTROLEN)
+        {
+            intro = intro.substring(0, DBAlert._MAXINTROLEN);
+        }
+        return intro;
+    }
+    
+    /**
+     * Clean all the user enterable parts of an Alert and truncate to the
+     * database allowed length.
+     * @param rec_ The Alert to be cleaned.
+     */
+    private void cleanRec(AlertRec rec_)
+    {
+        String temp = cleanName(rec_.getName());
+        rec_.setName(temp);
+        temp = rec_.getInactiveReason(false);
+        rec_.setInactiveReason(temp);
+        temp = cleanIntro(rec_.getIntro(false));
+        rec_.setIntro(temp, false);
+    }
+    
+    /**
      * Insert the properties for the Alert definition and retrieve the new id
      * for the Alert definition.
      * 
@@ -1738,6 +1806,7 @@ public class DBAlert
             + "values (?, ?, ?, ?, ?, ?, ?) return al_idseq into ?; end;";
 
         CallableStatement pstmt = null;
+        cleanRec(rec_);
         try
         {
             // Set all the SQL arguments.
@@ -1945,8 +2014,6 @@ public class DBAlert
      * 
      * @param select_
      *        The SQL select statement.
-     * @param data_
-     *        The result set.
      * @param flag_
      *        True to prefix "(All)" to the result set. False to return the
      *        result set unaltered.
@@ -2574,6 +2641,96 @@ public class DBAlert
         return temp;
     }
 
+    private class schemeTree
+    {
+        public schemeTree(String name_, int ndx_)
+        {
+            _fullName = name_;
+            _ndx = ndx_;
+        }
+        public String _fullName;
+        public int _ndx;
+    }
+    
+    /**
+     * Build the concatenated strings for the Class Scheme Items display.
+     * 
+     * @param rec_ The data returned from Oracle.
+     * @return An array of the full concatenated names for sorting later.
+     */
+    private schemeTree [] buildSchemeItemList(returnData3 rec_)
+    {
+        // Get the maximum number of levels and the maximum length of a single
+        // name.
+        int maxLvl = 0;
+        int maxLen = 0;
+        for (int ndx = 1; ndx < rec_._id3.length; ++ndx)
+        {
+            if (maxLvl < rec_._id3[ndx])
+                maxLvl = rec_._id3[ndx];
+            if (maxLen < rec_._label1[ndx].length())
+                maxLen = rec_._label1[ndx].length();
+        }
+        maxLvl += 2;
+        
+        // Build and array of prefixes for the levels.
+        String prefix[] = new String[maxLvl];
+        prefix[0] = "";
+        if (maxLvl > 1)
+        {
+            prefix[1] = "";
+            for (int ndx = 2; ndx < prefix.length; ++ndx)
+            {
+                prefix[ndx] = prefix[ndx - 1] + "    ";
+            }
+        }
+        
+        // In addition to creating the display labels we must also
+        // create an array used to sort everything alphabetically.
+        // The easiest is to create a fully concatenated label of a
+        // individuals hierarchy.
+        _schemeItemList = new String[rec_._label1.length];
+        maxLvl *= maxLen;
+        StringBuffer fullBuff = new StringBuffer(maxLvl);
+        StringBuffer spaces = new StringBuffer(maxLen);
+        for (int ndx = 0; ndx < maxLen; ++ndx)
+            spaces.insert(ndx, ' ');
+        schemeTree tree[] = new schemeTree[_schemeItemList.length];
+        
+        // Loop through the name list.
+        _schemeItemList[0] = rec_._label1[0];
+        tree[0] = new schemeTree("", 0);
+        for (int ndx = 1; ndx < _schemeItemList.length; ++ndx)
+        {
+            // Create the concatenated sort string.
+            int buffOff = (rec_._id3[ndx] - 1) * maxLen;
+            fullBuff.append(spaces);
+            fullBuff.setLength(buffOff);
+            fullBuff.insert(buffOff, rec_._label1[ndx]);
+            
+            // Create the display label.
+            if (rec_._id3[ndx] == 1)
+            {
+                if (rec_._label2[ndx] == null)
+                {
+                    _schemeItemList[ndx] = rec_._label1[ndx];
+                    fullBuff.append(spaces);
+                }
+                else
+                {
+                    _schemeItemList[ndx] = rec_._label1[ndx] + " (" + rec_._label2[ndx] + ")";
+                    fullBuff.append(rec_._label2[ndx]);
+                }
+            }
+            else
+            {
+                _schemeItemList[ndx] = prefix[rec_._id3[ndx]] + rec_._label1[ndx];
+            }
+            tree[ndx] = new schemeTree(fullBuff.toString(), ndx);
+        }
+        return tree;
+    }
+    
     /**
      * Retrieve the Classification Scheme Items from the database. Follows the
      * pattern documented in getUsers().
@@ -2582,13 +2739,14 @@ public class DBAlert
      * @see com.scenpro.DSRAlert.DBAlert#getUsers getUsers()
      * @see com.scenpro.DSRAlert.DBAlert#getSchemeItemList getSchemeItemList()
      * @see com.scenpro.DSRAlert.DBAlert#getSchemeItemVals getSchemeItemVals()
-     * @see com.scenpro.DSRAlert.DBAlert#getSchemeItemScheme
+     * @see com.scenpro.DSRAlert.DBAlert#getSchemeItemSchemes
      *      getSchemeItemScheme()
      */
     public int getSchemeItems()
     {
         String select = "select cv.cs_idseq, cv.csi_idseq, level as lvl, " +
-            "(select csi.csi_name from sbr.class_scheme_items_view csi where csi.csi_idseq = cv.csi_idseq) " +
+            "(select csi.csi_name from sbr.class_scheme_items_view csi where csi.csi_idseq = cv.csi_idseq), " +
+            "(select cs.long_name || ' / v' || cs.version as xname from sbr.classification_schemes_view cs where cs.cs_idseq = cv.cs_idseq) " +
             "from sbr.cs_csi_view cv " +
             "start with cv.p_cs_csi_idseq is null " +
             "connect by prior cv.cs_csi_idseq = cv.p_cs_csi_idseq";
@@ -2596,13 +2754,81 @@ public class DBAlert
         returnData3 rec = getBasicData3(select);
         if (rec._rc == 0)
         {
-            _schemeItemList = rec._labels;
+            schemeTree tree[] = buildSchemeItemList(rec);
             _schemeItemVals = rec._id2;
             _schemeItemSchemes = rec._id1;
+            sortSchemeItems(tree);
         }
         return rec._rc;
     }
-
+    
+    /**
+     * Sort the scheme items lists and make everything right on the display.
+     * @param tree_ The concatenated name tree list.
+     */
+    private void sortSchemeItems(schemeTree tree_[])
+    {
+        // Too few items don't bother.
+        if (tree_.length < 2)
+            return;
+        
+        // The first element is the "All" indicator, so don't include it.
+        schemeTree sort[] = new schemeTree[tree_.length];
+        sort[0] = tree_[0];
+        sort[1] = tree_[1];
+        int top = 2;
+        
+        // Perform a binary search-insert.
+        for (int ndx = 2; ndx < tree_.length; ++ndx)
+        {
+            int min = 1;
+            int max = top;
+            int check = 0;
+            while (true)
+            {
+                check = (max + min) / 2;
+                int test = tree_[ndx]._fullName.compareTo(sort[check]._fullName);
+                if (test == 0)
+                    break;
+                else if (test > 0)
+                {
+                    if (min == check)
+                    {
+                        ++check;
+                        break;
+                    }
+                    min = check;
+                }
+                else
+                {
+                    if (max == check)
+                        break;
+                    max = check;
+                }
+            }
+            // Add the record to the proper position in the sorted array.
+            if (check < top)
+                System.arraycopy(sort, check, sort, check + 1, top - check);
+            ++top;
+            sort[check] = tree_[ndx];
+        }
+        
+        // Now arrange all the arrays based on the sorted index.
+        String tempList[] = new String[_schemeItemList.length];
+        String tempVals[] = new String[_schemeItemList.length];
+        String tempSchemes[] = new String[_schemeItemList.length];
+        for (int ndx = 0; ndx < sort.length; ++ndx)
+        {
+            int pos = sort[ndx]._ndx;
+            tempList[ndx] = _schemeItemList[pos];
+            tempVals[ndx] = _schemeItemVals[pos];
+            tempSchemes[ndx] = _schemeItemSchemes[pos];
+        }
+        _schemeItemList = tempList;
+        _schemeItemVals = tempVals;
+        _schemeItemSchemes = tempSchemes;
+    }
+    
     /**
      * Retrieve the classification scheme item list. The method getSchemeItems()
      * must be called first. Once this method is used the internal copy is
@@ -2672,8 +2898,6 @@ public class DBAlert
      * 
      * @param select_
      *        The SQL select to run.
-     * @param rec_
-     *        The returned string arrays of the query results.
      * @return 0 if successful, otherwise the database error code.
      */
     private returnData2 getBasicData2(String select_)
@@ -2765,10 +2989,12 @@ public class DBAlert
         public String _id1[];
 
         public String _id2[];
+        
+        public int _id3[];
 
-        public String _id3[];
+        public String _label1[];
 
-        public String _labels[];
+        public String _label2[];
     }
 
     /**
@@ -2777,8 +3003,6 @@ public class DBAlert
      * 
      * @param select_
      *        The SQL select to run.
-     * @param rec_
-     *        The returned string arrays of the query results.
      * @return 0 if successful, otherwise the database error code.
      */
     private returnData3 getBasicData3(String select_)
@@ -2801,9 +3025,11 @@ public class DBAlert
 
                 public String _id2;
 
-                public String _id3;
+                public int _id3;
 
-                public String _label;
+                public String _label1;
+
+                public String _label2;
             }
             ;
             tempData3 rec;
@@ -2813,8 +3039,9 @@ public class DBAlert
                 rec = new tempData3();
                 rec._id1 = rs.getString(1);
                 rec._id2 = rs.getString(2);
-                rec._id3 = rs.getString(3);
-                rec._label = rs.getString(4);
+                rec._id3 = rs.getInt(3);
+                rec._label1 = rs.getString(4);
+                rec._label2 = rs.getString(5);
                 results.add(rec);
             }
             pstmt.close();
@@ -2828,26 +3055,30 @@ public class DBAlert
                 data._id1 = null;
                 data._id2 = null;
                 data._id3 = null;
-                data._labels = null;
+                data._label1 = null;
+                data._label2 = null;
             }
             else
             {
                 // Move the list from a Vector to an array and add "(All)" to
                 // the begining.
                 int count = results.size() + 1;
-                data._labels = new String[count];
+                data._label1 = new String[count];
+                data._label2 = new String[count];
                 data._id1 = new String[count];
                 data._id2 = new String[count];
-                data._id3 = new String[count];
-                data._labels[0] = Constants._STRALL;
+                data._id3 = new int[count];
+                data._label1[0] = Constants._STRALL;
+                data._label2[0] = Constants._STRALL;
                 data._id1[0] = Constants._STRALL;
                 data._id2[0] = Constants._STRALL;
-                data._id3[0] = Constants._STRALL;
+                data._id3[0] = 0;
                 int cnt = 0;
                 for (int ndx = 1; ndx < count; ++ndx)
                 {
                     rec = (tempData3) results.get(cnt++);
-                    data._labels[ndx] = rec._label;
+                    data._label1[ndx] = rec._label1;
+                    data._label2[ndx] = rec._label2;
                     data._id1[ndx] = rec._id1;
                     data._id2[ndx] = rec._id2;
                     data._id3[ndx] = rec._id3;
@@ -3255,12 +3486,12 @@ public class DBAlert
     }
 
     /**
-     * Generate a string of comma separated '?' literals for use in a SQL "in"
+     * Generate a string of comma separated SQL arguments for us in an "in"
      * clause.
      * 
      * @param cnt_
      *        The number of place holders needed.
-     * @return The comma separated string without parentheses.
+     * @return String The comma separated string without parentheses.
      */
     private String expandMarkers(int cnt_)
     {
@@ -4077,7 +4308,7 @@ public class DBAlert
     /**
      * Select the Data Elements affected by the Data Element Concepts provided.
      * 
-     * @param vd_
+     * @param dec_
      *        The data element concepts list.
      * @return The array of related data elements.
      */
@@ -4141,7 +4372,7 @@ public class DBAlert
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
      * 
-     * @param de_
+     * @param vd_
      *        The data element list.
      * @return The array of related forms/templates.
      */
@@ -4160,7 +4391,7 @@ public class DBAlert
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
      * 
-     * @param de_
+     * @param qcv_
      *        The data element list.
      * @return The array of related forms/templates.
      */
@@ -4178,7 +4409,7 @@ public class DBAlert
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
      * 
-     * @param de_
+     * @param qcq_
      *        The data element list.
      * @return The array of related forms/templates.
      */
@@ -4196,7 +4427,7 @@ public class DBAlert
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
      * 
-     * @param de_
+     * @param qcm_
      *        The data element list.
      * @return The array of related forms/templates.
      */
@@ -4214,7 +4445,7 @@ public class DBAlert
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
      * 
-     * @param de_
+     * @param qcq_
      *        The data element list.
      * @return The array of related forms/templates.
      */
@@ -4280,7 +4511,7 @@ public class DBAlert
     /**
      * Select the Contexts affected by the Conceptual Domains provided.
      * 
-     * @param cs_
+     * @param cd_
      *        The conceptual domains list.
      * @return The array of related contexts.
      */
@@ -4298,7 +4529,7 @@ public class DBAlert
     /**
      * Select the Contexts affected by the Value Domains provided.
      * 
-     * @param cs_
+     * @param vd_
      *        The value domains list.
      * @return The array of related contexts.
      */
@@ -4316,7 +4547,7 @@ public class DBAlert
     /**
      * Select the Contexts affected by the Data Elements provided.
      * 
-     * @param cs_
+     * @param de_
      *        The data elements list.
      * @return The array of related contexts.
      */
@@ -4334,7 +4565,7 @@ public class DBAlert
     /**
      * Select the Contexts affected by the Forms/Templates provided.
      * 
-     * @param cs_
+     * @param qc_
      *        The forms/templates list.
      * @return The array of related contexts.
      */
@@ -4352,7 +4583,7 @@ public class DBAlert
     /**
      * Select the Contexts affected by the Data Element Concepts provided.
      * 
-     * @param cs_
+     * @param dec_
      *        The data element concepts list.
      * @return The array of related contexts.
      */
@@ -4575,8 +4806,6 @@ public class DBAlert
      * 
      * @param keys_
      *        The key array to be searched.
-     * @param vals_
-     *        The values which match the key entries.
      * @param key_
      *        The key to search for.
      * @return The index into the keys_ array.
@@ -4648,7 +4877,7 @@ public class DBAlert
      * @param setInactive_
      *        true to set the alert status to inactive, false to leave the
      *        status unchanged
-     * @return
+     * @return int 0 if successful, otherwise the database error code.
      */
     public int updateRun(String id_, Timestamp stamp_, boolean run_,
         boolean setInactive_)
@@ -4728,8 +4957,8 @@ public class DBAlert
     /**
      * Given the id for a user, retrieve the email address.
      * 
-     * @param conte_
-     *        The context idseq.
+     * @param user_
+     *        The user id.
      * @return The array of user ids with write access.
      */
     public String selectEmailFromUser(String user_)
@@ -4919,4 +5148,20 @@ public class DBAlert
     private static final char   _CRITERIA     = 'C';
 
     private static final char   _MONITORS     = 'M';
+
+    public static final char    _VERANYCHG = 'C';
+
+    public static final char    _VERMAJCHG = 'M';
+
+    public static final char    _VERIGNCHG = 'I';
+
+    public static final char    _VERSPECHG = 'S';
+    
+    public static final int     _MAXNAMELEN = 30;
+    
+    public static final int     _MAXREASONLEN = 2000;
+    
+    public static final int     _MAXINTROLEN = 2000;
+    
+    public static final int     _MAXEMAILLEN = 255;
 }
