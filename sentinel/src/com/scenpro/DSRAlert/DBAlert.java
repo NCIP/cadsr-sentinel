@@ -2141,7 +2141,7 @@ public class DBAlert
     {
         String select = "select cv.conte_idseq "
             + "from sbr.contexts_view cv, sbrext.user_contexts_view ucv "
-            + "where ucv.ua_name = ? and ucv.privilege = 'W' and ucv.name not in ('TEST','TRAINING') and cv.name = ucv.name";
+            + "where ucv.ua_name = ? and ucv.privilege = 'W' and ucv.name not in ('TEST','Test','TRAINING','Training') and cv.name = ucv.name";
 
         try
         {
@@ -2185,7 +2185,7 @@ public class DBAlert
     {
         String select = "select name "
             + "from sbrext.user_contexts_view "
-            + "where ua_name in (?) and privilege = 'W' and name not in ('TEST','TRAINING') "
+            + "where ua_name in (?) and privilege = 'W' and name not in ('TEST','Test','TRAINING','Training') "
             + "order by name ASC";
         String temp[] = new String[1];
         temp[0] = user_;
