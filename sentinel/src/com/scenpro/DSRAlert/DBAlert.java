@@ -2668,10 +2668,12 @@ public class DBAlert
         {
             if (maxLvl < rec_._id3[ndx])
                 maxLvl = rec_._id3[ndx];
-            if (maxLen < rec_._label1[ndx].length())
+            if (rec_._label1[ndx] != null && maxLen < rec_._label1[ndx].length())
                 maxLen = rec_._label1[ndx].length();
+            if (rec_._label2[ndx] != null && maxLen < rec_._label2[ndx].length())
+                maxLen = rec_._label2[ndx].length();
         }
-        maxLvl += 2;
+        ++maxLvl;
         
         // Build and array of prefixes for the levels.
         String prefix[] = new String[maxLvl];
@@ -2692,9 +2694,7 @@ public class DBAlert
         _schemeItemList = new String[rec_._label1.length];
         maxLvl *= maxLen;
         StringBuffer fullBuff = new StringBuffer(maxLvl);
-        StringBuffer spaces = new StringBuffer(maxLen);
-        for (int ndx = 0; ndx < maxLen; ++ndx)
-            spaces.insert(ndx, ' ');
+        fullBuff.setLength(maxLvl);
         schemeTree tree[] = new schemeTree[_schemeItemList.length];
         
         // Loop through the name list.
@@ -2703,10 +2703,9 @@ public class DBAlert
         for (int ndx = 1; ndx < _schemeItemList.length; ++ndx)
         {
             // Create the concatenated sort string.
-            int buffOff = (rec_._id3[ndx] - 1) * maxLen;
-            fullBuff.append(spaces);
-            fullBuff.setLength(buffOff);
-            fullBuff.insert(buffOff, rec_._label1[ndx]);
+            int buffOff = (rec_._id3[ndx] < 2) ? 0 : (rec_._id3[ndx] * maxLen);
+            fullBuff.replace(buffOff, maxLvl, rec_._label1[ndx]);
+            fullBuff.setLength(maxLvl);
             
             // Create the display label.
             if (rec_._id3[ndx] == 1)
@@ -2714,12 +2713,12 @@ public class DBAlert
                 if (rec_._label2[ndx] == null)
                 {
                     _schemeItemList[ndx] = rec_._label1[ndx];
-                    fullBuff.append(spaces);
                 }
                 else
                 {
                     _schemeItemList[ndx] = rec_._label1[ndx] + " (" + rec_._label2[ndx] + ")";
-                    fullBuff.append(rec_._label2[ndx]);
+                    fullBuff.replace(buffOff + maxLen, maxLvl, rec_._label2[ndx]);
+                    fullBuff.setLength(maxLvl);
                 }
             }
             else
