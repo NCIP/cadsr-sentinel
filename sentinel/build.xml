@@ -4,7 +4,7 @@
     </description>
     <!-- set global properties for this build -->
 
-    <property name="oroot" location="tmp/DSRAlert"/>
+    <property name="oroot" location="tmp/cadsrsentinel"/>
     <property name="temp" location="tmp"/>
     <property name="test-results" location="test_results"/>
 
@@ -106,8 +106,8 @@
     		<classpath path="${lib}/test/junit.jar"/>
         	<classpath path="${lib}/test/strutstest-2.1.3.jar"/>
         </javac>
-        <delete file="${owar}/DSRAlert.jar"/>
-        <jar destfile="${owar}/DSRAlert.jar" basedir="${oclasses}"/>
+        <delete file="${owar}/cadsrsentinel.jar"/>
+        <jar destfile="${owar}/cadsrsentinel.jar" basedir="${oclasses}"/>
     </target>
 
 	<target name="test" unless="notest">
@@ -130,8 +130,8 @@
 	</target>
 
     <target name="deploy" depends="build,test">
-        <delete file="${owar}/DSRAlert.war"/>
-        <war destfile="${owar}/DSRAlert.war" basedir="${oroot}" update="true" webxml="${xml}/web.xml">
+        <delete file="${owar}/cadsrsentinel.war"/>
+        <war destfile="${owar}/cadsrsentinel.war" basedir="${oroot}" update="true" webxml="${xml}/web.xml">
         </war>
     </target>
 
