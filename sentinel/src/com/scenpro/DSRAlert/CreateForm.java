@@ -24,7 +24,7 @@ public class CreateForm extends ActionForm
     {
         _propName = "New Alert";
         _initial = "1";
-        _nextScreen = Constants._CREATE;
+        _nextScreen = Constants._ACTCREATE;
     }
 
     /**
@@ -135,7 +135,7 @@ public class CreateForm extends ActionForm
         }
 
         // If we are not going back to the list page, be sure we have defaults.
-        if (_nextScreen.equals(Constants._LIST) == false)
+        if (!_nextScreen.equals(Constants._ACTLIST))
         {
             if (_propName == null || _propName.length() == 0)
                 ub.getWorking().setName("New Sentinel");

@@ -122,7 +122,7 @@ public class ListTag extends TagSupport
     private String getScript()
     {
         String temp = (String) pageContext.getRequest().getAttribute(
-            Constants._SAVE);
+            Constants._ACTSAVE);
         String script = "var Muserid = \""
             + _ub.getUserUpper()
             + "\";\n"
@@ -134,7 +134,7 @@ public class ListTag extends TagSupport
         if (temp == null)
         {
             String run = (String) pageContext.getRequest().getAttribute(
-                Constants._RUN);
+                Constants._ACTRUN);
             if (run == null)
                 run = "";
             else
@@ -184,7 +184,6 @@ public class ListTag extends TagSupport
     private String getInit()
     {
         AlertRec database[] = null;
-        _ub.setDBlist(null);
         int count = 0;
 
         DBAlert db = new DBAlert();
@@ -197,16 +196,8 @@ public class ListTag extends TagSupport
                 database = db.selectAlerts((String) null);
 
             if (database != null && database.length > 0)
-            {
-                String temp[] = new String[database.length];
-
-                for (int ndx = 0; ndx < database.length; ++ndx)
-                {
-                    temp[ndx] = database[ndx].getAlertRecNum();
-                }
                 count = database.length;
-                _ub.setDBlist(temp);
-            }
+
             db.close();
         }
         pageContext.getRequest().setAttribute("alertList", database);
@@ -231,7 +222,7 @@ public class ListTag extends TagSupport
             {
                 temp = temp
                     + "<tr>\n"
-                    + "<td headers=\"t0\" class=td1a><input type=checkbox value=\"Y\" name=\"cb"
+                    + "<td headers=\"t0\" class=td1a><input type=checkbox value=\"" + list[ndx].getAlertRecNum() + "\" name=\"cb"
                     + ndx + "\" onclick=\"fixButs(this);\"></td>\n"
                     + "<td headers=\"t1\" class=td1b>" + list[ndx].getName()
                     + "</td>\n" + "<td headers=\"t2\" class=td1b>"

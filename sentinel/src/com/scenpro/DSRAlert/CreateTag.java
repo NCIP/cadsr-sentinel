@@ -77,7 +77,7 @@ public class CreateTag extends TagSupport
         _ub.setWorking(new AlertRec(_ub.getUser(), _ub.getUserName()));
 
         String saved = (String) pageContext.getRequest().getAttribute(
-            Constants._SAVE);
+            Constants._ACTSAVE);
         if (saved == null)
             saved = "";
 

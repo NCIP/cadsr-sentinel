@@ -50,6 +50,6 @@ public class Logon extends Action
         HttpSession session = request_.getSession();
         session.setAttribute(AlertBean._SESSIONNAME, ub);
 
-        return mapping_.findForward(Constants._LIST);
+        return mapping_.findForward(Constants._ACTLIST);
     }
 }

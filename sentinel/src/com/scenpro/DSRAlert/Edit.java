@@ -43,16 +43,16 @@ public class Edit extends Action
         EditForm form = (EditForm) form_;
         AlertBean ub = (AlertBean) request_.getSession().getAttribute(
             AlertBean._SESSIONNAME);
-        ub.setRunPrev(Constants._EDIT);
+        ub.setRunPrev(Constants._ACTEDIT);
 
         // If we are going back this will effectively cancel any edit operation.
-        if (form.getNextScreen().equals(Constants._BACK))
+        if (form.getNextScreen().equals(Constants._ACTBACK))
         {
             form.setNextScreen(ub.getEditPrev());
         }
 
         // The user requests a Run.
-        else if (form.getNextScreen().equals(Constants._RUN))
+        else if (form.getNextScreen().equals(Constants._ACTRUN))
         {
             // Get the data from the form.
             AlertRec rec = readForm(ub, form);
@@ -60,10 +60,10 @@ public class Edit extends Action
         }
 
         // We must save the edits made.
-        else if (form.getNextScreen().equals(Constants._SAVE))
+        else if (form.getNextScreen().equals(Constants._ACTSAVE))
         {
             // We will return to the edit screen to display the message box.
-            form.setNextScreen(Constants._EDIT);
+            form.setNextScreen(Constants._ACTEDIT);
 
             // Get the data from the form.
             AlertRec rec = readForm(ub, form);
@@ -79,11 +79,11 @@ public class Edit extends Action
                     // This should always work but you never know.
                     if (db.updateAlert(rec) == 0)
                     {
-                        request_.setAttribute(Constants._SAVE, "Y");
-                        form.setNextScreen(Constants._LIST);
+                        request_.setAttribute(Constants._ACTSAVE, "Y");
+                        form.setNextScreen(Constants._ACTLIST);
                     }
                     else
-                        request_.setAttribute(Constants._SAVE, db
+                        request_.setAttribute(Constants._ACTSAVE, db
                             .getErrorMsg(true));
                 }
 
@@ -93,11 +93,11 @@ public class Edit extends Action
                     // Of course it should work.
                     if (db.insertAlert(rec) == 0)
                     {
-                        request_.setAttribute(Constants._SAVE, "Y");
-                        form.setNextScreen(Constants._LIST);
+                        request_.setAttribute(Constants._ACTSAVE, "Y");
+                        form.setNextScreen(Constants._ACTLIST);
                     }
                     else
-                        request_.setAttribute(Constants._SAVE, db
+                        request_.setAttribute(Constants._ACTSAVE, db
                             .getErrorMsg(true));
                 }
 
@@ -107,7 +107,7 @@ public class Edit extends Action
             else
             {
                 // We couldn't connect.
-                request_.setAttribute(Constants._SAVE, db.getErrorMsg(true));
+                request_.setAttribute(Constants._ACTSAVE, db.getErrorMsg(true));
             }
             ub.setWorking(rec);
         }

@@ -348,7 +348,7 @@ public class EditTag extends TagSupport
         // Add the exempt list to the display.
         if (_namesExempt != null)
             temp = temp
-                + "exemptlist.innerHTML = \"<br><br>The following users only receive Alert "
+                + "exemptlist.innerHTML = \"The following users only receive Alert "
                 + "Broadcasts when added as specific Recipients.<br>"
                 + _namesExempt + "\";\n";
 
@@ -464,16 +464,16 @@ public class EditTag extends TagSupport
 
         switch (_ub.getWorking().getAVersion())
         {
-            case 'C':
+            case AlertRec._VERANYCHG:
                 temp = temp + "editForm.actVersion[0].checked = true;\n";
                 break;
-            case 'M':
+            case AlertRec._VERMAJCHG:
                 temp = temp + "editForm.actVersion[1].checked = true;\n";
                 break;
-            case 'I':
+            case AlertRec._VERIGNCHG:
                 temp = temp + "editForm.actVersion[2].checked = true;\n";
                 break;
-            case 'S':
+            case AlertRec._VERSPECHG:
                 temp = temp + "editForm.actVersion[3].checked = true;\n";
                 break;
         }
@@ -490,7 +490,7 @@ public class EditTag extends TagSupport
         }
 
         String run = (String) pageContext.getRequest().getAttribute(
-            Constants._RUN);
+            Constants._ACTRUN);
         if (run != null)
             temp = temp + "alert(\"Alert named '" + run
                 + "' has been submitted.\");\n";
@@ -500,7 +500,7 @@ public class EditTag extends TagSupport
 
         temp = temp + "function saveCheck() {\n";
         String saved = (String) pageContext.getRequest().getAttribute(
-            Constants._SAVE);
+            Constants._ACTSAVE);
         if (saved != null)
         {
             temp = temp + "saved(\"" + saved + "\");\n";

@@ -289,7 +289,8 @@ public class DBAlert
         String driver_, String tnsname_, String username_, String password_)
     {
         // Pass it on...
-        return setupPool(request_.getSession(), driver_, tnsname_, username_, password_);
+        return setupPool(request_.getSession(), driver_, tnsname_, username_,
+            password_);
     }
 
     /**
@@ -814,7 +815,7 @@ public class DBAlert
      * existing al_idseq values within the Alert table.
      * 
      * @param list_
-     *        The al_idseq values which identifier the definitions to delete.
+     *        The al_idseq values which identify the definitions to delete.
      *        Other dependant tables in the database will automatically be
      *        cleaned up via cascades and triggers.
      * @return 0 if successful, otherwise the Oracle error code.
@@ -826,11 +827,57 @@ public class DBAlert
         if (count == 0)
             return 0;
 
+        // Create an array.
+        String list[] = new String[count];
+        for (count = 0; count < list_.size(); ++count)
+        {
+            list[count] = (String) list_.get(count);
+        }
+        return deleteAlerts(list);
+    }
+
+
+    /**
+     * Delete the Alert Derinitions specified by the caller. The values must be
+     * existing al_idseq values within the Alert table.
+     * 
+     * @param id_
+     *        The al_idseq value which identifies the definition to delete.
+     *        Other dependant tables in the database will automatically be
+     *        cleaned up via cascades and triggers.
+     * @return 0 if successful, otherwise the Oracle error code.
+     */
+    public int deleteAlert(String id_)
+    {
+        // Be sure we have something to do.
+        if (id_ == null || id_.length() == 0)
+            return 0;
+        String list[] = new String[1];
+        list[0] = id_;
+        return deleteAlerts(list);
+    }
+
+    /**
+     * Delete the Alert Derinitions specified by the caller. The values must be
+     * existing al_idseq values within the Alert table.
+     * 
+     * @param list_
+     *        The al_idseq values which identify the definitions to delete.
+     *        Other dependant tables in the database will automatically be
+     *        cleaned up via cascades and triggers.
+     * @return 0 if successful, otherwise the Oracle error code.
+     */
+    public int deleteAlerts(String list_[])
+    {
+        // Be sure we have something to do.
+        if (list_ == null || list_.length == 0)
+                return 0;
+        
         // Build the delete SQL statement.
         String delete = "delete " + "from sbrext.sn_alert_view_ext "
             + "where al_idseq in (?";
 
-        for (int ndx = 1; ndx < count; ++ndx)
+        for (int ndx = 1; ndx < list_.length; ++ndx)
         {
             delete = delete + ",?";
         }
@@ -844,10 +891,9 @@ public class DBAlert
         {
             // Set all the SQL arguments.
             pstmt = _conn.prepareStatement(delete);
-            for (int ndx = 0; ndx < count; ++ndx)
+            for (int ndx = 0; ndx < list_.length; ++ndx)
             {
-                String temp = (String) list_.get(ndx);
-                pstmt.setString(ndx + 1, temp);
+                pstmt.setString(ndx + 1, list_[ndx]);
             }
 
             // Send it to the database. And remember to flag a commit for later.
@@ -1245,25 +1291,25 @@ public class DBAlert
                 specific += 2;
             }
         }
-        if (rec_.getAVersion() != 'I')
+        if (rec_.getAVersion() != AlertRec._VERIGNCHG)
         {
-            if (rec_.getAVersion() == 'C')
+            if (rec_.getAVersion() == AlertRec._VERANYCHG)
                 specific += 4;
             if (monitors.length() > 0)
                 monitors = monitors + " OR\n";
             switch (rec_.getAVersion())
             {
-                case 'C':
+                case AlertRec._VERANYCHG:
                     monitors = monitors + "Version changes to anything\n";
                     break;
-                case 'M':
+                case AlertRec._VERMAJCHG:
                     monitors = monitors
                         + "Version Major Revision changes to anything\n";
                     break;
-                case 'I':
+                case AlertRec._VERIGNCHG:
                     monitors = monitors + "";
                     break; // "Version changes are ignored\n"; break;
-                case 'S':
+                case AlertRec._VERSPECHG:
                     monitors = monitors + "Version changes to \""
                         + rec_.getActVerNum() + "\"\n";
                     break;
@@ -1324,7 +1370,7 @@ public class DBAlert
                 char rtype = rs.getString(1).charAt(0);
                 String dtype = rs.getString(2);
                 String value = rs.getString(4);
-                if (rtype == 'C')
+                if (rtype == _CRITERIA)
                 {
                     if (dtype.equals(_CONTEXT))
                         context.add(value);
@@ -1339,7 +1385,7 @@ public class DBAlert
                     else if (dtype.equals(_MODIFIER))
                         modifier.add(value);
                 }
-                else if (rtype == 'M')
+                else if (rtype == _MONITORS)
                 {
                     if (dtype.equals(_STATUS))
                         workflow.add(value);
@@ -1539,7 +1585,7 @@ public class DBAlert
             // and monitors. In other words, we don't want to waste time
             // checking the context when (All) was
             // selected because it will always logically test true.
-            if (rec_.getContexts(0).equals(Constants._ALL) == false)
+            if (rec_.getContexts(0).equals(Constants._STRALL) == false)
             {
                 pstmt.setString(3, _CONTEXT);
                 pstmt.setString(4, "CONTE_IDSEQ");
@@ -1552,7 +1598,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getForms(0).equals(Constants._ALL) == false)
+            if (rec_.getForms(0).equals(Constants._STRALL) == false)
             {
                 pstmt.setString(3, _FORM);
                 pstmt.setString(4, "QC_IDSEQ");
@@ -1565,7 +1611,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getSchemes(0).equals(Constants._ALL) == false)
+            if (rec_.getSchemes(0).equals(Constants._STRALL) == false)
             {
                 pstmt.setString(3, _SCHEME);
                 pstmt.setString(4, "CS_IDSEQ");
@@ -1578,7 +1624,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getSchemeItems(0).equals(Constants._ALL) == false)
+            if (rec_.getSchemeItems(0).equals(Constants._STRALL) == false)
             {
                 pstmt.setString(3, _SCHEMEITEM);
                 pstmt.setString(4, "CSI_IDSEQ");
@@ -1591,7 +1637,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getCreators(0).equals(Constants._ALL) == false)
+            if (rec_.getCreators(0).equals(Constants._STRALL) == false)
             {
                 pstmt.setString(3, _CREATOR);
                 pstmt.setString(4, "UA_NAME");
@@ -1604,7 +1650,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getModifiers(0).equals(Constants._ALL) == false)
+            if (rec_.getModifiers(0).equals(Constants._STRALL) == false)
             {
                 pstmt.setString(3, _MODIFIER);
                 pstmt.setString(4, "UA_NAME");
@@ -1619,7 +1665,7 @@ public class DBAlert
 
             pstmt.setString(2, "M");
 
-            if (rec_.getAWorkflow(0).equals(Constants._ANY) == false)
+            if (rec_.getAWorkflow(0).equals(Constants._STRANY) == false)
             {
                 pstmt.setString(3, _STATUS);
                 pstmt.setString(4, "ASL_NAME");
@@ -1632,7 +1678,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getARegis(0).equals(Constants._ANY) == false)
+            if (rec_.getARegis(0).equals(Constants._STRANY) == false)
             {
                 pstmt.setString(3, _REGISTER);
                 pstmt.setString(4, "REGISTRATION_STATUS");
@@ -1645,7 +1691,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getAVersion() != 'C')
+            if (rec_.getAVersion() != AlertRec._VERANYCHG)
             {
                 marker = 8;
                 pstmt.setString(3, _VERSION);
@@ -1958,8 +2004,8 @@ public class DBAlert
                 int ndx;
                 if (flag_)
                 {
-                    data._labels[0] = Constants._ALL;
-                    data._vals[0] = Constants._ALL;
+                    data._labels[0] = Constants._STRALL;
+                    data._vals[0] = Constants._STRALL;
                     ndx = 1;
                 }
                 else
@@ -2334,12 +2380,12 @@ public class DBAlert
             _workflowList = new String[rec._labels.length + 3];
             _workflowVals = new String[rec._labels.length + 3];
             int ndx = 0;
-            _workflowList[ndx] = Constants._ALL;
-            _workflowVals[ndx++] = Constants._ALL;
-            _workflowList[ndx] = Constants._ANY;
-            _workflowVals[ndx++] = Constants._ANY;
-            _workflowList[ndx] = Constants._IGNORE;
-            _workflowVals[ndx++] = Constants._IGNORE;
+            _workflowList[ndx] = Constants._STRALL;
+            _workflowVals[ndx++] = Constants._STRALL;
+            _workflowList[ndx] = Constants._STRANY;
+            _workflowVals[ndx++] = Constants._STRANY;
+            _workflowList[ndx] = Constants._STRIGNORE;
+            _workflowVals[ndx++] = Constants._STRIGNORE;
             for (int cnt = 0; cnt < rec._labels.length; ++cnt)
             {
                 _workflowList[ndx] = rec._vals[cnt];
@@ -2407,12 +2453,12 @@ public class DBAlert
             _regStatusList = new String[rec._labels.length + 3];
             _regStatusVals = new String[rec._labels.length + 3];
             int ndx = 0;
-            _regStatusList[ndx] = Constants._ALL;
-            _regStatusVals[ndx++] = Constants._ALL;
-            _regStatusList[ndx] = Constants._ANY;
-            _regStatusVals[ndx++] = Constants._ANY;
-            _regStatusList[ndx] = Constants._IGNORE;
-            _regStatusVals[ndx++] = Constants._IGNORE;
+            _regStatusList[ndx] = Constants._STRALL;
+            _regStatusVals[ndx++] = Constants._STRALL;
+            _regStatusList[ndx] = Constants._STRANY;
+            _regStatusVals[ndx++] = Constants._STRANY;
+            _regStatusList[ndx] = Constants._STRIGNORE;
+            _regStatusVals[ndx++] = Constants._STRIGNORE;
             for (int cnt = 0; cnt < rec._labels.length; ++cnt)
             {
                 _regStatusList[ndx] = rec._vals[cnt];
@@ -2683,9 +2729,9 @@ public class DBAlert
                 data._labels = new String[count];
                 data._id1 = new String[count];
                 data._id2 = new String[count];
-                data._labels[0] = Constants._ALL;
-                data._id1[0] = Constants._ALL;
-                data._id2[0] = Constants._ALL;
+                data._labels[0] = Constants._STRALL;
+                data._id1[0] = Constants._STRALL;
+                data._id2[0] = Constants._STRALL;
                 int cnt = 0;
                 for (int ndx = 1; ndx < count; ++ndx)
                 {
@@ -4757,4 +4803,8 @@ public class DBAlert
         "Context", "Classification Scheme", "Classification Scheme Item",
         "Data Element", "Data Element Concept", "Permissible Value",
         "Form/Template", "Module", "Question", "Valid Value", "Value Domain" };
+
+    private static final char   _CRITERIA     = 'C';
+
+    private static final char   _MONITORS     = 'M';
 }

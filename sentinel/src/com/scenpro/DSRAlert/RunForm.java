@@ -22,8 +22,8 @@ public class RunForm extends ActionForm
      */
     public RunForm()
     {
-        _recipients = "C";
-        _nextScreen = Constants._RUN;
+        _recipients = String.valueOf(_RECIPIENTS);
+        _nextScreen = Constants._ACTRUN;
     }
 
     /**
@@ -149,4 +149,6 @@ public class RunForm extends ActionForm
     private String _end;
 
     private String _nextScreen;
+    
+    public static final char _RECIPIENTS = 'C';
 }

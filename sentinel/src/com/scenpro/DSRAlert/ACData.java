@@ -620,10 +620,10 @@ public class ACData
      * @see com.scenpro.DSRAlert.ACData#dumpHeader2 dumpHeader2()
      * @see com.scenpro.DSRAlert.ACData#dumpDetail2 dumpDetail2()
      */
-    static public void dumpFooter2(AlertRec rec_, FileOutputStream fout_)
+    static public void dumpFooter2(String msg_, AlertRec rec_, FileOutputStream fout_)
         throws IOException
     {
-        dumpFooter1(rec_, fout_);
+        dumpFooter1(msg_, rec_, fout_);
     }
 
     /**
@@ -638,10 +638,16 @@ public class ACData
      * @see com.scenpro.DSRAlert.ACData#dumpHeader1 dumpHeader1()
      * @see com.scenpro.DSRAlert.ACData#dumpDetail1 dumpDetail1()
      */
-    static public void dumpFooter1(AlertRec rec_, FileOutputStream fout_)
+    static public void dumpFooter1(String msg_, AlertRec rec_, FileOutputStream fout_)
         throws IOException
     {
-        fout_.write("\t</table>\n</body>\n</html>\n".getBytes());
+        if (msg_ == null || msg_.length() == 0)
+            fout_.write("\t</table>\n</body>\n</html>\n".getBytes());
+        else
+        {
+            String temp = "\t</table>\n\t<p style=\"text-align: right; margin-top: 6pt\">" + msg_ + "</p>\n</body>\n</html>\n";
+            fout_.write(temp.getBytes());
+        }
     }
 
     /**

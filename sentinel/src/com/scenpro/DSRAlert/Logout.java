@@ -46,6 +46,6 @@ public class Logout extends Action
         session.removeAttribute(AlertBean._SESSIONNAME);
 
         // Have to logon.
-        return mapping_.findForward(Constants._LOGON);
+        return mapping_.findForward(Constants._ACTLOGON);
     }
 }

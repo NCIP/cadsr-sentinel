@@ -29,7 +29,7 @@ public class AlertBean
         _pswd = pswd_;
 
         // Set List.jsp defaults.
-        _listShow = 'p';
+        _listShow = _SHOWPRIV;
         //        _listSortCol = 1;
 
         // Generate bean key.
@@ -39,6 +39,9 @@ public class AlertBean
 
         _lastUserTab = "0";
         _lastMainTab = "0";
+
+        _editPrev = Constants._ACTLIST;
+        _runPrev = Constants._ACTLIST;
     }
 
     /**
@@ -99,25 +102,25 @@ public class AlertBean
      */
     public boolean isListShowPrivate()
     {
-        return (_listShow == 'p');
+        return (_listShow == _SHOWPRIV);
     }
 
     /**
      * Set the flag indicating which list is visible to the user.
      * 
      * @param flag_
-     *        'p' when the private list is shown, 'a' when all alerts are shown.
+     *        _SHOWPRIV when the private list is shown, _SHOWALL when all alerts are shown.
      */
     public void setListShow(char flag_)
     {
-        _listShow = (flag_ == 'p') ? 'p' : 'a';
+        _listShow = (flag_ == _SHOWPRIV) ? _SHOWPRIV : _SHOWALL;
     }
 
     /**
      * Set the flag indicating which list is visible to the user.
      * 
      * @param flag_
-     *        "p" when the private list is shown, "a" when all alerts are shown.
+     *        _SHOWPRIV when the private list is shown, _SHOWALL when all alerts are shown.
      */
     public void setListShow(String flag_)
     {
@@ -132,29 +135,6 @@ public class AlertBean
     public String getKey()
     {
         return _key;
-    }
-
-    /**
-     * Set the database list of id's for the Alerts shown.
-     * 
-     * @param list_
-     *        The database id's for visible Alerts.
-     */
-    public void setDBlist(String list_[])
-    {
-        _listDBid = list_;
-    }
-
-    /**
-     * Get the database id for the Alert item specified.
-     * 
-     * @param ndx_
-     *        The desired Alert item.
-     * @return The database id for the Alert.
-     */
-    public String getDBlist(int ndx_)
-    {
-        return _listDBid[ndx_];
     }
 
     /**
@@ -260,8 +240,6 @@ public class AlertBean
     //    private int _listSortCol;
     private String             _key;
 
-    private String             _listDBid[];
-
     private AlertRec           _working;
 
     private String             _editPrev;
@@ -271,4 +249,8 @@ public class AlertBean
     private String             _lastUserTab;
 
     private String             _lastMainTab;
+    
+    public static final char _SHOWALL = 'a';
+    
+    public static final char _SHOWPRIV = 'p';
 }

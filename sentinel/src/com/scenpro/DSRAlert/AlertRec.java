@@ -17,16 +17,20 @@ public class AlertRec
 {
     /**
      * Constructor with a known creator.
+     * 
+     * @param id_
+     *        The user id creating this Alert.
+     * @param creator_
+     *        The user name corresponding to the id.
      */
     public AlertRec(String id_, String creator_)
     {
-        setRec(null);
-        setCreator(id_);
+        setRec(id_);
         setCreatorName(creator_);
     }
 
     /**
-     * Constructor for a default record.
+     * Constructor for a default record and unknown creator.
      */
     public AlertRec()
     {
@@ -1059,14 +1063,14 @@ public class AlertRec
      */
     public void setAVersion(String val_)
     {
-        _aVersion = (val_ == null) ? 'C' : val_.charAt(0);
+        _aVersion = (val_ == null) ? AlertRec._VERANYCHG : val_.charAt(0);
     }
 
     /**
      * Set the version flag to monitor.
      * 
      * @param val_
-     *        One of 'C', 'M', 'I', 'S'.
+     *        One of _VERANYCHG, _VERMAJCHG, _VERIGNCHG, _VERSPECHG.
      */
     public void setAVersion(char val_)
     {
@@ -1384,7 +1388,7 @@ public class AlertRec
         if (val_ == null)
         {
             _attrs = new String[1];
-            _attrs[0] = Constants._ALL;
+            _attrs[0] = Constants._STRALL;
         }
         else
             _attrs = val_;
@@ -1425,7 +1429,7 @@ public class AlertRec
         if (val_ == null)
         {
             _aWorkflow = new String[1];
-            _aWorkflow[0] = Constants._ANY;
+            _aWorkflow[0] = Constants._STRANY;
         }
         else
         {
@@ -1443,7 +1447,7 @@ public class AlertRec
         if (val_ == null)
         {
             _iWorkflow = new String[1];
-            _iWorkflow[0] = Constants._ALL;
+            _iWorkflow[0] = Constants._STRALL;
         }
         else
         {
@@ -1463,7 +1467,7 @@ public class AlertRec
         if (val_ == null)
         {
             _aRegis = new String[1];
-            _aRegis[0] = Constants._ANY;
+            _aRegis[0] = Constants._STRANY;
         }
         else
         {
@@ -1481,7 +1485,7 @@ public class AlertRec
         if (val_ == null)
         {
             _iRegis = new String[1];
-            _iRegis[0] = Constants._ALL;
+            _iRegis[0] = Constants._STRALL;
         }
         else
         {
@@ -1501,7 +1505,7 @@ public class AlertRec
         if (val_ == null)
         {
             _creators = new String[1];
-            _creators[0] = Constants._ALL;
+            _creators[0] = Constants._STRALL;
         }
         else
         {
@@ -1521,7 +1525,7 @@ public class AlertRec
         if (val_ == null)
         {
             _modifiers = new String[1];
-            _modifiers[0] = Constants._ALL;
+            _modifiers[0] = Constants._STRALL;
         }
         else
         {
@@ -1539,7 +1543,7 @@ public class AlertRec
         if (val_ == null)
         {
             _searchAC = new String[1];
-            _searchAC[0] = Constants._ALL;
+            _searchAC[0] = Constants._STRALL;
         }
         else
         {
@@ -1559,7 +1563,7 @@ public class AlertRec
         if (val_ == null)
         {
             _forms = new String[1];
-            _forms[0] = Constants._ALL;
+            _forms[0] = Constants._STRALL;
         }
         else
         {
@@ -1580,7 +1584,7 @@ public class AlertRec
         if (val_ == null)
         {
             _schemes = new String[1];
-            _schemes[0] = Constants._ALL;
+            _schemes[0] = Constants._STRALL;
         }
         else
         {
@@ -1601,7 +1605,7 @@ public class AlertRec
         if (val_ == null)
         {
             _schemeItems = new String[1];
-            _schemeItems[0] = Constants._ALL;
+            _schemeItems[0] = Constants._STRALL;
         }
         else
         {
@@ -1619,7 +1623,7 @@ public class AlertRec
         if (val_ == null)
         {
             _domains = new String[1];
-            _domains[0] = Constants._ALL;
+            _domains[0] = Constants._STRALL;
         }
         else
         {
@@ -1639,7 +1643,7 @@ public class AlertRec
         if (val_ == null)
         {
             _contexts = new String[1];
-            _contexts[0] = Constants._ALL;
+            _contexts[0] = Constants._STRALL;
         }
         else
         {
@@ -2138,7 +2142,8 @@ public class AlertRec
     }
 
     /**
-     * Return the version monitor flag: 'C', 'M', 'I', 'S'.
+     * Return the version monitor flag: _VERANYCHG, _VERMAJCHG, _VERIGNCHG,
+     * _VERSPECHG.
      * 
      * @return The flag.
      */
@@ -2255,7 +2260,7 @@ public class AlertRec
      */
     public boolean isAWorkflowANY()
     {
-        return (_aWorkflow == null || _aWorkflow[0].equals(Constants._ANY));
+        return (_aWorkflow == null || _aWorkflow[0].equals(Constants._STRANY));
     }
 
     /**
@@ -2265,7 +2270,8 @@ public class AlertRec
      */
     public boolean isAWorkflowIGNORE()
     {
-        return (_aWorkflow != null && _aWorkflow[0].equals(Constants._IGNORE));
+        return (_aWorkflow != null && _aWorkflow[0]
+            .equals(Constants._STRIGNORE));
     }
 
     /**
@@ -2275,7 +2281,7 @@ public class AlertRec
      */
     public boolean isARegisANY()
     {
-        return (_aRegis == null || _aRegis[0].equals(Constants._ANY));
+        return (_aRegis == null || _aRegis[0].equals(Constants._STRANY));
     }
 
     /**
@@ -2285,7 +2291,7 @@ public class AlertRec
      */
     public boolean isARegisIGNORE()
     {
-        return (_aRegis != null && _aRegis[0].equals(Constants._IGNORE));
+        return (_aRegis != null && _aRegis[0].equals(Constants._STRIGNORE));
     }
 
     /**
@@ -2295,7 +2301,7 @@ public class AlertRec
      */
     public boolean isAVersionANY()
     {
-        return (_aVersion == 'C');
+        return (_aVersion == _VERANYCHG);
     }
 
     /**
@@ -2433,4 +2439,12 @@ public class AlertRec
 
     private static final String weekdays[] = { "Sun", "Mon", "Tue", "Wed",
         "Thu", "Fri", "Sat"               };
+
+    public static final char    _VERANYCHG = 'C';
+
+    public static final char    _VERMAJCHG = 'M';
+
+    public static final char    _VERIGNCHG = 'I';
+
+    public static final char    _VERSPECHG = 'S';
 }

@@ -45,19 +45,19 @@ public class Run extends Action
         AlertBean ub = (AlertBean) request_.getSession().getAttribute(
             AlertBean._SESSIONNAME);
 
-        if (form.getNextScreen().equals(Constants._BACK))
+        if (form.getNextScreen().equals(Constants._ACTBACK))
         {
             // Never mind...
             form.setNextScreen(ub.getRunPrev());
         }
-        else if (form.getNextScreen().equals(Constants._RUN))
+        else if (form.getNextScreen().equals(Constants._ACTRUN))
         {
             // Setup to submit the Alert.
             AutoProcessAlerts pa = new AutoProcessAlerts();
             Timestamp start = AlertRec.parseDate(form.getStartDate());
             Timestamp end = AlertRec.parseDate(form.getEndDate());
             AlertRec rec = new AlertRec(ub.getWorking());
-            if (form.getRecipients().charAt(0) == 'C')
+            if (form.getRecipients().charAt(0) == RunForm._RECIPIENTS)
             {
                 // Only send to the Creator.
                 String temp[] = new String[1];
@@ -71,7 +71,7 @@ public class Run extends Action
             pa.manualRun(rec, start, end);
 
             // Tell the user we have submitted the Alert.
-            request_.setAttribute(Constants._RUN, ub.getWorking().getName());
+            request_.setAttribute(Constants._ACTRUN, ub.getWorking().getName());
             form.setNextScreen(ub.getRunPrev());
         }
 

@@ -22,7 +22,7 @@ public class EditForm extends ActionForm
      */
     public EditForm()
     {
-        _nextScreen = Constants._EDIT;
+        _nextScreen = Constants._ACTEDIT;
     }
 
     /**
@@ -1097,7 +1097,7 @@ public class EditForm extends ActionForm
             return errors;
         }
 
-        if (_nextScreen.equals(Constants._SAVE))
+        if (_nextScreen.equals(Constants._ACTSAVE))
         {
             // The form is self validating. Meaning we handle as much as
             // possible in the UI to avoid the
@@ -1121,105 +1121,105 @@ public class EditForm extends ActionForm
     }
 
     // Class data elements.
-    private String _nextScreen;
+    private String           _nextScreen;
 
-    private String _propName;
+    private String           _propName;
 
-    private String _propDesc;
+    private String           _propDesc;
 
-    private String _propCreator;
+    private String           _propCreator;
 
-    private String _propCreateDate;
+    private String           _propCreateDate;
 
-    private String _propLastRunDate;
+    private String           _propLastRunDate;
 
-    private String _propModifyDate;
+    private String           _propModifyDate;
 
-    private String _repIncProp;
+    private String           _repIncProp;
 
-    private String _repStyle;
+    private String           _repStyle;
 
-    private String _propIntro;
+    private String           _propIntro;
 
-    private String _actAdminChg;
+    private String           _actAdminChg;
 
-    private String _actAdminNew;
+    private String           _actAdminNew;
 
-    private String _actAdminDel;
+    private String           _actAdminDel;
 
-    private String _actAdminCopy;
+    private String           _actAdminCopy;
 
-    private String _infoSearchTerm;
+    private String           _infoSearchTerm;
 
-    private String _infoVDTE;
+    private String           _infoVDTE;
 
-    private String _infoVDTN;
+    private String           _infoVDTN;
 
-    private String _freqUnit;
+    private String           _freqUnit;
 
-    private String _propStatus;
+    private String           _propStatus;
 
-    private String _propBeginDate;
+    private String           _propBeginDate;
 
-    private String _propEndDate;
+    private String           _propEndDate;
 
-    private String _freqEmpty;
+    private String           _freqEmpty;
 
-    private String _freqAck;
+    private String           _freqAck;
 
-    private String _propEmail;
+    private String           _propEmail;
 
-    private String _actVersion;
+    private String           _actVersion;
 
-    private String _actVerNum;
+    private String           _actVerNum;
 
-    private String _actVDT;
+    private String           _actVDT;
 
-    private String _propStatusReason;
+    private String           _propStatusReason;
 
-    private String _actContextUse;
+    private String           _actContextUse;
 
-    private String _actDependantChg;
+    private String           _actDependantChg;
 
-    private String _infoContextUse;
+    private String           _infoContextUse;
 
-    private String _infoVersion;
+    private String           _infoVersion;
 
-    private String _infoVerNum;
+    private String           _infoVerNum;
 
-    private String _propRecipients[];
+    private String           _propRecipients[];
 
-    private String _freqWeekly;
+    private String           _freqWeekly;
 
-    private String _freqMonthly;
+    private String           _freqMonthly;
 
-    private String _repAttributes[];
+    private String           _repAttributes[];
 
-    private String _infoSearchIn;
+    private String           _infoSearchIn;
 
-    private String _actWorkflowStatus[];
+    private String           _actWorkflowStatus[];
 
-    private String _infoWorkflowStatus[];
+    private String           _infoWorkflowStatus[];
 
-    private String _actRegStatus[];
+    private String           _actRegStatus[];
 
-    private String _infoRegStatus[];
+    private String           _infoRegStatus[];
 
-    private String _infoCreator[];
+    private String           _infoCreator[];
 
-    private String _infoModifier[];
+    private String           _infoModifier[];
 
-    private String _infoSchemes[];
+    private String           _infoSchemes[];
 
-    private String _infoSchemeItems[];
+    private String           _infoSchemeItems[];
 
-    private String _infoForms[];
+    private String           _infoForms[];
 
-    private String _infoConceptDomain[];
+    private String           _infoConceptDomain[];
 
-    private String _infoSearchFor[];
+    private String           _infoSearchFor[];
 
-    private String _propUsers[];
+    private String           _propUsers[];
 
-    private String _infoContext[];
+    private String           _infoContext[];
 }

@@ -22,8 +22,8 @@ public class ListForm extends ActionForm
      */
     public ListForm()
     {
-        _nextScreen = "list";
-        _listShow = "p";
+        _nextScreen = Constants._ACTLIST;
+        _listShow = String.valueOf(AlertBean._SHOWPRIV);
     }
 
     /**

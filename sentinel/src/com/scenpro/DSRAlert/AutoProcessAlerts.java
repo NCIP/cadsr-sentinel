@@ -655,7 +655,7 @@ public class AutoProcessAlerts
                 logError(_db.getError());
 
                 // Footer
-                ACData.dumpFooter1(rec_._alert, fout);
+                ACData.dumpFooter1(_version, rec_._alert, fout);
             }
             else if (_outForm == 2)
             {
@@ -668,7 +668,7 @@ public class AutoProcessAlerts
                 logError(_db.getError());
 
                 // Footer
-                ACData.dumpFooter2(rec_._alert, fout);
+                ACData.dumpFooter2(_version, rec_._alert, fout);
             }
 
             // Close file.
@@ -1185,17 +1185,18 @@ public class AutoProcessAlerts
             _user = prb.getString(Constants._DBUSER);
             _pswd = prb.getString(Constants._DBPSWD);
             _dbname = prb.getString(Constants._DBNAME);
-            _work = prb.getString(Constants._WORKING);
-            _subject = prb.getString(Constants._SUBJECT);
-            _adminEmail = prb.getString(Constants._ADMINEMAIL);
-            _adminName = prb.getString(Constants._ADMINNAME);
-            _adminIntro = prb.getString(Constants._ADMININTRO);
-            _adminIntroError = prb.getString(Constants._ADMININTROERROR);
-            _emailHost = prb.getString(Constants._EMAILHOST);
-            _emailUser = prb.getString(Constants._EMAILUSER);
-            _emailPswd = prb.getString(Constants._EMAILPSWD);
-            _http = prb.getString(Constants._HTTP);
-            _style = prb.getString(Constants._STYLE).replaceAll("}", "}\n");
+            _version = prb.getString(Constants._APLVERS);
+            _work = prb.getString(_WORKING);
+            _subject = prb.getString(_SUBJECT);
+            _adminEmail = prb.getString(_ADMINEMAIL);
+            _adminName = prb.getString(_ADMINNAME);
+            _adminIntro = prb.getString(_ADMININTRO);
+            _adminIntroError = prb.getString(_ADMININTROERROR);
+            _emailHost = prb.getString(_EMAILHOST);
+            _emailUser = prb.getString(_EMAILUSER);
+            _emailPswd = prb.getString(_EMAILPSWD);
+            _http = prb.getString(_HTTP);
+            _style = prb.getString(_STYLE).replaceAll("}", "}\n");
             ifile.close();
         }
         catch (IOException ex)
@@ -1425,6 +1426,8 @@ public class AutoProcessAlerts
 
     private String              _dbname;
 
+    private String              _version;
+
     private int                 _outRows;
 
     private String              _work;
@@ -1476,4 +1479,71 @@ public class AutoProcessAlerts
     private int                 _outForm;
 
     private static final String _RESOURCES = "DSRAlert.properties";
+
+    /**
+     * The Auto Process administrator email address coded in
+     * DSRAlert.properties.
+     */
+    private static final String _ADMINEMAIL      = "AutoProcess.admin.email";
+
+    /**
+     * The Auto Process email introduction for recipient distributed messages
+     * coded in DSRAlert.properties.
+     */
+    private static final String _ADMININTRO      = "AutoProcess.intro";
+
+    /**
+     * The Auto Process email introduction addendum when errors occurred
+     * generating the report file coded in DSRAlert.properties.
+     */
+    private static final String _ADMININTROERROR = "AutoProcess.introError";
+
+    /**
+     * The Auto Process administrator name/title to appear in the "From" field
+     * on recipient distributed emails coded in DSRAlert.properties.
+     */
+    private static final String _ADMINNAME       = "AutoProcess.admin.name";
+
+    /**
+     * The Auto Process email password for connection to the email host coded in
+     * DSRAlert.properties.
+     */
+    private static final String _EMAILPSWD       = "AutoProcess.emailpassword";
+
+    /**
+     * The Auto Process email server host IP or Name for message distribution
+     * coded in DSRAlert.properties.
+     */
+    private static final String _EMAILHOST       = "AutoProcess.emailhost";
+
+    /**
+     * The Auto Process email user id for connection to the email host coded in
+     * DSRAlert.properties.
+     */
+    private static final String _EMAILUSER       = "AutoProcess.emailusername";
+
+    /**
+     * The Auto Process HTTP prefix string for links set to Alert email
+     * recipients coded in DSRAlert.properties
+     */
+    private static final String _HTTP            = "AutoProcess.http";
+
+    /**
+     * The Auto Process CSS style definitions used for the Alert report coded in
+     * DSRAlert.properties.
+     */
+    private static final String _STYLE           = "AutoProcess.style";
+
+    /**
+     * The Auto Process email subject line for all distribution to recipients
+     * and administrators coded in DSRAlert.properties.
+     */
+    private static final String _SUBJECT         = "AutoProcess.subject";
+
+    /**
+     * The Auto Process working forder for temporary files and report output.
+     * Must be relative to the machine on which the process executes and coded
+     * in DSRAlert.properties.
+     */
+    private static final String _WORKING         = "AutoProcess.workingfolder";
 }

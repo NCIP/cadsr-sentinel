@@ -46,7 +46,7 @@ public class Create extends Action
             AlertBean._SESSIONNAME);
 
         // If edit is used, we want to return to creat on a "back" operation.
-        ub.setEditPrev(Constants._CREATE);
+        ub.setEditPrev(Constants._ACTCREATE);
 
         // Make the working alert definition.
         if (ub.getWorking() == null)
@@ -79,13 +79,13 @@ public class Create extends Action
         // When going to edit, we can't query the databse for information as the
         // user hasn't
         // saved anything yet.
-        if (form.getNextScreen().equals(Constants._EDIT))
+        if (form.getNextScreen().equals(Constants._ACTEDIT))
         {
             ub.getWorking().setSummary(form.getPropDesc(), true);
         }
 
         // The user doesn't want to edit, just save with current settings.
-        else if (form.getNextScreen().equals(Constants._CREATE))
+        else if (form.getNextScreen().equals(Constants._ACTCREATE))
         {
             // Save the new alert.
             DBAlert db = new DBAlert();
@@ -93,16 +93,16 @@ public class Create extends Action
             {
                 if (db.insertAlert(ub.getWorking()) == 0)
                 {
-                    request_.setAttribute(Constants._SAVE, "Y");
-                    form.setNextScreen(Constants._LIST);
+                    request_.setAttribute(Constants._ACTSAVE, "Y");
+                    form.setNextScreen(Constants._ACTLIST);
                 }
                 else
                     request_
-                        .setAttribute(Constants._SAVE, db.getErrorMsg(true));
+                        .setAttribute(Constants._ACTSAVE, db.getErrorMsg(true));
                 db.close();
             }
             else
-                request_.setAttribute(Constants._SAVE, db.getErrorMsg(true));
+                request_.setAttribute(Constants._ACTSAVE, db.getErrorMsg(true));
         }
 
         // Transfer to the next screen.

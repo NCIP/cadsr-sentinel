@@ -50,20 +50,21 @@ public class List extends Action
             AlertBean._SESSIONNAME);
 
         // If going to edit we want to return to the list on a "back" operation.
-        ub.setEditPrev(Constants._LIST);
-        ub.setRunPrev(Constants._LIST);
+        ub.setEditPrev(Constants._ACTLIST);
+        ub.setRunPrev(Constants._ACTLIST);
 
         // Delete all selected definitions.
         int count = Integer.parseInt(request_.getParameter("rowCount"));
-        if (form.getNextScreen().equals(Constants._DELETE))
+        if (form.getNextScreen().equals(Constants._ACTDELETE))
         {
-            form.setNextScreen(Constants._LIST);
+            form.setNextScreen(Constants._ACTLIST);
             Vector dlist = new Vector();
             for (int ndx = 0; ndx < count; ++ndx)
             {
-                if (request_.getParameter("cb" + Integer.toString(ndx)) != null)
+                String temp = request_.getParameter("cb" + Integer.toString(ndx)); 
+                if (temp != null)
                 {
-                    dlist.add(ub.getDBlist(ndx));
+                    dlist.add(temp);
                 }
             }
             if (dlist.size() > 0)
@@ -78,36 +79,37 @@ public class List extends Action
         // Create a new definition. Be sure we don't inherit any unexpected
         // values from previous working
         // operations.
-        else if (form.getNextScreen().equals(Constants._CREATE))
+        else if (form.getNextScreen().equals(Constants._ACTCREATE))
         {
             ub.setWorking(null);
         }
 
         // Process a specific alert.
-        else
+        else if (!form.getNextScreen().equals(Constants._ACTLIST))
         {
             for (int ndx = 0; ndx < count; ++ndx)
             {
                 // Look for the first check box flagged by the user.
-                if (request_.getParameter("cb" + Integer.toString(ndx)) != null)
+                String idseq = request_.getParameter("cb" + Integer.toString(ndx));
+                if (idseq != null)
                 {
                     // The user wants to edit the definition.
-                    if (form.getNextScreen().equals(Constants._EDIT)
-                        || form.getNextScreen().equals(Constants._RUN))
+                    if (form.getNextScreen().equals(Constants._ACTEDIT)
+                        || form.getNextScreen().equals(Constants._ACTRUN))
                     {
                         DBAlert db = new DBAlert();
                         db.open(request_, ub.getUser(), ub.getPswd());
-                        ub.setWorking(db.selectAlert(ub.getDBlist(ndx)));
+                        ub.setWorking(db.selectAlert(idseq));
                         db.close();
                     }
 
                     // The user wants to create a new definition using an
                     // existing one as a template.
-                    else if (form.getNextScreen().equals(Constants._NEWFROM))
+                    else if (form.getNextScreen().equals(Constants._ACTNEWFROM))
                     {
                         DBAlert db = new DBAlert();
                         db.open(request_, ub.getUser(), ub.getPswd());
-                        AlertRec temp = db.selectAlert(ub.getDBlist(ndx));
+                        AlertRec temp = db.selectAlert(idseq);
                         db.close();
 
                         // Reset the record numbers to ensure an Insert is done
