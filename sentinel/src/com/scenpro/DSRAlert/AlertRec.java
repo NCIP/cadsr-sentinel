@@ -88,7 +88,7 @@ public class AlertRec
     /**
      * Create an exact duplicate (copy) of this instance. This is used to submit
      * a manual run of an Alert as the user is not required to Save changes to
-     * an Alert and we want to run using the onscreen settings. It also allows
+     * an Alert and we want to run using the on screen settings. It also allows
      * the user the flexibility to test "what if" situations before saving.
      * 
      * @return The new AlertRec.

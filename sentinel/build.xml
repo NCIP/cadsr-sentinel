@@ -111,7 +111,24 @@
     </target>
 
 	<target name="test" unless="notest">
-    	<junit printsummary="yes" haltonfailure="yes" showoutput="yes">
+        <delete><fileset dir="${test-results}" includes="**/*"/></delete>
+        <junit printsummary="on" haltonfailure="yes" showoutput="yes">
+            <classpath>
+                <pathelement location="${oroot}"/>
+                <pathelement location="${oclasses}"/>
+                <fileset dir="${lib}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+            <sysproperty key="test.propfile" value="${conf}/DSRAlertTest.properties"/>
+            <formatter type="plain"/>
+            <batchtest fork="yes" todir="${test-results}" filtertrace="on">
+                <fileset dir="${java}">
+                    <include name="**/TestDatabase.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    	<junit printsummary="on" haltonfailure="yes" showoutput="yes">
     		<classpath>
     			<pathelement location="${oroot}"/>
   		      	<pathelement location="${oclasses}"/>

@@ -620,11 +620,10 @@ public class AutoProcessAlerts
      */
     private void getFileName(ProcessRec rec_)
     {
-        String temp = rec_._alert.getName().replaceAll(
-            "[ .,/?\\\\}{|`~><:;'\"-&)(=+*!@#$%^]", "_");
+        String temp = rec_._alert.getName().replaceAll("\\W", "_");
         String ts = "_"
-            + new Timestamp(new Date().getTime()).toString().replaceAll(
-                "[ :.\\\\-]", "") + ".html";
+            + new Timestamp(new Date().getTime()).toString().replaceAll("\\D",
+                "") + ".html";
         rec_._reportFile = _work + temp + ts;
         temp = _http + temp + ts;
         log("\tCreated by " + rec_._alert.getCreator()
@@ -1353,13 +1352,17 @@ public class AutoProcessAlerts
             long elapsed = today.getTime() - _today.getTime();
             int hrs = (int) (elapsed / (1000 * 60 * 60));
             elapsed -= hrs * 1000 * 60 * 60;
+            hrs += 100;
             int mins = (int) (elapsed / (1000 * 60));
             elapsed -= mins * 1000 * 60;
+            mins += 100;
             int secs = (int) (elapsed / 1000);
             elapsed -= secs * 1000;
+            secs += 100;
             elapsed += 1000;
-            String msg = String.valueOf(hrs) + ":" + String.valueOf(mins) + ":"
-                + String.valueOf(secs) + "."
+            String msg = String.valueOf(hrs).substring(1) + ":"
+                + String.valueOf(mins).substring(1) + ":"
+                + String.valueOf(secs).substring(1) + "."
                 + String.valueOf(elapsed).substring(1);
             msg = "\nEnd timestamp: " + today.toString()
                 + "\nElapsed processing time: " + msg + "\n";

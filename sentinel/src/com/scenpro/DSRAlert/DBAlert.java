@@ -27,14 +27,14 @@ import oracle.jdbc.pool.OracleDataSource;
  * definitions.
  * <p>
  * For all access, the SQL statements are NOT placed in the properties file as
- * internationaliztion and translation should not affect them. We also want to
- * ease the maintanence by keeping the SQL with the database execute function
+ * internationalization and translation should not affect them. We also want to
+ * ease the maintenance by keeping the SQL with the database execute function
  * calls. If some SQL becomes duplicated, a single method with appropriate
  * parameters should be created to avoid difficulties with changing the SQL
  * statements over time as the table definitions evolve.
  * <p>
  * Start with setupPool() which only needs to be executed once. Then open() and
- * close() everytime a new DBAlert object is created.
+ * close() every time a new DBAlert object is created.
  * <p>
  * Also, just a reminder, all JDBC set...() and get...() methods use 1 (one)
  * based indexing unlike the Java language which uses 0 (zero) based.
@@ -232,15 +232,15 @@ public class DBAlert
 
     /**
      * Required prior to using any other methods within this class. This method
-     * checks for the existance of the pool attached to the Servlet Context.
-     * Once the pool is succesfully created subsequent invocations perform no
+     * checks for the existence of the pool attached to the Servlet Context.
+     * Once the pool is successfully created subsequent invocations perform no
      * action. The method is static and synchronized to allow for possible
      * multiple invocations of the Sentinel Tool simultaneously. Although the
      * data referenced is not static we don't want to take the chance that the
      * ServletContext.getAttribute() is called, we loose the time slice and upon
      * return from the VM one invocation thinks the pool is missing when another
      * invocation has just successfully created it. This is only called from the
-     * Logon Action currently so the overhead in herit with synchronized
+     * Logon Action currently so the overhead inherit with synchronized
      * functions is minimized.
      * <p>
      * To use this from non-browser servlet logic use the method which requires
@@ -280,15 +280,15 @@ public class DBAlert
 
     /**
      * Required prior to using any other methods within this class. This method
-     * checks for the existance of the pool attached to the Servlet Context.
-     * Once the pool is succesfully created subsequent invocations perform no
+     * checks for the existence of the pool attached to the Servlet Context.
+     * Once the pool is successfully created subsequent invocations perform no
      * action. The method is static and synchronized to allow for possible
      * multiple invocations of the Sentinel Tool simultaneously. Although the
      * data referenced is not static we don't want to take the chance that the
      * ServletContext.getAttribute() is called, we loose the time slice and upon
      * return from the VM one invocation thinks the pool is missing when another
      * invocation has just successfully created it. This is only called from the
-     * Logon Action currently so the overhead in herit with synchronized
+     * Logon Action currently so the overhead inherit with synchronized
      * functions is minimized.
      * <p>
      * To use this from non-browser servlet logic use the method which requires
@@ -316,15 +316,15 @@ public class DBAlert
 
     /**
      * Required prior to using any other methods within this class. This method
-     * checks for the existance of the pool attached to the Servlet Context.
-     * Once the pool is succesfully created subsequent invocations perform no
+     * checks for the existence of the pool attached to the Servlet Context.
+     * Once the pool is successfully created subsequent invocations perform no
      * action. The method is static and synchronized to allow for possible
      * multiple invocations of the Sentinel Tool simultaneously. Although the
      * data referenced is not static we don't want to take the chance that the
      * ServletContext.getAttribute() is called, we loose the time slice and upon
      * return from the VM one invocation thinks the pool is missing when another
      * invocation has just successfully created it. This is only called from the
-     * Logon Action currently so the overhead in herit with synchronized
+     * Logon Action currently so the overhead inherit with synchronized
      * functions is minimized.
      * <p>
      * To use this from a browser servlet, use the method which requires an
@@ -440,7 +440,7 @@ public class DBAlert
                 // the database, however, the descriptions could become
                 // very large and we have to worry about some things changing
                 // and not being updated. For the first implementation
-                // it seems buest to generate it. In the future this may change.
+                // it seems best to generate it. In the future this may change.
                 selectQuery(rec);
                 select = rec.getSummary(false);
                 rec.clearQuery();
@@ -603,7 +603,7 @@ public class DBAlert
      * Pull the properties for a specific alert definition.
      * 
      * @param rec_
-     *        The alert for the desired proeprty values. The alertRecNum must be
+     *        The alert for the desired property values. The alertRecNum must be
      *        set prior to this method.
      * @return 0 if successful, otherwise the database error code.
      */
@@ -833,7 +833,7 @@ public class DBAlert
     }
 
     /**
-     * Delete the Alert Derinitions specified by the caller. The values must be
+     * Delete the Alert Definitions specified by the caller. The values must be
      * existing al_idseq values within the Alert table.
      * 
      * @param list_
@@ -859,7 +859,7 @@ public class DBAlert
     }
 
     /**
-     * Delete the Alert Derinitions specified by the caller. The values must be
+     * Delete the Alert Definitions specified by the caller. The values must be
      * existing al_idseq values within the Alert table.
      * 
      * @param id_
@@ -879,7 +879,7 @@ public class DBAlert
     }
 
     /**
-     * Delete the Alert Derinitions specified by the caller. The values must be
+     * Delete the Alert Definitions specified by the caller. The values must be
      * existing al_idseq values within the Alert table.
      * 
      * @param list_
@@ -1390,7 +1390,7 @@ public class DBAlert
             // representations there is
             // no point to attempting to order it. Also for any one Alert there
             // isn't enough rows
-            // to warrant the extra coding or logical overheard.
+            // to warrant the extra coding or logical overhead.
             while (rs.next())
             {
                 char rtype = rs.getString(1).charAt(0);
@@ -1745,8 +1745,10 @@ public class DBAlert
 
     /**
      * Clean the name of any illegal characters and truncate if needed.
-     * @param name_ The name of the Alert.
-     * @return The corrected name. 
+     * 
+     * @param name_
+     *        The name of the Alert.
+     * @return The corrected name.
      */
     private String cleanName(String name_)
     {
@@ -1759,10 +1761,12 @@ public class DBAlert
         }
         return name;
     }
-    
+
     /**
      * Clean the inactive reason and truncate if needed.
-     * @param reason_ The reason message.
+     * 
+     * @param reason_
+     *        The reason message.
      * @return The corrected message.
      */
     private String cleanReason(String reason_)
@@ -1774,10 +1778,12 @@ public class DBAlert
         }
         return reason;
     }
-    
+
     /**
      * Clean the Alert Report introduction and truncate if needed.
-     * @param intro_ The introduction.
+     * 
+     * @param intro_
+     *        The introduction.
      * @return The cleaned introduction.
      */
     private String cleanIntro(String intro_)
@@ -1789,11 +1795,13 @@ public class DBAlert
         }
         return intro;
     }
-    
+
     /**
      * Clean all the user enterable parts of an Alert and truncate to the
      * database allowed length.
-     * @param rec_ The Alert to be cleaned.
+     * 
+     * @param rec_
+     *        The Alert to be cleaned.
      */
     private void cleanRec(AlertRec rec_)
     {
@@ -1804,7 +1812,7 @@ public class DBAlert
         temp = cleanIntro(rec_.getIntro(false));
         rec_.setIntro(temp, false);
     }
-    
+
     /**
      * Insert the properties for the Alert definition and retrieve the new id
      * for the Alert definition.
@@ -2084,7 +2092,7 @@ public class DBAlert
             else
             {
                 // Move the list from a Vector to an array and add "(All)" to
-                // the begining.
+                // the beginning.
                 int count = results.size() + ((flag_) ? 1 : 0);
                 data._labels = new String[count];
                 data._vals = new String[count];
@@ -2196,7 +2204,7 @@ public class DBAlert
      * subsequently sets the data element to null so the memory may be
      * reclaimed. The getUserVals() method accesses the user ids of the returned
      * data and subsequently sets the data element to null so the memory may be
-     * reclaimed. Consequently getUsers() must be called first, folowed by
+     * reclaimed. Consequently getUsers() must be called first, followed by
      * either getUserList() or getUserVals(). Further getUserList() and
      * getUserVals() should be called only once after each invocation of
      * getUsers() as additional calls will always result in a null return. See
@@ -2515,7 +2523,7 @@ public class DBAlert
     }
 
     /**
-     * Retrieve the valid registration statues. Follows the pattern documented
+     * Retrieve the valid registration statuses. Follows the pattern documented
      * in getUsers().
      * 
      * @return 0 if successful, otherwise the database error code.
@@ -2669,17 +2677,20 @@ public class DBAlert
             _fullName = name_;
             _ndx = ndx_;
         }
+
         public String _fullName;
-        public int _ndx;
+
+        public int    _ndx;
     }
-    
+
     /**
      * Build the concatenated strings for the Class Scheme Items display.
      * 
-     * @param rec_ The data returned from Oracle.
+     * @param rec_
+     *        The data returned from Oracle.
      * @return An array of the full concatenated names for sorting later.
      */
-    private schemeTree [] buildSchemeItemList(returnData3 rec_)
+    private schemeTree[] buildSchemeItemList(returnData3 rec_)
     {
         // Get the maximum number of levels and the maximum length of a single
         // name.
@@ -2689,13 +2700,15 @@ public class DBAlert
         {
             if (maxLvl < rec_._id3[ndx])
                 maxLvl = rec_._id3[ndx];
-            if (rec_._label1[ndx] != null && maxLen < rec_._label1[ndx].length())
+            if (rec_._label1[ndx] != null
+                && maxLen < rec_._label1[ndx].length())
                 maxLen = rec_._label1[ndx].length();
-            if (rec_._label2[ndx] != null && maxLen < rec_._label2[ndx].length())
+            if (rec_._label2[ndx] != null
+                && maxLen < rec_._label2[ndx].length())
                 maxLen = rec_._label2[ndx].length();
         }
         ++maxLvl;
-        
+
         // Build and array of prefixes for the levels.
         String prefix[] = new String[maxLvl];
         prefix[0] = "";
@@ -2707,7 +2720,7 @@ public class DBAlert
                 prefix[ndx] = prefix[ndx - 1] + "    ";
             }
         }
-        
+
         // In addition to creating the display labels we must also
         // create an array used to sort everything alphabetically.
         // The easiest is to create a fully concatenated label of a
@@ -2717,7 +2730,7 @@ public class DBAlert
         StringBuffer fullBuff = new StringBuffer(maxLvl);
         fullBuff.setLength(maxLvl);
         schemeTree tree[] = new schemeTree[_schemeItemList.length];
-        
+
         // Loop through the name list.
         _schemeItemList[0] = rec_._label1[0];
         tree[0] = new schemeTree("", 0);
@@ -2727,7 +2740,7 @@ public class DBAlert
             int buffOff = (rec_._id3[ndx] < 2) ? 0 : (rec_._id3[ndx] * maxLen);
             fullBuff.replace(buffOff, maxLvl, rec_._label1[ndx]);
             fullBuff.setLength(maxLvl);
-            
+
             // Create the display label.
             if (rec_._id3[ndx] == 1)
             {
@@ -2737,20 +2750,23 @@ public class DBAlert
                 }
                 else
                 {
-                    _schemeItemList[ndx] = rec_._label1[ndx] + " (" + rec_._label2[ndx] + ")";
-                    fullBuff.replace(buffOff + maxLen, maxLvl, rec_._label2[ndx]);
+                    _schemeItemList[ndx] = rec_._label1[ndx] + " ("
+                        + rec_._label2[ndx] + ")";
+                    fullBuff.replace(buffOff + maxLen, maxLvl,
+                        rec_._label2[ndx]);
                     fullBuff.setLength(maxLvl);
                 }
             }
             else
             {
-                _schemeItemList[ndx] = prefix[rec_._id3[ndx]] + rec_._label1[ndx];
+                _schemeItemList[ndx] = prefix[rec_._id3[ndx]]
+                    + rec_._label1[ndx];
             }
             tree[ndx] = new schemeTree(fullBuff.toString(), ndx);
         }
         return tree;
     }
-    
+
     /**
      * Retrieve the Classification Scheme Items from the database. Follows the
      * pattern documented in getUsers().
@@ -2764,12 +2780,12 @@ public class DBAlert
      */
     public int getSchemeItems()
     {
-        String select = "select cv.cs_idseq, cv.csi_idseq, level as lvl, " +
-            "(select csi.csi_name from sbr.class_scheme_items_view csi where csi.csi_idseq = cv.csi_idseq), " +
-            "(select cs.long_name || ' / v' || cs.version as xname from sbr.classification_schemes_view cs where cs.cs_idseq = cv.cs_idseq) " +
-            "from sbr.cs_csi_view cv " +
-            "start with cv.p_cs_csi_idseq is null " +
-            "connect by prior cv.cs_csi_idseq = cv.p_cs_csi_idseq";
+        String select = "select cv.cs_idseq, cv.csi_idseq, level as lvl, "
+            + "(select csi.csi_name from sbr.class_scheme_items_view csi where csi.csi_idseq = cv.csi_idseq), "
+            + "(select cs.long_name || ' / v' || cs.version as xname from sbr.classification_schemes_view cs where cs.cs_idseq = cv.cs_idseq) "
+            + "from sbr.cs_csi_view cv "
+            + "start with cv.p_cs_csi_idseq is null "
+            + "connect by prior cv.cs_csi_idseq = cv.p_cs_csi_idseq";
 
         returnData3 rec = getBasicData3(select);
         if (rec._rc == 0)
@@ -2781,23 +2797,25 @@ public class DBAlert
         }
         return rec._rc;
     }
-    
+
     /**
      * Sort the scheme items lists and make everything right on the display.
-     * @param tree_ The concatenated name tree list.
+     * 
+     * @param tree_
+     *        The concatenated name tree list.
      */
     private void sortSchemeItems(schemeTree tree_[])
     {
         // Too few items don't bother.
         if (tree_.length < 2)
             return;
-        
+
         // The first element is the "All" indicator, so don't include it.
         schemeTree sort[] = new schemeTree[tree_.length];
         sort[0] = tree_[0];
         sort[1] = tree_[1];
         int top = 2;
-        
+
         // Perform a binary search-insert.
         for (int ndx = 2; ndx < tree_.length; ++ndx)
         {
@@ -2807,7 +2825,8 @@ public class DBAlert
             while (true)
             {
                 check = (max + min) / 2;
-                int test = tree_[ndx]._fullName.compareTo(sort[check]._fullName);
+                int test = tree_[ndx]._fullName
+                    .compareTo(sort[check]._fullName);
                 if (test == 0)
                     break;
                 else if (test > 0)
@@ -2832,7 +2851,7 @@ public class DBAlert
             ++top;
             sort[check] = tree_[ndx];
         }
-        
+
         // Now arrange all the arrays based on the sorted index.
         String tempList[] = new String[_schemeItemList.length];
         String tempVals[] = new String[_schemeItemList.length];
@@ -2848,7 +2867,7 @@ public class DBAlert
         _schemeItemVals = tempVals;
         _schemeItemSchemes = tempSchemes;
     }
-    
+
     /**
      * Retrieve the classification scheme item list. The method getSchemeItems()
      * must be called first. Once this method is used the internal copy is
@@ -2968,7 +2987,7 @@ public class DBAlert
             else
             {
                 // Move the list from a Vector to an array and add "(All)" to
-                // the begining.
+                // the beginning.
                 int count = results.size() + 1;
                 data._labels = new String[count];
                 data._id1 = new String[count];
@@ -3009,8 +3028,8 @@ public class DBAlert
         public String _id1[];
 
         public String _id2[];
-        
-        public int _id3[];
+
+        public int    _id3[];
 
         public String _label1[];
 
@@ -3045,7 +3064,7 @@ public class DBAlert
 
                 public String _id2;
 
-                public int _id3;
+                public int    _id3;
 
                 public String _label1;
 
@@ -3081,7 +3100,7 @@ public class DBAlert
             else
             {
                 // Move the list from a Vector to an array and add "(All)" to
-                // the begining.
+                // the beginning.
                 int count = results.size() + 1;
                 data._label1 = new String[count];
                 data._label2 = new String[count];
@@ -3362,7 +3381,7 @@ public class DBAlert
      * 
      * @param rs_
      *        The query result set.
-     * @return The ACData arry if successful, otherwise null.
+     * @return The ACData array if successful, otherwise null.
      * @throws java.sql.SQLException
      *         When there is a problem with the result set.
      */
@@ -3461,7 +3480,7 @@ public class DBAlert
      * <li>[in, from/to, from/to] {2, 4} - This represents a single "in" clause
      * of creators or modifiers followed by the from/to pair which may occur 2
      * or 4 times in the SQL in this order.</li>
-     * <li>[in, in, from/to, from/to] {2,4} - This represents an "in" cluase
+     * <li>[in, in, from/to, from/to] {2,4} - This represents an "in" clause
      * for the creators and an "in" clause for the modifiers followed by the
      * from/to pair which in total may appear 1 or 2 times.</li>
      * </ul>
@@ -3534,7 +3553,7 @@ public class DBAlert
      * of creators or modifiers followed by the from/to pair which may occur 2
      * or 4 times in the SQL in this order. This pattern is handled by this
      * method argument list.</li>
-     * <li>[in, in, from/to, from/to] {2,4} - This represents an "in" cluase
+     * <li>[in, in, from/to, from/to] {2,4} - This represents an "in" clause
      * for the creators and an "in" clause for the modifiers followed by the
      * from/to pair which in total may appear 1 or 2 times.</li>
      * </ul>
@@ -3613,7 +3632,7 @@ public class DBAlert
      * <li>[in, from/to, from/to] {2, 4} - This represents a single "in" clause
      * of creators or modifiers followed by the from/to pair which may occur 2
      * or 4 times in the SQL in this order.</li>
-     * <li>[in, in, from/to, from/to] {2,4} - This represents an "in" cluase
+     * <li>[in, in, from/to, from/to] {2,4} - This represents an "in" clause
      * for the creators and an "in" clause for the modifiers followed by the
      * from/to pair which in total may appear 1 or 2 times. This pattern is
      * handled by this method argument list.</li>
@@ -4619,7 +4638,7 @@ public class DBAlert
     }
 
     /**
-     * For performance reasons as "names" are the mose common data required, a
+     * For performance reasons as "names" are the most common data required, a
      * cache is created to avoid hitting the database with too many individual
      * requests. This cache is good for the life of this DBAlert object and will
      * be rebuilt as needed with each new DBAlert.
@@ -4897,7 +4916,7 @@ public class DBAlert
      * @param setInactive_
      *        true to set the alert status to inactive, false to leave the
      *        status unchanged
-     * @return int 0 if successful, otherwise the database error code.
+     * @return 0 if successful, otherwise the database error code.
      */
     public int updateRun(String id_, Timestamp stamp_, boolean run_,
         boolean setInactive_)
@@ -5008,6 +5027,88 @@ public class DBAlert
             System.err.println(_errorMsg);
             return null;
         }
+    }
+
+    /**
+     * Run a specific SELECT for the testDBdependancies() method.
+     * 
+     * @param select_
+     *        The select statement.
+     * @return >0 if successful with the number of rows returned, otherwise
+     *         failed.
+     */
+    private int testDB(String select_)
+    {
+        try
+        {
+            PreparedStatement pstmt = _conn.prepareStatement(select_);
+            ResultSet rs = pstmt.executeQuery();
+            int rows;
+            for (rows = 0; rs.next(); ++rows)
+                ;
+            rs.close();
+            pstmt.close();
+            return rows;
+        }
+        catch (SQLException ex)
+        {
+            _errorCode = ex.getErrorCode();
+            _errorMsg = select_ + "\n" + ex.toString();
+            return -1;
+        }
+    }
+
+    /**
+     * Test the database dependencies within this class. This method will check
+     * the existence of tables, columns and required values.
+     * 
+     * @return null if all dependencies are present, otherwise a string
+     *         detailing those that failed.
+     */
+    public String testDBdependancies()
+    {
+        String results = "";
+        String select = "select ua_name, name, electronic_mail_address, alert_ind "
+            + "from sbrext.user_accounts_view "
+            + "where (ua_name is null or name is null or alert_ind is null) and rownum < 2";
+        int rows = testDB(select);
+        if (rows != 0)
+        {
+            if (rows < 0)
+                results += _errorMsg;
+            else
+                results += "One of the columns ua_name, name or alert_ind in the table sbrext.user_accounts_view is NULL";
+            results += "\n\n";
+        }
+
+        select = "select * from sbrext.sn_alert_view_ext where rownum < 2";
+        rows = testDB(select);
+        if (rows < 0)
+            results += _errorMsg + "\n\n";
+
+        select = "select * from sbrext.sn_query_view_ext where rownum < 2";
+        rows = testDB(select);
+        if (rows < 0)
+            results += _errorMsg + "\n\n";
+
+        select = "select * from sbrext.sn_recipient_view_ext where rownum < 2";
+        rows = testDB(select);
+        if (rows < 0)
+            results += _errorMsg + "\n\n";
+
+        select = "select * from sbrext.sn_report_view_ext where rownum < 2";
+        rows = testDB(select);
+        if (rows < 0)
+            results += _errorMsg + "\n\n";
+
+        select = "select ua_name, name, privilege from sbrext.user_contexts_view where rownum < 2";
+        rows = testDB(select);
+        if (rows < 0)
+            results += _errorMsg + "\n\n";
+
+        _errorCode = 0;
+        _errorMsg = "";
+        return (results.length() == 0) ? null : results;
     }
 
     /**
@@ -5169,19 +5270,19 @@ public class DBAlert
 
     private static final char   _MONITORS     = 'M';
 
-    public static final char    _VERANYCHG = 'C';
+    public static final char    _VERANYCHG    = 'C';
 
-    public static final char    _VERMAJCHG = 'M';
+    public static final char    _VERMAJCHG    = 'M';
 
-    public static final char    _VERIGNCHG = 'I';
+    public static final char    _VERIGNCHG    = 'I';
 
-    public static final char    _VERSPECHG = 'S';
-    
-    public static final int     _MAXNAMELEN = 30;
-    
+    public static final char    _VERSPECHG    = 'S';
+
+    public static final int     _MAXNAMELEN   = 30;
+
     public static final int     _MAXREASONLEN = 2000;
-    
-    public static final int     _MAXINTROLEN = 2000;
-    
-    public static final int     _MAXEMAILLEN = 255;
+
+    public static final int     _MAXINTROLEN  = 2000;
+
+    public static final int     _MAXEMAILLEN  = 255;
 }
