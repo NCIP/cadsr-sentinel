@@ -1,0 +1,145 @@
+<project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
+    <description>
+        Build and deploy the caDSR Sentinel Alert Tool
+    </description>
+    <!-- set global properties for this build -->
+
+    <property name="oroot" location="tmp/DSRAlert"/>
+    <property name="temp" location="tmp"/>
+
+    <property name="ojsp" location="${oroot}/jsp"/>
+    <property name="owebinf" location="${oroot}/WEB-INF"/>
+    <property name="oclasses" location="${owebinf}/classes"/>
+    <property name="orootC2" location="${oclasses}/com"/>
+    <property name="orootC3" location="${oclasses}/com/scenpro"/>
+    <property name="orootC4" location="${oclasses}/com/scenpro/DSRAlert"/>
+    <property name="olib" location="${owebinf}/lib"/>
+    <property name="otld" location="${owebinf}/tld"/>
+    <property name="owar" location="distrib/war"/>
+    <property name="java" location="src"/>
+    <property name="xml" location="conf/web"/>
+    <property name="tld" location="conf/web/tld"/>
+    <property name="lib" location="lib"/>
+    <property name="jsp" location="ui"/>
+    <property name="prop" location="."/>
+    <property environment="environ"/>
+    
+    <target name="clean">
+    	<delete dir="${oroot}"/>
+    	<mkdir dir="${oroot}"/>
+    	<mkdir dir="${ojsp}"/>
+    	<mkdir dir="${owebinf}"/>
+    	<mkdir dir="${oclasses}"/>
+    	<mkdir dir="${orootC2}"/>
+    	<mkdir dir="${orootC3}"/>
+    	<mkdir dir="${orootC4}"/>
+    	<mkdir dir="${olib}"/>
+    	<mkdir dir="${otld}"/>
+    </target>
+ 
+    <target name="setup" depends="clean">
+        <copy todir="${olib}">
+            <fileset file="${lib}/antlr.jar"/>
+            <fileset file="${lib}/commons-beanutils.jar"/>
+            <fileset file="${lib}/commons-collections.jar"/>
+            <fileset file="${lib}/commons-digester.jar"/>
+            <fileset file="${lib}/commons-fileupload.jar"/>
+            <fileset file="${lib}/commons-logging.jar"/>
+            <fileset file="${lib}/commons-validator.jar"/>
+            <fileset file="${lib}/jakarta-oro.jar"/>
+            <fileset file="${lib}/struts-config_1_0.dtd"/>
+            <fileset file="${lib}/struts-config_1_1.dtd"/>
+            <fileset file="${lib}/struts-config_1_2.dtd"/>
+            <fileset file="${lib}/struts.jar"/>
+            <fileset file="${lib}/tiles-config_1_1.dtd"/>
+            <fileset file="${lib}/validator-rules.xml"/>
+            <fileset file="${lib}/web-app_2_2.dtd"/>
+            <fileset file="${lib}/web-app_2_3.dtd"/>
+        </copy>
+        <copy todir="${otld}">
+            <fileset dir="${tld}"/>
+        </copy>
+        <copy todir="${ojsp}">
+            <fileset dir="${jsp}/css"/>
+            <fileset dir="${jsp}/jsp"/>
+            <fileset dir="${jsp}/html"/>
+            <fileset dir="${jsp}/scripts"/>
+            <fileset dir="${jsp}/images"/>
+        </copy>
+        <copy todir="${owebinf}">
+            <fileset file="${xml}/struts-config.xml"/>
+            <fileset file="${xml}/struts-bean.tld"/>
+            <fileset file="${xml}/struts-html.tld"/>
+        </copy>
+    </target>
+
+    <target name="java" depends="setup">
+        <javac srcdir="${java}" destdir="${oclasses}" tempdir="${temp}">
+            <compilerarg line="-deprecation"/>
+            <classpath path="${lib}/antlr.jar"/>
+            <classpath path="${lib}/commons-beanutils.jar"/>
+            <classpath path="${lib}/commons-collections.jar"/>
+            <classpath path="${lib}/commons-digester.jar"/>
+            <classpath path="${lib}/commons-fileupload.jar"/>
+            <classpath path="${lib}/commons-logging.jar"/>
+            <classpath path="${lib}/commons-validator.jar"/>
+            <classpath path="${lib}/jakarta-oro.jar"/>
+            <classpath path="${lib}/struts.jar"/>
+            <classpath path="${lib}/classes12.jar"/>
+            <classpath path="${lib}/nls_charset12.jar"/>
+            <classpath path="${lib}/activation.jar"/>
+            <classpath path="${lib}/mail.jar"/>
+            <classpath path="${lib}/j2ee.jar"/>
+        </javac>
+    </target>
+
+    <target name="init2" depends="java">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <filter filtersfile="${conf}/DSRAlertDeploy.properties"/>
+        <delete>
+            <fileset file="${orootC4}/DSRAlert.properties"/>
+        </delete>
+        <copy tofile="${orootC4}/DSRAlert.properties" filtering="true">
+            <fileset file="conf/common/DSRAlert.properties"/>
+        </copy>
+        <delete file="${owar}/DSRAlert.war"/>
+        <war destfile="${owar}/DSRAlert.war" basedir="${oroot}" update="true" webxml="${xml}/web.xml">
+        </war>
+    </target>
+
+    <target name="init">
+        <echo message="This build script must be run with the name of the desired target: build-proto, build-dev, build-qa, build-stage, build-prod."/>
+    </target>
+
+    <target name="build-proto">
+        <antcall target="init2">
+            <param name="conf" value="conf/proto"/>
+        </antcall>
+    </target>
+
+    <target name="build-dev">
+        <antcall target="init2">
+            <param name="conf" value="conf/dev"/>
+        </antcall>
+    </target>
+
+    <target name="build-qa">
+        <antcall target="init2">
+            <param name="conf" value="conf/qa"/>
+        </antcall>
+    </target>
+
+    <target name="build-stage">
+        <antcall target="init2">
+            <param name="conf" value="conf/stage"/>
+        </antcall>
+    </target>
+
+    <target name="build-prod">
+        <antcall target="init2">
+            <param name="conf" value="conf/prod"/>
+        </antcall>
+    </target>
+
+</project>
