@@ -6,6 +6,7 @@
 
     <property name="oroot" location="tmp/DSRAlert"/>
     <property name="temp" location="tmp"/>
+    <property name="test-results" location="test_results"/>
 
     <property name="ojsp" location="${oroot}/jsp"/>
     <property name="owebinf" location="${oroot}/WEB-INF"/>
@@ -26,6 +27,8 @@
     
     <target name="clean">
     	<delete dir="${oroot}"/>
+    	<mkdir dir="${temp}"/>
+    	<mkdir dir="${test-results}"/>
     	<mkdir dir="${oroot}"/>
     	<mkdir dir="${ojsp}"/>
     	<mkdir dir="${owebinf}"/>
@@ -71,9 +74,19 @@
             <fileset file="${xml}/struts-bean.tld"/>
             <fileset file="${xml}/struts-html.tld"/>
         </copy>
+        <filter filtersfile="${conf}/DSRAlertDeploy.properties"/>
+        <delete>
+            <fileset file="${orootC4}/DSRAlert.properties"/>
+        </delete>
+        <copy tofile="${orootC4}/DSRAlert.properties" filtering="true">
+            <fileset file="conf/common/DSRAlert.properties"/>
+        </copy>
+    	<copy todir="${owebinf}">
+            <fileset file="${xml}/web.xml"/>
+        </copy>
     </target>
 
-    <target name="java" depends="setup">
+    <target name="build" depends="setup">
         <javac srcdir="${java}" destdir="${oclasses}" tempdir="${temp}">
             <compilerarg line="-deprecation"/>
             <classpath path="${lib}/antlr.jar"/>
@@ -90,19 +103,33 @@
             <classpath path="${lib}/activation.jar"/>
             <classpath path="${lib}/mail.jar"/>
             <classpath path="${lib}/j2ee.jar"/>
+    		<classpath path="${lib}/test/junit.jar"/>
+        	<classpath path="${lib}/test/strutstest-2.1.3.jar"/>
         </javac>
+        <delete file="${owar}/DSRAlert.jar"/>
+        <jar destfile="${owar}/DSRAlert.jar" basedir="${oclasses}"/>
     </target>
 
-    <target name="init2" depends="java">
-        <!-- Create the time stamp -->
-        <tstamp/>
-        <filter filtersfile="${conf}/DSRAlertDeploy.properties"/>
-        <delete>
-            <fileset file="${orootC4}/DSRAlert.properties"/>
-        </delete>
-        <copy tofile="${orootC4}/DSRAlert.properties" filtering="true">
-            <fileset file="conf/common/DSRAlert.properties"/>
-        </copy>
+	<target name="test" unless="notest">
+    	<junit printsummary="yes" haltonfailure="yes" showoutput="yes">
+    		<classpath>
+    			<pathelement location="${oroot}"/>
+  		      	<pathelement location="${oclasses}"/>
+    		    <fileset dir="${lib}">
+    		        <include name="**/*.jar"/>
+    		    </fileset>
+    		</classpath>
+    		<sysproperty key="test.propfile" value="${conf}/DSRAlertTest.properties"/>
+    	  	<formatter type="plain"/>
+    	  	<batchtest fork="yes" todir="${test-results}" filtertrace="on">
+    	    	<fileset dir="${java}">
+    	      		<include name="**/Test*.java"/>
+    	    	</fileset>
+    	  	</batchtest>
+    	</junit>
+	</target>
+
+    <target name="deploy" depends="build,test">
         <delete file="${owar}/DSRAlert.war"/>
         <war destfile="${owar}/DSRAlert.war" basedir="${oroot}" update="true" webxml="${xml}/web.xml">
         </war>
@@ -113,31 +140,31 @@
     </target>
 
     <target name="build-proto">
-        <antcall target="init2">
+        <antcall target="deploy">
             <param name="conf" value="conf/proto"/>
         </antcall>
     </target>
 
     <target name="build-dev">
-        <antcall target="init2">
+        <antcall target="deploy">
             <param name="conf" value="conf/dev"/>
         </antcall>
     </target>
 
     <target name="build-qa">
-        <antcall target="init2">
+        <antcall target="deploy">
             <param name="conf" value="conf/qa"/>
         </antcall>
     </target>
 
     <target name="build-stage">
-        <antcall target="init2">
+        <antcall target="deploy">
             <param name="conf" value="conf/stage"/>
         </antcall>
     </target>
 
     <target name="build-prod">
-        <antcall target="init2">
+        <antcall target="deploy">
             <param name="conf" value="conf/prod"/>
         </antcall>
     </target>

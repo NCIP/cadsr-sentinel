@@ -3,7 +3,6 @@
 package com.scenpro.DSRAlert;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,6 +13,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.Stack;
 
 import javax.mail.AuthenticationFailedException;
@@ -1123,89 +1123,30 @@ public class AutoProcessAlerts
      */
     private int getResources()
     {
-        int rc = 0;
-        FileInputStream ifile = null;
-        try
+        ResourceBundle prb = PropertyResourceBundle.getBundle(_RESOURCES);
+        if (prb == null)
         {
-            _resourcePath = _RESOURCES;
-            ifile = new FileInputStream(_resourcePath);
+            System.err.println("DSRAlert: AutoProcessAlerts: Can not find properties resource " + _RESOURCES);
+            return -1;
         }
-        catch (FileNotFoundException ex)
-        {
-            /*
-             * rc = -1; String temp = _resourcePath + " (" + rc + ")" +
-             * ex.toString(); System.err.println(temp);
-             */
-            _resourcePath = "";
-            if (ifile != null)
-            {
-                try
-                {
-                    ifile.close();
-                }
-                catch (IOException ex2)
-                {
-                }
-            }
-            ifile = null;
-        }
-
-        if (ifile == null)
-        {
-            try
-            {
-                // If we haven't found the file yet, go looking.
-                if (_resourcePath.length() == 0)
-                {
-                    File path = new File("..");
-                    findResources(path.getAbsolutePath());
-                    if (_resourcePath.length() == 0)
-                        _resourcePath = _RESOURCES;
-                }
-
-                // Just do this once and remember the values.
-                ifile = new FileInputStream(_resourcePath);
-            }
-            catch (FileNotFoundException ex)
-            {
-                rc = -2;
-                String temp = _resourcePath + " (" + rc + ")" + ex.toString();
-                System.err.println(temp);
-            }
-        }
-
-        if (ifile == null)
-            return rc;
-
-        try
-        {
-            PropertyResourceBundle prb = new PropertyResourceBundle(ifile);
-            _driver = prb.getString(Constants._DBDRIVER);
-            _tnsname = prb.getString(Constants._DBTNSNAME);
-            _user = prb.getString(Constants._DBUSER);
-            _pswd = prb.getString(Constants._DBPSWD);
-            _dbname = prb.getString(Constants._DBNAME);
-            _version = prb.getString(Constants._APLVERS);
-            _work = prb.getString(_WORKING);
-            _subject = prb.getString(_SUBJECT);
-            _adminEmail = prb.getString(_ADMINEMAIL);
-            _adminName = prb.getString(_ADMINNAME);
-            _adminIntro = prb.getString(_ADMININTRO);
-            _adminIntroError = prb.getString(_ADMININTROERROR);
-            _emailHost = prb.getString(_EMAILHOST);
-            _emailUser = prb.getString(_EMAILUSER);
-            _emailPswd = prb.getString(_EMAILPSWD);
-            _http = prb.getString(_HTTP);
-            _style = prb.getString(_STYLE).replaceAll("}", "}\n");
-            ifile.close();
-        }
-        catch (IOException ex)
-        {
-            rc = -3;
-            String temp = _resourcePath + " (" + rc + ")" + ex.toString();
-            System.err.println(temp);
-        }
-        return rc;
+        _driver = prb.getString(Constants._DBDRIVER);
+        _tnsname = prb.getString(Constants._DBTNSNAME);
+        _user = prb.getString(Constants._DBUSER);
+        _pswd = prb.getString(Constants._DBPSWD);
+        _dbname = prb.getString(Constants._DBNAME);
+        _version = prb.getString(Constants._APLVERS);
+        _work = prb.getString(_WORKING);
+        _subject = prb.getString(_SUBJECT);
+        _adminEmail = prb.getString(_ADMINEMAIL);
+        _adminName = prb.getString(_ADMINNAME);
+        _adminIntro = prb.getString(_ADMININTRO);
+        _adminIntroError = prb.getString(_ADMININTROERROR);
+        _emailHost = prb.getString(_EMAILHOST);
+        _emailUser = prb.getString(_EMAILUSER);
+        _emailPswd = prb.getString(_EMAILPSWD);
+        _http = prb.getString(_HTTP);
+        _style = prb.getString(_STYLE).replaceAll("}", "}\n");
+        return 0;
     }
 
     /**
@@ -1478,7 +1419,7 @@ public class AutoProcessAlerts
 
     private int                 _outForm;
 
-    private static final String _RESOURCES = "DSRAlert.properties";
+    private static final String _RESOURCES       = "com.scenpro.DSRAlert.DSRAlert";
 
     /**
      * The Auto Process administrator email address coded in

@@ -836,7 +836,6 @@ public class DBAlert
         return deleteAlerts(list);
     }
 
-
     /**
      * Delete the Alert Derinitions specified by the caller. The values must be
      * existing al_idseq values within the Alert table.
@@ -871,8 +870,8 @@ public class DBAlert
     {
         // Be sure we have something to do.
         if (list_ == null || list_.length == 0)
-                return 0;
-        
+            return 0;
+
         // Build the delete SQL statement.
         String delete = "delete " + "from sbrext.sn_alert_view_ext "
             + "where al_idseq in (?";
@@ -1932,7 +1931,7 @@ public class DBAlert
      * 
      * @see com.scenpro.DSRAlert.DBAlert#getBasicData1 getBasicData1()
      */
-    private class returnData
+    private class returnData1
     {
         public int    _rc;
 
@@ -1953,12 +1952,12 @@ public class DBAlert
      *        result set unaltered.
      * @return 0 if successful, otherwise the Oracle error code.
      */
-    private returnData getBasicData1(String select_, boolean flag_)
+    private returnData1 getBasicData1(String select_, boolean flag_)
     {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         Vector results = new Vector();
-        returnData data = new returnData();
+        returnData1 data = new returnData1();
 
         try
         {
@@ -2139,7 +2138,7 @@ public class DBAlert
                 + "from sbrext.user_contexts_view ucv, sbrext.user_accounts_view uav "
                 + "where ucv.privilege = 'W' and ucv.ua_name = uav.ua_name "
                 + "order by uav.name ASC, ucv.name ASC";
-            returnData rec = getBasicData1(select, false);
+            returnData1 rec = getBasicData1(select, false);
             if (rec._rc == 0)
             {
                 // Build the user list in the format <user name>[*] [(context
@@ -2259,7 +2258,7 @@ public class DBAlert
     {
         String select = "select '/' || conte_idseq as id, name "
             + "from sbr.contexts_view " + "order by name ASC";
-        returnData rec = getBasicData1(select, false);
+        returnData1 rec = getBasicData1(select, false);
         if (rec._rc == 0)
         {
             _groupsList = rec._labels;
@@ -2314,7 +2313,7 @@ public class DBAlert
         // Get the context names and id's.
         String select = "select conte_idseq, name " + "from sbr.contexts_view "
             + "order by name ASC";
-        returnData rec = getBasicData1(select, true);
+        returnData1 rec = getBasicData1(select, true);
         if (rec._rc == 0)
         {
             _contextList = rec._labels;
@@ -2373,7 +2372,7 @@ public class DBAlert
         String select = "select asl_name, 'C' "
             + "from sbr.ac_status_lov_view " + "order by asl_name ASC";
 
-        returnData rec = getBasicData1(select, false);
+        returnData1 rec = getBasicData1(select, false);
         if (rec._rc == 0)
         {
             // Add the special values "(All)", "(Any Change)" and "(Ignore)"
@@ -2446,7 +2445,7 @@ public class DBAlert
             + "from sbr.reg_status_lov_view "
             + "order by registration_status ASC";
 
-        returnData rec = getBasicData1(select, false);
+        returnData1 rec = getBasicData1(select, false);
         if (rec._rc == 0)
         {
             // Add the special values "(All)", "(Any Change)" and "(Ignore)"
@@ -2588,12 +2587,13 @@ public class DBAlert
      */
     public int getSchemeItems()
     {
-        String select = "select distinct csv.cs_idseq, csiv.csi_idseq, csiv.csi_name "
-            + "from sbr.class_scheme_items_view csiv, sbr.cs_csi_view csv "
-            + "where csv.csi_idseq = csiv.csi_idseq "
-            + "order by csiv.csi_name ASC";
+        String select = "select cv.cs_idseq, cv.csi_idseq, level as lvl, " +
+            "(select csi.csi_name from sbr.class_scheme_items_view csi where csi.csi_idseq = cv.csi_idseq) " +
+            "from sbr.cs_csi_view cv " +
+            "start with cv.p_cs_csi_idseq is null " +
+            "connect by prior cv.cs_csi_idseq = cv.p_cs_csi_idseq";
 
-        returnData2 rec = getBasicData2(select);
+        returnData3 rec = getBasicData3(select);
         if (rec._rc == 0)
         {
             _schemeItemList = rec._labels;
@@ -2739,6 +2739,118 @@ public class DBAlert
                     data._labels[ndx] = rec._label;
                     data._id1[ndx] = rec._id1;
                     data._id2[ndx] = rec._id2;
+                }
+            }
+            data._rc = 0;
+        }
+        catch (SQLException ex)
+        {
+            // Bad...
+            _errorCode = ex.getErrorCode();
+            _errorMsg = "\n\nDBAlert 27: " + _errorCode + ": " + select_
+                + "\n\n" + ex.toString();
+            System.err.println(_errorMsg);
+            data._rc = _errorCode;
+        }
+        return data;
+    }
+
+    /**
+     * Class used to return method results.
+     */
+    private class returnData3
+    {
+        public int    _rc;
+
+        public String _id1[];
+
+        public String _id2[];
+
+        public String _id3[];
+
+        public String _labels[];
+    }
+
+    /**
+     * Perform the database access for a simple query which results in a 4
+     * column value per returned row.
+     * 
+     * @param select_
+     *        The SQL select to run.
+     * @param rec_
+     *        The returned string arrays of the query results.
+     * @return 0 if successful, otherwise the database error code.
+     */
+    private returnData3 getBasicData3(String select_)
+    {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Vector results = new Vector();
+        returnData3 data = new returnData3();
+
+        try
+        {
+            // Prepare the statement.
+            pstmt = _conn.prepareStatement(select_);
+
+            // Get the list.
+            rs = pstmt.executeQuery();
+            class tempData3
+            {
+                public String _id1;
+
+                public String _id2;
+
+                public String _id3;
+
+                public String _label;
+            }
+            ;
+            tempData3 rec;
+            while (rs.next())
+            {
+                // Remember about the 1 (one) based indexing.
+                rec = new tempData3();
+                rec._id1 = rs.getString(1);
+                rec._id2 = rs.getString(2);
+                rec._id3 = rs.getString(3);
+                rec._label = rs.getString(4);
+                results.add(rec);
+            }
+            pstmt.close();
+            rs.close();
+
+            // We know there will always be someone in the table but we should
+            // follow good
+            // programming.
+            if (results.size() == 0)
+            {
+                data._id1 = null;
+                data._id2 = null;
+                data._id3 = null;
+                data._labels = null;
+            }
+            else
+            {
+                // Move the list from a Vector to an array and add "(All)" to
+                // the begining.
+                int count = results.size() + 1;
+                data._labels = new String[count];
+                data._id1 = new String[count];
+                data._id2 = new String[count];
+                data._id3 = new String[count];
+                data._labels[0] = Constants._STRALL;
+                data._id1[0] = Constants._STRALL;
+                data._id2[0] = Constants._STRALL;
+                data._id3[0] = Constants._STRALL;
+                int cnt = 0;
+                for (int ndx = 1; ndx < count; ++ndx)
+                {
+                    rec = (tempData3) results.get(cnt++);
+                    data._labels[ndx] = rec._label;
+                    data._id1[ndx] = rec._id1;
+                    data._id2[ndx] = rec._id2;
+                    data._id3[ndx] = rec._id3;
                 }
             }
             data._rc = 0;

@@ -22,6 +22,8 @@ public class EditTag extends TagSupport
      */
     public EditTag()
     {
+        _buf = null;
+        _bufLen = 0;
     }
 
     /**
@@ -150,65 +152,45 @@ public class EditTag extends TagSupport
         String temp = "[";
         if (list_ != null)
         {
-            for (int ndx = 0; ndx < list_.length; ++ndx)
+            // We have input so add up the total length of the concatenation.
+            int maxLen = 0;
+            int listLen = list_.length;
+            for (int ndx = 0; ndx < listLen; ++ndx)
             {
-                if (ndx > 0)
-                    temp = temp + ",\n";
-                temp = temp + "\"" + list_[ndx] + "\"";
+                maxLen += list_[ndx].length() + 4;
             }
-        }
-        return temp + "];\n";
-    }
-
-    /**
-     * Create a concatenated comma separated single string from an int array.
-     * 
-     * @param list_
-     *        The values.
-     * @return The Java Script form.
-     */
-    private String intList(int list_[])
-    {
-        String temp = "[";
-        if (list_ != null)
-        {
-            for (int ndx = 0; ndx < list_.length; ++ndx)
+            ++maxLen;
+            
+            // If the new length is larger than the buffer...
+            if (_bufLen < maxLen)
             {
-                if (ndx > 0)
-                    temp = temp + ",\n";
-                temp = temp + "\"" + list_[ndx] + "\"";
+                // Get a bigger buffer.
+                _bufLen = maxLen;
+                _buf = new StringBuffer(_bufLen);
             }
-        }
-        return temp + "];\n";
-    }
-
-    /**
-     * Create a concatenated comma separated single string from a 2 dimensional
-     * int array.
-     * 
-     * @param list_
-     *        The values.
-     * @return The Java Script form.
-     */
-    private String intList2(int list_[][])
-    {
-        String temp = "[";
-        if (list_ != null)
-        {
-            for (int ndx = 0; ndx < list_.length; ++ndx)
+            else
+            {
+                // Delete the old contents of the buffer.
+                _buf.delete(0, _bufLen);
+            }
+            
+            // Move the strings into the buffer and append the appropriate tokens.
+            maxLen = 0;
+            for (int ndx = 0; ndx < listLen; ++ndx)
             {
                 if (ndx > 0)
-                    temp = temp + ",\n";
-                temp = temp + "[";
-
-                for (int ndx2 = 0; ndx2 < list_[ndx].length; ++ndx2)
                 {
-                    if (ndx2 > 0)
-                        temp = temp + ",";
-                    temp = temp + "\"" + list_[ndx][ndx2] + "\"";
+                    _buf.insert(maxLen, ",\n");
+                    maxLen += 2;
                 }
-                temp = temp + "]";
+                _buf.insert(maxLen, "\"");
+                _buf.insert(++maxLen, list_[ndx]);
+                maxLen += list_[ndx].length();
+                _buf.insert(maxLen++, "\"");
             }
+            
+            // Return the total string.
+            temp = temp + _buf.substring(0, maxLen);
         }
         return temp + "];\n";
     }
@@ -259,96 +241,99 @@ public class EditTag extends TagSupport
         MessageResources msgs = (MessageResources) pageContext
             .findAttribute(Constants._RESOURCES);
 
-        String temp = "var MstatusReason = false;\n" + "var Mprev = \""
+        String temp[] = new String[80];
+        temp[0] = "var MstatusReason = false;\nvar Mprev = \""
             + _ub.getEditPrev() + "\";\n";
 
         // Everything is in name/value pairs as a minimum. The name is shown to
         // the user in the
         // browser and the value is sent back to the servlet on a submit.
-        temp = temp + "var DBnamesList = ";
-        temp = temp + stringList(_namesList);
+        temp[1] = "var DBnamesList = ";
+        temp[2] = stringList(_namesList);
 
-        temp = temp + "var DBnamesVals = ";
-        temp = temp + stringList(_namesVals);
+        temp[3] = "var DBnamesVals = ";
+        temp[4] = stringList(_namesVals);
 
-        temp = temp + "var DBcontextList = ";
-        temp = temp + stringList(_contextList);
+        temp[5] = "var DBcontextList = ";
+        temp[6] = stringList(_contextList);
 
-        temp = temp + "var DBcontextVals = ";
-        temp = temp + stringList(_contextVals);
+        temp[7] = "var DBcontextVals = ";
+        temp[8] = stringList(_contextVals);
 
-        temp = temp + "var DBgroupsList = ";
-        temp = temp + stringList(_groupsList);
+        temp[9] = "var DBgroupsList = ";
+        temp[10] = stringList(_groupsList);
 
-        temp = temp + "var DBgroupsVals = ";
-        temp = temp + stringList(_groupsVals);
+        temp[11] = "var DBgroupsVals = ";
+        temp[12] = stringList(_groupsVals);
 
-        temp = temp + "var DBworkflowList = ";
-        temp = temp + stringList(_workflowList);
+        temp[13] = "var DBworkflowList = ";
+        temp[14] = stringList(_workflowList);
 
-        temp = temp + "var DBworkflowVals = ";
-        temp = temp + stringList(_workflowVals);
+        temp[15] = "var DBworkflowVals = ";
+        temp[16] = stringList(_workflowVals);
 
-        temp = temp + "var DBregStatusList = ";
-        temp = temp + stringList(_regstatusList);
+        temp[17] = "var DBregStatusList = ";
+        temp[18] = stringList(_regstatusList);
 
-        temp = temp + "var DBregStatusVals = ";
-        temp = temp + stringList(_regstatusVals);
+        temp[19] = "var DBregStatusVals = ";
+        temp[20] = stringList(_regstatusVals);
 
-        temp = temp + "var RecSchemes = ";
-        temp = temp + stringList(_ub.getWorking().getSchemes());
+        temp[21] = "var RecSchemes = ";
+        temp[22] = stringList(_ub.getWorking().getSchemes());
 
-        temp = temp + "var RecSchemeItems = ";
-        temp = temp + stringList(_ub.getWorking().getSchemeItems());
+        temp[23] = "var RecSchemeItems = ";
+        temp[24] = stringList(_ub.getWorking().getSchemeItems());
 
-        temp = temp + "var DBschemeList = ";
-        temp = temp + stringList(_schemeList);
+        temp[25] = "var DBschemeList = ";
+        temp[26] = stringList(_schemeList);
 
-        temp = temp + "var DBschemeVals = ";
-        temp = temp + stringList(_schemeVals);
+        temp[27] = "var DBschemeVals = ";
+        temp[28] = stringList(_schemeVals);
 
-        temp = temp + "var DBschemeContexts = ";
-        temp = temp + stringList(_schemeContext);
+        temp[29] = "var DBschemeContexts = ";
+        temp[30] = stringList(_schemeContext);
 
-        temp = temp + "var DBschemeItemList = ";
-        temp = temp + stringList(_schemeItemList);
+        temp[31] = "var DBschemeItemList = ";
+        temp[32] = stringList(_schemeItemList);
 
-        temp = temp + "var DBschemeItemVals = ";
-        temp = temp + stringList(_schemeItemVals);
+        temp[33] = "var DBschemeItemVals = ";
+        temp[34] = stringList(_schemeItemVals);
 
-        temp = temp + "var DBschemeItemSchemes = ";
-        temp = temp + stringList(_schemeItemSchemes);
+        temp[35] = "var DBschemeItemSchemes = ";
+        temp[36] = stringList(_schemeItemSchemes);
 
-        temp = temp + "var RecForms = ";
-        temp = temp + stringList(_ub.getWorking().getForms());
+        temp[37] = "var RecForms = ";
+        temp[38] = stringList(_ub.getWorking().getForms());
 
-        temp = temp + "var DBformsList = ";
-        temp = temp + stringList(_formsList);
+        temp[39] = "var DBformsList = ";
+        temp[40] = stringList(_formsList);
 
-        temp = temp + "var DBformsVals = ";
-        temp = temp + stringList(_formsVals);
+        temp[41] = "var DBformsVals = ";
+        temp[42] = stringList(_formsVals);
 
-        temp = temp + "var DBformsContexts = ";
-        temp = temp + stringList(_formsContext);
+        temp[43] = "var DBformsContexts = ";
+        temp[44] = stringList(_formsContext);
 
-        temp = temp + "var DBrecipients = ";
-        temp = temp + stringList(_ub.getWorking().getRecipients());
+        temp[45] = "var DBrecipients = ";
+        temp[46] = stringList(_ub.getWorking().getRecipients());
 
-        temp = temp + "var DBactVerNum = \"" + _ub.getWorking().getActVerNum()
+        temp[47] = "var DBactVerNum = \"" + _ub.getWorking().getActVerNum()
             + "\";\n";
 
         // Most of the Javascript for the edit.jsp page is in the edit.js file.
         // The body onloaded function
         // is written to call "loaded0()" to complete the operation for the
         // dynamic part of the script.
-        temp = temp + "function loaded0() {\n";
+        temp[48] = "function loaded0() {\n";
 
         int ndx;
 
         // Add the exempt list to the display.
-        if (_namesExempt != null)
-            temp = temp
-                + "exemptlist.innerHTML = \"The following users only receive Alert "
+        if (_namesExempt == null)
+            temp[49] = "";
+        else
+            temp[49] = 
+                "exemptlist.innerHTML = \"The following users only receive Alert "
                 + "Broadcasts when added as specific Recipients.<br>"
                 + _namesExempt + "\";\n";
 
@@ -357,157 +342,175 @@ public class EditTag extends TagSupport
         // fields from the form bean. Actually, I couldn't find a way to have
         // the form bean access the
         // database on the outbound page.
-        temp = temp + "editForm.propName.value = \""
+        temp[50] = "editForm.propName.value = \""
             + _ub.getWorking().getName() + "\";\n";
-        temp = temp + "editForm.propDesc.value = \""
+        temp[51] = "editForm.propDesc.value = \""
             + _ub.getWorking().getSummary(true) + "\";\n";
-        temp = temp + "editForm.propCreator.value = \""
+        temp[52] = "editForm.propCreator.value = \""
             + _ub.getWorking().getCreator() + "\";\n";
-        temp = temp + "editForm.propCreateDate.value = \""
+        temp[53] = "editForm.propCreateDate.value = \""
             + _ub.getWorking().getCDate() + "\";\n";
-        temp = temp + "editForm.propLastRunDate.value = \""
+        temp[54] = "editForm.propLastRunDate.value = \""
             + _ub.getWorking().getADate() + "\";\n";
-        temp = temp + "editForm.propModifyDate.value = \""
+        temp[55] = "editForm.propModifyDate.value = \""
             + _ub.getWorking().getMDate() + "\";\n";
         if (_ub.getWorking().getIncPropSect())
-            temp = temp + "editForm.repIncProp.checked = true;\n";
+            temp[56] = "editForm.repIncProp.checked = true;\n";
+        else
+            temp[56] = "";
 
         if (_ub.getWorking().getIntro(false) == null)
-            temp = temp + "editForm.propIntro.value = \""
+            temp[57] = "editForm.propIntro.value = \""
                 + msgs.getMessage("edit.static") + "\";\n";
         else
-            temp = temp + "editForm.propIntro.value = \""
+            temp[57] = "editForm.propIntro.value = \""
                 + _ub.getWorking().getIntro(true) + "\";\n";
 
         if (_ub.getWorking().isFreqDay())
         {
-            temp = temp + "editForm.freqUnit[0].checked = true;\n";
+            temp[58] = "editForm.freqUnit[0].checked = true;\n";
         }
         else if (_ub.getWorking().isFreqWeek())
         {
             ndx = _ub.getWorking().getDay() - 1;
-            temp = temp + "editForm.freqUnit[1].checked = true;\n"
+            temp[58] = "editForm.freqUnit[1].checked = true;\n"
                 + "editForm.freqWeekly.disabled = false;\n"
                 + "editForm.freqWeekly.options[" + ndx + "].selected = true;\n";
         }
         else if (_ub.getWorking().isFreqMonth())
         {
             ndx = _ub.getWorking().getDay() - 1;
-            temp = temp + "editForm.freqUnit[2].checked = true;\n"
+            temp[58] = "editForm.freqUnit[2].checked = true;\n"
                 + "editForm.freqMonthly.disabled = false;\n"
                 + "editForm.freqMonthly.options[" + ndx
                 + "].selected = true;\n";
         }
+        else
+            temp[58] = "";
+
         if (_ub.getWorking().isActive())
         {
-            temp = temp + "editForm.propStatus[0].checked = true;\n"
+            temp[59] = "editForm.propStatus[0].checked = true;\n"
                 + "editForm.propStatusReason.value = \""
                 + msgs.getMessage("edit.statusi2") + "\";\n";
+            temp[60] = "";
         }
         else if (_ub.getWorking().isActiveOnce())
         {
-            temp = temp + "editForm.propStatus[1].checked = true;\n"
+            temp[59] = "editForm.propStatus[1].checked = true;\n"
                 + "editForm.propStatusReason.value = \""
                 + msgs.getMessage("edit.statusi2") + "\";\n";
+            temp[60] = "";
         }
         else if (_ub.getWorking().isActiveDates())
         {
-            temp = temp + "editForm.propStatus[2].checked = true;\n"
+            temp[59] = "editForm.propStatus[2].checked = true;\n"
                 + "editForm.propStatusReason.value = \""
                 + msgs.getMessage("edit.statusi2") + "\";\n";
+            temp[60] = "";
         }
         else
         {
-            temp = temp + "editForm.propStatus[3].checked = true;\n"
+            temp[59] = "editForm.propStatus[3].checked = true;\n"
                 + "editForm.propStatusReason.value = \"";
             if (_ub.getWorking().getInactiveReason(false) == null)
             {
-                temp = temp + msgs.getMessage("edit.explain") + "\";\n";
+                temp[60] = msgs.getMessage("edit.explain") + "\";\n";
             }
             else
             {
-                temp = temp + _ub.getWorking().getInactiveReason(true)
+                temp[60] = _ub.getWorking().getInactiveReason(true)
                     + "\";\n" + "MstatusReason = true;\n";
             }
         }
 
         if (_ub.getWorking().isSendEmptyReport())
-        {
-            temp = temp + "editForm.freqEmpty[1].checked = true;\n";
-        }
+            temp[61] = "editForm.freqEmpty[1].checked = true;\n";
         else
-        {
-            temp = temp + "editForm.freqEmpty[0].checked = true;\n";
-        }
+            temp[61] = "editForm.freqEmpty[0].checked = true;\n";
 
-        temp = temp
-            + selectFromList("actWorkflowStatus", _workflowVals, _ub
+        temp[62] = selectFromList("actWorkflowStatus", _workflowVals, _ub
                 .getWorking().getAWorkflow(), true);
-        temp = temp
-            + selectFromList("actRegStatus", _regstatusVals, _ub.getWorking()
+        temp[63] = selectFromList("actRegStatus", _regstatusVals, _ub.getWorking()
                 .getARegis(), true);
-        temp = temp
-            + selectFromList("infoCreator", _namesVals, _ub.getWorking()
+        temp[64] = selectFromList("infoCreator", _namesVals, _ub.getWorking()
                 .getCreators(), true);
-        temp = temp
-            + selectFromList("infoModifier", _namesVals, _ub.getWorking()
+        temp[65] = selectFromList("infoModifier", _namesVals, _ub.getWorking()
                 .getModifiers(), true);
-        temp = temp
-            + selectFromList("infoContext", _contextVals, _ub.getWorking()
+        temp[66] = selectFromList("infoContext", _contextVals, _ub.getWorking()
                 .getContexts(), true);
-        temp = temp + "changedContext();\n";
-        temp = temp + "setSelected(editForm.infoForms, RecForms);\n";
-        temp = temp + "setSelected(editForm.infoSchemes, RecSchemes);\n";
-        temp = temp + "changedCS();\n";
-        temp = temp
-            + "setSelected(editForm.infoSchemeItems, RecSchemeItems);\n";
+        temp[67] = "changedContext();\n";
+        temp[68] = "setSelected(editForm.infoForms, RecForms);\n";
+        temp[69] = "setSelected(editForm.infoSchemes, RecSchemes);\n";
+        temp[70] = "changedCS();\n";
+        temp[71] = "setSelected(editForm.infoSchemeItems, RecSchemeItems);\n";
 
         switch (_ub.getWorking().getAVersion())
         {
             case AlertRec._VERANYCHG:
-                temp = temp + "editForm.actVersion[0].checked = true;\n";
+                temp[72] = "editForm.actVersion[0].checked = true;\n";
                 break;
             case AlertRec._VERMAJCHG:
-                temp = temp + "editForm.actVersion[1].checked = true;\n";
+                temp[72] = "editForm.actVersion[1].checked = true;\n";
                 break;
             case AlertRec._VERIGNCHG:
-                temp = temp + "editForm.actVersion[2].checked = true;\n";
+                temp[72] = "editForm.actVersion[2].checked = true;\n";
                 break;
             case AlertRec._VERSPECHG:
-                temp = temp + "editForm.actVersion[3].checked = true;\n";
+                temp[72] = "editForm.actVersion[3].checked = true;\n";
+                break;
+            default:
+                temp[72] = "";
                 break;
         }
 
         if (_ub.getWorking().getStart() != null)
-        {
-            temp = temp + "editForm.propBeginDate.value = \""
+            temp[73] = "editForm.propBeginDate.value = \""
                 + _ub.getWorking().getSDate() + "\";\n";
-        }
+        else
+            temp[73] = "";
         if (_ub.getWorking().getEnd() != null)
-        {
-            temp = temp + "editForm.propEndDate.value = \""
+            temp[74] = "editForm.propEndDate.value = \""
                 + _ub.getWorking().getEDate() + "\";\n";
-        }
+        else
+            temp[74] = "";
 
         String run = (String) pageContext.getRequest().getAttribute(
             Constants._ACTRUN);
-        if (run != null)
-            temp = temp + "alert(\"Alert named '" + run
+        if (run == null)
+            temp[75] = "";
+        else
+            temp[75] = "alert(\"Alert named '" + run
                 + "' has been submitted.\");\n";
 
-        temp = temp
-            + "if (MmainTab == tabMain1)\neditForm.propName.focus();\n}\n";
+        temp[76] = "if (MmainTab == tabMain1)\neditForm.propName.focus();\n}\n";
 
-        temp = temp + "function saveCheck() {\n";
+        temp[77] = "function saveCheck() {\n";
         String saved = (String) pageContext.getRequest().getAttribute(
             Constants._ACTSAVE);
-        if (saved != null)
-        {
-            temp = temp + "saved(\"" + saved + "\");\n";
-        }
-        temp = temp + "}\n";
+        if (saved == null)
+            temp[78] = "";
+        else
+            temp[78] = "saved(\"" + saved + "\");\n";
+        temp[79] = "}\n";
 
-        return temp;
+        // Build the complete string.  This is a performance saving technique.
+        int maxLen = 0;
+        int listLen = temp.length;
+        for (ndx = 0; ndx < listLen; ++ndx)
+        {
+            maxLen += temp[ndx].length();
+        }
+        ++maxLen;
+        StringBuffer buf = new StringBuffer(maxLen);
+        maxLen = 0;
+        for (ndx = 0; ndx < listLen; ++ndx)
+        {
+            buf.insert(maxLen, temp[ndx]);
+            maxLen += temp[ndx].length();
+        }
+        
+        return buf.toString();
     }
 
     /**
@@ -540,6 +543,8 @@ public class EditTag extends TagSupport
         _workflowVals = null;
         _regstatusList = null;
         _regstatusVals = null;
+        _buf = null;
+        _bufLen = 0;
         super.release();
     }
 
@@ -593,4 +598,8 @@ public class EditTag extends TagSupport
     private String         _regstatusList[];
 
     private String         _regstatusVals[];
+    
+    private StringBuffer   _buf;
+    
+    private int            _bufLen;
 }
