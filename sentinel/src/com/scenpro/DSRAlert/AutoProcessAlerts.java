@@ -8,9 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -390,7 +388,7 @@ public class AutoProcessAlerts
                 // Use midnight of the last run date as a start point.
                 _start = setToMidnight(_start);
             }
-            log("Processing Alert Definition: " + ndx + ": "
+            log("\nProcessing Alert Definition: " + ndx + ": "
                 + list[ndx]._alert.getName() + " (" + _start.toString()
                 + " TO " + _end.toString() + ")");
 
@@ -552,9 +550,13 @@ public class AutoProcessAlerts
         {
             // Get configuration information.
             getResources();
-            log("Manual Run for Sentinel Alert starting: " + _today.toString()
-                + ": " + _rec.getName() + "\n\tDatabase = " + _dbname + " ("
-                + _tnsname + ")\n\tWorking folder prefix = " + _work);
+            log("caDSR Sentinel Alert Manual Run Process Starts... "
+                + _today.toString() + "\n\tDatabase = " + _dbname + " (" + _tnsname
+                + ")\n\tWorking folder prefix = " + _work);
+
+            log("\nProcessing Alert Definition: "
+                + _rec.getName() + " (" + _start.toString()
+                + " TO " + _end.toString() + ")");
 
             ProcessRec rec = new ProcessRec();
             rec._alert = _rec;
@@ -1050,13 +1052,8 @@ public class AutoProcessAlerts
      */
     private Timestamp setToMidnight(Timestamp time_)
     {
-        GregorianCalendar tend = new GregorianCalendar();
-        tend.setTimeInMillis(time_.getTime());
-        tend.set(Calendar.HOUR_OF_DAY, 0);
-        tend.set(Calendar.MINUTE, 0);
-        tend.set(Calendar.SECOND, 0);
-        tend.set(Calendar.MILLISECOND, 0);
-        return new Timestamp(tend.getTimeInMillis());
+        String time = time_.toString().substring(0, 10);
+        return Timestamp.valueOf( time + " 00:00:00.0");
     }
 
     /**
