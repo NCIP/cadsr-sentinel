@@ -48,13 +48,13 @@ public class CDECuration extends Action
         ActionForward af;
         if (ub == null)
         {
-            af = new ActionForward("/DSRAlert/do/logon");
+            af = new ActionForward("/do/logon");
         }
         else
         {
             String userid = ub.getUsername();
             String pswd = ub.getPassword();
-            af = new ActionForward("/DSRAlert/do/logon?userid=" + userid
+            af = new ActionForward("/do/logon?userid=" + userid
                 + "&pswd=" + pswd);
         }
         return af;

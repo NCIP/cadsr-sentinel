@@ -359,7 +359,7 @@ public class AutoProcessAlerts
             log("\tNo Alerts available to run on " + _today.toString());
             return;
         }
-        log("Alert Definitions to process: " + alerts.length);
+        log("Alert Definitions to process: " + alerts.length + "\n");
         ProcessRec list[] = new ProcessRec[alerts.length];
         for (int ndx = 0; ndx < list.length; ++ndx)
         {
@@ -484,7 +484,7 @@ public class AutoProcessAlerts
      */
     private void sendEmails()
     {
-        log("Sending emails...");
+        log("\nSending emails...");
 
         // Be sure we have something to send.
         if (_recipients.length < 2)
@@ -532,7 +532,7 @@ public class AutoProcessAlerts
             body = _adminIntro + prefix + body;
             sendEmail((hasErrors) ? 1 : 0, _recipients[ndx], "", subject, body);
         }
-        log("Completed emails...");
+        log("Completed emails...\n");
     }
 
     /**
@@ -620,13 +620,15 @@ public class AutoProcessAlerts
      */
     private void getFileName(ProcessRec rec_)
     {
-        String temp = rec_._alert.getName().replaceAll(" ", "_");
+        String temp = rec_._alert.getName().replaceAll(
+            "[ .,/?\\\\}{|`~><:;'\"-&)(=+*!@#$%^]", "_");
         String ts = "_"
             + new Timestamp(new Date().getTime()).toString().replaceAll(
-                "[ :.\\-]", "") + ".html";
+                "[ :.\\\\-]", "") + ".html";
         rec_._reportFile = _work + temp + ts;
         temp = _http + temp + ts;
-        log("\tOutput File is\n\t\t" + rec_._reportFile + "\n\t\t" + temp);
+        log("\tCreated by " + rec_._alert.getCreator()
+            + "\n\tOutput File is\n\t\t" + rec_._reportFile + "\n\t\t" + temp);
     }
 
     /**
