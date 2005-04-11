@@ -364,32 +364,16 @@ public class AlertRec
      *        The string to convert.
      * @return An HTML compatible string.
      */
-    private String getHTMLString(String text_)
+    static public String getHTMLString(String text_)
     {
         // Playing with the escape character to get past the compiler.
-        return text_.replaceAll("\\n", "<br>");
-    }
-
-    /**
-     * Return the Summary description of the Alert using embedded &lt;br&gt;
-     * tags as appropriate.
-     * 
-     * @return The summary in HTML compatible form.
-     */
-    public String getHTMLSummary()
-    {
-        return getHTMLString(_summary);
-    }
-
-    /**
-     * Return the Introduction description of the Alert using embedded
-     * &lt;br&gt; tags as appropriate.
-     * 
-     * @return The intro in HTML compatible form.
-     */
-    public String getHTMLIntro()
-    {
-        return getHTMLString(_intro);
+        String temp;
+        temp = text_;
+        temp = temp.replaceAll("[&]", "&amp;");
+        temp = temp.replaceAll("[<]", "&lt;");
+        temp = temp.replaceAll("[>]", "&gt;");
+        temp = temp.replaceAll("\\n", "<br>");
+        return temp;
     }
 
     /**

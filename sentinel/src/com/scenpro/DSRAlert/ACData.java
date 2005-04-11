@@ -116,7 +116,7 @@ public class ACData
         else if (val_.length() == 0)
             return "<i>&lt;empty&gt;</i>".getBytes();
         else
-            return val_.getBytes();
+            return AlertRec.getHTMLString(val_).getBytes();
     }
 
     /**
@@ -134,7 +134,7 @@ public class ACData
         else if (val_.length() == 0)
             return "<i>&lt;empty&gt;</i>";
         else
-            return val_.replaceAll(" ", "&nbsp;");
+            return AlertRec.getHTMLString(val_).replaceAll(" ", "&nbsp;");
     }
 
     /**
@@ -160,7 +160,7 @@ public class ACData
             result = result
                 + "<br>"
                 + ((val_[ndx] == null || val_[ndx].length() == 0) ? "&nbsp;"
-                    : val_[ndx]);
+                    : AlertRec.getHTMLString(val_[ndx]));
         }
         return result.getBytes();
     }
@@ -180,28 +180,7 @@ public class ACData
         else if (val_.length() == 0)
             return "&nbsp;".getBytes();
         else
-            return val_.getBytes();
-    }
-
-    /**
-     * Return the byte representation for a String with null and empty as
-     * "&nbsp;"
-     * 
-     * @param val_
-     *        A string.
-     * @param suffix_
-     *        A suffix to append to val_ when val_ is not null or empty.
-     * @return The byte representation.
-     */
-    static private byte[] dumpConvert2(String val_, String suffix_)
-    {
-        if (val_ == null)
-            return "&nbsp;".getBytes();
-        else if (val_.length() == 0)
-            return "&nbsp;".getBytes();
-
-        String temp = val_ + suffix_;
-        return temp.getBytes();
+            return AlertRec.getHTMLString(val_).getBytes();
     }
 
     /**
@@ -221,7 +200,7 @@ public class ACData
         else if (val_.length() == 0)
             return "&nbsp;".getBytes();
 
-        String temp = prefix_ + val_;
+        String temp = prefix_ + AlertRec.getHTMLString(val_);
         return temp.getBytes();
     }
 
@@ -382,10 +361,10 @@ public class ACData
                 --basicNdx;
                 temp = "\t\t\t<tr><td>Change&nbsp;Note&nbsp;/<br>Comment</td><td colspan=\""
                     + basicNdx
-                    + "\">"
-                    + dumpConvert2(val._rec._note)
-                    + "</td></tr>\n";
+                    + "\">";
                 fout_.write(temp.getBytes());
+                fout_.write(dumpConvert2(val._rec._note));
+                fout_.write("</td></tr>\n".getBytes());
             }
             fout_.write("\t\t\t</table></td></tr>\n".getBytes());
             if (val._rec._level == 'p')
@@ -620,10 +599,10 @@ public class ACData
      * @see com.scenpro.DSRAlert.ACData#dumpHeader2 dumpHeader2()
      * @see com.scenpro.DSRAlert.ACData#dumpDetail2 dumpDetail2()
      */
-    static public void dumpFooter2(String msg_, AlertRec rec_, FileOutputStream fout_)
+    static public void dumpFooter2(boolean empty_, String msg_, AlertRec rec_, FileOutputStream fout_)
         throws IOException
     {
-        dumpFooter1(msg_, rec_, fout_);
+        dumpFooter1(empty_, msg_, rec_, fout_);
     }
 
     /**
@@ -638,16 +617,18 @@ public class ACData
      * @see com.scenpro.DSRAlert.ACData#dumpHeader1 dumpHeader1()
      * @see com.scenpro.DSRAlert.ACData#dumpDetail1 dumpDetail1()
      */
-    static public void dumpFooter1(String msg_, AlertRec rec_, FileOutputStream fout_)
+    static public void dumpFooter1(boolean empty_, String msg_, AlertRec rec_, FileOutputStream fout_)
         throws IOException
     {
-        if (msg_ == null || msg_.length() == 0)
-            fout_.write("\t</table>\n</body>\n</html>\n".getBytes());
-        else
+        fout_.write("\t</table>".getBytes());
+        if (empty_)
+            fout_.write("\n\t<p>No activity to report.</p>".getBytes());
+        if (msg_ != null && msg_.length() > 0)
         {
-            String temp = "\t</table>\n\t<p style=\"text-align: right; margin-top: 6pt\">" + msg_ + "</p>\n</body>\n</html>\n";
+            String temp = "\n\t<p style=\"text-align: right; margin-top: 6pt\">" + msg_ + "</p>";
             fout_.write(temp.getBytes());
         }
+        fout_.write("\n</body>\n</html>\n".getBytes());
     }
 
     /**
@@ -695,7 +676,7 @@ public class ACData
         {
             fout_.write("</td></tr>\n\t\t<tr><td>Introduction:</td><td>"
                 .getBytes());
-            fout_.write(dumpConvert(rec_.getHTMLIntro()));
+            fout_.write(dumpConvert(rec_.getIntro(false)));
         }
         fout_.write("</td></tr>\n\t\t<tr><td>Created By:</td><td>".getBytes());
         if (cemail_ == null || cemail_.length() == 0)
@@ -711,7 +692,7 @@ public class ACData
             fout_.write("</a>".getBytes());
         }
         fout_.write("</td></tr>\n\t\t<tr><td>Summary:</td><td>".getBytes());
-        fout_.write(dumpConvert(rec_.getHTMLSummary()));
+        fout_.write(dumpConvert(rec_.getSummary(false)));
         if (rec_.getIncPropSect())
         {
             fout_.write("</td></tr>\n\t\t<tr><td>Last Auto Run Date:</td><td>"

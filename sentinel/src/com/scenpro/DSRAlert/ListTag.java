@@ -225,7 +225,7 @@ public class ListTag extends TagSupport
                     + ndx + "\" onclick=\"fixButs(this);\"></td>\n"
                     + "<td headers=\"t1\" class=td1b>" + list[ndx].getName()
                     + "</td>\n" + "<td headers=\"t2\" class=td1b>"
-                    + list[ndx].getHTMLSummary() + "</td>\n"
+                    + AlertRec.getHTMLString(list[ndx].getSummary(false)) + "</td>\n"
                     + "<td headers=\"t3\" class=td1a>"
                     + list[ndx].getFreq(true) + "</td>\n"
                     + "<td headers=\"t4\" class=td1a>" + list[ndx].getADate()

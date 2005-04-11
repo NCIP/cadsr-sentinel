@@ -5,9 +5,6 @@
  */
 package com.scenpro.DSRAlert.test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 

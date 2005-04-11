@@ -524,6 +524,7 @@ public class AutoProcessAlerts
             // Complete subject and body and send to recipient.
             String subject = _subject
                 + ((_id.charAt(0) == 'A') ? " Auto Run" : " Manual Run")
+                + " for " + _today.toString().substring(0, 10)
                 + ((hasErrors) ? " has Errors" : "");
             body = _adminIntro + prefix + body;
             sendEmail((hasErrors) ? 1 : 0, _recipients[ndx], "", subject, body);
@@ -656,7 +657,7 @@ public class AutoProcessAlerts
                 logError(_db.getError());
 
                 // Footer
-                ACData.dumpFooter1(_version, rec_._alert, fout);
+                ACData.dumpFooter1((_outRows == 0), _version, rec_._alert, fout);
             }
             else if (_outForm == 2)
             {
@@ -669,7 +670,7 @@ public class AutoProcessAlerts
                 logError(_db.getError());
 
                 // Footer
-                ACData.dumpFooter2(_version, rec_._alert, fout);
+                ACData.dumpFooter2((_outRows == 0), _version, rec_._alert, fout);
             }
 
             // Close file.
@@ -722,7 +723,7 @@ public class AutoProcessAlerts
                 return;
             }
         }
-
+        
         // Determine file name that will eventually hold the output.
         getFileName(rec_);
 
@@ -817,6 +818,8 @@ public class AutoProcessAlerts
         logError(_db.getError());
         ACData qcqm[] = ACData.merge(qcq, _db.selectQCQfromQCV(qcvm));
         logError(_db.getError());
+        qcqm = ACData.merge(qcqm, _db.selectQCQfromVD(vdm));
+        logError(_db.getError());
         qcqm = ACData.merge(qcqm, _db.selectQCQfromDE(dem));
         logError(_db.getError());
         ACData qcmm[] = ACData.merge(qcm, _db.selectQCMfromQCQ(qcqm));
@@ -827,6 +830,10 @@ public class AutoProcessAlerts
         logError(_db.getError());
         ACData cdm[] = new ACData[0];
         ACData csim[] = ACData.merge(csi, _db.selectCSIfromDE(dem));
+        logError(_db.getError());
+        csim = ACData.merge(csim, _db.selectCSIfromDEC(dec));
+        logError(_db.getError());
+        csim = ACData.merge(csim, _db.selectCSIfromVD(vdm));
         logError(_db.getError());
         ACData csm[] = ACData.merge(cs, _db.selectCSfromCSI(csim));
         logError(_db.getError());
@@ -845,6 +852,8 @@ public class AutoProcessAlerts
             logError(_db.getError());
             cd = filter(cd, rec_);
             cdm = ACData.merge(cd, _db.selectCDfromVD(vdm));
+            logError(_db.getError());
+            cdm = ACData.merge(cdm, _db.selectCDfromDEC(dec));
             logError(_db.getError());
             contem = ACData.merge(contem, _db.selectCONTEfromCD(cdm));
             logError(_db.getError());
@@ -939,10 +948,14 @@ public class AutoProcessAlerts
             chainCD.add(lconte);
             chainVD.add(chainDE);
             chainVD.add(chainCD);
+            chainVD.add(chainCSI);
             lpv.add(chainVD);
             lvd.add(chainCD);
             lvd.add(chainDE);
+            lvd.add(chainCSI);
+            ldec.add(chainCD);
             ldec.add(chainDE);
+            ldec.add(chainCSI);
             lde.add(chainCSI);
             lcsi.add(chainCS);
             lcs.add(lconte);
@@ -966,6 +979,7 @@ public class AutoProcessAlerts
             lqc.add(lconte);
             lpv.add(chainVD);
             lvd.add(chainDE);
+            lvd.add(chainQCQ);
             ldec.add(chainDE);
         }
         if (rec_._alert.isCSIall() && rec_._alert.isCSall()

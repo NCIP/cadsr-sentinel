@@ -67,6 +67,15 @@ public class Run extends Action
             // Always send a report even when empty - this is a manual run.
             rec.setReportEmpty('Y');
 
+            // Build the summary to ensure it is current with any selections made
+            // and not yet saved to the database.
+            DBAlert db = new DBAlert();
+            if (db.open(request_, ub.getUser(), ub.getPswd()) == 0)
+            {
+                rec.setSummary(db.buildSummary(rec));
+                db.close();
+            }
+            
             // Run the alert and report.
             pa.manualRun(rec, start, end);
 

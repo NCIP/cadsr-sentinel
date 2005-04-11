@@ -9,6 +9,7 @@
     <property name="test-results" location="test_results"/>
 
     <property name="ojsp" location="${oroot}/jsp"/>
+    <property name="odoc" location="${oroot}/doc"/>
     <property name="owebinf" location="${oroot}/WEB-INF"/>
     <property name="oclasses" location="${owebinf}/classes"/>
     <property name="orootC2" location="${oclasses}/com"/>
@@ -36,6 +37,7 @@
     	<mkdir dir="${orootC2}"/>
     	<mkdir dir="${orootC3}"/>
     	<mkdir dir="${orootC4}"/>
+        <mkdir dir="${orootC4}/test"/>
     	<mkdir dir="${olib}"/>
     	<mkdir dir="${otld}"/>
     </target>
@@ -77,9 +79,13 @@
         <filter filtersfile="${conf}/DSRAlertDeploy.properties"/>
         <delete>
             <fileset file="${orootC4}/DSRAlert.properties"/>
+            <fileset file="${orootC4}/test/DSRAlertTest.properties"/>
         </delete>
         <copy tofile="${orootC4}/DSRAlert.properties" filtering="true">
             <fileset file="conf/common/DSRAlert.properties"/>
+        </copy>
+        <copy tofile="${orootC4}/test/DSRAlertTest.properties">
+            <fileset file="${conf}/DSRAlertTest.properties"/>
         </copy>
     	<copy todir="${owebinf}">
             <fileset file="${xml}/web.xml"/>
@@ -152,8 +158,40 @@
         </war>
     </target>
 
+    <target name="build-doc">
+        <mkdir dir="${temp}"/>
+        <mkdir dir="${oroot}"/>
+        <delete dir="${odoc}"/>
+        <mkdir dir="${odoc}"/>
+        <javadoc
+                destdir="${odoc}"
+                Private="true"
+                author="true"
+                version="true"
+                use="true"
+                windowtitle="caDSR Sentinel Tool API">
+			
+            <classpath>
+                <fileset dir="${lib}">
+                    <include name="**/*.jar" />
+                </fileset>
+            </classpath>
+			
+            <packageset dir="${java}" defaultexcludes="yes">
+                <include name="com/scenpro/DSRAlert/**" />
+            </packageset>
+			
+            <doctitle><![CDATA[<h1>caDSR Sentinel Tool</h1>]]></doctitle>
+			<bottom><![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]></bottom>
+			<tag name="todo" scope="all" description="To do:" />
+			<group title="Source Package" packages="com.scenpro.DSRAlert;com.scenpro.DSRAlert.Test"/>
+			<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="D:\temp"/>
+			<link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+        </javadoc>
+    </target>
+
     <target name="init">
-        <echo message="This build script must be run with the name of the desired target: build-proto, build-dev, build-qa, build-stage, build-prod."/>
+        <echo message="This build script must be run with the name of the desired target: build-proto, build-dev, build-qa, build-stage, build-prod, build-doc."/>
     </target>
 
     <target name="build-proto">

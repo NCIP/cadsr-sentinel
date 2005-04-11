@@ -1160,7 +1160,7 @@ public class DBAlert
      * @param rec_
      *        The alert definition.
      */
-    private String buildSummary(AlertRec rec_)
+    public String buildSummary(AlertRec rec_)
     {
         String select;
 
@@ -1179,8 +1179,8 @@ public class DBAlert
         {
             if (rec_.getContexts(0).charAt(0) != '(')
             {
-                select = "select name " + "from sbr.contexts_view "
-                    + "where conte_idseq in (?) " + "order by name ASC";
+                select = "select name from sbr.contexts_view "
+                    + "where conte_idseq in (?) order by upper(name) ASC";
                 criteria = criteria + "Context must be "
                     + selectText(select, rec_.getContexts(), 1);
                 specific += 1;
@@ -1196,7 +1196,7 @@ public class DBAlert
             {
                 select = "select long_name "
                     + "from sbrext.quest_contents_view_ext "
-                    + "where qc_idseq in (?) " + "order by long_name ASC";
+                    + "where qc_idseq in (?) order by upper(long_name) ASC";
                 criteria = criteria + "Forms / Templates must be "
                     + selectText(select, rec_.getForms(), 1);
                 specific += 2;
@@ -1212,7 +1212,7 @@ public class DBAlert
             {
                 select = "select long_name "
                     + "from sbr.classification_schemes_view "
-                    + "where cs_idseq in (?) " + "order by long_name ASC";
+                    + "where cs_idseq in (?) order by upper(long_name) ASC";
                 criteria = criteria + "Classification Schemes must be "
                     + selectText(select, rec_.getSchemes(), 1);
                 specific += 4;
@@ -1228,7 +1228,7 @@ public class DBAlert
             {
                 select = "select csi_name "
                     + "from sbr.class_scheme_items_view "
-                    + "where csi_idseq in (?) " + "order by csi_name ASC";
+                    + "where csi_idseq in (?) order by upper(csi_name) ASC";
                 criteria = criteria + "Classification Scheme Items must be "
                     + selectText(select, rec_.getSchemeItems(), 1);
                 specific += 8;
@@ -1243,8 +1243,8 @@ public class DBAlert
                 criteria = criteria + " AND\n";
             if (rec_.getCreators(0).charAt(0) != '(')
             {
-                select = "select name " + "from sbrext.user_accounts_view "
-                    + "where ua_name in (?) " + "order by name ASC";
+                select = "select name from sbrext.user_accounts_view "
+                    + "where ua_name in (?) order by upper(name) ASC";
                 criteria = criteria + "Created By must be "
                     + selectText(select, rec_.getCreators(), 1);
                 specific += 16;
@@ -1258,8 +1258,8 @@ public class DBAlert
                 criteria = criteria + " AND\n";
             if (rec_.getModifiers(0).charAt(0) != '(')
             {
-                select = "select name " + "from sbrext.user_accounts_view "
-                    + "where ua_name in (?) " + "order by name ASC";
+                select = "select name from sbrext.user_accounts_view "
+                    + "where ua_name in (?) order by upper(name) ASC";
                 criteria = criteria + "Modified By must be "
                     + selectText(select, rec_.getModifiers(), 1);
                 specific += 32;
@@ -1278,8 +1278,8 @@ public class DBAlert
         {
             if (rec_.getAWorkflow(0).charAt(0) != '(')
             {
-                select = "select asl_name " + "from sbr.ac_status_lov_view "
-                    + "where asl_name in (?) " + "order by asl_name ASC";
+                select = "select asl_name from sbr.ac_status_lov_view "
+                    + "where asl_name in (?) order by upper(asl_name) ASC";
                 monitors = monitors + "Workflow Status changes to "
                     + selectText(select, rec_.getAWorkflow(), 1);
             }
@@ -1299,7 +1299,7 @@ public class DBAlert
                 select = "select registration_status "
                     + "from sbr.reg_status_lov_view "
                     + "where registration_status in (?) "
-                    + "order by registration_status ASC";
+                    + "order by upper(registration_status) ASC";
                 if (monitors.length() > 0)
                     monitors = monitors + " OR\n";
                 monitors = monitors + "Registration Status changes to "
@@ -2186,7 +2186,7 @@ public class DBAlert
         String select = "select name "
             + "from sbrext.user_contexts_view "
             + "where ua_name in (?) and privilege = 'W' and name not in ('TEST','Test','TRAINING','Training') "
-            + "order by name ASC";
+            + "order by upper(name) ASC";
         String temp[] = new String[1];
         temp[0] = user_;
         return selectText(select, temp);
@@ -2218,7 +2218,7 @@ public class DBAlert
     {
         // Get the user names and id's.
         String select = "select ua_name, nvl2(electronic_mail_address, 'y', 'n') || alert_ind as eflag, name "
-            + "from sbrext.user_accounts_view " + "order by name ASC";
+            + "from sbrext.user_accounts_view order by upper(name) ASC";
         returnData2 rec2 = getBasicData2(select);
         if (rec2._rc == 0)
         {
@@ -2233,7 +2233,7 @@ public class DBAlert
             select = "select uav.name, ucv.name "
                 + "from sbrext.user_contexts_view ucv, sbrext.user_accounts_view uav "
                 + "where ucv.privilege = 'W' and ucv.ua_name = uav.ua_name "
-                + "order by uav.name ASC, ucv.name ASC";
+                + "order by upper(uav.name) ASC, upper(ucv.name) ASC";
             returnData1 rec = getBasicData1(select, false);
             if (rec._rc == 0)
             {
@@ -2250,7 +2250,7 @@ public class DBAlert
                 String fixname = "";
                 while (ncnt < _namesList.length && vcnt < rec._vals.length)
                 {
-                    int test = _namesList[ncnt].compareTo(rec._vals[vcnt]);
+                    int test = _namesList[ncnt].compareToIgnoreCase(rec._vals[vcnt]);
 
                     if (test < 0)
                     {
@@ -2353,7 +2353,7 @@ public class DBAlert
     public int getGroups()
     {
         String select = "select '/' || conte_idseq as id, name "
-            + "from sbr.contexts_view " + "order by name ASC";
+            + "from sbr.contexts_view order by upper(name) ASC";
         returnData1 rec = getBasicData1(select, false);
         if (rec._rc == 0)
         {
@@ -2407,8 +2407,8 @@ public class DBAlert
     public int getContexts()
     {
         // Get the context names and id's.
-        String select = "select conte_idseq, name " + "from sbr.contexts_view "
-            + "order by name ASC";
+        String select = "select conte_idseq, name from sbr.contexts_view "
+            + "order by upper(name) ASC";
         returnData1 rec = getBasicData1(select, true);
         if (rec._rc == 0)
         {
@@ -2466,7 +2466,7 @@ public class DBAlert
         // columns. For some reason this view is designed to expose the real id
         // to the end user.
         String select = "select asl_name, 'C' "
-            + "from sbr.ac_status_lov_view " + "order by asl_name ASC";
+            + "from sbr.ac_status_lov_view order by upper(asl_name) ASC";
 
         returnData1 rec = getBasicData1(select, false);
         if (rec._rc == 0)
@@ -2539,7 +2539,7 @@ public class DBAlert
         // to the end user.
         String select = "select registration_status, 'C' "
             + "from sbr.reg_status_lov_view "
-            + "order by registration_status ASC";
+            + "order by upper(registration_status) ASC";
 
         returnData1 rec = getBasicData1(select, false);
         if (rec._rc == 0)
@@ -2609,7 +2609,7 @@ public class DBAlert
     {
         String select = "select csv.conte_idseq, csv.cs_idseq, csv.long_name || ' (v' || csv.version || ' / ' || cv.name || ')' as lname "
             + "from sbr.classification_schemes_view csv, sbr.contexts_view cv "
-            + "where cv.conte_idseq = csv.conte_idseq " + "order by lname ASC";
+            + "where cv.conte_idseq = csv.conte_idseq order by upper(lname) ASC";
 
         returnData2 rec = getBasicData2(select);
         if (rec._rc == 0)
@@ -2826,7 +2826,7 @@ public class DBAlert
             {
                 check = (max + min) / 2;
                 int test = tree_[ndx]._fullName
-                    .compareTo(sort[check]._fullName);
+                    .compareToIgnoreCase(sort[check]._fullName);
                 if (test == 0)
                     break;
                 else if (test > 0)
@@ -3153,7 +3153,7 @@ public class DBAlert
         String select = "select qcv.conte_idseq, qcv.qc_idseq, qcv.long_name || ' (v' || qcv.version || ' / ' || qcv.qtl_name || ' / ' || cv.name || ')' as lname "
             + "from sbrext.quest_contents_view_ext qcv, sbr.contexts_view cv "
             + "where qcv.qtl_name in ('TEMPLATE','CRF') and cv.conte_idseq = qcv.conte_idseq "
-            + "order by lname";
+            + "order by upper(lname)";
 
         returnData2 rec = getBasicData2(select);
         if (rec._rc == 0)
@@ -3291,7 +3291,7 @@ public class DBAlert
             + "(auto_freq_unit = 'D' OR "
             + "(auto_freq_unit = 'W' AND auto_freq_value = ?) OR "
             + "(auto_freq_unit = 'M' AND auto_freq_value = ?)) "
-            + "order by created_by asc, name asc";
+            + "order by upper(created_by) asc, upper(name) asc";
 
         // Get day and date from target to qualify the select.
         GregorianCalendar tdate = new GregorianCalendar();
@@ -3323,12 +3323,12 @@ public class DBAlert
             // retrieve the full alert definition, we will need it.
             AlertRec recs[] = new AlertRec[list.size()];
             int keep = 0;
-            for (int ndx = 0; ndx < recs.length; ++ndx)
+            int ndx;
+            for (ndx = 0; ndx < recs.length; ++ndx)
             {
+                // Be sure we can read the Alert Definition.
                 recs[keep] = selectAlert((String) list.get(ndx));
-
-                // This means a database error has occurred.
-                if (recs[ndx] == null)
+                if (recs[keep] == null)
                     return null;
 
                 // Check the date. We do this here and not in the SQL because
@@ -3350,7 +3350,14 @@ public class DBAlert
             // a loop
             // with the following condition: "cnt < recs.length && recs[cnt] !=
             // null"
-            return recs;
+            if (keep == ndx)
+                return recs;
+ 
+            // Only process the ones that are Active.
+            AlertRec trecs[] = new AlertRec[keep];
+            for (ndx = 0; ndx < keep; ++ndx)
+                trecs[ndx] = recs[ndx];
+            return trecs;
         }
         catch (SQLException ex)
         {
@@ -4278,13 +4285,13 @@ public class DBAlert
     {
         String select = "(select 's', 1, 'vd', vd.vd_idseq as id, vd.version, vd.vd_id, vd.long_name, vd.conte_idseq as cid, "
             + "vd.date_modified, vd.date_created, vd.modified_by, vd.created_by, vd.change_note, c.name, pv.pv_idseq "
-            + "from sbr.value_domains_view vd, sbr.vd_pvs vp, sbr.permissible_values_view pv, sbr.contexts_view c "
+            + "from sbr.value_domains_view vd, sbr.vd_pvs_view vp, sbr.permissible_values_view pv, sbr.contexts_view c "
             + "where pv.pv_idseq in (?) and vp.pv_idseq = pv.pv_idseq and vd.vd_idseq = vp.vd_idseq and "
             + "c.conte_idseq = vd.conte_idseq "
             + "union "
             + "select 's', 2, 'vd', ac.ac_idseq as id, ac.version, xx.vd_id, ac.long_name, dv.conte_idseq as cid, "
             + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, pv.pv_idseq "
-            + "from sbr.permissible_values_view pv, sbr.vd_pvs vp, sbr.value_domains_view xx, "
+            + "from sbr.permissible_values_view pv, sbr.vd_pvs_view vp, sbr.value_domains_view xx, "
             + "sbr.admin_components_view ac, sbr.designations_view dv, sbr.contexts_view c "
             + "where pv.pv_idseq in (?) and vp.pv_idseq = pv.pv_idseq and xx.vd_idseq = vp.vd_idseq "
             + "and ac.ac_idseq = xx.vd_idseq and ac.actl_name = 'VALUEDOMAIN' and "
@@ -4318,6 +4325,32 @@ public class DBAlert
             + "order by id asc, cid asc";
 
         return selectAC(select, vd_);
+    }
+
+    /**
+     * Find the Conceptual Domains affected by changes to the Data Element Concepts
+     * provided.
+     * 
+     * @param dec_
+     *        The list of data element concepts.
+     * @return The array of conceptual domains.
+     */
+    public ACData[] selectCDfromDEC(ACData dec_[])
+    {
+        String select = "(select 's', 1, 'cd', cd.cd_idseq as id, cd.version, cd.cd_id, cd.long_name, cd.conte_idseq as cid, "
+            + "cd.date_modified, cd.date_created, cd.modified_by, cd.created_by, cd.change_note, c.name, dec.dec_idseq "
+            + "from sbr.conceptual_domains_view cd, sbr.contexts_view c, sbr.data_element_concepts_view dec "
+            + "where dec.dec_idseq in (?) and cd.cd_idseq = dec.dec_idseq and c.conte_idseq = cd.conte_idseq "
+            + "union "
+            + "select 's', 2, 'cd', ac.ac_idseq as id, ac.version, xx.cd_id, ac.long_name, dv.conte_idseq as cid, "
+            + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, dec.dec_idseq "
+            + "from sbr.admin_components_view ac, sbr.conceptual_domains_view xx, "
+            + "sbr.designations_view dv, sbr.contexts_view c, sbr.data_element_concepts_view dec "
+            + "where dec.dec_idseq in (?) and xx.cd_idseq = dec.cd_idseq and ac.ac_idseq = xx.cd_idseq and "
+            + "ac.actl_name = 'CONCEPTUALDOMAIN' and dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq) "
+            + "order by id asc, cid asc";
+
+        return selectAC(select, dec_);
     }
 
     /**
@@ -4392,6 +4425,48 @@ public class DBAlert
     }
 
     /**
+     * Select the Classification Scheme Item affected by the Data Element Concepts
+     * provided.
+     * 
+     * @param dec_
+     *        The data element concept list.
+     * @return The array of related classification scheme items.
+     */
+    public ACData[] selectCSIfromDEC(ACData dec_[])
+    {
+        String select = "select 's', 1, 'csi', civ.csi_idseq as id, '', -1, civ.csi_name, '', "
+            + "civ.date_modified, civ.date_created, civ.modified_by, civ.created_by, civ.comments, '', dec.dec_idseq "
+            + "from sbr.class_scheme_items_view civ, sbr.data_element_concepts_view dec, sbr.admin_components_view ac, "
+            + "sbr.ac_csi_view ai, sbr.cs_csi_view ci "
+            + "where dec.dec_idseq in (?) and ac.ac_idseq = dec.dec_idseq and ai.ac_idseq = ac.ac_idseq and "
+            + "ci.cs_csi_idseq = ai.cs_csi_idseq and civ.csi_idseq = ci.csi_idseq "
+            + "order by id asc";
+
+        return selectAC(select, dec_);
+    }
+
+    /**
+     * Select the Classification Scheme Item affected by the Value Domains
+     * provided.
+     * 
+     * @param vd_
+     *        The value domain list.
+     * @return The array of related classification scheme items.
+     */
+    public ACData[] selectCSIfromVD(ACData vd_[])
+    {
+        String select = "select 's', 1, 'csi', civ.csi_idseq as id, '', -1, civ.csi_name, '', "
+            + "civ.date_modified, civ.date_created, civ.modified_by, civ.created_by, civ.comments, '', vd.vd_idseq "
+            + "from sbr.class_scheme_items_view civ, sbr.value_domains_view vd, sbr.admin_components_view ac, "
+            + "sbr.ac_csi_view ai, sbr.cs_csi_view ci "
+            + "where vd.vd_idseq in (?) and ac.ac_idseq = vd.vd_idseq and ai.ac_idseq = ac.ac_idseq and "
+            + "ci.cs_csi_idseq = ai.cs_csi_idseq and civ.csi_idseq = ci.csi_idseq "
+            + "order by id asc";
+
+        return selectAC(select, vd_);
+    }
+
+    /**
      * Select the Forms/Templates affected by the Data Elements provided.
      * 
      * @param de_
@@ -4407,6 +4482,24 @@ public class DBAlert
             + "order by id asc";
 
         return selectAC(select, de_);
+    }
+
+    /**
+     * Select the Forms/Templates affected by the Value Domains provided.
+     * 
+     * @param vd_
+     *        The value domain list.
+     * @return The array of related forms/templates.
+     */
+    public ACData[] selectQCQfromVD(ACData vd_[])
+    {
+        String select = "select 's', 1, 'qcq', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq, "
+            + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, vd.vd_idseq "
+            + "from sbrext.quest_contents_view_ext qc, sbr.value_domains_view vd, sbr.contexts_view c "
+            + "where vd.vd_idseq in (?) and qc.dn_vd_idseq = vd.vd_idseq and qc.qtl_name = 'QUESTION' and c.conte_idseq = qc.conte_idseq "
+            + "order by id asc";
+
+        return selectAC(select, vd_);
     }
 
     /**

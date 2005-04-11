@@ -1,8 +1,6 @@
 /*
  * Copyright (c) Feb 17, 2005 ScenPro, Inc.
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package com.scenpro.DSRAlert.test;
 
@@ -14,10 +12,7 @@ import com.scenpro.DSRAlert.DBAlert;
  */
 
 /**
- * @author lhebel
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * Database verification test.
  */
 public class TestDatabase extends DSRAlertTestCase
 {
