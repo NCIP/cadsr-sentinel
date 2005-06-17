@@ -171,6 +171,8 @@ public class Edit extends Action
         rec.setDomains(form_.getInfoConceptDomain());
         rec.setContexts(form_.getInfoContext());
         rec.setForms(form_.getInfoForms());
+        rec.setDateFilter((form_.getInfoDateFilter()));
+        rec.setACTypes(form_.getInfoACTypes());
 
         return rec;
     }

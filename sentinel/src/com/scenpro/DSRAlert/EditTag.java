@@ -134,6 +134,9 @@ public class EditTag extends TagSupport
             db.getRegistrations();
             _regstatusList = db.getRegStatusList();
             _regstatusVals = db.getRegStatusVals();
+            db.getACTypes();
+            _actypesList = db.getACTypesList();
+            _actypesVals = db.getACTypesVals();
         }
         db.close();
 
@@ -241,98 +244,105 @@ public class EditTag extends TagSupport
         MessageResources msgs = (MessageResources) pageContext
             .findAttribute(Constants._RESOURCES);
 
-        String temp[] = new String[80];
-        temp[0] = "var MstatusReason = false;\nvar Mprev = \""
+        int tspot = 0;
+        String temp[] = new String[86];
+        temp[tspot++] = "var MstatusReason = false;\nvar Mprev = \""
             + _ub.getEditPrev() + "\";\n";
 
         // Everything is in name/value pairs as a minimum. The name is shown to
         // the user in the
         // browser and the value is sent back to the servlet on a submit.
-        temp[1] = "var DBnamesList = ";
-        temp[2] = stringList(_namesList);
+        temp[tspot++] = "var DBnamesList = ";
+        temp[tspot++] = stringList(_namesList);
 
-        temp[3] = "var DBnamesVals = ";
-        temp[4] = stringList(_namesVals);
+        temp[tspot++] = "var DBnamesVals = ";
+        temp[tspot++] = stringList(_namesVals);
 
-        temp[5] = "var DBcontextList = ";
-        temp[6] = stringList(_contextList);
+        temp[tspot++] = "var DBcontextList = ";
+        temp[tspot++] = stringList(_contextList);
 
-        temp[7] = "var DBcontextVals = ";
-        temp[8] = stringList(_contextVals);
+        temp[tspot++] = "var DBcontextVals = ";
+        temp[tspot++] = stringList(_contextVals);
 
-        temp[9] = "var DBgroupsList = ";
-        temp[10] = stringList(_groupsList);
+        temp[tspot++] = "var DBgroupsList = ";
+        temp[tspot++] = stringList(_groupsList);
 
-        temp[11] = "var DBgroupsVals = ";
-        temp[12] = stringList(_groupsVals);
+        temp[tspot++] = "var DBgroupsVals = ";
+        temp[tspot++] = stringList(_groupsVals);
 
-        temp[13] = "var DBworkflowList = ";
-        temp[14] = stringList(_workflowList);
+        temp[tspot++] = "var DBworkflowList = ";
+        temp[tspot++] = stringList(_workflowList);
 
-        temp[15] = "var DBworkflowVals = ";
-        temp[16] = stringList(_workflowVals);
+        temp[tspot++] = "var DBworkflowVals = ";
+        temp[tspot++] = stringList(_workflowVals);
 
-        temp[17] = "var DBregStatusList = ";
-        temp[18] = stringList(_regstatusList);
+        temp[tspot++] = "var DBregStatusList = ";
+        temp[tspot++] = stringList(_regstatusList);
 
-        temp[19] = "var DBregStatusVals = ";
-        temp[20] = stringList(_regstatusVals);
+        temp[tspot++] = "var DBregStatusVals = ";
+        temp[tspot++] = stringList(_regstatusVals);
 
-        temp[21] = "var RecSchemes = ";
-        temp[22] = stringList(_ub.getWorking().getSchemes());
+        temp[tspot++] = "var RecSchemes = ";
+        temp[tspot++] = stringList(_ub.getWorking().getSchemes());
 
-        temp[23] = "var RecSchemeItems = ";
-        temp[24] = stringList(_ub.getWorking().getSchemeItems());
+        temp[tspot++] = "var RecSchemeItems = ";
+        temp[tspot++] = stringList(_ub.getWorking().getSchemeItems());
 
-        temp[25] = "var DBschemeList = ";
-        temp[26] = stringList(_schemeList);
+        temp[tspot++] = "var DBschemeList = ";
+        temp[tspot++] = stringList(_schemeList);
 
-        temp[27] = "var DBschemeVals = ";
-        temp[28] = stringList(_schemeVals);
+        temp[tspot++] = "var DBschemeVals = ";
+        temp[tspot++] = stringList(_schemeVals);
 
-        temp[29] = "var DBschemeContexts = ";
-        temp[30] = stringList(_schemeContext);
+        temp[tspot++] = "var DBschemeContexts = ";
+        temp[tspot++] = stringList(_schemeContext);
 
-        temp[31] = "var DBschemeItemList = ";
-        temp[32] = stringList(_schemeItemList);
+        temp[tspot++] = "var DBschemeItemList = ";
+        temp[tspot++] = stringList(_schemeItemList);
 
-        temp[33] = "var DBschemeItemVals = ";
-        temp[34] = stringList(_schemeItemVals);
+        temp[tspot++] = "var DBschemeItemVals = ";
+        temp[tspot++] = stringList(_schemeItemVals);
 
-        temp[35] = "var DBschemeItemSchemes = ";
-        temp[36] = stringList(_schemeItemSchemes);
+        temp[tspot++] = "var DBschemeItemSchemes = ";
+        temp[tspot++] = stringList(_schemeItemSchemes);
 
-        temp[37] = "var RecForms = ";
-        temp[38] = stringList(_ub.getWorking().getForms());
+        temp[tspot++] = "var RecForms = ";
+        temp[tspot++] = stringList(_ub.getWorking().getForms());
 
-        temp[39] = "var DBformsList = ";
-        temp[40] = stringList(_formsList);
+        temp[tspot++] = "var DBformsList = ";
+        temp[tspot++] = stringList(_formsList);
 
-        temp[41] = "var DBformsVals = ";
-        temp[42] = stringList(_formsVals);
+        temp[tspot++] = "var DBformsVals = ";
+        temp[tspot++] = stringList(_formsVals);
 
-        temp[43] = "var DBformsContexts = ";
-        temp[44] = stringList(_formsContext);
+        temp[tspot++] = "var DBformsContexts = ";
+        temp[tspot++] = stringList(_formsContext);
 
-        temp[45] = "var DBrecipients = ";
-        temp[46] = stringList(_ub.getWorking().getRecipients());
+        temp[tspot++] = "var DBactypesList = ";
+        temp[tspot++] = stringList(_actypesList);
 
-        temp[47] = "var DBactVerNum = \"" + _ub.getWorking().getActVerNum()
+        temp[tspot++] = "var DBactypesVals = ";
+        temp[tspot++] = stringList(_actypesVals);
+
+        temp[tspot++] = "var DBrecipients = ";
+        temp[tspot++] = stringList(_ub.getWorking().getRecipients());
+
+        temp[tspot++] = "var DBactVerNum = \"" + _ub.getWorking().getActVerNum()
             + "\";\n";
 
         // Most of the Javascript for the edit.jsp page is in the edit.js file.
         // The body onloaded function
         // is written to call "loaded0()" to complete the operation for the
         // dynamic part of the script.
-        temp[48] = "function loaded0() {\n";
+        temp[tspot++] = "function loaded0() {\n";
 
         int ndx;
 
         // Add the exempt list to the display.
         if (_namesExempt == null)
-            temp[49] = "";
+            temp[tspot++] = "";
         else
-            temp[49] = 
+            temp[tspot++] = 
                 "exemptlist.innerHTML = \"The following users only receive Alert "
                 + "Broadcasts when added as specific Recipients.<br>"
                 + _namesExempt + "\";\n";
@@ -342,157 +352,173 @@ public class EditTag extends TagSupport
         // fields from the form bean. Actually, I couldn't find a way to have
         // the form bean access the
         // database on the outbound page.
-        temp[50] = "editForm.propName.value = \""
+        temp[tspot++] = "editForm.propName.value = \""
             + _ub.getWorking().getName() + "\";\n";
-        temp[51] = "editForm.propDesc.value = \""
+        temp[tspot++] = "editForm.propDesc.value = \""
             + _ub.getWorking().getSummary(true) + "\";\n";
-        temp[52] = "editForm.propCreator.value = \""
+        temp[tspot++] = "editForm.propCreator.value = \""
             + _ub.getWorking().getCreator() + "\";\n";
-        temp[53] = "editForm.propCreateDate.value = \""
+        temp[tspot++] = "editForm.propCreateDate.value = \""
             + _ub.getWorking().getCDate() + "\";\n";
-        temp[54] = "editForm.propLastRunDate.value = \""
+        temp[tspot++] = "editForm.propLastRunDate.value = \""
             + _ub.getWorking().getADate() + "\";\n";
-        temp[55] = "editForm.propModifyDate.value = \""
+        temp[tspot++] = "editForm.propModifyDate.value = \""
             + _ub.getWorking().getMDate() + "\";\n";
         if (_ub.getWorking().getIncPropSect())
-            temp[56] = "editForm.repIncProp.checked = true;\n";
+            temp[tspot++] = "editForm.repIncProp.checked = true;\n";
         else
-            temp[56] = "";
+            temp[tspot++] = "";
 
         if (_ub.getWorking().getIntro(false) == null)
-            temp[57] = "editForm.propIntro.value = \""
+            temp[tspot++] = "editForm.propIntro.value = \""
                 + msgs.getMessage("edit.static") + "\";\n";
         else
-            temp[57] = "editForm.propIntro.value = \""
+            temp[tspot++] = "editForm.propIntro.value = \""
                 + _ub.getWorking().getIntro(true) + "\";\n";
 
         if (_ub.getWorking().isFreqDay())
         {
-            temp[58] = "editForm.freqUnit[0].checked = true;\n";
+            temp[tspot++] = "editForm.freqUnit[0].checked = true;\n";
         }
         else if (_ub.getWorking().isFreqWeek())
         {
             ndx = _ub.getWorking().getDay() - 1;
-            temp[58] = "editForm.freqUnit[1].checked = true;\n"
+            temp[tspot++] = "editForm.freqUnit[1].checked = true;\n"
                 + "editForm.freqWeekly.disabled = false;\n"
                 + "editForm.freqWeekly.options[" + ndx + "].selected = true;\n";
         }
         else if (_ub.getWorking().isFreqMonth())
         {
             ndx = _ub.getWorking().getDay() - 1;
-            temp[58] = "editForm.freqUnit[2].checked = true;\n"
+            temp[tspot++] = "editForm.freqUnit[2].checked = true;\n"
                 + "editForm.freqMonthly.disabled = false;\n"
                 + "editForm.freqMonthly.options[" + ndx
                 + "].selected = true;\n";
         }
         else
-            temp[58] = "";
+            temp[tspot++] = "";
 
         if (_ub.getWorking().isActive())
         {
-            temp[59] = "editForm.propStatus[0].checked = true;\n"
+            temp[tspot++] = "editForm.propStatus[0].checked = true;\n"
                 + "editForm.propStatusReason.value = \""
                 + msgs.getMessage("edit.statusi2") + "\";\n";
-            temp[60] = "";
+            temp[tspot++] = "";
         }
         else if (_ub.getWorking().isActiveOnce())
         {
-            temp[59] = "editForm.propStatus[1].checked = true;\n"
+            temp[tspot++] = "editForm.propStatus[1].checked = true;\n"
                 + "editForm.propStatusReason.value = \""
                 + msgs.getMessage("edit.statusi2") + "\";\n";
-            temp[60] = "";
+            temp[tspot++] = "";
         }
         else if (_ub.getWorking().isActiveDates())
         {
-            temp[59] = "editForm.propStatus[2].checked = true;\n"
+            temp[tspot++] = "editForm.propStatus[2].checked = true;\n"
                 + "editForm.propStatusReason.value = \""
                 + msgs.getMessage("edit.statusi2") + "\";\n";
-            temp[60] = "";
+            temp[tspot++] = "";
         }
         else
         {
-            temp[59] = "editForm.propStatus[3].checked = true;\n"
+            temp[tspot++] = "editForm.propStatus[3].checked = true;\n"
                 + "editForm.propStatusReason.value = \"";
             if (_ub.getWorking().getInactiveReason(false) == null)
             {
-                temp[60] = msgs.getMessage("edit.explain") + "\";\n";
+                temp[tspot++] = msgs.getMessage("edit.explain") + "\";\n";
             }
             else
             {
-                temp[60] = _ub.getWorking().getInactiveReason(true)
+                temp[tspot++] = _ub.getWorking().getInactiveReason(true)
                     + "\";\n" + "MstatusReason = true;\n";
             }
         }
 
         if (_ub.getWorking().isSendEmptyReport())
-            temp[61] = "editForm.freqEmpty[1].checked = true;\n";
+            temp[tspot++] = "editForm.freqEmpty[1].checked = true;\n";
         else
-            temp[61] = "editForm.freqEmpty[0].checked = true;\n";
+            temp[tspot++] = "editForm.freqEmpty[0].checked = true;\n";
 
-        temp[62] = selectFromList("actWorkflowStatus", _workflowVals, _ub
+        temp[tspot++] = selectFromList("actWorkflowStatus", _workflowVals, _ub
                 .getWorking().getAWorkflow(), true);
-        temp[63] = selectFromList("actRegStatus", _regstatusVals, _ub.getWorking()
+        temp[tspot++] = selectFromList("actRegStatus", _regstatusVals, _ub.getWorking()
                 .getARegis(), true);
-        temp[64] = selectFromList("infoCreator", _namesVals, _ub.getWorking()
+        temp[tspot++] = selectFromList("infoCreator", _namesVals, _ub.getWorking()
                 .getCreators(), true);
-        temp[65] = selectFromList("infoModifier", _namesVals, _ub.getWorking()
+        temp[tspot++] = selectFromList("infoModifier", _namesVals, _ub.getWorking()
                 .getModifiers(), true);
-        temp[66] = selectFromList("infoContext", _contextVals, _ub.getWorking()
+        temp[tspot++] = selectFromList("infoACTypes", _actypesVals, _ub.getWorking()
+                .getACTypes(), true);
+        temp[tspot++] = selectFromList("infoContext", _contextVals, _ub.getWorking()
                 .getContexts(), true);
-        temp[67] = "changedContext();\n";
-        temp[68] = "setSelected(editForm.infoForms, RecForms);\n";
-        temp[69] = "setSelected(editForm.infoSchemes, RecSchemes);\n";
-        temp[70] = "changedCS();\n";
-        temp[71] = "setSelected(editForm.infoSchemeItems, RecSchemeItems);\n";
+        temp[tspot++] = "changedContext();\n";
+        temp[tspot++] = "setSelected(editForm.infoForms, RecForms);\n";
+        temp[tspot++] = "setSelected(editForm.infoSchemes, RecSchemes);\n";
+        temp[tspot++] = "changedCS();\n";
+        temp[tspot++] = "setSelected(editForm.infoSchemeItems, RecSchemeItems);\n";
 
         switch (_ub.getWorking().getAVersion())
         {
             case DBAlert._VERANYCHG:
-                temp[72] = "editForm.actVersion[0].checked = true;\n";
+                temp[tspot++] = "editForm.actVersion[0].checked = true;\n";
                 break;
             case DBAlert._VERMAJCHG:
-                temp[72] = "editForm.actVersion[1].checked = true;\n";
+                temp[tspot++] = "editForm.actVersion[1].checked = true;\n";
                 break;
             case DBAlert._VERIGNCHG:
-                temp[72] = "editForm.actVersion[2].checked = true;\n";
+                temp[tspot++] = "editForm.actVersion[2].checked = true;\n";
                 break;
             case DBAlert._VERSPECHG:
-                temp[72] = "editForm.actVersion[3].checked = true;\n";
+                temp[tspot++] = "editForm.actVersion[3].checked = true;\n";
                 break;
             default:
-                temp[72] = "";
+                temp[tspot++] = "";
+                break;
+        }
+        
+        switch (_ub.getWorking().getDateFilter())
+        {
+            case DBAlert._DATECONLY:
+                temp[tspot++] = "editForm.infoDateFilter.options[2].selected = true;\n";
+                break;
+            case DBAlert._DATEMONLY:
+                temp[tspot++] = "editForm.infoDateFilter.options[1].selected = true;\n";
+                break;
+            case DBAlert._DATECM: 
+            default:
+                temp[tspot++] = "editForm.infoDateFilter.options[0].selected = true;\n";
                 break;
         }
 
         if (_ub.getWorking().getStart() != null)
-            temp[73] = "editForm.propBeginDate.value = \""
+            temp[tspot++] = "editForm.propBeginDate.value = \""
                 + _ub.getWorking().getSDate() + "\";\n";
         else
-            temp[73] = "";
+            temp[tspot++] = "";
         if (_ub.getWorking().getEnd() != null)
-            temp[74] = "editForm.propEndDate.value = \""
+            temp[tspot++] = "editForm.propEndDate.value = \""
                 + _ub.getWorking().getEDate() + "\";\n";
         else
-            temp[74] = "";
+            temp[tspot++] = "";
 
         String run = (String) pageContext.getRequest().getAttribute(
             Constants._ACTRUN);
         if (run == null)
-            temp[75] = "";
+            temp[tspot++] = "";
         else
-            temp[75] = "alert(\"Alert named '" + run
+            temp[tspot++] = "alert(\"Alert named '" + run
                 + "' has been submitted.\");\n";
 
-        temp[76] = "if (MmainTab == tabMain1)\neditForm.propName.focus();\n}\n";
+        temp[tspot++] = "if (MmainTab == tabMain1)\neditForm.propName.focus();\n}\n";
 
-        temp[77] = "function saveCheck() {\n";
+        temp[tspot++] = "function saveCheck() {\n";
         String saved = (String) pageContext.getRequest().getAttribute(
             Constants._ACTSAVE);
         if (saved == null)
-            temp[78] = "";
+            temp[tspot++] = "";
         else
-            temp[78] = "saved(\"" + saved + "\");\n";
-        temp[79] = "}\n";
+            temp[tspot++] = "saved(\"" + saved + "\");\n";
+        temp[tspot++] = "}\n";
 
         // Build the complete string.  This is a performance saving technique.
         int maxLen = 0;
@@ -598,6 +624,10 @@ public class EditTag extends TagSupport
     private String         _regstatusList[];
 
     private String         _regstatusVals[];
+    
+    private String         _actypesList[];
+    
+    private String         _actypesVals[];
     
     private StringBuffer   _buf;
     

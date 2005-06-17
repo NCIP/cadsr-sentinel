@@ -34,30 +34,43 @@ public class ACData
      * 
      * @param rec_
      *        The other record.
-     * @return true when all pertinent fields are equal, otherwise false.
+     * @return true the record are essentially the same.
      */
-    public boolean equals(ACData rec_)
+    public boolean isEquivalent(ACData rec_)
     {
-        if (_level != rec_._level)
-            return false;
-        if (_publicID != rec_._publicID)
-            return false;
         if (!_table.equals(rec_._table))
             return false;
         if (!_idseq.equals(rec_._idseq))
             return false;
+        if (!_contextID.equals(rec_._contextID))
+            return false;
         if (!_relatedID.equals(rec_._relatedID))
             return false;
-        if (!_contextID.equals(rec_._contextID))
+        if (_level != rec_._level)
+            return false;
+        if (_publicID != rec_._publicID)
             return false;
         if (!_name.equals(rec_._name))
             return false;
+        if (!((_version == null && rec_._version == null) || (_version != null
+            && rec_._version != null && _version.equals(rec_._version))))
+            return false;
+
+        // If one has a note and the other not, let's keep the text.
+        if (_note == null)
+        {
+            if (rec_._note != null)
+                _note = rec_._note;
+        }
+        else if (rec_._note == null)
+        {
+            rec_._note = _note;
+        }
+
+/*
         if (!_created.equals(rec_._created))
             return false;
         if (!_creator.equals(rec_._creator))
-            return false;
-        if (!((_version == null && rec_._version == null) || (_version != null
-            && rec_._version != null && _version.equals(rec_._version))))
             return false;
         if (!((_modified == null && rec_._modified == null) || (_modified != null
             && rec_._modified != null && _modified.equals(rec_._modified))))
@@ -68,21 +81,7 @@ public class ACData
         if (!((_note == null && rec_._note == null) || (_note != null
             && rec_._note != null && _note.equals(rec_._note))))
             return false;
-        /*
-         * return (_level == rec_._level && _publicID == rec_._publicID &&
-         * _table.equals( rec_._table) && _idseq.equals( rec_._idseq) &&
-         * _relatedID.equals(rec_._relatedID) &&
-         * _contextID.equals(rec_._contextID) && _name.equals( rec_._name) &&
-         * _created.equals( rec_._created) && _creator.equals( rec_._creator) &&
-         * ((_version == null && rec_._version == null) || (_version != null &&
-         * rec_._version != null && _version.equals(rec_._version))) &&
-         * ((_modified == null && rec_._modified == null) || (_modified != null &&
-         * rec_._modified != null && _modified.equals(rec_._modified))) &&
-         * ((_modifier == null && rec_._modifier == null) || (_modifier != null &&
-         * rec_._modifier != null && _modifier.equals(rec_._modifier))) &&
-         * ((_note == null && rec_._note == null) || (_note != null &&
-         * rec_._note != null && _note.equals(rec_._note))));
-         */
+*/
         return true;
     }
 
@@ -620,14 +619,24 @@ public class ACData
     static public void dumpFooter1(boolean empty_, String msg_, AlertRec rec_, FileOutputStream fout_)
         throws IOException
     {
-        fout_.write("\t</table>".getBytes());
         if (empty_)
-            fout_.write("\n\t<p>No activity to report.</p>".getBytes());
+        {
+            fout_.write("\t\t<tr><td colspan=\"3\">".getBytes());
+            fout_.write("<p>No activity to report.</p></td></tr>\n".getBytes());
+        }
+        fout_.write("\t\t<tr><td style=\"border-top: 1px solid black;\">&nbsp;</td>".getBytes());
+        fout_.write("<td style=\"border-top: 1px solid black;\">&nbsp;</td>".getBytes());
+        fout_.write("<td style=\"border-top: 1px solid black; text-align: right\" colspan=\"3\">".getBytes());
         if (msg_ != null && msg_.length() > 0)
         {
-            String temp = "\n\t<p style=\"text-align: right; margin-top: 6pt\">" + msg_ + "</p>";
+            String temp = "<p style=\"margin-top: 6pt\">" + msg_ + "</p>";
             fout_.write(temp.getBytes());
         }
+        else
+        {
+            fout_.write("&nbsp;".getBytes());
+        }
+        fout_.write("</td></tr>\n\t</table>".getBytes());
         fout_.write("\n</body>\n</html>\n".getBytes());
     }
 

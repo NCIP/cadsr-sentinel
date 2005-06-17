@@ -18,7 +18,7 @@ import org.apache.struts.util.MessageResources;
 public class LogonForm extends ActionForm
 {
     /**
-     * Construtor.
+     * Constructor.
      */
     public LogonForm()
     {
@@ -94,6 +94,13 @@ public class LogonForm extends ActionForm
 
         if (_userid.length() > 0)
         {
+            // Verify the guest account is not being used.
+            if (_userid.compareToIgnoreCase("guest") == 0)
+            {
+                errors.add("logon", new ActionMessage("error.logon.guest"));
+                return errors;
+            }
+            
             // Get the default information needed to connect to the database.
             // This requires
             // an entry in the TNSNAMES.ORA file. If problems occur, first

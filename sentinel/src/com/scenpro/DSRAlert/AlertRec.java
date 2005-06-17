@@ -148,6 +148,8 @@ public class AlertRec
         _creators = copy(rec_._creators);
         _modifiers = copy(rec_._modifiers);
         _contexts = copy(rec_._contexts);
+        _ACTypes = copy(rec_._ACTypes);
+        _dateFilter = rec_._dateFilter;
     }
 
     /**
@@ -209,6 +211,7 @@ public class AlertRec
     {
         setSummary("");
         setContexts(null);
+        setACTypes(null);
         setForms(null);
         setSchemes(null);
         setSchemeItems(null);
@@ -218,6 +221,7 @@ public class AlertRec
         setARegis(null);
         setAVersion(null);
         setActVerNum("");
+        setDateFilter(DBAlert._DATECM);
     }
 
     /**
@@ -1639,6 +1643,26 @@ public class AlertRec
     }
 
     /**
+     * Set the list of record types for the criteria.
+     * 
+     * @param val_
+     *        The record type keys to qualify the criteria when searching
+     *        for changes. If null, then all record types are included.
+     */
+    public void setACTypes(String val_[])
+    {
+        if (val_ == null)
+        {
+            _ACTypes = new String[1];
+            _ACTypes[0] = Constants._STRALL;
+        }
+        else
+        {
+            _ACTypes = val_;
+        }
+    }
+
+    /**
      * Return the alert definition name.
      * 
      * @return The name.
@@ -2116,11 +2140,23 @@ public class AlertRec
     {
         return _contexts;
     }
+    
+    /**
+     * Return the specific record types to include in the criteria.  "(All)"
+     * is a special value and will be the sole value if present.
+     * 
+     * @return The record types.
+     */
+    public String[] getACTypes()
+    {
+        return _ACTypes;
+    }
 
     /**
      * Return the specific context database id to include in the criteria.
      * "(All)" is a special value and will be the sole value if present.
      * 
+     * @param ndx_ The index into the context list.
      * @return A context id.
      */
     public String getContexts(int ndx_)
@@ -2128,6 +2164,18 @@ public class AlertRec
         return _contexts[ndx_];
     }
 
+    /**
+     * Return the specific record type to include in the criteria.  "(All)"
+     * is a special value and will be the sole value if present.
+     * 
+     * @param ndx_ The index into the record type list.
+     * @return The record type requested.
+     */
+    public String getACTypes(int ndx_)
+    {
+        return _ACTypes[ndx_];
+    }
+    
     /**
      * Return the version monitor flag: _VERANYCHG, _VERMAJCHG, _VERIGNCHG,
      * _VERSPECHG.
@@ -2196,8 +2244,8 @@ public class AlertRec
      */
     public boolean isCSIall()
     {
-        return (_schemeItems == null || _schemeItems.length == 0 || _schemeItems[0]
-            .charAt(0) == '(');
+        return (_schemeItems == null || _schemeItems.length == 0 ||
+            _schemeItems[0].charAt(0) == '(');
     }
 
     /**
@@ -2207,8 +2255,8 @@ public class AlertRec
      */
     public boolean isCSall()
     {
-        return (_schemes == null || _schemes.length == 0 || _schemes[0]
-            .charAt(0) == '(');
+        return (_schemes == null || _schemes.length == 0 ||
+            _schemes[0].charAt(0) == '(');
     }
 
     /**
@@ -2221,6 +2269,33 @@ public class AlertRec
         return (_forms == null || _forms.length == 0 || _forms[0].charAt(0) == '(');
     }
 
+    /**
+     * Check for the use of all Contexts.
+     * 
+     * @return true if all should be used.
+     */
+    public boolean isCONTall()
+    {
+        return (_contexts == null || _contexts.length == 0 || _contexts[0].charAt(0) == '(');
+    }
+
+    /**
+     * Check for the use of all Record Types.
+     * 
+     * @return true if all should be used.
+     */
+    public boolean isACTYPEall()
+    {
+        return (_ACTypes == null || _ACTypes.length == 0 || _ACTypes[0].charAt(0) == '(');
+    }
+
+    public int isACTypeUsed(int val_)
+    {
+        if (isACTYPEall())
+            return val_;
+        return DBAlert.isACTypeUsed(_ACTypes[val_]);
+    }
+    
     /**
      * Describe the status of the Alert Definition.
      * 
@@ -2321,6 +2396,36 @@ public class AlertRec
         return (_aVersion == 'S');
     }
 
+    /**
+     * Set the date filter for the criteria.
+     * 
+     * @param dates_ the filter DBAlert._DATECM, _DATECONLY, _DATEMONLY
+     */
+    public void setDateFilter(int dates_)
+    {
+        _dateFilter = dates_;
+    }
+
+    /**
+     * Set the date filter for the criteria.
+     * 
+     * @param dates_ the filter DBAlert._DATECM, _DATECONLY, _DATEMONLY
+     */
+    public void setDateFilter(String dates_)
+    {
+        _dateFilter = Integer.parseInt(dates_);
+    }
+    
+    /**
+     * Return the date filter setting.
+     * 
+     * @return DBAlert._DATECM, _DATECONLY, _DATEMONLY
+     */
+    public int getDateFilter()
+    {
+        return _dateFilter;
+    }
+    
     // Class data elements.
     private String              _name;
 
@@ -2393,6 +2498,8 @@ public class AlertRec
     private String              _modifiers[];
 
     private String              _contexts[];
+    
+    private String              _ACTypes[];
 
     private char                _iuse;
 
@@ -2423,6 +2530,8 @@ public class AlertRec
     private String              _alertRecNum;
 
     private String              _reportRecNum;
+    
+    private int                 _dateFilter;
 
     private static final String weekdays[] = { "Sun", "Mon", "Tue", "Wed",
         "Thu", "Fri", "Sat"               };

@@ -26,6 +26,27 @@ public class EditForm extends ActionForm
     }
 
     /**
+     * Set the Date Filter.
+     * 
+     * @param val_
+     *        The date filter value.
+     */
+    public void setInfoDateFilter(String val_)
+    {
+        _infoDateFilter = val_;
+    }
+    
+    /**
+     * Get the Date Filter.
+     * 
+     * @return The date filter value.
+     */
+    public String getInfoDateFilter()
+    {
+        return _infoDateFilter;
+    }
+    
+    /**
      * Set the Context selections for the Criteria tab.
      * 
      * @param val_
@@ -46,6 +67,26 @@ public class EditForm extends ActionForm
         return _infoContext;
     }
 
+    /**
+     * Set the Admin Components selections.
+     * 
+     * @param val_ The AC values.
+     */
+    public void setInfoACTypes(String val_[])
+    {
+        _infoACTypes = val_;
+    }
+
+    /**
+     * Get the Admin Component selections.
+     * 
+     * @return The AC values.
+     */
+    public String[] getInfoACTypes()
+    {
+        return _infoACTypes;
+    }
+    
     /**
      * Set the Possible Users for the Report Recipients.
      * 
@@ -1222,4 +1263,8 @@ public class EditForm extends ActionForm
     private String           _propUsers[];
 
     private String           _infoContext[];
+    
+    private String           _infoDateFilter;
+    
+    private String           _infoACTypes[];
 }

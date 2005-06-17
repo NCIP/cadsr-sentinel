@@ -49,7 +49,6 @@
             <fileset file="${lib}/commons-collections.jar"/>
             <fileset file="${lib}/commons-digester.jar"/>
             <fileset file="${lib}/commons-fileupload.jar"/>
-            <fileset file="${lib}/commons-logging.jar"/>
             <fileset file="${lib}/commons-validator.jar"/>
             <fileset file="${lib}/jakarta-oro.jar"/>
             <fileset file="${lib}/struts-config_1_0.dtd"/>
@@ -100,7 +99,6 @@
             <classpath path="${lib}/commons-collections.jar"/>
             <classpath path="${lib}/commons-digester.jar"/>
             <classpath path="${lib}/commons-fileupload.jar"/>
-            <classpath path="${lib}/commons-logging.jar"/>
             <classpath path="${lib}/commons-validator.jar"/>
             <classpath path="${lib}/jakarta-oro.jar"/>
             <classpath path="${lib}/struts.jar"/>

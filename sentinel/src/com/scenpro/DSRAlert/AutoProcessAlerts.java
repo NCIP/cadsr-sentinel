@@ -71,9 +71,9 @@ public class AutoProcessAlerts
 
         // Default database information if the properties file is missing.
         _driver = "oci8";
-        _tnsname = "cbdev";
-        _user = "sbrext";
-        _pswd = "jjuser";
+        _tnsname = "test";
+        _user = "test";
+        _pswd = "test";
 
         // A location to store all log and report files.
         _work = "alerts_";
@@ -696,14 +696,84 @@ public class AutoProcessAlerts
      *        The Alert details.
      * @return The new data set.
      */
-    private ACData[] filter(ACData list_[], ProcessRec rec_)
+    private ACData[] filter(ACData list_[], AlertRec rec_)
     {
-        ACData temp[] = ACData.filter(list_, rec_._alert);
+        ACData temp[] = ACData.filter(list_, rec_);
         ACData.resolveChanges(_db, temp);
         logError(_db.getError());
         return temp;
     }
 
+    /**
+     * Find the records that have actually changed in the database.
+     * 
+     * @param rec_ The Alert Definition.
+     * @param acdList_ The lists of record changes.
+     */
+    private void findChanges(AlertRec rec_, ACData acdList_[][])
+    {
+        // Check for changes to Valid Values from the Questions on
+        // Forms/Templates.
+        String creators[] = rec_.getCreators();
+        String modifiers[] = rec_.getModifiers();
+        int dates = rec_.getDateFilter();
+
+        for (int ndx = 0; ndx < acdList_.length; ++ndx)
+            acdList_[ndx] = new ACData[0];
+
+        int length = (rec_.isACTYPEall()) ? DBAlert._ACTYPE_LENGTH : rec_.getACTypes().length;
+        
+        for (int ndx = 0; ndx < length; ++ndx)
+        {
+            int rc = rec_.isACTypeUsed(ndx);
+            if (rc == -1) continue;
+            switch (rc)
+            {
+                case DBAlert._ACTYPE_OC:
+                    acdList_[rc] = _db.selectOC(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_QCV:
+                    acdList_[rc] = _db.selectQCV(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_QCQ:
+                    acdList_[rc] = _db.selectQCQ(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_QCM:
+                    acdList_[rc] = _db.selectQCM(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_QC:
+                    acdList_[rc] = _db.selectQC(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_PV:
+                    acdList_[rc] = _db.selectPV(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_VD:
+                    acdList_[rc] = _db.selectVD(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_CD:
+                    acdList_[rc] = _db.selectCD(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_DEC:
+                    acdList_[rc] = _db.selectDEC(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_DE:
+                    acdList_[rc] = _db.selectDE(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_CSI:
+                    acdList_[rc] = _db.selectCSI(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_CS:
+                    acdList_[rc] = _db.selectCS(dates, _start, _end, creators, modifiers);
+                    break;
+                case DBAlert._ACTYPE_CONTE:
+                    acdList_[rc] = _db.selectCONTE(dates, _start, _end, creators, modifiers);
+                    break;
+            }
+            logError(_db.getError());
+            acdList_[rc] = filter(acdList_[rc], rec_);
+        }
+    }
+    
     /**
      * Create a dataset of all changes from the caDSR.
      * 
@@ -727,78 +797,37 @@ public class AutoProcessAlerts
         // Determine file name that will eventually hold the output.
         getFileName(rec_);
 
-        // Check for changes to Valid Values from the Questions on
-        // Forms/Templates.
-        String creators[] = rec_._alert.getCreators();
-        String modifiers[] = rec_._alert.getModifiers();
-        ACData qcv[] = _db.selectQCV(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        qcv = filter(qcv, rec_);
-
-        // Check for changes to Questions on Forms/Templates.
-        ACData qcq[] = _db.selectQCQ(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        qcq = filter(qcq, rec_);
-
-        // Check for changes to Modules on Forms/Templates.
-        ACData qcm[] = _db.selectQCM(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        qcm = filter(qcm, rec_);
-
-        // Check for changes to Forms/Templates.
-        ACData qc[] = _db.selectQC(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        qc = filter(qc, rec_);
-
-        // Check for changes to Permissible Values
-        ACData pv[] = _db.selectPV(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        pv = filter(pv, rec_);
-
-        // Check for changes to Value Domains
-        ACData vd[] = _db.selectVD(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        vd = filter(vd, rec_);
-
-        // Don't worry about Conceptual Domains yet, that comes later in the
-        // logis below.
-        ACData cd[] = new ACData[0];
-
-        // Check for changes to Data Element Concepts
-        ACData dec[] = _db.selectDEC(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        dec = filter(dec, rec_);
-
-        // Check for changes to Data Elements
-        ACData de[] = _db.selectDE(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        de = filter(de, rec_);
-
-        // Check for changes to Classification Scheme Items
-        ACData csi[] = _db.selectCSI(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        csi = filter(csi, rec_);
-
-        // Check for changes to Classification Schemes
-        ACData cs[] = _db.selectCS(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        cs = filter(cs, rec_);
-
-        // Check for changes to Contexts
-        ACData conte[] = _db.selectCONTE(_start, _end, creators, modifiers);
-        logError(_db.getError());
-        conte = filter(conte, rec_);
+        // Get the changes from the database.
+        ACData actypes[][] = new ACData[DBAlert._ACTYPE_LENGTH][];
+        findChanges(rec_._alert, actypes);
+        ACData oc[]    = actypes[DBAlert._ACTYPE_OC];
+        ACData qcv[]   = actypes[DBAlert._ACTYPE_QCV];
+        ACData qcq[]   = actypes[DBAlert._ACTYPE_QCQ];
+        ACData qcm[]   = actypes[DBAlert._ACTYPE_QCM];
+        ACData qc[]    = actypes[DBAlert._ACTYPE_QC];
+        ACData pv[]    = actypes[DBAlert._ACTYPE_PV];
+        ACData vd[]    = actypes[DBAlert._ACTYPE_VD];
+        ACData cd[]    = actypes[DBAlert._ACTYPE_CD];
+        ACData dec[]   = actypes[DBAlert._ACTYPE_DEC];
+        ACData de[]    = actypes[DBAlert._ACTYPE_DE];
+        ACData csi[]   = actypes[DBAlert._ACTYPE_CSI];
+        ACData cs[]    = actypes[DBAlert._ACTYPE_CS];
+        ACData conte[] = actypes[DBAlert._ACTYPE_CONTE];
+        actypes = null;
 
         // Report on the raw change counts.
-        log("\tChange count:" + " qcv " + qcv.length + " qcq " + qcq.length
-            + ", qcm " + qcm.length + " qc " + qc.length + ", pv " + pv.length
-            + ", vd " + vd.length + ", cd " + cd.length + ", dec " + dec.length
-            + ", de " + de.length + ", csi " + csi.length + ", cs " + cs.length
+        log("\tChange count:"
+            + " qcv " + qcv.length + " qcq " + qcq.length
+            + ", qcm " + qcm.length + " qc " + qc.length
+            + ", pv " + pv.length + ", vd " + vd.length
+            + ", cd " + cd.length + ", oc " + oc.length
+            + ", dec " + dec.length + ", de " + de.length
+            + ", csi " + csi.length + ", cs " + cs.length
             + ", conte " + conte.length);
 
         // Get the data associated to the changed data. This is done one step at
-        // a time using the following
-        // assocications.
+        // a time using the following associations.
+        //      Object Class associate to Data Element Concepts
         //      Permissible Values associate to Value Domains
         //      Value Domains associate to Data Elements and Valid Values
         //      Valid Values associate to Questions
@@ -812,7 +841,9 @@ public class AutoProcessAlerts
         logError(_db.getError());
         ACData dem[] = ACData.merge(de, _db.selectDEfromVD(vdm));
         logError(_db.getError());
-        dem = ACData.merge(dem, _db.selectDEfromDEC(dec));
+        ACData decm[] = ACData.merge(dec, _db.selectDECfromOC(oc));
+        logError(_db.getError());
+        dem = ACData.merge(dem, _db.selectDEfromDEC(decm));
         logError(_db.getError());
         ACData qcvm[] = ACData.merge(qcv, _db.selectQCVfromVD(vdm));
         logError(_db.getError());
@@ -831,7 +862,7 @@ public class AutoProcessAlerts
         ACData cdm[] = new ACData[0];
         ACData csim[] = ACData.merge(csi, _db.selectCSIfromDE(dem));
         logError(_db.getError());
-        csim = ACData.merge(csim, _db.selectCSIfromDEC(dec));
+        csim = ACData.merge(csim, _db.selectCSIfromDEC(decm));
         logError(_db.getError());
         csim = ACData.merge(csim, _db.selectCSIfromVD(vdm));
         logError(_db.getError());
@@ -843,17 +874,13 @@ public class AutoProcessAlerts
         logError(_db.getError());
 
         // If a CSI, CS or Form is specified, we can not get to a Context
-        // directly from the
-        // Administered Components.
+        // directly from the Administered Components.
         if (rec_._alert.isCSIall() && rec_._alert.isCSall()
             && rec_._alert.isFORMSall())
         {
-            cd = _db.selectCD(_start, _end, creators, modifiers);
-            logError(_db.getError());
-            cd = filter(cd, rec_);
             cdm = ACData.merge(cd, _db.selectCDfromVD(vdm));
             logError(_db.getError());
-            cdm = ACData.merge(cdm, _db.selectCDfromDEC(dec));
+            cdm = ACData.merge(cdm, _db.selectCDfromDEC(decm));
             logError(_db.getError());
             contem = ACData.merge(contem, _db.selectCONTEfromCD(cdm));
             logError(_db.getError());
@@ -861,18 +888,26 @@ public class AutoProcessAlerts
             logError(_db.getError());
             contem = ACData.merge(contem, _db.selectCONTEfromDE(dem));
             logError(_db.getError());
-            contem = ACData.merge(contem, _db.selectCONTEfromDEC(dec));
+            contem = ACData.merge(contem, _db.selectCONTEfromDEC(decm));
+            logError(_db.getError());
+            contem = ACData.merge(contem, _db.selectCONTEfromOC(oc));
             logError(_db.getError());
         }
+        
+        // Turns out we don't want the Conceptual Domain right now.
+        else
+            cd = new ACData[0];
 
         // Report on the related counts.
-        log("\tRelated count:" + " qca " + ((qca == null) ? -1 : qca.length)
-            + ", vdm " + ((vdm == null) ? -1 : vdm.length) + ", cdm "
-            + ((cdm == null) ? -1 : cdm.length) + ", dem "
-            + ((dem == null) ? -1 : dem.length) + ", csim "
-            + ((csim == null) ? -1 : csim.length) + ", csm "
-            + ((csm == null) ? -1 : csm.length) + ", contem "
-            + ((contem == null) ? -1 : contem.length));
+        log("\tRelated count:"
+            + " qca " + ((qca == null) ? -1 : qca.length)
+            + ", vdm " + ((vdm == null) ? -1 : vdm.length)
+            + ", cdm " + ((cdm == null) ? -1 : cdm.length)
+            + ", decm " + ((decm == null) ? -1 : decm.length)
+            + ", dem " + ((dem == null) ? -1 : dem.length)
+            + ", csim " + ((csim == null) ? -1 : csim.length)
+            + ", csm " + ((csm == null) ? -1 : csm.length)
+            + ", contem " + ((contem == null) ? -1 : contem.length));
 
         // Scrub the lists and remove everything that is not part of the
         // Criteria.
@@ -905,6 +940,7 @@ public class AutoProcessAlerts
         ACData.sortRelated(qca);
         ACData.sortRelated(vdm);
         ACData.sortRelated(cdm);
+        ACData.sortRelated(decm);
         ACData.sortRelated(dem);
         ACData.sortRelated(csim);
         ACData.sortRelated(csm);
@@ -914,6 +950,7 @@ public class AutoProcessAlerts
         ACDataLink lconte = new ACDataLink(contem, true);
         ACDataLink lpv = new ACDataLink(pv);
         ACDataLink lvd = new ACDataLink(vd);
+        ACDataLink loc = new ACDataLink(oc);
         ACDataLink lde = new ACDataLink(de);
         ACDataLink ldec = new ACDataLink(dec);
         ACDataLink lcs = new ACDataLink(cs);
@@ -924,6 +961,7 @@ public class AutoProcessAlerts
         ACDataLink lqcm = new ACDataLink(qcm);
         ACDataLink lqc = new ACDataLink(qc);
         ACDataLink chainVD = new ACDataLink(vdm);
+        ACDataLink chainDEC = new ACDataLink(decm);
         ACDataLink chainDE = new ACDataLink(dem);
         ACDataLink chainCS = new ACDataLink(csm);
         ACDataLink chainCSI = new ACDataLink(csim);
@@ -942,13 +980,18 @@ public class AutoProcessAlerts
         Stack results = new Stack();
         if (rec_._alert.isFORMSall())
         {
+            // Qualify results by CS and CSI (i.e. Forms/Templates is "All").
             chainCS.add(lconte);
             chainCSI.add(chainCS);
             chainDE.add(chainCSI);
+            chainDEC.add(chainDE);
             chainCD.add(lconte);
+            chainDEC.add(chainCD);
+            chainDEC.add(chainCSI);
             chainVD.add(chainDE);
             chainVD.add(chainCD);
             chainVD.add(chainCSI);
+            loc.add(chainDEC);
             lpv.add(chainVD);
             lvd.add(chainCD);
             lvd.add(chainDE);
@@ -962,6 +1005,7 @@ public class AutoProcessAlerts
         }
         if (rec_._alert.isCSIall() && rec_._alert.isCSall())
         {
+            // Qualify results by Forms/Templates (i.e. CS and CSI is "All").
             chainQC.add(lconte);
             chainQCM.add(chainQC);
             chainQCQ.add(chainQCM);
@@ -969,7 +1013,9 @@ public class AutoProcessAlerts
             chainQCV.add(chainQCQ);
             chainVD.add(chainQCV);
             chainVD.add(chainDE);
+            chainDEC.add(chainDE);
             chainDE.add(chainQCQ);
+            loc.add(chainDEC);
             lvd.add(chainQCV);
             lde.add(chainQCQ);
             lqcv.add(chainQCQ);
@@ -985,6 +1031,7 @@ public class AutoProcessAlerts
         if (rec_._alert.isCSIall() && rec_._alert.isCSall()
             && rec_._alert.isFORMSall())
         {
+            loc.add(lconte);
             lvd.add(lconte);
             ldec.add(lconte);
             lde.add(lconte);
@@ -992,6 +1039,7 @@ public class AutoProcessAlerts
         }
         chainVD = null;
         chainDE = null;
+        chainDEC = null;
         chainCS = null;
         chainCSI = null;
         chainCD = null;
@@ -1001,6 +1049,7 @@ public class AutoProcessAlerts
         chainQCV = null;
         lconte = null;
 
+        loc.follow(results, 0, loc.getRange());
         lpv.follow(results, 0, lpv.getRange());
         lvd.follow(results, 0, lvd.getRange());
         lde.follow(results, 0, lde.getRange());

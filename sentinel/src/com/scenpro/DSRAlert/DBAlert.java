@@ -1177,7 +1177,9 @@ public class DBAlert
         int specific = 0;
         if (rec_.getContexts() != null)
         {
-            if (rec_.getContexts(0).charAt(0) != '(')
+            if (rec_.isCONTall())
+                criteria = criteria + "Context may be anything ";
+            else
             {
                 select = "select name from sbr.contexts_view "
                     + "where conte_idseq in (?) order by upper(name) ASC";
@@ -1185,14 +1187,14 @@ public class DBAlert
                     + selectText(select, rec_.getContexts(), 1);
                 specific += 1;
             }
-            else
-                criteria = criteria + "Context may be anything ";
         }
         if (rec_.getForms() != null)
         {
             if (criteria.length() > 0)
                 criteria = criteria + " AND\n";
-            if (rec_.getForms(0).charAt(0) != '(')
+            if (rec_.isFORMSall())
+                criteria = criteria + "Forms / Templates may be anything ";
+            else
             {
                 select = "select long_name "
                     + "from sbrext.quest_contents_view_ext "
@@ -1201,14 +1203,14 @@ public class DBAlert
                     + selectText(select, rec_.getForms(), 1);
                 specific += 2;
             }
-            else
-                criteria = criteria + "Forms / Templates may be anything ";
         }
         if (rec_.getSchemes() != null)
         {
             if (criteria.length() > 0)
                 criteria = criteria + " AND\n";
-            if (rec_.getSchemes(0).charAt(0) != '(')
+            if (rec_.isCSall())
+                criteria = criteria + "Classification Schemes may be anything ";
+            else
             {
                 select = "select long_name "
                     + "from sbr.classification_schemes_view "
@@ -1217,14 +1219,15 @@ public class DBAlert
                     + selectText(select, rec_.getSchemes(), 1);
                 specific += 4;
             }
-            else
-                criteria = criteria + "Classification Schemes may be anything ";
         }
         if (rec_.getSchemeItems() != null)
         {
             if (criteria.length() > 0)
                 criteria = criteria + " AND\n";
-            if (rec_.getSchemeItems(0).charAt(0) != '(')
+            if (rec_.isCSIall())
+                criteria = criteria
+                + "Classification Scheme Items may be anything ";
+            else
             {
                 select = "select csi_name "
                     + "from sbr.class_scheme_items_view "
@@ -1233,40 +1236,76 @@ public class DBAlert
                     + selectText(select, rec_.getSchemeItems(), 1);
                 specific += 8;
             }
+        }
+        if (rec_.getACTypes() != null)
+        {
+            if (criteria.length() > 0)
+                criteria = criteria + " AND\n";
+            if (rec_.isACTYPEall())
+                criteria = criteria + "Administered Component Types may be anything ";
             else
-                criteria = criteria
-                    + "Classification Scheme Items may be anything ";
+            {
+                criteria = criteria + "Administered Component Types must be ";
+                String list = "";
+                for (int ndx = 0; ndx < rec_.getACTypes().length; ++ndx)
+                {
+                    list = list + " OR \"" + binarySearch(_DBMAP3KEYS, _DBMAP3VALS, rec_.getACTypes(ndx)) + "\"";
+                }
+                criteria = criteria + list.substring(4);
+                specific += 16;
+            }
         }
         if (rec_.getCreators() != null)
         {
             if (criteria.length() > 0)
                 criteria = criteria + " AND\n";
-            if (rec_.getCreators(0).charAt(0) != '(')
+            if (rec_.getCreators(0).charAt(0) == '(')
+                criteria = criteria + "Created By may be anyone ";
+            else
             {
                 select = "select name from sbrext.user_accounts_view "
                     + "where ua_name in (?) order by upper(name) ASC";
                 criteria = criteria + "Created By must be "
                     + selectText(select, rec_.getCreators(), 1);
-                specific += 16;
+                specific += 32;
             }
-            else
-                criteria = criteria + "Created By may be anyone ";
         }
         if (rec_.getModifiers() != null)
         {
             if (criteria.length() > 0)
                 criteria = criteria + " AND\n";
-            if (rec_.getModifiers(0).charAt(0) != '(')
+            if (rec_.getModifiers(0).charAt(0) == '(')
+                criteria = criteria + "Modified By may be anyone ";
+            else
             {
                 select = "select name from sbrext.user_accounts_view "
                     + "where ua_name in (?) order by upper(name) ASC";
                 criteria = criteria + "Modified By must be "
                     + selectText(select, rec_.getModifiers(), 1);
-                specific += 32;
+                specific += 64;
             }
-            else
-                criteria = criteria + "Modified By may be anyone ";
         }
+
+        if (criteria.length() > 0)
+            criteria = criteria + " AND\n";
+        switch (rec_.getDateFilter())
+        {
+            case _DATECONLY:
+                criteria = criteria + "Reporting Dates are compared to Date Created only ";
+                specific += 128;
+                break;
+
+            case _DATEMONLY:
+                criteria = criteria + "Reporting Dates are compared to Date Modified only ";
+                specific += 128;
+                break;
+
+            case _DATECM:
+            default:
+                criteria = criteria + "Reporting Dates are compared to Date Created and Date Modified ";
+                break;
+        }
+
         if (specific > 0)
             criteria = "Criteria:\n" + criteria + "\n";
         else
@@ -1376,6 +1415,7 @@ public class DBAlert
             pstmt.setString(1, rec_.getAlertRecNum());
             ResultSet rs = pstmt.executeQuery();
             Vector context = new Vector();
+            Vector actype = new Vector();
             Vector scheme = new Vector();
             Vector schemeitem = new Vector();
             Vector form = new Vector();
@@ -1410,6 +1450,12 @@ public class DBAlert
                         creator.add(value);
                     else if (dtype.equals(_MODIFIER))
                         modifier.add(value);
+                    else if (dtype.equals(_ACTYPE))
+                        actype.add(value);
+                    else if (dtype.equals(_DATEFILTER))
+                    {
+                        rec_.setDateFilter(value);
+                    }
                 }
                 else if (rtype == _MONITORS)
                 {
@@ -1441,6 +1487,18 @@ public class DBAlert
                 for (int ndx = 0; ndx < list.length; ++ndx)
                     list[ndx] = (String) context.get(ndx);
                 rec_.setContexts(list);
+            }
+
+            if (actype.size() == 0)
+            {
+                rec_.setACTypes(null);
+            }
+            else
+            {
+                list = new String[actype.size()];
+                for (int ndx = 0; ndx < list.length; ++ndx)
+                    list[ndx] = (String) actype.get(ndx);
+                rec_.setACTypes(list);
             }
 
             if (form.size() == 0)
@@ -1611,7 +1669,7 @@ public class DBAlert
             // and monitors. In other words, we don't want to waste time
             // checking the context when (All) was
             // selected because it will always logically test true.
-            if (rec_.getContexts(0).equals(Constants._STRALL) == false)
+            if (!rec_.isCONTall())
             {
                 pstmt.setString(3, _CONTEXT);
                 pstmt.setString(4, "CONTE_IDSEQ");
@@ -1624,7 +1682,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getForms(0).equals(Constants._STRALL) == false)
+            if (!rec_.isFORMSall())
             {
                 pstmt.setString(3, _FORM);
                 pstmt.setString(4, "QC_IDSEQ");
@@ -1637,7 +1695,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getSchemes(0).equals(Constants._STRALL) == false)
+            if (!rec_.isCSall())
             {
                 pstmt.setString(3, _SCHEME);
                 pstmt.setString(4, "CS_IDSEQ");
@@ -1650,7 +1708,7 @@ public class DBAlert
                 }
             }
 
-            if (rec_.getSchemeItems(0).equals(Constants._STRALL) == false)
+            if (!rec_.isCSIall())
             {
                 pstmt.setString(3, _SCHEMEITEM);
                 pstmt.setString(4, "CSI_IDSEQ");
@@ -1689,13 +1747,35 @@ public class DBAlert
                 }
             }
 
+            if (!rec_.isACTYPEall())
+            {
+                pstmt.setString(3, _ACTYPE);
+                pstmt.setString(4, "ABBREV");
+                marker = 6;
+                for (int ndx = 0; ndx < rec_.getACTypes().length; ++ndx)
+                {
+                    // Update
+                    pstmt.setString(5, rec_.getACTypes(ndx));
+                    xxx = pstmt.executeUpdate();
+                }
+            }
+
+            if (rec_.getDateFilter() != DBAlert._DATECM)
+            {
+                marker = 7;
+                pstmt.setString(3, _DATEFILTER);
+                pstmt.setString(4, "CODE");
+                pstmt.setString(5, Integer.toString(rec_.getDateFilter()));
+                xxx = pstmt.executeUpdate();
+            }
+
             pstmt.setString(2, "M");
 
             if (rec_.getAWorkflow(0).equals(Constants._STRANY) == false)
             {
                 pstmt.setString(3, _STATUS);
                 pstmt.setString(4, "ASL_NAME");
-                marker = 6;
+                marker = 20;
                 for (int ndx = 0; ndx < rec_.getAWorkflow().length; ++ndx)
                 {
                     // Update
@@ -1708,7 +1788,7 @@ public class DBAlert
             {
                 pstmt.setString(3, _REGISTER);
                 pstmt.setString(4, "REGISTRATION_STATUS");
-                marker = 7;
+                marker = 21;
                 for (int ndx = 0; ndx < rec_.getARegis().length; ++ndx)
                 {
                     // Update
@@ -1719,7 +1799,7 @@ public class DBAlert
 
             if (rec_.getAVersion() != DBAlert._VERANYCHG)
             {
-                marker = 8;
+                marker = 22;
                 pstmt.setString(3, _VERSION);
                 pstmt.setString(4, rec_.getAVersionString());
                 pstmt.setString(5, rec_.getActVerNum());
@@ -2975,35 +3055,24 @@ public class DBAlert
             pstmt.close();
             rs.close();
 
-            // We know there will always be someone in the table but we should
-            // follow good
-            // programming.
-            if (results.size() == 0)
+            // Move the list from a Vector to an array and add "(All)" to
+            // the beginning.
+            int count = results.size() + 1;
+            data._labels = new String[count];
+            data._id1 = new String[count];
+            data._id2 = new String[count];
+            data._labels[0] = Constants._STRALL;
+            data._id1[0] = Constants._STRALL;
+            data._id2[0] = Constants._STRALL;
+            int cnt = 0;
+            for (int ndx = 1; ndx < count; ++ndx)
             {
-                data._id1 = null;
-                data._id2 = null;
-                data._labels = null;
+                rec = (tempData2) results.get(cnt++);
+                data._labels[ndx] = rec._label;
+                data._id1[ndx] = rec._id1;
+                data._id2[ndx] = rec._id2;
             }
-            else
-            {
-                // Move the list from a Vector to an array and add "(All)" to
-                // the beginning.
-                int count = results.size() + 1;
-                data._labels = new String[count];
-                data._id1 = new String[count];
-                data._id2 = new String[count];
-                data._labels[0] = Constants._STRALL;
-                data._id1[0] = Constants._STRALL;
-                data._id2[0] = Constants._STRALL;
-                int cnt = 0;
-                for (int ndx = 1; ndx < count; ++ndx)
-                {
-                    rec = (tempData2) results.get(cnt++);
-                    data._labels[ndx] = rec._label;
-                    data._id1[ndx] = rec._id1;
-                    data._id2[ndx] = rec._id2;
-                }
-            }
+            
             data._rc = 0;
         }
         catch (SQLException ex)
@@ -3086,42 +3155,28 @@ public class DBAlert
             pstmt.close();
             rs.close();
 
-            // We know there will always be someone in the table but we should
-            // follow good
-            // programming.
-            if (results.size() == 0)
+            // Move the list from a Vector to an array and add "(All)" to
+            // the beginning.
+            int count = results.size() + 1;
+            data._label1 = new String[count];
+            data._label2 = new String[count];
+            data._id1 = new String[count];
+            data._id2 = new String[count];
+            data._id3 = new int[count];
+            data._label1[0] = Constants._STRALL;
+            data._label2[0] = Constants._STRALL;
+            data._id1[0] = Constants._STRALL;
+            data._id2[0] = Constants._STRALL;
+            data._id3[0] = 0;
+            int cnt = 0;
+            for (int ndx = 1; ndx < count; ++ndx)
             {
-                data._id1 = null;
-                data._id2 = null;
-                data._id3 = null;
-                data._label1 = null;
-                data._label2 = null;
-            }
-            else
-            {
-                // Move the list from a Vector to an array and add "(All)" to
-                // the beginning.
-                int count = results.size() + 1;
-                data._label1 = new String[count];
-                data._label2 = new String[count];
-                data._id1 = new String[count];
-                data._id2 = new String[count];
-                data._id3 = new int[count];
-                data._label1[0] = Constants._STRALL;
-                data._label2[0] = Constants._STRALL;
-                data._id1[0] = Constants._STRALL;
-                data._id2[0] = Constants._STRALL;
-                data._id3[0] = 0;
-                int cnt = 0;
-                for (int ndx = 1; ndx < count; ++ndx)
-                {
-                    rec = (tempData3) results.get(cnt++);
-                    data._label1[ndx] = rec._label1;
-                    data._label2[ndx] = rec._label2;
-                    data._id1[ndx] = rec._id1;
-                    data._id2[ndx] = rec._id2;
-                    data._id3[ndx] = rec._id3;
-                }
+                rec = (tempData3) results.get(cnt++);
+                data._label1[ndx] = rec._label1;
+                data._label2[ndx] = rec._label2;
+                data._id1[ndx] = rec._id1;
+                data._id2[ndx] = rec._id2;
+                data._id3[ndx] = rec._id3;
             }
             data._rc = 0;
         }
@@ -3137,6 +3192,107 @@ public class DBAlert
         return data;
     }
 
+    /**
+     * Retrieve the list of record types.  As this is coded in a constant
+     * array, no database access is required.
+     * 
+     * @return 0 if successful.
+     */
+    public int getACTypes()
+    {
+        String[] list = new String[_DBMAP3VALS.length + 1];
+        String[] vals = new String[_DBMAP3KEYS.length + 1];
+        list[0] = Constants._STRALL;
+        vals[0] = Constants._STRALL;
+        list[1] = _DBMAP3VALS[0];
+        vals[1] = _DBMAP3KEYS[0];
+
+        // Put the descriptive text in alphabetic order for display.
+        // Of course we have to keep the key-value pairs intact.
+        for (int ndx = 1; ndx < _DBMAP3VALS.length; ++ndx)
+        {
+            int min = 1;
+            int max = ndx + 1;
+            int pos = 1;
+            while (true)
+            {
+                pos = (max + min) / 2;
+                int compare = _DBMAP3VALS[ndx].compareTo(list[pos]);
+                if (compare == 0)
+                {
+                    // Can't happen.
+                }
+                else if (compare > 0)
+                {
+                    if (min == pos)
+                    {
+                        ++pos;
+                        break;
+                    }
+                    min = pos;
+                }
+                else
+                {
+                    if (max == pos)
+                    {
+                        break;
+                    }
+                    max = pos;
+                }
+            }
+
+            // Preserve existing entries - an insert.
+            if (pos <= ndx)
+            {
+                System.arraycopy(list, pos, list, pos + 1, ndx - pos + 1);
+                System.arraycopy(vals, pos, vals, pos + 1, ndx - pos + 1);
+            }
+            
+            // Insert new item in list.
+            list[pos] = _DBMAP3VALS[ndx];
+            vals[pos] = _DBMAP3KEYS[ndx];
+        }
+        
+        // Keep the results.
+        _actypesList = list;
+        _actypesVals = vals;
+        return 0;
+    }
+
+    /**
+     * Return the descriptive names for the record types.
+     * 
+     * @return The list of display values.
+     */
+    public String[] getACTypesList()
+    {
+        String temp[] = _actypesList;
+        _actypesList = null;
+        return temp;
+    }
+    
+    /**
+     * Return the internal values used to identify the record types.
+     * 
+     * @return The list of internal record types.
+     */
+    public String[] getACTypesVals()
+    {
+        String temp[] = _actypesVals;
+        _actypesVals = null;
+        return temp;
+    }
+    
+    /**
+     * Look for the selection of a specific record type.
+     * 
+     * @return false if the record type is not found.
+     */
+    static public int isACTypeUsed(String val_)
+    {
+        return binarySearch(_DBMAP3KEYS, val_);
+    }
+    
     /**
      * Retrieve the list of forms and templates from the database. Follows the
      * pattern documented in getUsers().
@@ -3415,13 +3571,11 @@ public class DBAlert
                     .getString(15));
 
             // We don't want to waste time or space with records that are
-            // identical.
-            // We can't use a SELECT DISTINCT for this logic as the
-            // ACData.equals doesn't
-            // look at all data elements but only specific ones.
+            // identical. We can't use a SELECT DISTINCT for this logic as the
+            // ACData.equals doesn't look at all data elements but only specific ones.
             if (oldrec != null)
             {
-                if (oldrec.equals(rec) == false)
+                if (!oldrec.isEquivalent(rec))
                 {
                     clist = paste(changes);
                     olist = paste(oval);
@@ -3788,7 +3942,7 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectPV(Timestamp start_, Timestamp end_,
+    public ACData[] selectPV(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
         String select[] = new String[4];
@@ -3797,8 +3951,10 @@ public class DBAlert
             + "from sbr.permissible_values_view pv " + "where ";
         select[1] = "created_by in (?) and ";
         select[2] = "modified_by in (?) and ";
-        select[3] = "((pv.date_modified is not null and pv.date_modified >= ? and pv.date_modified < ?) "
-            + "or (pv.date_modified is null and pv.date_created >= ? and pv.date_created < ?)) "
+        select[3] = "((pv.date_modified is not null and pv.date_modified "
+            + _DATECHARS[dates_][0] + " ? and pv.date_modified " + _DATECHARS[dates_][1] + " ?) "
+            + "or (pv.date_created is not null and pv.date_created "
+            + _DATECHARS[dates_][2] + " ? and pv.date_created " + _DATECHARS[dates_][3] + " ?)) "
             + "order by id asc";
 
         return selectAC(select, start_, end_, 2, creators_, modifiers_);
@@ -3813,9 +3969,10 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectVD(Timestamp start_, Timestamp end_,
+    public ACData[] selectVD(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
+        int pairs;
         String select[] = new String[7];
         select[0] = "(select 'p', 1, 'vd', vd.vd_idseq as id, vd.version, vd.vd_id, vd.long_name, vd.conte_idseq as cid, "
             + "vd.date_modified as ctime, vd.date_created, vd.modified_by, vd.created_by, vd.change_note, "
@@ -3825,23 +3982,40 @@ public class DBAlert
             + "c.conte_idseq = vd.conte_idseq and ";
         select[1] = "vd.created_by in (?) and ";
         select[2] = "ach.changed_by in (?) and ";
-        select[3] = "((ach.change_datetimestamp is not null and ach.change_datetimestamp >= ? and ach.change_datetimestamp < ?) "
-            + "or (vd.date_modified is null and vd.date_created >= ? and vd.date_created < ?)) "
-            + "union "
-            + "select 'p', 2, 'vd', ac.ac_idseq as id, ac.version, xx.vd_id, ac.long_name, dv.conte_idseq as cid, "
-            + "ac.date_modified as ctime, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, "
-            + "c.name, '', '', '', '', ac.date_modified as stime "
-            + "from sbr.admin_components_view ac, sbr.value_domains_view xx, "
-            + "sbr.designations_view dv, sbr.contexts_view c "
-            + "where ac.actl_name = 'VALUEDOMAIN' and xx.vd_idseq = ac.ac_idseq and "
-            + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq and ";
-        select[4] = "ac.created_by in (?) and ";
-        select[5] = "ac.modified_by in (?) and ";
-        select[6] = "((ac.date_modified is not null and ac.date_modified >= ? and ac.date_modified < ?) "
-            + "or (ac.date_modified is null and ac.date_created >= ? and ac.date_created < ?))) "
-            + "order by id asc, cid asc, ctime asc, stime asc";
+        if (_INCdesignations)
+        {
+            pairs = 4;
+            select[3] = "((ach.change_datetimestamp is not null and ach.change_datetimestamp "
+                + _DATECHARS[dates_][0] + " ? and ach.change_datetimestamp " + _DATECHARS[dates_][1] + " ?) "
+                + "or (vd.date_created is not null and vd.date_created "
+                + _DATECHARS[dates_][2] + " ? and vd.date_created " + _DATECHARS[dates_][3] + " ?)) "
+                + "union "
+                + "select 'p', 2, 'vd', ac.ac_idseq as id, ac.version, xx.vd_id, ac.long_name, dv.conte_idseq as cid, "
+                + "ac.date_modified as ctime, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, "
+                + "c.name, '', '', '', '', ac.date_modified as stime "
+                + "from sbr.admin_components_view ac, sbr.value_domains_view xx, "
+                + "sbr.designations_view dv, sbr.contexts_view c "
+                + "where ac.actl_name = 'VALUEDOMAIN' and xx.vd_idseq = ac.ac_idseq and "
+                + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq and ";
+            select[4] = "ac.created_by in (?) and ";
+            select[5] = "ac.modified_by in (?) and ";
+            select[6] = "((ac.date_modified is not null and ac.date_modified "
+                + _DATECHARS[dates_][0] + " ? and ac.date_modified " + _DATECHARS[dates_][1] + " ?) "
+                + "or (ac.date_created is not null and ac.date_created "
+                + _DATECHARS[dates_][2] + " ? and ac.date_created " + _DATECHARS[dates_][3] + " ?))) "
+                + "order by id asc, cid asc, ctime asc, stime asc";
+        }
+        else
+        {
+            pairs = 2;
+            select[3] = "((ach.change_datetimestamp is not null and ach.change_datetimestamp "
+                + _DATECHARS[dates_][0] + " ? and ach.change_datetimestamp " + _DATECHARS[dates_][1] + " ?) "
+                + "or (vd.date_created is not null and vd.date_created "
+                + _DATECHARS[dates_][2] + " ? and vd.date_created " + _DATECHARS[dates_][3] + " ?)) ) "
+                + "order by id asc, cid asc, ctime asc, stime asc";
+        }
 
-        return selectAC(select, start_, end_, 4, creators_, modifiers_);
+        return selectAC(select, start_, end_, pairs, creators_, modifiers_);
     }
 
     /**
@@ -3853,9 +4027,10 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectCD(Timestamp start_, Timestamp end_,
+    public ACData[] selectCD(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
+        int pairs;
         String select[] = new String[7];
         select[0] = "(select 'p', 1, 'cd', cd.cd_idseq as id, cd.version, cd.cd_id, cd.long_name, cd.conte_idseq as cid, "
             + "cd.date_modified, cd.date_created, cd.modified_by, cd.created_by, cd.change_note, c.name, '' "
@@ -3863,22 +4038,39 @@ public class DBAlert
             + "where c.conte_idseq = cd.conte_idseq and ";
         select[1] = "cd.created_by in (?) and ";
         select[2] = "cd.modified_by in (?) and ";
-        select[3] = "((cd.date_modified is not null and cd.date_modified >= ? and cd.date_modified < ?) "
-            + "or (cd.date_modified is null and cd.date_created >= ? and cd.date_created < ?)) "
-            + "union "
-            + "select 'p', 2, 'cd', ac.ac_idseq as id, ac.version, xx.cd_id, ac.long_name, dv.conte_idseq as cid, "
-            + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, '' "
-            + "from sbr.admin_components_view ac, sbr.conceptual_domains_view xx, "
-            + "sbr.designations_view dv, sbr.contexts_view c "
-            + "where ac.actl_name = 'CONCEPTUALDOMAIN' and xx.cd_idseq = ac.ac_idseq and "
-            + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq and ";
-        select[4] = "ac.created_by in (?) and ";
-        select[5] = "ac.modified_by in (?) and ";
-        select[6] = "((ac.date_modified is not null and ac.date_modified >= ? and ac.date_modified < ?) "
-            + "or (ac.date_modified is null and ac.date_created >= ? and ac.date_created < ?))) "
-            + "order by id asc, cid asc";
+        if (_INCdesignations)
+        {
+            pairs = 4;
+            select[3] = "((cd.date_modified is not null and cd.date_modified "
+                + _DATECHARS[dates_][0] + " ? and cd.date_modified " + _DATECHARS[dates_][1] + " ?) "
+                + "or (cd.date_created is not null and cd.date_created "
+                + _DATECHARS[dates_][2] + " ? and cd.date_created " + _DATECHARS[dates_][3] + " ?)) "
+                + "union "
+                + "select 'p', 2, 'cd', ac.ac_idseq as id, ac.version, xx.cd_id, ac.long_name, dv.conte_idseq as cid, "
+                + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, '' "
+                + "from sbr.admin_components_view ac, sbr.conceptual_domains_view xx, "
+                + "sbr.designations_view dv, sbr.contexts_view c "
+                + "where ac.actl_name = 'CONCEPTUALDOMAIN' and xx.cd_idseq = ac.ac_idseq and "
+                + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq and ";
+            select[4] = "ac.created_by in (?) and ";
+            select[5] = "ac.modified_by in (?) and ";
+            select[6] = "((ac.date_modified is not null and ac.date_modified "
+                + _DATECHARS[dates_][0] + " ? and ac.date_modified " + _DATECHARS[dates_][1] + " ?) "
+                + "or (ac.date_created is not null and ac.date_created "
+                + _DATECHARS[dates_][2] + " ? and ac.date_created " + _DATECHARS[dates_][3] + " ?))) "
+                + "order by id asc, cid asc";
+        }
+        else
+        {
+            pairs = 2;
+            select[3] = "((cd.date_modified is not null and cd.date_modified "
+                + _DATECHARS[dates_][0] + " ? and cd.date_modified " + _DATECHARS[dates_][1] + " ?) "
+                + "or (cd.date_created is not null and cd.date_created "
+                + _DATECHARS[dates_][2] + " ? and cd.date_created " + _DATECHARS[dates_][3] + " ?)) ) "
+                + "order by id asc, cid asc";
+        }
 
-        return selectAC(select, start_, end_, 4, creators_, modifiers_);
+        return selectAC(select, start_, end_, pairs, creators_, modifiers_);
     }
 
     /**
@@ -3890,9 +4082,10 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectCS(Timestamp start_, Timestamp end_,
+    public ACData[] selectCS(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
+        int pairs;
         String select[] = new String[7];
         select[0] = "(select 'p', 1, 'cs', cs.cs_idseq as id, cs.version, cs.cs_id, cs.long_name, cs.conte_idseq as cid, "
             + "cs.date_modified, cs.date_created, cs.modified_by, cs.created_by, cs.change_note, c.name, '' "
@@ -3900,22 +4093,69 @@ public class DBAlert
             + "where c.conte_idseq = cs.conte_idseq and ";
         select[1] = "cs.created_by in (?) and ";
         select[2] = "cs.modified_by in (?) and ";
-        select[3] = "((cs.date_modified is not null and cs.date_modified >= ? and cs.date_modified < ?) "
-            + "or (cs.date_modified is null and cs.date_created >= ? and cs.date_created < ?)) "
-            + "union "
-            + "select 'p', 2, 'cs', ac.ac_idseq as id, ac.version, xx.cs_id, ac.long_name, dv.conte_idseq as cid, "
-            + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, '' "
-            + "from sbr.admin_components_view ac, sbr.classification_schemes_view xx, "
-            + "sbr.designations_view dv, sbr.contexts_view c "
-            + "where ac.actl_name = 'CLASSIFICATION' and xx.cs_idseq = ac.ac_idseq and "
-            + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq and ";
-        select[4] = "ac.created_by in (?) and ";
-        select[5] = "ac.modified_by in (?) and ";
-        select[6] = "((ac.date_modified is not null and ac.date_modified >= ? and ac.date_modified < ?) "
-            + "or (ac.date_modified is null and ac.date_created >= ? and ac.date_created < ?))) "
+        if (_INCdesignations)
+        {
+            pairs = 4;
+            select[3] = "((cs.date_modified is not null and cs.date_modified "
+                + _DATECHARS[dates_][0] + " ? and cs.date_modified " + _DATECHARS[dates_][1] + " ?) "
+                + "or (cs.date_created is not null and cs.date_created "
+                + _DATECHARS[dates_][2] + " ? and cs.date_created " + _DATECHARS[dates_][3] + " ?)) "
+                + "union "
+                + "select 'p', 2, 'cs', ac.ac_idseq as id, ac.version, xx.cs_id, ac.long_name, dv.conte_idseq as cid, "
+                + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, '' "
+                + "from sbr.admin_components_view ac, sbr.classification_schemes_view xx, "
+                + "sbr.designations_view dv, sbr.contexts_view c "
+                + "where ac.actl_name = 'CLASSIFICATION' and xx.cs_idseq = ac.ac_idseq and "
+                + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq and ";
+            select[4] = "ac.created_by in (?) and ";
+            select[5] = "ac.modified_by in (?) and ";
+            select[6] = "((ac.date_modified is not null and ac.date_modified "
+                + _DATECHARS[dates_][0] + " ? and ac.date_modified " + _DATECHARS[dates_][1] + " ?) "
+                + "or (ac.date_created is not null and ac.date_created "
+                + _DATECHARS[dates_][2] + " ? and ac.date_created " + _DATECHARS[dates_][3] + " ?))) "
+                + "order by id asc, cid asc";
+        }
+        else
+        {
+            pairs = 2;
+            select[3] = "((cs.date_modified is not null and cs.date_modified "
+                + _DATECHARS[dates_][0] + " ? and cs.date_modified " + _DATECHARS[dates_][1] + " ?) "
+                + "or (cs.date_created is not null and cs.date_created "
+                + _DATECHARS[dates_][2] + " ? and cs.date_created " + _DATECHARS[dates_][3] + " ?)) ) "
+                + "order by id asc, cid asc";
+        }
+
+        return selectAC(select, start_, end_, pairs, creators_, modifiers_);
+    }
+
+    /**
+     * Pull all Object Class changes in the date range
+     * specified.
+     * 
+     * @param start_
+     *        The date to start.
+     * @param end_
+     *        The date to end.
+     * @return 0 if successful, otherwise the database error code.
+     */
+    public ACData[] selectOC(int dates_, Timestamp start_, Timestamp end_,
+        String creators_[], String modifiers_[])
+    {
+        String select[] = new String[4];
+        select[0] = "select 'p', 1, 'oc', oc.oc_idseq as id, oc.version, oc.oc_id, "
+            + "oc.long_name, oc.conte_idseq as cid, "
+            + "oc.date_modified, oc.date_created, oc.modified_by, oc.created_by, oc.change_note, c.name, '' "
+            + "from sbrext.object_classes_view_ext oc, sbr.contexts_view c "
+            + "where c.conte_idseq = oc.conte_idseq and ";
+        select[1] = "oc.created_by in (?) and ";
+        select[2] = "oc.modified_by in (?) and ";
+        select[3] = "((oc.date_modified is not null and oc.date_modified "
+            + _DATECHARS[dates_][0] + " ? and oc.date_modified " + _DATECHARS[dates_][1] + " ?) "
+            + "or (oc.date_created is not null and oc.date_created "
+            + _DATECHARS[dates_][2] + " ? and oc.date_created " + _DATECHARS[dates_][3] + " ?)) "
             + "order by id asc, cid asc";
 
-        return selectAC(select, start_, end_, 4, creators_, modifiers_);
+        return selectAC(select, start_, end_, 2, creators_, modifiers_);
     }
 
     /**
@@ -3928,10 +4168,10 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectQCV(Timestamp start_, Timestamp end_,
+    public ACData[] selectQCV(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
-        String select[] = new String[7];
+        String select[] = new String[4];
         select[0] = "select 'p', 1, 'qcv', qc.qc_idseq as id, qc.version, qc.qc_id, "
             + "qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, '' "
@@ -3939,8 +4179,10 @@ public class DBAlert
             + "where qc.qtl_name = 'VALID_VALUE' and c.conte_idseq = qc.conte_idseq and ";
         select[1] = "qc.created_by in (?) and ";
         select[2] = "qc.modified_by in (?) and ";
-        select[3] = "((qc.date_modified is not null and qc.date_modified >= ? and qc.date_modified < ?) "
-            + "or (qc.date_modified is null and qc.date_created >= ? and qc.date_created < ?)) "
+        select[3] = "((qc.date_modified is not null and qc.date_modified "
+            + _DATECHARS[dates_][0] + " ? and qc.date_modified " + _DATECHARS[dates_][1] + " ?) "
+            + "or (qc.date_created is not null and qc.date_created "
+            + _DATECHARS[dates_][2] + " ? and qc.date_created " + _DATECHARS[dates_][3] + " ?)) "
             + "order by id asc, cid asc";
 
         return selectAC(select, start_, end_, 2, creators_, modifiers_);
@@ -3955,10 +4197,10 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectQCQ(Timestamp start_, Timestamp end_,
+    public ACData[] selectQCQ(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
-        String select[] = new String[7];
+        String select[] = new String[4];
         select[0] = "select 'p', 1, 'qcq', qc.qc_idseq as id, qc.version, qc.qc_id, "
             + "qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, '' "
@@ -3966,8 +4208,10 @@ public class DBAlert
             + "where qc.qtl_name = 'QUESTION' and c.conte_idseq = qc.conte_idseq and ";
         select[1] = "qc.created_by in (?) and ";
         select[2] = "qc.modified_by in (?) and ";
-        select[3] = "((qc.date_modified is not null and qc.date_modified >= ? and qc.date_modified < ?) "
-            + "or (qc.date_modified is null and qc.date_created >= ? and qc.date_created < ?)) "
+        select[3] = "((qc.date_modified is not null and qc.date_modified "
+            + _DATECHARS[dates_][0] + " ? and qc.date_modified " + _DATECHARS[dates_][1] + " ?) "
+            + "or (qc.date_created is not null and qc.date_created "
+            + _DATECHARS[dates_][2] + " ? and qc.date_created " + _DATECHARS[dates_][3] + " ?)) "
             + "order by id asc, cid asc";
 
         return selectAC(select, start_, end_, 2, creators_, modifiers_);
@@ -3982,10 +4226,10 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectQCM(Timestamp start_, Timestamp end_,
+    public ACData[] selectQCM(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
-        String select[] = new String[7];
+        String select[] = new String[4];
         select[0] = "select 'p', 1, 'qcm', qc.qc_idseq as id, qc.version, qc.qc_id, "
             + "qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, '' "
@@ -3993,8 +4237,10 @@ public class DBAlert
             + "where qc.qtl_name = 'MODULE' and c.conte_idseq = qc.conte_idseq and ";
         select[1] = "qc.created_by in (?) and ";
         select[2] = "qc.modified_by in (?) and ";
-        select[3] = "((qc.date_modified is not null and qc.date_modified >= ? and qc.date_modified < ?) "
-            + "or (qc.date_modified is null and qc.date_created >= ? and qc.date_created < ?)) "
+        select[3] = "((qc.date_modified is not null and qc.date_modified "
+            + _DATECHARS[dates_][0] + " ? and qc.date_modified " + _DATECHARS[dates_][1] + " ?) "
+            + "or (qc.date_created is not null and qc.date_created "
+            + _DATECHARS[dates_][2] + " ? and qc.date_created " + _DATECHARS[dates_][3] + " ?)) "
             + "order by id asc, cid asc";
 
         return selectAC(select, start_, end_, 2, creators_, modifiers_);
@@ -4009,10 +4255,10 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectQC(Timestamp start_, Timestamp end_,
+    public ACData[] selectQC(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
-        String select[] = new String[7];
+        String select[] = new String[4];
         select[0] = "select 'p', 1, 'qc', qc.qc_idseq as id, qc.version, qc.qc_id, "
             + "qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, '' "
@@ -4020,8 +4266,10 @@ public class DBAlert
             + "where qc.qtl_name in ('FORM', 'TEMPLATE') and c.conte_idseq = qc.conte_idseq and ";
         select[1] = "qc.created_by in (?) and ";
         select[2] = "qc.modified_by in (?) and ";
-        select[3] = "((qc.date_modified is not null and qc.date_modified >= ? and qc.date_modified < ?) "
-            + "or (qc.date_modified is null and qc.date_created >= ? and qc.date_created < ?)) "
+        select[3] = "((qc.date_modified is not null and qc.date_modified "
+            + _DATECHARS[dates_][0] + " ? and qc.date_modified " + _DATECHARS[dates_][1] + " ?) "
+            + "or (qc.date_created is not null and qc.date_created "
+            + _DATECHARS[dates_][2] + " ? and qc.date_created " + _DATECHARS[dates_][3] + " ?)) "
             + "order by id asc, cid asc";
 
         return selectAC(select, start_, end_, 2, creators_, modifiers_);
@@ -4036,7 +4284,7 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectCSI(Timestamp start_, Timestamp end_,
+    public ACData[] selectCSI(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
         String select[] = new String[4];
@@ -4045,8 +4293,10 @@ public class DBAlert
             + "from sbr.class_scheme_items_view " + "where ";
         select[1] = "created_by in (?) and ";
         select[2] = "modified_by in (?) and ";
-        select[3] = "((date_modified is not null and date_modified >= ? and date_modified < ?) "
-            + "or (date_modified is null and date_created >= ? and date_created < ?)) "
+        select[3] = "((date_modified is not null and date_modified "
+            + _DATECHARS[dates_][0] + " ? and date_modified " + _DATECHARS[dates_][1] + " ?) "
+            + "or (date_created is not null and date_created "
+            + _DATECHARS[dates_][2] + " ? and date_created " + _DATECHARS[dates_][3] + " ?)) "
             + "order by id asc";
 
         return selectAC(select, start_, end_, 2, creators_, modifiers_);
@@ -4061,9 +4311,10 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectDE(Timestamp start_, Timestamp end_,
+    public ACData[] selectDE(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
+        int pairs;
         String select[] = new String[7];
         select[0] = "(select 'p', 1, 'de', de.de_idseq as id, de.version, de.cde_id, de.long_name, de.conte_idseq as cid, "
             + "de.date_modified as ctime, de.date_created, de.modified_by, de.created_by, de.change_note, "
@@ -4073,23 +4324,40 @@ public class DBAlert
             + "c.conte_idseq = de.conte_idseq and ";
         select[1] = "de.created_by in (?) and ";
         select[2] = "ach.changed_by in (?) and ";
-        select[3] = "((ach.change_datetimestamp is not null and ach.change_datetimestamp >= ? and ach.change_datetimestamp < ?) "
-            + "or (de.date_modified is null and de.date_created >= ? and de.date_created < ?)) "
-            + "union "
-            + "select 'p', 2, 'de', ac.ac_idseq as id, ac.version, xx.cde_id, ac.long_name, dv.conte_idseq as cid, "
-            + "ac.date_modified as ctime, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, "
-            + "c.name, '', '', '', '', ac.date_modified as stime "
-            + "from sbr.admin_components_view ac, sbr.data_elements_view xx, "
-            + "sbr.designations_view dv, sbr.contexts_view c "
-            + "where ac.actl_name = 'DATAELEMENT' and xx.de_idseq = ac.ac_idseq and "
-            + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq and ";
-        select[4] = "ac.created_by in (?) and ";
-        select[5] = "ac.modified_by in (?) and ";
-        select[6] = "((ac.date_modified is not null and ac.date_modified >= ? and ac.date_modified < ?) "
-            + "or (ac.date_modified is null and ac.date_created >= ? and ac.date_created < ?))) "
-            + "order by id asc, cid asc, ctime asc, stime asc";
+        if (_INCdesignations)
+        {
+            pairs = 4;
+            select[3] = "((ach.change_datetimestamp is not null and ach.change_datetimestamp "
+                + _DATECHARS[dates_][0] + " ? and ach.change_datetimestamp " + _DATECHARS[dates_][1] + " ?) "
+                + "or (de.date_created is not null and de.date_created "
+                + _DATECHARS[dates_][2] + " ? and de.date_created " + _DATECHARS[dates_][3] + " ?)) "
+                + "union "
+                + "select 'p', 2, 'de', ac.ac_idseq as id, ac.version, xx.cde_id, ac.long_name, dv.conte_idseq as cid, "
+                + "ac.date_modified as ctime, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, "
+                + "c.name, '', '', '', '', ac.date_modified as stime "
+                + "from sbr.admin_components_view ac, sbr.data_elements_view xx, "
+                + "sbr.designations_view dv, sbr.contexts_view c "
+                + "where ac.actl_name = 'DATAELEMENT' and xx.de_idseq = ac.ac_idseq and "
+                + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq and ";
+            select[4] = "ac.created_by in (?) and ";
+            select[5] = "ac.modified_by in (?) and ";
+            select[6] = "((ac.date_modified is not null and ac.date_modified "
+                + _DATECHARS[dates_][0] + " ? and ac.date_modified " + _DATECHARS[dates_][1] + " ?) "
+                + "or (ac.date_created is not null and ac.date_created "
+                + _DATECHARS[dates_][2] + " ? and ac.date_created " + _DATECHARS[dates_][3] + " ?))) "
+                + "order by id asc, cid asc, ctime asc, stime asc";
+        }
+        else
+        {
+            pairs = 2;
+            select[3] = "((ach.change_datetimestamp is not null and ach.change_datetimestamp "
+                + _DATECHARS[dates_][0] + " ? and ach.change_datetimestamp " + _DATECHARS[dates_][1] + " ?) "
+                + "or (de.date_created is not null and de.date_created "
+                + _DATECHARS[dates_][2] + " ? and de.date_created " + _DATECHARS[dates_][3] + " ?)) ) "
+                + "order by id asc, cid asc, ctime asc, stime asc";
+        }
 
-        return selectAC(select, start_, end_, 4, creators_, modifiers_);
+        return selectAC(select, start_, end_, pairs, creators_, modifiers_);
     }
 
     /**
@@ -4101,7 +4369,7 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectCONTE(Timestamp start_, Timestamp end_,
+    public ACData[] selectCONTE(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
         String select[] = new String[4];
@@ -4110,8 +4378,10 @@ public class DBAlert
             + "from sbr.contexts_view " + "where ";
         select[1] = "created_by in (?) and ";
         select[2] = "modified_by in (?) and ";
-        select[3] = "((date_modified is not null and date_modified >= ? and date_modified < ?) "
-            + "or (date_modified is null and date_created >= ? and date_created < ?)) "
+        select[3] = "((date_modified is not null and date_modified "
+            + _DATECHARS[dates_][0] + " ? and date_modified " + _DATECHARS[dates_][1] + " ?) "
+            + "or (date_created is not null and date_created "
+            + _DATECHARS[dates_][2] + " ? and date_created " + _DATECHARS[dates_][3] + " ?)) "
             + "order by id asc";
 
         return selectAC(select, start_, end_, 2, creators_, modifiers_);
@@ -4126,9 +4396,10 @@ public class DBAlert
      *        The date to end.
      * @return 0 if successful, otherwise the database error code.
      */
-    public ACData[] selectDEC(Timestamp start_, Timestamp end_,
+    public ACData[] selectDEC(int dates_, Timestamp start_, Timestamp end_,
         String creators_[], String modifiers_[])
     {
+        int pairs;
         String select[] = new String[7];
         select[0] = "(select 'p', 1, 'dec', dec.dec_idseq as id, dec.version, dec.dec_id, dec.long_name, dec.conte_idseq as cid, "
             + "dec.date_modified as ctime, dec.date_created, dec.modified_by, dec.created_by, dec.change_note, "
@@ -4138,23 +4409,40 @@ public class DBAlert
             + "c.conte_idseq = dec.conte_idseq and ";
         select[1] = "dec.created_by in (?) and ";
         select[2] = "ach.changed_by in (?) and ";
-        select[3] = "((ach.change_datetimestamp is not null and ach.change_datetimestamp >= ? and ach.change_datetimestamp < ?) "
-            + "or (dec.date_modified is null and dec.date_created >= ? and dec.date_created < ?)) "
-            + "union "
-            + "select 'p', 2, 'dec', ac.ac_idseq as id, ac.version, xx.dec_id, ac.long_name, dv.conte_idseq as cid, "
-            + "ac.date_modified as ctime, ac.date_created, ac.modified_by, ac.created_by, "
-            + "ac.change_note, c.name, '', '', '', '', ac.date_modified as stime "
-            + "from sbr.admin_components_view ac, sbr.data_element_concepts_view xx, "
-            + "sbr.designations_view dv, sbr.contexts_view c "
-            + "where ac.actl_name = 'DE_CONCEPT' and xx.dec_idseq = ac.ac_idseq and "
-            + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq and ";
-        select[4] = "ac.created_by in (?) and ";
-        select[5] = "ac.modified_by in (?) and ";
-        select[6] = "((ac.date_modified is not null and ac.date_modified >= ? and ac.date_modified < ?) "
-            + "or (ac.date_modified is null and ac.date_created >= ? and ac.date_created < ?))) "
-            + "order by id asc, cid asc, ctime asc, stime asc";
+        if (_INCdesignations)
+        {
+            pairs = 4;
+            select[3] = "((ach.change_datetimestamp is not null and ach.change_datetimestamp "
+                + _DATECHARS[dates_][0] + " ? and ach.change_datetimestamp " + _DATECHARS[dates_][1] + " ?) "
+                + "or (dec.date_created is not null and dec.date_created "
+                + _DATECHARS[dates_][2] + " ? and dec.date_created " + _DATECHARS[dates_][3] + " ?)) "
+                + "union "
+                + "select 'p', 2, 'dec', ac.ac_idseq as id, ac.version, xx.dec_id, ac.long_name, dv.conte_idseq as cid, "
+                + "ac.date_modified as ctime, ac.date_created, ac.modified_by, ac.created_by, "
+                + "ac.change_note, c.name, '', '', '', '', ac.date_modified as stime "
+                + "from sbr.admin_components_view ac, sbr.data_element_concepts_view xx, "
+                + "sbr.designations_view dv, sbr.contexts_view c "
+                + "where ac.actl_name = 'DE_CONCEPT' and xx.dec_idseq = ac.ac_idseq and "
+                + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq and ";
+            select[4] = "ac.created_by in (?) and ";
+            select[5] = "ac.modified_by in (?) and ";
+            select[6] = "((ac.date_modified is not null and ac.date_modified "
+                + _DATECHARS[dates_][0] + " ? and ac.date_modified " + _DATECHARS[dates_][1] + " ?) "
+                + "or (ac.date_created is not null and ac.date_created "
+                + _DATECHARS[dates_][2] + " ? and ac.date_created " + _DATECHARS[dates_][3] + " ?))) "
+                + "order by id asc, cid asc, ctime asc, stime asc";
+        }
+        else
+        {
+            pairs = 2;
+            select[3] = "((ach.change_datetimestamp is not null and ach.change_datetimestamp "
+                + _DATECHARS[dates_][0] + " ? and ach.change_datetimestamp " + _DATECHARS[dates_][1] + " ?) "
+                + "or (dec.date_created is not null and dec.date_created "
+                + _DATECHARS[dates_][2] + " ? and dec.date_created " + _DATECHARS[dates_][3] + " ?)) ) "
+                + "order by id asc, cid asc, ctime asc, stime asc";
+        }
 
-        return selectAC(select, start_, end_, 4, creators_, modifiers_);
+        return selectAC(select, start_, end_, pairs, creators_, modifiers_);
     }
 
     /**
@@ -4289,7 +4577,7 @@ public class DBAlert
             + "where pv.pv_idseq in (?) and vp.pv_idseq = pv.pv_idseq and vd.vd_idseq = vp.vd_idseq and "
             + "c.conte_idseq = vd.conte_idseq "
             + "union "
-            + "select 's', 2, 'vd', ac.ac_idseq as id, ac.version, xx.vd_id, ac.long_name, dv.conte_idseq as cid, "
+            + "select 's', 1, 'vd', ac.ac_idseq as id, ac.version, xx.vd_id, ac.long_name, dv.conte_idseq as cid, "
             + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, pv.pv_idseq "
             + "from sbr.permissible_values_view pv, sbr.vd_pvs_view vp, sbr.value_domains_view xx, "
             + "sbr.admin_components_view ac, sbr.designations_view dv, sbr.contexts_view c "
@@ -4316,7 +4604,7 @@ public class DBAlert
             + "from sbr.conceptual_domains_view cd, sbr.contexts_view c, sbr.value_domains_view vd "
             + "where vd.vd_idseq in (?) and cd.cd_idseq = vd.cd_idseq and c.conte_idseq = cd.conte_idseq "
             + "union "
-            + "select 's', 2, 'cd', ac.ac_idseq as id, ac.version, xx.cd_id, ac.long_name, dv.conte_idseq as cid, "
+            + "select 's', 1, 'cd', ac.ac_idseq as id, ac.version, xx.cd_id, ac.long_name, dv.conte_idseq as cid, "
             + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, vd.vd_idseq "
             + "from sbr.admin_components_view ac, sbr.conceptual_domains_view xx, "
             + "sbr.designations_view dv, sbr.contexts_view c, sbr.value_domains_view vd "
@@ -4342,7 +4630,7 @@ public class DBAlert
             + "from sbr.conceptual_domains_view cd, sbr.contexts_view c, sbr.data_element_concepts_view dec "
             + "where dec.dec_idseq in (?) and cd.cd_idseq = dec.dec_idseq and c.conte_idseq = cd.conte_idseq "
             + "union "
-            + "select 's', 2, 'cd', ac.ac_idseq as id, ac.version, xx.cd_id, ac.long_name, dv.conte_idseq as cid, "
+            + "select 's', 1, 'cd', ac.ac_idseq as id, ac.version, xx.cd_id, ac.long_name, dv.conte_idseq as cid, "
             + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, dec.dec_idseq "
             + "from sbr.admin_components_view ac, sbr.conceptual_domains_view xx, "
             + "sbr.designations_view dv, sbr.contexts_view c, sbr.data_element_concepts_view dec "
@@ -4367,7 +4655,7 @@ public class DBAlert
             + "from sbr.data_elements_view de, sbr.contexts_view c, sbr.value_domains_view vd "
             + "where vd.vd_idseq in (?) and de.vd_idseq = vd.vd_idseq and c.conte_idseq = de.conte_idseq "
             + "union "
-            + "select 's', 2, 'de', ac.ac_idseq as id, ac.version, xx.cde_id, ac.long_name, dv.conte_idseq as cid, "
+            + "select 's', 1, 'de', ac.ac_idseq as id, ac.version, xx.cde_id, ac.long_name, dv.conte_idseq as cid, "
             + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, vd.vd_idseq "
             + "from sbr.admin_components_view ac, sbr.data_elements_view xx, "
             + "sbr.designations_view dv, sbr.contexts_view c, sbr.value_domains_view vd "
@@ -4376,6 +4664,31 @@ public class DBAlert
             + "order by id asc, cid asc";
 
         return selectAC(select, vd_);
+    }
+
+    /**
+     * Select the Data Element Conceptss affected by the Object Classes provided.
+     * 
+     * @param oc_
+     *        The object class list.
+     * @return The array of related data element concepts.
+     */
+    public ACData[] selectDECfromOC(ACData oc_[])
+    {
+        String select = "(select 's', 1, 'dec', dec.dec_idseq as id, dec.version, dec.dec_id, dec.long_name, dec.conte_idseq as cid, "
+            + "dec.date_modified, dec.date_created, dec.modified_by, dec.created_by, dec.change_note, c.name, oc.oc_idseq "
+            + "from sbr.data_element_concepts_view dec, sbr.contexts_view c, sbrext.object_classes_view_ext oc "
+            + "where oc.oc_idseq in (?) and dec.oc_idseq = oc.oc_idseq and c.conte_idseq = dec.conte_idseq "
+            + "union "
+            + "select 's', 1, 'dec', ac.ac_idseq as id, ac.version, xx.dec_id, ac.long_name, dv.conte_idseq as cid, "
+            + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, oc.oc_idseq "
+            + "from sbr.admin_components_view ac, sbr.data_element_concepts_view xx, "
+            + "sbr.designations_view dv, sbr.contexts_view c, sbrext.object_classes_view_ext oc "
+            + "where oc.oc_idseq in (?) and xx.oc_idseq = oc.oc_idseq and xx.dec_idseq = ac.ac_idseq and ac.actl_name = 'DE_CONCEPT' and "
+            + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq) "
+            + "order by id asc, cid asc";
+
+        return selectAC(select, oc_);
     }
 
     /**
@@ -4392,11 +4705,11 @@ public class DBAlert
             + "from sbr.data_elements_view de, sbr.contexts_view c, sbr.data_element_concepts_view dec "
             + "where dec.dec_idseq in (?) and de.dec_idseq = dec.dec_idseq and c.conte_idseq = de.conte_idseq "
             + "union "
-            + "select 's', 2, 'de', ac.ac_idseq as id, ac.version, xx.cde_id, ac.long_name, dv.conte_idseq as cid, "
+            + "select 's', 1, 'de', ac.ac_idseq as id, ac.version, xx.cde_id, ac.long_name, dv.conte_idseq as cid, "
             + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, dec.dec_idseq "
             + "from sbr.admin_components_view ac, sbr.data_elements_view xx, "
             + "sbr.designations_view dv, sbr.contexts_view c, sbr.data_element_concepts_view dec "
-            + "where dec.dec_idseq in (?) and xx.vd_idseq = dec.dec_idseq and xx.de_idseq = ac.ac_idseq and ac.actl_name = 'DATAELEMENT' and "
+            + "where dec.dec_idseq in (?) and xx.dec_idseq = dec.dec_idseq and xx.de_idseq = ac.ac_idseq and ac.actl_name = 'DATAELEMENT' and "
             + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq) "
             + "order by id asc, cid asc";
 
@@ -4611,7 +4924,7 @@ public class DBAlert
             + "where civ.csi_idseq in (?) and ci.csi_idseq = civ.csi_idseq and cs.cs_idseq = ci.cs_idseq and "
             + "c.conte_idseq = cs.conte_idseq "
             + "union "
-            + "select 's', 2, 'cs', ac.ac_idseq as id, ac.version, xx.cs_id, ac.long_name, dv.conte_idseq as cid, "
+            + "select 's', 1, 'cs', ac.ac_idseq as id, ac.version, xx.cs_id, ac.long_name, dv.conte_idseq as cid, "
             + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, civ.csi_idseq "
             + "from sbr.admin_components_view ac, sbr.classification_schemes_view xx, sbr.cs_csi_view ci, "
             + "sbr.designations_view dv, sbr.contexts_view c, sbr.class_scheme_items_view civ "
@@ -4693,6 +5006,24 @@ public class DBAlert
             + "order by id asc";
 
         return selectAC(select, de_);
+    }
+
+    /**
+     * Select the Contexts affected by the Object Classes provided.
+     * 
+     * @param oc_
+     *        The object class list.
+     * @return The array of related contexts.
+     */
+    public ACData[] selectCONTEfromOC(ACData oc_[])
+    {
+        String select = "select 's', 1, 'conte', c.conte_idseq as id, c.version, -1, c.name, '', "
+            + "c.date_modified, c.date_created, c.modified_by, c.created_by, '', '', oc.oc_idseq "
+            + "from sbr.contexts_view c, sbrext.object_classes_view_ext oc "
+            + "where oc.oc_idseq in (?) and c.conte_idseq = oc.conte_idseq "
+            + "order by id asc";
+
+        return selectAC(select, oc_);
     }
 
     /**
@@ -5285,6 +5616,10 @@ public class DBAlert
     private int                 _errorCode;
 
     private String              _errorMsg;
+    
+    private String              _actypesList[];
+    
+    private String              _actypesVals[];
 
     private static final String _DBPOOL       = "DSRAlertPool";
 
@@ -5304,31 +5639,56 @@ public class DBAlert
 
     private static final String _STATUS       = "AC_STATUS";
 
+    private static final String _ACTYPE       = "ACTYPE";
+
+    private static final String _DATEFILTER   = "DATEFILTER";
+
     // The following DBMap1 arrays must be kept in sync. The number of entries
     // must match
     // and the order must match as these are key/value pairs. They are written
     // as String
     // arrays to make the methods more generic and usable outside this class.
-    private static final String _DBMAP1KEYS[] = { "ASL_NAME", "BEGIN_DATE",
-        "CDE_ID", "CD_IDSEQ", "CHANGE_NOTE", "CONTE_IDSEQ", "CREATED_BY",
-        "DATE_CREATED", "DATE_MODIFIED", "DEC_ID", "DEC_IDSEQ", "DELETED_IND",
-        "DESIG_IDSEQ", "DE_IDSEQ", "END_DATE", "LATEST_VERSION_IND",
-        "LONG_NAME", "MODIFIED_BY", "OBJ_CLASS_QUALIFIER", "OC_IDSEQ",
-        "ORIGIN", "PREFERRED_DEFINITION", "PREFERRED_NAME",
-        "PROPERTY_QUALIFIER", "PROP_IDSEQ", "QUESTION", "REP_IDSEQ", "VD_ID",
-        "VD_IDSEQ", "VERSION"                };
+    private static final String _DBMAP1KEYS[] = { 
+        "AC_CSI_IDSEQ", "AC_IDSEQ", "ASL_NAME", 
+        "BEGIN_DATE",
+        "CDE_ID", "CDR_IDSEQ", "CD_IDSEQ", "CHANGE_NOTE", "CONCAT_CHAR", "CONTE_IDSEQ", "CREATED_BY",
+        "CRTL_NAME", "CS_CSI_IDSEQ", "C_DEC_IDSEQ", "C_DE_IDSEQ", "C_VD_IDSEQ",
+        "DATE_CREATED", "DATE_MODIFIED", "DCTL_NAME", "DECIMAL_PLACE", "DEC_ID", "DEC_IDSEQ", "DEC_REC_IDSEQ",
+        "DELETED_IND", "DESCRIPTION", "DESIG_IDSEQ", "DETL_NAME", "DE_IDSEQ", "DE_REC_IDSEQ", "DISPLAY_ORDER",
+        "DOC_TEXT", "DTL_NAME", 
+        "END_DATE", 
+        "FORML_NAME", 
+        "HIGH_VALUE_NUM",
+        "LAE_NAME", "LATEST_VERSION_IND", "LONG_NAME", "LOW_VALUE_NUM",
+        "MAX_LENGTH_NUM", "METHODS", "MIN_LENGTH_NUM", "MODIFIED_BY",
+        "NAME",
+        "OBJ_CLASS_QUALIFIER", "OCL_NAME", "OC_IDSEQ", "ORIGIN", 
+        "PREFERRED_DEFINITION", "PREFERRED_NAME", "PROPERTY_QUALIFIER", "PROPL_NAME", "PROP_IDSEQ",
+        "P_DEC_IDSEQ", "P_DE_IDSEQ", "P_VD_IDSEQ",
+        "QUALIFIER_NAME", "QUESTION", 
+        "RDTL_NAME", "RD_IDSEQ", "REP_IDSEQ", "RL_NAME", "RULE",
+        "UOML_NAME", "URL", 
+        "VD_ID", "VD_IDSEQ", "VD_REC_IDSEQ", "VD_TYPE_FLAG", "VERSION" };
 
-    private static final String _DBMAP1VALS[] = { "Workflow Status",
-        "Begin Date", "Public ID", "Associated with Conceptual Domain",
-        "Change Note", "Associated with Context", "Created By", "Created Date",
-        "Modified Date", "Public ID", "Associated with Data Element Concept",
-        "Deleted Indicator", "Associated with Designation",
-        "Associated with Data Element", "End Date", "Latest Version Indicator",
-        "Long Name", "Modified By", "Object Class Qualifier",
+    private static final String _DBMAP1VALS[] = { "Associated with Classification Scheme Item",
+        "Associated with Administered Component", "Workflow Status",
+        "Begin Date", "Public ID", "Associated with Complex DE", "Associated with Conceptual Domain",
+        "Change Note", "Concatenation Character", "Associated with Context", "Created By",
+        "Associated with Complex Representation", "Associated with CS/CSI",
+        "Associated with Child DEC", "Associated with Child DE", "Associated with Child VD",
+        "Created Date", "Modified Date", "Associated with Document Type",
+        "Number of Decimal Places", "Public ID", "Associated with Data Element Concept",
+        "DEC_REC_IDSEQ", "Deleted Indicator", "Description", "Associated with Designation",
+        "Designation Type", "Associated with Data Element", "DE_REC_IDSEQ", "Display Order", "Document Text",
+        "Data Type", "End Date", "Data Format", "Maximum Value", "Language", 
+        "Latest Version Indicator", "Long Name", "Minimum Value", "Maximum Length", "Methods", "Minimum Length",
+        "Modified By", "Name", "Object Class Qualifier", "OCL_NAME",
         "Associated with Object Class", "Origin", "Preferred Definition",
-        "Preferred Name", "Property Qualifier", "Associated with Property",
-        "Question", "Associated with Representation", "Public ID",
-        "Associated with Value Domain", "Version" };
+        "Preferred Name", "Property Qualifier", "PROPL_NAME", "Associated with Property",
+        "Associated with Parent DEC", "Associated with Parent DE", "Associated with Parent VD",
+        "Qualifier", "Question", "Reference Document", "Associated with Reference Document", "Associated with Representation",
+        "Associated with Relationship", "Rule", "Unit Of Measure", "URL", "Public ID",
+        "Associated with Value Domain", "VD_REC_IDSEQ", "Enumerated/Non-enumerated", "Version" };
 
     private static final String _DBMAP2KEYS[] = { "CD_IDSEQ", "CONTE_IDSEQ",
         "CREATED_BY", "DEC_IDSEQ", "DE_IDSEQ", "MODIFIED_BY", "OC_IDSEQ",
@@ -5352,12 +5712,27 @@ public class DBAlert
         "long_name || ' (' || rep_id || 'v' || version || ')' as label", "",
         "long_name || ' (' || vd_id || 'v' || version || ')' as label" };
 
+    public static final int _ACTYPE_CD     = 0;
+    public static final int _ACTYPE_CONTE  = 1;
+    public static final int _ACTYPE_CS     = 2;
+    public static final int _ACTYPE_CSI    = 3;
+    public static final int _ACTYPE_DE     = 4;
+    public static final int _ACTYPE_DEC    = 5;
+    public static final int _ACTYPE_OC     = 6;
+    public static final int _ACTYPE_PV     = 7;
+    public static final int _ACTYPE_QC     = 8;
+    public static final int _ACTYPE_QCM    = 9;
+    public static final int _ACTYPE_QCQ    = 10;
+    public static final int _ACTYPE_QCV    = 11;
+    public static final int _ACTYPE_VD     = 12;
+    public static final int _ACTYPE_LENGTH = 13;
+    
     private static final String _DBMAP3KEYS[] = { "cd", "conte", "cs", "csi",
-        "de", "dec", "pv", "qc", "qcm", "qcq", "qcv", "vd" };
+        "de", "dec", "oc", "pv", "qc", "qcm", "qcq", "qcv", "vd" };
 
     private static final String _DBMAP3VALS[] = { "Conceptual Domain",
         "Context", "Classification Scheme", "Classification Scheme Item",
-        "Data Element", "Data Element Concept", "Permissible Value",
+        "Data Element", "Data Element Concept", "Object Class", "Permissible Value",
         "Form/Template", "Module", "Question", "Valid Value", "Value Domain" };
 
     private static final char   _CRITERIA     = 'C';
@@ -5379,4 +5754,18 @@ public class DBAlert
     public static final int     _MAXINTROLEN  = 2000;
 
     public static final int     _MAXEMAILLEN  = 255;
+    
+    public static final int     _DATECONLY = 0;
+    
+    public static final int     _DATEMONLY = 1;
+    
+    public static final int     _DATECM = 2;
+    
+    private static final String _DATECHARS[][] = {
+        {"<", ">", ">=", "<"},
+        {">=", "<", "<", ">"},
+        {">=", "<", ">=", "<"}
+    };
+    
+    private static final boolean _INCdesignations = false;
 }
