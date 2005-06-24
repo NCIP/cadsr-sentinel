@@ -4129,6 +4129,36 @@ public class DBAlert
     }
 
     /**
+     * Pull all Property changes in the date range
+     * specified.
+     * 
+     * @param start_
+     *        The date to start.
+     * @param end_
+     *        The date to end.
+     * @return 0 if successful, otherwise the database error code.
+     */
+    public ACData[] selectPROP(int dates_, Timestamp start_, Timestamp end_,
+        String creators_[], String modifiers_[])
+    {
+        String select[] = new String[4];
+        select[0] = "select 'p', 1, 'prop', prop.prop_idseq as id, prop.version, prop.prop_id, "
+            + "prop.long_name, prop.conte_idseq as cid, "
+            + "prop.date_modified, prop.date_created, prop.modified_by, prop.created_by, prop.change_note, c.name, '' "
+            + "from sbrext.properties_view_ext prop, sbr.contexts_view c "
+            + "where c.conte_idseq = prop.conte_idseq and ";
+        select[1] = "prop.created_by in (?) and ";
+        select[2] = "prop.modified_by in (?) and ";
+        select[3] = "((prop.date_modified is not null and prop.date_modified "
+            + _DATECHARS[dates_][0] + " ? and prop.date_modified " + _DATECHARS[dates_][1] + " ?) "
+            + "or (prop.date_created is not null and prop.date_created "
+            + _DATECHARS[dates_][2] + " ? and prop.date_created " + _DATECHARS[dates_][3] + " ?)) "
+            + "order by id asc, cid asc";
+
+        return selectAC(select, start_, end_, 2, creators_, modifiers_);
+    }
+
+    /**
      * Pull all Object Class changes in the date range
      * specified.
      * 
@@ -4667,7 +4697,32 @@ public class DBAlert
     }
 
     /**
-     * Select the Data Element Conceptss affected by the Object Classes provided.
+     * Select the Data Element Concepts affected by the Properties provided.
+     * 
+     * @param oc_
+     *        The object class list.
+     * @return The array of related data element concepts.
+     */
+    public ACData[] selectDECfromPROP(ACData prop_[])
+    {
+        String select = "(select 's', 1, 'dec', dec.dec_idseq as id, dec.version, dec.dec_id, dec.long_name, dec.conte_idseq as cid, "
+            + "dec.date_modified, dec.date_created, dec.modified_by, dec.created_by, dec.change_note, c.name, prop.prop_idseq "
+            + "from sbr.data_element_concepts_view dec, sbr.contexts_view c, sbrext.properties_view_ext prop "
+            + "where prop.prop_idseq in (?) and dec.prop_idseq = prop.prop_idseq and c.conte_idseq = dec.conte_idseq "
+            + "union "
+            + "select 's', 1, 'dec', ac.ac_idseq as id, ac.version, xx.dec_id, ac.long_name, dv.conte_idseq as cid, "
+            + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, prop.prop_idseq "
+            + "from sbr.admin_components_view ac, sbr.data_element_concepts_view xx, "
+            + "sbr.designations_view dv, sbr.contexts_view c, sbrext.properties_view_ext prop "
+            + "where prop.prop_idseq in (?) and xx.prop_idseq = prop.prop_idseq and xx.dec_idseq = ac.ac_idseq and ac.actl_name = 'DE_CONCEPT' and "
+            + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq) "
+            + "order by id asc, cid asc";
+
+        return selectAC(select, prop_);
+    }
+
+    /**
+     * Select the Data Element Concepts affected by the Object Classes provided.
      * 
      * @param oc_
      *        The object class list.
@@ -5006,6 +5061,24 @@ public class DBAlert
             + "order by id asc";
 
         return selectAC(select, de_);
+    }
+
+    /**
+     * Select the Contexts affected by the Properties provided.
+     * 
+     * @param prop_
+     *        The properties list.
+     * @return The array of related contexts.
+     */
+    public ACData[] selectCONTEfromPROP(ACData prop_[])
+    {
+        String select = "select 's', 1, 'conte', c.conte_idseq as id, c.version, -1, c.name, '', "
+            + "c.date_modified, c.date_created, c.modified_by, c.created_by, '', '', prop.prop_idseq "
+            + "from sbr.contexts_view c, sbrext.properties_view_ext prop "
+            + "where prop.prop_idseq in (?) and c.conte_idseq = prop.conte_idseq "
+            + "order by id asc";
+
+        return selectAC(select, prop_);
     }
 
     /**
@@ -5725,14 +5798,15 @@ public class DBAlert
     public static final int _ACTYPE_QCQ    = 10;
     public static final int _ACTYPE_QCV    = 11;
     public static final int _ACTYPE_VD     = 12;
-    public static final int _ACTYPE_LENGTH = 13;
+    public static final int _ACTYPE_PROP   = 13;
+    public static final int _ACTYPE_LENGTH = 14;
     
     private static final String _DBMAP3KEYS[] = { "cd", "conte", "cs", "csi",
-        "de", "dec", "oc", "pv", "qc", "qcm", "qcq", "qcv", "vd" };
+        "de", "dec", "oc", "prop", "pv", "qc", "qcm", "qcq", "qcv", "vd" };
 
     private static final String _DBMAP3VALS[] = { "Conceptual Domain",
         "Context", "Classification Scheme", "Classification Scheme Item",
-        "Data Element", "Data Element Concept", "Object Class", "Permissible Value",
+        "Data Element", "Data Element Concept", "Object Class", "Property", "Permissible Value",
         "Form/Template", "Module", "Question", "Valid Value", "Value Domain" };
 
     private static final char   _CRITERIA     = 'C';

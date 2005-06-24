@@ -729,6 +729,9 @@ public class AutoProcessAlerts
             if (rc == -1) continue;
             switch (rc)
             {
+                case DBAlert._ACTYPE_PROP:
+                    acdList_[rc] = _db.selectPROP(dates, _start, _end, creators, modifiers);
+                    break;
                 case DBAlert._ACTYPE_OC:
                     acdList_[rc] = _db.selectOC(dates, _start, _end, creators, modifiers);
                     break;
@@ -800,6 +803,7 @@ public class AutoProcessAlerts
         // Get the changes from the database.
         ACData actypes[][] = new ACData[DBAlert._ACTYPE_LENGTH][];
         findChanges(rec_._alert, actypes);
+        ACData prop[]  = actypes[DBAlert._ACTYPE_PROP];
         ACData oc[]    = actypes[DBAlert._ACTYPE_OC];
         ACData qcv[]   = actypes[DBAlert._ACTYPE_QCV];
         ACData qcq[]   = actypes[DBAlert._ACTYPE_QCQ];
@@ -821,9 +825,9 @@ public class AutoProcessAlerts
             + ", qcm " + qcm.length + " qc " + qc.length
             + ", pv " + pv.length + ", vd " + vd.length
             + ", cd " + cd.length + ", oc " + oc.length
-            + ", dec " + dec.length + ", de " + de.length
-            + ", csi " + csi.length + ", cs " + cs.length
-            + ", conte " + conte.length);
+            + ", prop " + prop.length + ", dec " + dec.length
+            + ", de " + de.length + ", csi " + csi.length
+            + ", cs " + cs.length + ", conte " + conte.length);
 
         // Get the data associated to the changed data. This is done one step at
         // a time using the following associations.
@@ -842,6 +846,8 @@ public class AutoProcessAlerts
         ACData dem[] = ACData.merge(de, _db.selectDEfromVD(vdm));
         logError(_db.getError());
         ACData decm[] = ACData.merge(dec, _db.selectDECfromOC(oc));
+        logError(_db.getError());
+        decm = ACData.merge(decm, _db.selectDECfromPROP(prop));
         logError(_db.getError());
         dem = ACData.merge(dem, _db.selectDEfromDEC(decm));
         logError(_db.getError());
@@ -891,6 +897,8 @@ public class AutoProcessAlerts
             contem = ACData.merge(contem, _db.selectCONTEfromDEC(decm));
             logError(_db.getError());
             contem = ACData.merge(contem, _db.selectCONTEfromOC(oc));
+            logError(_db.getError());
+            contem = ACData.merge(contem, _db.selectCONTEfromPROP(prop));
             logError(_db.getError());
         }
         
@@ -950,6 +958,7 @@ public class AutoProcessAlerts
         ACDataLink lconte = new ACDataLink(contem, true);
         ACDataLink lpv = new ACDataLink(pv);
         ACDataLink lvd = new ACDataLink(vd);
+        ACDataLink lprop = new ACDataLink(prop);
         ACDataLink loc = new ACDataLink(oc);
         ACDataLink lde = new ACDataLink(de);
         ACDataLink ldec = new ACDataLink(dec);
@@ -991,6 +1000,7 @@ public class AutoProcessAlerts
             chainVD.add(chainDE);
             chainVD.add(chainCD);
             chainVD.add(chainCSI);
+            lprop.add(chainDEC);
             loc.add(chainDEC);
             lpv.add(chainVD);
             lvd.add(chainCD);
@@ -1015,6 +1025,7 @@ public class AutoProcessAlerts
             chainVD.add(chainDE);
             chainDEC.add(chainDE);
             chainDE.add(chainQCQ);
+            lprop.add(chainDEC);
             loc.add(chainDEC);
             lvd.add(chainQCV);
             lde.add(chainQCQ);
@@ -1031,6 +1042,7 @@ public class AutoProcessAlerts
         if (rec_._alert.isCSIall() && rec_._alert.isCSall()
             && rec_._alert.isFORMSall())
         {
+            lprop.add(lconte);
             loc.add(lconte);
             lvd.add(lconte);
             ldec.add(lconte);
@@ -1049,6 +1061,7 @@ public class AutoProcessAlerts
         chainQCV = null;
         lconte = null;
 
+        lprop.follow(results, 0, lprop.getRange());
         loc.follow(results, 0, loc.getRange());
         lpv.follow(results, 0, lpv.getRange());
         lvd.follow(results, 0, lvd.getRange());
