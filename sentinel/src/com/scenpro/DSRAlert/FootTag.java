@@ -38,7 +38,7 @@ public class FootTag extends TagSupport
             out
                 .print("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n"
                     + "<tr><td>&nbsp;</td></tr>\n"
-                    + "<tr><td class=\"ncifmenu\" valign=\"middle\" align=\"right\"><span style=\"color: #dddddd\">"
+                    + "<tr><td class=\"ncifmenu\" valign=\"middle\" align=\"left\"><span style=\"color: #dddddd\">"
                     + msgs.getMessage("Appl.version")
                     + "</span></td></tr>\n"
                     + "<tr class=\"nciftrtable\">\n<td valign=\"top\">\n<div align=\"center\">\n"
