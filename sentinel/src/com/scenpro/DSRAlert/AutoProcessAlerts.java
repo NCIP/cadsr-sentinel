@@ -1042,7 +1042,12 @@ public class AutoProcessAlerts
         if (rec_._alert.isCSIall() && rec_._alert.isCSall()
             && rec_._alert.isFORMSall())
         {
+            chainDE.add(lconte);
+            chainDEC.add(lconte);
+            chainVD.add(lconte);
+            lprop.add(chainDEC);
             lprop.add(lconte);
+            loc.add(chainDEC);
             loc.add(lconte);
             lvd.add(lconte);
             ldec.add(lconte);

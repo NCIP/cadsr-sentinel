@@ -95,7 +95,7 @@ public class ACData
     static private byte[] dumpConvertLevel(char val_)
     {
         if (val_ == 'p')
-            return "The".getBytes();
+            return "Changes&nbsp;to&nbsp;the".getBytes();
         else
             return "Associated&nbsp;To".getBytes();
     }
@@ -245,7 +245,7 @@ public class ACData
         if (save_ == null || save_.empty())
             return 0;
 
-        // This represents the longest assocation chain that could be created.
+        // This represents the longest association chain that could be created.
         int maxSections = 20;
         int sections[] = new int[maxSections];
         int count;
@@ -265,7 +265,6 @@ public class ACData
         int indentLimit = maxSections;
 
         // Dumpe the stack.
-        String temp;
         while (!save_.empty())
         {
             RepRows val = (RepRows) save_.pop();
@@ -278,14 +277,11 @@ public class ACData
                 display = "pstripe";
             else
                 display = "stripe";
-            temp = "\t\t<tr class=\"" + display + "\">";
-            fout_.write(temp.getBytes());
+            fout_.write(new String("\t\t<tr class=\"" + display + "\">").getBytes());
             display = display + "2";
-            temp = "<td class=\"" + display + "\" title=\"Row Number\">";
-            fout_.write(temp.getBytes());
+            fout_.write(new String("<td class=\"" + display + "\" title=\"Row Number\">").getBytes());
             fout_.write(String.valueOf(++rows_).getBytes());
-            temp = "</td><td class=\"" + display + "\" title=\"Group Number\">";
-            fout_.write(temp.getBytes());
+            fout_.write(new String("</td><td class=\"" + display + "\" title=\"Group Number\">").getBytes());
 
             // Handle the group/section number column
             if (lastIndent == val._indent)
@@ -301,8 +297,7 @@ public class ACData
                 fout_.write(String.valueOf(sections[ndx]).getBytes());
             }
             lastIndent = val._indent;
-            temp = "</td><td class=\"" + display + "\" colspan=\"3\">";
-            fout_.write(temp.getBytes());
+            fout_.write(new String("</td><td class=\"" + display + "\" colspan=\"6\">").getBytes());
             fout_.write(dumpConvertLevel(val._rec._level));
             fout_.write("&nbsp;".getBytes());
             fout_.write(val._rec._table.getBytes());
@@ -313,44 +308,38 @@ public class ACData
             basicNdx = 0;
             if (val._rec._publicID > -1)
             {
-                temp = "<td>Public&nbsp;ID<br>" + val._rec._publicID + "</td>";
-                basics[basicNdx++] = temp.getBytes();
+                basics[basicNdx++] = new String("<td>Public&nbsp;ID<br>" + val._rec._publicID + "</td>").getBytes();
+            }
+            else
+            {
+                basics[basicNdx++] = "<td><span class=\"na\">Public&nbsp;ID<br>N/A</span></td>".getBytes();
             }
             if (val._rec._version != null && val._rec._version.length() > 0)
             {
-                temp = "<td>Version<br>" + val._rec._version + "</td>";
-                basics[basicNdx++] = temp.getBytes();
+                basics[basicNdx++] = new String("<td>Version<br>" + val._rec._version + "</td>").getBytes();
             }
-            /*
-             * if (val._rec._context != null && val._rec._context.length() > 0) {
-             * temp = " <td> Context <br> " + ((val._rec._category == 1) ?
-             * "Owned" : "Used") + "&nbsp;By&nbsp;" + val._rec._context + "
-             * </td> "; basics[basicNdx++] = temp.getBytes(); }
-             */
+            else
+            {
+                basics[basicNdx++] = "<td><span class=\"na\">Version<br>N/A</span></td>".getBytes();
+            }
             if (val._rec._modifier != null && val._rec._modifier.length() > 0)
             {
-                temp = "<td>Modified&nbsp;By<br>" + val._rec._modifier
-                    + "</td>";
-                basics[basicNdx++] = temp.getBytes();
-                temp = "<td>Modified&nbsp;Date<br>"
+                basics[basicNdx++] = new String("<td>Modified&nbsp;By<br>" + val._rec._modifier
+                    + "</td>").getBytes();
+                basics[basicNdx++] = new String("<td>Modified&nbsp;Date<br>"
                     + AlertRec.dateToString(val._rec._modified, true, true)
-                    + "</td>";
-                basics[basicNdx++] = temp.getBytes();
+                    + "</td>").getBytes();
             }
-            temp = "<td>Created&nbsp;By<br>" + val._rec._creator + "</td>";
-            basics[basicNdx++] = temp.getBytes();
-            temp = "<td>Created&nbsp;Date<br>"
+            else
+            {
+                basics[basicNdx++] = "<td>Modified&nbsp;By<br>&nbsp;</td>".getBytes();
+                basics[basicNdx++] = "<td>Modified&nbsp;Date<br>&nbsp;</td>".getBytes();
+            }
+            basics[basicNdx++] = new String("<td>Created&nbsp;By<br>" + val._rec._creator + "</td>").getBytes();
+            basics[basicNdx++] = new String("<td>Created&nbsp;Date<br>"
                 + AlertRec.dateToString(val._rec._created, true, true)
-                + "</td>";
-            basics[basicNdx++] = temp.getBytes();
+                + "</td>").getBytes();
 
-            fout_.write("<td colspan=\"3\"><table class=\"t3prop\"><colgroup>"
-                .getBytes());
-            for (int ndx = 0; ndx < basicNdx; ++ndx)
-                fout_.write("<col class=\"c2propl\">".getBytes());
-            fout_
-                .write("</colgroup><thead><tbody class=\"t3body\">\n\t\t\t<tr>"
-                    .getBytes());
             for (int ndx = 0; ndx < basicNdx; ++ndx)
                 fout_.write(basics[ndx]);
             fout_.write("</tr>\n".getBytes());
@@ -358,24 +347,26 @@ public class ACData
             if (val._rec._note != null && val._rec._note.length() > 0)
             {
                 --basicNdx;
-                temp = "\t\t\t<tr><td>Change&nbsp;Note&nbsp;/<br>Comment</td><td colspan=\""
+                fout_.write(new String("\t\t<tr><td colspan=\"2\">&nbsp;</td><td>Change&nbsp;Note&nbsp;/<br>Comment</td><td colspan=\""
                     + basicNdx
-                    + "\">";
-                fout_.write(temp.getBytes());
+                    + "\">").getBytes());
                 fout_.write(dumpConvert2(val._rec._note));
                 fout_.write("</td></tr>\n".getBytes());
             }
-            fout_.write("\t\t\t</table></td></tr>\n".getBytes());
             if (val._rec._level == 'p')
             {
-                fout_.write("\t\t<tr><td colspan=\"2\">&nbsp;</td>".getBytes());
+                fout_.write(new String(
+                    "\t\t<tr><td colspan=\"2\">&nbsp;</td>" +
+                    "<td colspan=\"6\"><table class=\"t3prop\">" +
+                    "<colgroup><col /><col /><col /></colgroup>" +
+                    "<tbody class=\"t3body\" />" +
+                    "<tr>").getBytes());
                 fout_
                     .write("<td class=\"chghead\">Attribute&nbsp;Name</td><td class=\"chghead\">Old&nbsp;Value</td><td class=\"chghead\">New&nbsp;Value</td></tr>\n"
                         .getBytes());
                 if (val._rec._changes == null || val._rec._changes.length == 0)
                 {
-                    fout_.write("\t\t<tr><td colspan=\"2\">&nbsp;</td>"
-                        .getBytes());
+                    fout_.write("\t\t\t<tr>".getBytes());
                     if (val._rec._modified == null)
                         fout_.write("<td colspan=\"3\">(New&nbsp;Record)"
                             .getBytes());
@@ -390,7 +381,7 @@ public class ACData
                     for (int chgcnt = 0; chgcnt < val._rec._changes.length; ++chgcnt)
                     {
                         fout_
-                            .write("\t\t<tr><td colspan=\"2\">&nbsp;</td><td title=\"Attribute Name\">"
+                            .write("\t\t\t<tr><td title=\"Attribute Name\">"
                                 .getBytes());
                         fout_
                             .write(dumpConvertBlanks(val._rec._changes[chgcnt])
@@ -406,6 +397,7 @@ public class ACData
                         fout_.write("</td></tr>\n".getBytes());
                     }
                 }
+                fout_.write("\t\t</table></td></tr>\n".getBytes());
             }
         }
 
@@ -439,7 +431,7 @@ public class ACData
         if (save_ == null || save_.empty())
             return 0;
 
-        // This represents the longest assocation chain that could be created.
+        // This represents the longest association chain that could be created.
         int maxSections = 20;
         int sections[] = new int[maxSections];
         int count;
@@ -453,7 +445,7 @@ public class ACData
         // to show the associated records.
         int indentLimit = maxSections;
 
-        // Dumpe the stack.
+        // Dump the stack.
         while (!save_.empty())
         {
             RepRows val = (RepRows) save_.pop();
@@ -626,7 +618,7 @@ public class ACData
         }
         fout_.write("\t\t<tr><td style=\"border-top: 1px solid black;\">&nbsp;</td>".getBytes());
         fout_.write("<td style=\"border-top: 1px solid black;\">&nbsp;</td>".getBytes());
-        fout_.write("<td style=\"border-top: 1px solid black; text-align: right\" colspan=\"3\">".getBytes());
+        fout_.write("<td style=\"border-top: 1px solid black; text-align: right\" colspan=\"6\">".getBytes());
         if (msg_ != null && msg_.length() > 0)
         {
             String temp = "<p style=\"margin-top: 6pt\">" + msg_ + "</p>";
@@ -679,7 +671,7 @@ public class ACData
         fout_.write("\t</colgroup>\n".getBytes());
         fout_.write("\t<tbody class=\"t1body\">\n".getBytes());
 
-        fout_.write("\t\t<tr><td>Sentinel Name:</td><td>".getBytes());
+        fout_.write("\t\t<tr><td>Sentinel&nbsp;Name:</td><td>".getBytes());
         fout_.write(dumpConvert(rec_.getName()));
         if (rec_.getIntro(false) != null)
         {
@@ -687,7 +679,7 @@ public class ACData
                 .getBytes());
             fout_.write(dumpConvert(rec_.getIntro(false)));
         }
-        fout_.write("</td></tr>\n\t\t<tr><td>Created By:</td><td>".getBytes());
+        fout_.write("</td></tr>\n\t\t<tr><td>Created&nbsp;By:</td><td>".getBytes());
         if (cemail_ == null || cemail_.length() == 0)
             fout_.write(dumpConvert(rec_.getCreatorName()));
         else
@@ -704,7 +696,7 @@ public class ACData
         fout_.write(dumpConvert(rec_.getSummary(false)));
         if (rec_.getIncPropSect())
         {
-            fout_.write("</td></tr>\n\t\t<tr><td>Last Auto Run Date:</td><td>"
+            fout_.write("</td></tr>\n\t\t<tr><td>Last&nbsp;Auto&nbsp;Run&nbsp;Date:</td><td>"
                 .getBytes());
             fout_.write(dumpConvert(rec_.getADate()));
             fout_.write("</td></tr>\n\t\t<tr><td>Frequency:</td><td>"
@@ -713,20 +705,32 @@ public class ACData
             fout_.write("</td></tr>\n\t\t<tr><td>Status:</td><td>".getBytes());
             fout_.write(dumpConvert(rec_.getStatus()));
         }
-        fout_.write("</td></tr>\n\t\t<tr><td>Reporting Dates:</td><td>"
+        fout_.write("</td></tr>\n\t\t<tr><td>Reporting&nbsp;Dates:</td><td>"
             .getBytes());
         fout_.write(dumpConvert(AlertRec.dateToString(start_, false)));
         fout_.write("&nbsp;<b>To</b>&nbsp;".getBytes());
         fout_.write(dumpConvert(AlertRec.dateToString(end_, false)));
-        fout_.write("</td></tr>\n\t\t<tr><td>Report Created On:</td><td>"
+        fout_.write("</td></tr>\n\t\t<tr><td>Report&nbsp;Created&nbsp;On:</td><td>"
             .getBytes());
         fout_.write(dumpConvert(AlertRec.dateToString(now, true)));
-        fout_.write("</td></tr>\n\t\t<tr><td>Source Database:</td><td>"
+        fout_.write("</td></tr>\n\t\t<tr><td>Source&nbsp;Database:</td><td>"
             .getBytes());
         fout_.write(dumpConvert(db_));
-        fout_.write("</td></tr>\n\t\t<tr><td>&nbsp;</td><td>&nbsp;".getBytes());
+//        fout_.write("</td></tr>\n\t\t<tr><td>&nbsp;</td><td>&nbsp;".getBytes());
         fout_
-            .write("</td></tr>\n\t\t<tr><td>&nbsp;</td><td><i>Note all dates are month/day/year (mm/dd/yyyy).</i></td></tr>\n\t</table><br><br>\n"
+            .write(new String("</td></tr>\n\t\t<tr><td>&nbsp;</td><td><i>" +
+                "Information in the report is displayed in blocks. " +
+                "Change blocks are indicated by a bright blue color, a " +
+                "whole number under the Group column, and the prefix: " +
+                "\"Changes to the ...\" The change details appear under the " +
+                "headings \"Attribute Name\", \"Old Value\" and \"New Value\". " +
+                "If no details are available, the text \"Details not available\" " +
+                "appears. Associated blocks are indicated by a light grey " +
+                "color, one or more decimal Group numbers, and the prefix " +
+                "\"Associated To ...\". These blocks indicate information associated " +
+                "to the preceding change block. The first number of the " +
+                "Associated To block corresponds to the related change.<br><br>" +
+                "Note all dates are month/day/year (mm/dd/yyyy).</i></td></tr>\n\t</table><br><br>\n")
                 .getBytes());
     }
 
@@ -762,12 +766,14 @@ public class ACData
         fout_.write("\t<col class=\"c2propl\">\n".getBytes());
         fout_.write("\t<col class=\"c2propl\">\n".getBytes());
         fout_.write("\t<col class=\"c2propl\">\n".getBytes());
+        fout_.write("\t<col class=\"c2propl\">\n".getBytes());
+        fout_.write("\t<col class=\"c2propl\">\n".getBytes());
+        fout_.write("\t<col class=\"c2propl\">\n".getBytes());
         fout_.write("\t</colgroup>\n".getBytes());
         fout_
             .write("\t<thead class=\"t2head\">\n\t\t<tr><th>Row</th><th>Group</th>"
                 .getBytes());
-        fout_.write("<th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>\n"
-            .getBytes());
+        fout_.write("<th colspan=\"6\">&nbsp;</th></tr>\n".getBytes());
         fout_.write("\t<tbody class=\"t2body\">\n".getBytes());
     }
 

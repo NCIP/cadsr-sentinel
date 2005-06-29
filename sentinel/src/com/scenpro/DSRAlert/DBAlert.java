@@ -5792,13 +5792,13 @@ public class DBAlert
     public static final int _ACTYPE_DE     = 4;
     public static final int _ACTYPE_DEC    = 5;
     public static final int _ACTYPE_OC     = 6;
-    public static final int _ACTYPE_PV     = 7;
-    public static final int _ACTYPE_QC     = 8;
-    public static final int _ACTYPE_QCM    = 9;
-    public static final int _ACTYPE_QCQ    = 10;
-    public static final int _ACTYPE_QCV    = 11;
-    public static final int _ACTYPE_VD     = 12;
-    public static final int _ACTYPE_PROP   = 13;
+    public static final int _ACTYPE_PROP   = 7;
+    public static final int _ACTYPE_PV     = 8;
+    public static final int _ACTYPE_QC     = 9;
+    public static final int _ACTYPE_QCM    = 10;
+    public static final int _ACTYPE_QCQ    = 11;
+    public static final int _ACTYPE_QCV    = 12;
+    public static final int _ACTYPE_VD     = 13;
     public static final int _ACTYPE_LENGTH = 14;
     
     private static final String _DBMAP3KEYS[] = { "cd", "conte", "cs", "csi",
