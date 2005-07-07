@@ -40,6 +40,7 @@
         <mkdir dir="${orootC4}/test"/>
     	<mkdir dir="${olib}"/>
     	<mkdir dir="${otld}"/>
+        <mkdir dir="${owar}"/>
     </target>
  
     <target name="setup" depends="clean">
