@@ -157,6 +157,48 @@
         </war>
     </target>
 
+    <target name="ospack">
+        <delete dir="ospackage"/>
+        <mkdir dir="ospackage"/>
+        <mkdir dir="ospackage/conf"/>
+        <mkdir dir="ospackage/conf/common"/>
+        <mkdir dir="ospackage/conf/web"/>
+        <mkdir dir="ospackage/conf/prod"/>
+        <copy todir="ospackage/conf/common">
+            <fileset dir="conf/common"/>
+        </copy>
+        <copy todir="ospackage/conf/web">
+            <fileset dir="conf/web"/>
+        </copy>
+        <copy todir="ospackage/conf/prod">
+            <fileset dir="conf/osi"/>
+        </copy>
+        <mkdir dir="ospackage/distrib"/>
+        <copy todir="ospackage/distrib">
+            <fileset dir="distrib"/>
+        </copy>
+        <delete dir="ospackage/distrib/war"/>
+        <mkdir dir="ospackage/doc"/>
+        <copy todir="ospackage/doc">
+            <fileset dir="doc"/>
+        </copy>
+        <mkdir dir="ospackage/lib"/>
+        <copy todir="ospackage/lib">
+            <fileset dir="lib"/>
+        </copy>
+        <mkdir dir="ospackage/src"/>
+        <copy todir="ospackage/src">
+            <fileset dir="src"/>
+        </copy>
+        <mkdir dir="ospackage/ui"/>
+        <copy todir="ospackage/ui">
+            <fileset dir="ui"/>
+        </copy>
+        <zip destfile="ospackage/sentinel.zip">
+            <zipfileset dir="ospackage"/>
+        </zip>
+    </target>
+
     <target name="build-doc">
         <mkdir dir="${temp}"/>
         <mkdir dir="${oroot}"/>
@@ -225,6 +267,11 @@
         <antcall target="deploy">
             <param name="conf" value="conf/prod"/>
             <param name="jdebug" value="off"/>
+        </antcall>
+    </target>
+
+    <target name="build-ospackage">
+        <antcall target="ospack">
         </antcall>
     </target>
 
