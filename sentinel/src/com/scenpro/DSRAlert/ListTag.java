@@ -258,4 +258,6 @@ public class ListTag extends TagSupport
     private String    _section;
 
     private AlertBean _ub;
+
+    private static final long serialVersionUID = -5247677342477707453L;
 }

@@ -165,4 +165,6 @@ public class LogonForm extends ActionForm
     private String _pswd;
 
     private String _userName;
+
+    private static final long serialVersionUID = -6923074595312333195L;
 }

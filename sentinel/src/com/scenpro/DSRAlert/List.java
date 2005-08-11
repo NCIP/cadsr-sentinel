@@ -117,6 +117,7 @@ public class List extends Action
                             .getSession().getServletContext().getAttribute(
                                 Constants._RESOURCES);
                         temp.setCreator(ub.getUser());
+                        temp.setCreatorName(ub.getUserName());
                         temp.setName(msgs.getMessage("all.createusing") + " "
                             + temp.getName());
                         ub.setWorking(temp);

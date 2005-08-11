@@ -151,4 +151,6 @@ public class RunForm extends ActionForm
     private String _nextScreen;
     
     public static final char _RECIPIENTS = 'C';
+
+    private static final long serialVersionUID = 6780909133861681552L;
 }

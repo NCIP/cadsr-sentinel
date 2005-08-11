@@ -125,4 +125,6 @@ public class CreateTag extends TagSupport
     private String    _section;
 
     private AlertBean _ub;
+
+    private static final long serialVersionUID = -6781255356606529465L;
 }

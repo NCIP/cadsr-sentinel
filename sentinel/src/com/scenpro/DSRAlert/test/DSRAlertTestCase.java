@@ -8,7 +8,6 @@ package com.scenpro.DSRAlert.test;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import org.apache.struts.action.ActionMessage;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.util.MessageResourcesFactory;
 import org.apache.struts.util.PropertyMessageResources;
@@ -77,7 +76,6 @@ public class DSRAlertTestCase extends MockStrutsTestCase
     String password = msgs.getMessage(Constants._DBPSWD);
 
     // Setup the database pool.
-    ActionMessage am;
     DBAlert.setupPool(getSession(), driver, tnsname, username, password);
     getSession().setAttribute(AlertBean._SESSIONNAME,
         new AlertBean(_validUserid, "", _validPswd));

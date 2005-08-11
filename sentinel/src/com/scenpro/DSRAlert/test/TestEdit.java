@@ -57,8 +57,6 @@ public class TestEdit extends DSRAlertTestCase
   public void testSave()
   {
     // Create the alert to edit
-    AlertBean alertBean = (AlertBean)getSession().getAttribute(
-        AlertBean._SESSIONNAME);
     AlertRec alertRec = _alertBean.getWorking();
     alertRec.setName("struts_test_temp_alert");
     DBAlert dbAlert = new DBAlert();

@@ -81,9 +81,6 @@ public class AutoProcessAlerts
         // The active database connection.
         _db = null;
 
-        // The location of the properties file.
-        _resourcePath = "";
-
         // For the insert logic to work easily when recording recipients and
         // the reports they receive, we seed the lists with a 'blank' entry.
         _recipients = new String[1];
@@ -162,11 +159,14 @@ public class AutoProcessAlerts
         {
             _file = "";
             _name = "";
+            _rows = 0;
         }
 
         public String _file;
 
         public String _name;
+        
+        public int _rows;
     }
 
     /**
@@ -181,7 +181,7 @@ public class AutoProcessAlerts
      * @param name_
      *        The name of the Alert definition.
      */
-    private void appendReport(int pos_, String file_, String name_)
+    private void appendReport(int pos_, String file_, String name_, int rows_)
     {
         // Increase the array by 1 element.
         int len = _reports[pos_].length + 1;
@@ -198,6 +198,7 @@ public class AutoProcessAlerts
         temp[ndx] = new ReportItem();
         temp[ndx]._file = file_;
         temp[ndx]._name = name_;
+        temp[ndx]._rows = rows_;
 
         // Discard the old list in preference to the new one.
         _reports[pos_] = temp;
@@ -255,8 +256,19 @@ public class AutoProcessAlerts
     {
         // Get the list of desired recipients.
         String list[] = rec_._alert.getRecipients();
-        String file = (rec_._errors) ? "" : rec_._reportFile;
+        String file;
         String name = rec_._alert.getName();
+        int rowCnt;
+        if (rec_._errors)
+        {
+            file = "";
+            rowCnt = 0;
+        }
+        else
+        {
+            file = rec_._reportFile;
+            rowCnt = _outRows;
+        }
 
         // The recipients are coded such that anything starting with
         // a "/" is the conte_idseq for the groups of curators for a
@@ -308,7 +320,7 @@ public class AutoProcessAlerts
                         // When the recipient is already in the list we need
                         // only
                         // add the report name.
-                        appendReport(pos, file, name);
+                        appendReport(pos, file, name, rowCnt);
                         break;
                     }
                     else if (compare > 0)
@@ -319,7 +331,7 @@ public class AutoProcessAlerts
                             // to position the name alphabetically and add
                             // the report also.
                             insertRecipient(++pos, temp[ndx]);
-                            appendReport(pos, file, name);
+                            appendReport(pos, file, name, rowCnt);
                             break;
                         }
                         min = pos;
@@ -332,7 +344,7 @@ public class AutoProcessAlerts
                             // to position the name alphabetically and add
                             // the report also.
                             insertRecipient(pos, temp[ndx]);
-                            appendReport(pos, file, name);
+                            appendReport(pos, file, name, rowCnt);
                             break;
                         }
                         max = pos;
@@ -498,7 +510,7 @@ public class AutoProcessAlerts
             boolean hasErrors;
             hasErrors = false;
             String prefix = "";
-            String body = "\n\n\"Alert Name\"\tLink\n\n";
+            String body = "\n";
             log("\tTo: " + _recipients[ndx] + "\n\t\tNumber of reports: "
                 + _reports[ndx].length);
             for (int ndx2 = 0; ndx2 < _reports[ndx].length; ++ndx2)
@@ -517,8 +529,11 @@ public class AutoProcessAlerts
                         + link.substring(link.lastIndexOf(File.separator) + 1);
                     link = link.replaceAll(" ", "%20");
                 }
-                body = body + "\"" + _reports[ndx][ndx2]._name + "\"\t" + link
-                    + "\n";
+                body = body
+                    + "\n"
+                    + "Alert Definition Name:    " + _reports[ndx][ndx2]._name + "\n"
+                    + "Link to Alert Report:     " + link + "\n"
+                    + "Number of Rows in Report: " + _reports[ndx][ndx2]._rows + "\n";
             }
 
             // Complete subject and body and send to recipient.
@@ -985,7 +1000,6 @@ public class AutoProcessAlerts
         // If we can't it means the CSI, CS, FORM or Context was removed from
         // the list in earlier
         // logic and the change should be ignored by the report.
-        ACDataLink head = new ACDataLink(null);
         Stack results = new Stack();
         if (rec_._alert.isFORMSall())
         {
@@ -1168,7 +1182,6 @@ public class AutoProcessAlerts
      * Search for the DSRAlert.properties file on the current drive.
      * 
      * @param path_
-     */
     private void findResources(String path_)
     {
         if (new File(path_ + File.separator + _RESOURCES).exists())
@@ -1190,6 +1203,7 @@ public class AutoProcessAlerts
             }
         }
     }
+     */
 
     /**
      * Load the configuration options from the resource/property file.
@@ -1473,8 +1487,6 @@ public class AutoProcessAlerts
     private String              _work;
 
     private DBAlert             _db;
-
-    private String              _resourcePath;
 
     private String              _recipients[];
 

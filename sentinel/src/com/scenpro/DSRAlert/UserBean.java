@@ -156,5 +156,6 @@ public final class UserBean implements Serializable
     {
         m_superuser = isSuperuser;
     }
-}
 
+    private static final long serialVersionUID = 8123556646776080906L;
+}

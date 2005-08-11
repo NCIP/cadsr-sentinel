@@ -1267,4 +1267,6 @@ public class EditForm extends ActionForm
     private String           _infoDateFilter;
     
     private String           _infoACTypes[];
+
+    private static final long serialVersionUID = 1111591331986981868L;
 }

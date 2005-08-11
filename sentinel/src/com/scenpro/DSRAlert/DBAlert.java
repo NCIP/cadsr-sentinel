@@ -4,7 +4,6 @@ package com.scenpro.DSRAlert;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -620,7 +619,6 @@ public class DBAlert
             + "from sbrext.sn_alert_view_ext a, sbrext.user_accounts_view u1, sbrext.user_accounts_view u2 "
             + "where a.al_idseq = ? and u1.ua_name = a.created_by and u2.ua_name(+) = a.modified_by";
         PreparedStatement pstmt = null;
-        String result;
         ResultSet rs = null;
 
         try
@@ -636,7 +634,6 @@ public class DBAlert
                 // As the where clause uses a specific ID we should only
                 // retrieve one result. And there's the
                 // one (1) based indexing again.
-                Date tdate;
                 rec_.setName(rs.getString(1));
                 rec_.setAdate(rs.getTimestamp(2));
                 rec_.setRdate(rs.getTimestamp(3));
@@ -739,7 +736,7 @@ public class DBAlert
             pstmt.setString(8, rec_.getAlertRecNum());
 
             // Send it to the database. And remember to flag a commit for later.
-            int xxx = pstmt.executeUpdate();
+            pstmt.executeUpdate();
             pstmt.close();
             _needCommit = true;
             return 0;
@@ -782,7 +779,7 @@ public class DBAlert
             pstmt.setString(5, rec_.getReportAckString());
             pstmt.setString(6, rec_.getReportRecNum());
 
-            int xxx = pstmt.executeUpdate();
+            pstmt.executeUpdate();
             pstmt.close();
             _needCommit = true;
             return 0;
@@ -810,6 +807,10 @@ public class DBAlert
      */
     public int updateAlert(AlertRec rec_)
     {
+        // Ensure data is clean.
+        rec_.setDependancies();
+        
+        // Update database.
         try
         {
             int xxx = updateProperties(rec_);
@@ -918,7 +919,7 @@ public class DBAlert
             }
 
             // Send it to the database. And remember to flag a commit for later.
-            int xxx = pstmt.executeUpdate();
+            pstmt.executeUpdate();
             pstmt.close();
             _needCommit = true;
             return 0;
@@ -969,7 +970,7 @@ public class DBAlert
             PreparedStatement pstmt = _conn.prepareStatement(update);
             pstmt.setString(1, rec_.getReportRecNum());
 
-            int xxx = pstmt.executeUpdate();
+            pstmt.executeUpdate();
             pstmt.close();
 
             return insertRecipients(rec_);
@@ -1036,7 +1037,7 @@ public class DBAlert
                 PreparedStatement pstmt = _conn.prepareStatement(insert);
                 pstmt.setString(1, rec_.getReportRecNum());
                 pstmt.setString(2, temp);
-                int xxx = pstmt.executeUpdate();
+                pstmt.executeUpdate();
                 pstmt.close();
             }
             // Remember to commit. It appears that we may flagging a commit when
@@ -1621,7 +1622,7 @@ public class DBAlert
         {
             PreparedStatement pstmt = _conn.prepareStatement(update);
             pstmt.setString(1, rec_.getAlertRecNum());
-            int xxx = pstmt.executeUpdate();
+            pstmt.executeUpdate();
             pstmt.close();
 
             return insertQuery(rec_);
@@ -1655,7 +1656,6 @@ public class DBAlert
         int marker = 0;
         try
         {
-            int xxx;
             PreparedStatement pstmt = _conn.prepareStatement(insert);
             pstmt.setString(1, rec_.getAlertRecNum());
             pstmt.setString(2, "C");
@@ -1678,7 +1678,7 @@ public class DBAlert
                 {
                     // Update
                     pstmt.setString(5, rec_.getContexts(ndx));
-                    xxx = pstmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
             }
 
@@ -1691,7 +1691,7 @@ public class DBAlert
                 {
                     // Update
                     pstmt.setString(5, rec_.getForms(ndx));
-                    xxx = pstmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
             }
 
@@ -1704,7 +1704,7 @@ public class DBAlert
                 {
                     // Update
                     pstmt.setString(5, rec_.getSchemes(ndx));
-                    xxx = pstmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
             }
 
@@ -1717,7 +1717,7 @@ public class DBAlert
                 {
                     // Update
                     pstmt.setString(5, rec_.getSchemeItems(ndx));
-                    xxx = pstmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
             }
 
@@ -1730,7 +1730,7 @@ public class DBAlert
                 {
                     // Update
                     pstmt.setString(5, rec_.getCreators(ndx));
-                    xxx = pstmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
             }
 
@@ -1743,7 +1743,7 @@ public class DBAlert
                 {
                     // Update
                     pstmt.setString(5, rec_.getModifiers(ndx));
-                    xxx = pstmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
             }
 
@@ -1756,7 +1756,7 @@ public class DBAlert
                 {
                     // Update
                     pstmt.setString(5, rec_.getACTypes(ndx));
-                    xxx = pstmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
             }
 
@@ -1766,7 +1766,7 @@ public class DBAlert
                 pstmt.setString(3, _DATEFILTER);
                 pstmt.setString(4, "CODE");
                 pstmt.setString(5, Integer.toString(rec_.getDateFilter()));
-                xxx = pstmt.executeUpdate();
+                pstmt.executeUpdate();
             }
 
             pstmt.setString(2, "M");
@@ -1780,7 +1780,7 @@ public class DBAlert
                 {
                     // Update
                     pstmt.setString(5, rec_.getAWorkflow(ndx));
-                    xxx = pstmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
             }
 
@@ -1793,7 +1793,7 @@ public class DBAlert
                 {
                     // Update
                     pstmt.setString(5, rec_.getARegis(ndx));
-                    xxx = pstmt.executeUpdate();
+                    pstmt.executeUpdate();
                 }
             }
 
@@ -1803,7 +1803,7 @@ public class DBAlert
                 pstmt.setString(3, _VERSION);
                 pstmt.setString(4, rec_.getAVersionString());
                 pstmt.setString(5, rec_.getActVerNum());
-                xxx = pstmt.executeUpdate();
+                pstmt.executeUpdate();
             }
 
             // Remember to commit.
@@ -1848,7 +1848,6 @@ public class DBAlert
      * @param reason_
      *        The reason message.
      * @return The corrected message.
-     */
     private String cleanReason(String reason_)
     {
         String reason = reason_;
@@ -1858,6 +1857,7 @@ public class DBAlert
         }
         return reason;
     }
+     */
 
     /**
      * Clean the Alert Report introduction and truncate if needed.
@@ -1979,7 +1979,7 @@ public class DBAlert
             pstmt.setString(5, rec_.getReportEmptyString());
             pstmt.setString(6, rec_.getReportAckString());
             pstmt.registerOutParameter(7, Types.CHAR);
-            int xxx = pstmt.executeUpdate();
+            pstmt.executeUpdate();
 
             // We need the record id to populate the foreign keys for other
             // tables.
@@ -2011,6 +2011,10 @@ public class DBAlert
      */
     public int insertAlert(AlertRec rec_)
     {
+        // Ensure required data dependancies.
+        rec_.setDependancies();
+        
+        // Update the database.
         try
         {
             int xxx = insertProperties(rec_);
@@ -2191,7 +2195,7 @@ public class DBAlert
                 for (; ndx < count; ++ndx)
                 {
                     rec = (tempData) results.get(cnt++);
-                    data._labels[ndx] = rec._label;
+                    data._labels[ndx] = rec._label.replaceAll("[\\s]", " ");
                     data._vals[ndx] = rec._val;
                 }
             }
@@ -3068,7 +3072,7 @@ public class DBAlert
             for (int ndx = 1; ndx < count; ++ndx)
             {
                 rec = (tempData2) results.get(cnt++);
-                data._labels[ndx] = rec._label;
+                data._labels[ndx] = rec._label.replaceAll("[\\s]", " ");
                 data._id1[ndx] = rec._id1;
                 data._id2[ndx] = rec._id2;
             }
@@ -3172,8 +3176,8 @@ public class DBAlert
             for (int ndx = 1; ndx < count; ++ndx)
             {
                 rec = (tempData3) results.get(cnt++);
-                data._label1[ndx] = rec._label1;
-                data._label2[ndx] = rec._label2;
+                data._label1[ndx] = rec._label1.replaceAll("[\\s]", " ");
+                data._label2[ndx] = rec._label2.replaceAll("[\\s]", " ");
                 data._id1[ndx] = rec._id1;
                 data._id2[ndx] = rec._id2;
                 data._id3[ndx] = rec._id3;
@@ -3320,7 +3324,7 @@ public class DBAlert
                 // Can you believe that some people put quotes in the name? We
                 // have to escape them or it causes
                 // problems downstream.
-                _formsList[ndx] = _formsList[ndx].replaceAll("\"", "\\\\\"");
+                _formsList[ndx] = _formsList[ndx].replaceAll("[\"]", "\\\\\"");
                 _formsList[ndx] = _formsList[ndx].replaceAll("[\\r\\n]", " ");
             }
             _formsVals = rec._id2;
@@ -3401,7 +3405,7 @@ public class DBAlert
      */
     public String getErrorMsg(boolean flag_)
     {
-        return (_errorCode != 0) ? ((flag_) ? _errorMsg.replaceAll("\n",
+        return (_errorCode != 0) ? ((flag_) ? _errorMsg.replaceAll("[\\n]",
             "\\\\n") : _errorMsg) : null;
     }
 
@@ -3555,9 +3559,11 @@ public class DBAlert
         Vector changes = new Vector();
         Vector oval = new Vector();
         Vector nval = new Vector();
+        Vector dval = new Vector();
         String clist[] = null;
         String olist[] = null;
         String nlist[] = null;
+        String dlist[] = null;
         ACData oldrec = null;
         int cols = rs_.getMetaData().getColumnCount();
         while (rs_.next())
@@ -3580,12 +3586,14 @@ public class DBAlert
                     clist = paste(changes);
                     olist = paste(oval);
                     nlist = paste(nval);
-                    oldrec.setChanges(clist, olist, nlist);
+                    dlist = paste(dval);
+                    oldrec.setChanges(clist, olist, nlist, dlist);
                     data.add(oldrec);
 
                     changes = new Vector();
                     oval = new Vector();
                     nval = new Vector();
+                    dval = new Vector();
                 }
             }
 
@@ -3606,6 +3614,7 @@ public class DBAlert
                     changes.add(ctext);
                     oval.add(rs_.getString(17));
                     nval.add(rs_.getString(18));
+                    dval.add(rs_.getString(19));
                 }
             }
 
@@ -3616,7 +3625,8 @@ public class DBAlert
             clist = paste(changes);
             olist = paste(oval);
             nlist = paste(nval);
-            oldrec.setChanges(clist, olist, nlist);
+            dlist = paste(dval);
+            oldrec.setChanges(clist, olist, nlist, dlist);
             data.add(oldrec);
         }
 
@@ -4498,26 +4508,63 @@ public class DBAlert
         if (ids_.length < limit)
             return selectAC2(select_, ids_);
 
+        // When more than 1000 we have to break up the list
+        // and merge the results together.
         ACData results[] = new ACData[0];
         int group = limit;
         int indx = 0;
         while (indx < ids_.length)
         {
-            ACData temp[] = new ACData[group];
-            int ndx;
-            for (ndx = 0; ndx < group; ++ndx)
-                temp[ndx] = ids_[indx++];
-            ACData rc[] = selectAC2(select_, temp);
-            temp = results;
-            results = new ACData[temp.length + rc.length];
-            for (ndx = 0; ndx < temp.length; ++ndx)
-                results[ndx] = temp[ndx];
-            int cnt = ndx;
-            for (ndx = 0; ndx < rc.length; ++ndx)
-                results[cnt++] = rc[ndx];
-            cnt = ids_.length - indx;
-            if (cnt < limit)
-                group = cnt;
+            ACData tset[] = new ACData[group];
+            System.arraycopy(ids_, indx, tset, 0, group);
+            indx += group;
+            ACData rset[] = selectAC2(select_, tset);
+            tset = results;
+            results = new ACData[tset.length + rset.length];
+            
+            // Now that we have a place to store the composite
+            // list perform a simple merge as both are already
+            // sorted.
+            int tndx = 0;
+            int rndx = 0;
+            int ndx = 0;
+            if (tset.length > 0 && rset.length > 0)
+            {
+                while (ndx < results.length)
+                {
+                    if (tset[tndx].compareUsingIDS(rset[rndx]) <= 0)
+                    {
+                        results[ndx++] = tset[tndx++];
+                        if (tndx == tset.length)
+                            break;
+                    }
+                    else
+                    {
+                        results[ndx++] = rset[rndx++];
+                        if (rndx == rset.length)
+                            break;
+                    }
+                }
+            }
+            
+            // We've exhausted the 'temp' list so copy the rest of the
+            // 'rc' list.
+            if (tndx == tset.length)
+                System.arraycopy(rset, rndx, results, ndx, rset.length - rndx);
+            
+            // We've exhausted the 'rc' list so copy the rest of the
+            // 'temp' list.
+            else
+                System.arraycopy(tset, tndx, results, ndx, tset.length - tndx);
+
+            // Do next group.
+            tndx = ids_.length - indx;
+            if (group > tndx)
+                group = tndx;
+            
+            // Force conservation of memory.
+            tset = null;
+            rset = null;
         }
         return results;
     }
@@ -4843,11 +4890,11 @@ public class DBAlert
      */
     public ACData[] selectQCQfromDE(ACData de_[])
     {
-        String select = "select 's', 1, 'qcq', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq, "
+        String select = "select 's', 1, 'qcq', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, de.de_idseq "
             + "from sbrext.quest_contents_view_ext qc, sbr.data_elements_view de, sbr.contexts_view c "
             + "where de.de_idseq in (?) and qc.de_idseq = de.de_idseq and qc.qtl_name = 'QUESTION' and c.conte_idseq = qc.conte_idseq "
-            + "order by id asc";
+            + "order by id asc, cid asc";
 
         return selectAC(select, de_);
     }
@@ -4861,11 +4908,11 @@ public class DBAlert
      */
     public ACData[] selectQCQfromVD(ACData vd_[])
     {
-        String select = "select 's', 1, 'qcq', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq, "
+        String select = "select 's', 1, 'qcq', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, vd.vd_idseq "
             + "from sbrext.quest_contents_view_ext qc, sbr.value_domains_view vd, sbr.contexts_view c "
             + "where vd.vd_idseq in (?) and qc.dn_vd_idseq = vd.vd_idseq and qc.qtl_name = 'QUESTION' and c.conte_idseq = qc.conte_idseq "
-            + "order by id asc";
+            + "order by id asc, cid asc";
 
         return selectAC(select, vd_);
     }
@@ -4879,12 +4926,12 @@ public class DBAlert
      */
     public ACData[] selectQCVfromVD(ACData vd_[])
     {
-        String select = "select 's', 1, 'qcv', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq, "
+        String select = "select 's', 1, 'qcv', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, vd.vd_idseq "
             + "from sbrext.quest_contents_view_ext qc, sbr.value_domains_view vd, sbr.vd_pvs_view vp, sbr.contexts_view c "
             + "where vd.vd_idseq in (?) and vp.vd_idseq = vd.vd_idseq and qc.vp_idseq = vp.vp_idseq and "
             + "qc.qtl_name = 'VALID_VALUE' and c.conte_idseq = qc.conte_idseq "
-            + "order by id asc";
+            + "order by id asc, cid asc";
 
         return selectAC(select, vd_);
     }
@@ -4898,11 +4945,11 @@ public class DBAlert
      */
     public ACData[] selectQCQfromQCV(ACData qcv_[])
     {
-        String select = "select 's', 1, 'qcq', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq, "
+        String select = "select 's', 1, 'qcq', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, qc2.qc_idseq "
             + "from sbrext.quest_contents_view_ext qc, sbrext.quest_contents_view_ext qc2, sbr.contexts_view c "
             + "where qc2.qc_idseq in (?) and qc2.qtl_name = 'VALID_VALUE' and qc.qc_idseq = qc2.p_qst_idseq and c.conte_idseq = qc.conte_idseq "
-            + "order by id asc";
+            + "order by id asc, cid asc";
 
         return selectAC(select, qcv_);
     }
@@ -4916,11 +4963,11 @@ public class DBAlert
      */
     public ACData[] selectQCMfromQCQ(ACData qcq_[])
     {
-        String select = "select 's', 1, 'qcm', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq, "
+        String select = "select 's', 1, 'qcm', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, qc2.qc_idseq "
             + "from sbrext.quest_contents_view_ext qc, sbrext.quest_contents_view_ext qc2, sbr.contexts_view c "
             + "where qc2.qc_idseq in (?) and qc2.qtl_name = 'QUESTION' and qc.qc_idseq = qc2.p_mod_idseq and c.conte_idseq = qc.conte_idseq "
-            + "order by id asc";
+            + "order by id asc, cid asc";
 
         return selectAC(select, qcq_);
     }
@@ -4934,11 +4981,11 @@ public class DBAlert
      */
     public ACData[] selectQCfromQCM(ACData qcm_[])
     {
-        String select = "select 's', 1, 'qc', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq, "
+        String select = "select 's', 1, 'qc', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, qc2.qc_idseq "
             + "from sbrext.quest_contents_view_ext qc, sbrext.quest_contents_view_ext qc2, sbr.contexts_view c "
             + "where qc2.qc_idseq in (?) and qc2.qtl_name = 'MODULE' and qc.qc_idseq = qc2.dn_crf_idseq and c.conte_idseq = qc.conte_idseq "
-            + "order by id asc";
+            + "order by id asc, cid asc";
 
         return selectAC(select, qcm_);
     }
@@ -4952,12 +4999,12 @@ public class DBAlert
      */
     public ACData[] selectQCfromQCQ(ACData qcq_[])
     {
-        String select = "select 's', 1, 'qc', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq, "
+        String select = "select 's', 1, 'qc', qc.qc_idseq as id, qc.version, qc.qc_id, qc.long_name, qc.conte_idseq as cid, "
             + "qc.date_modified, qc.date_created, qc.modified_by, qc.created_by, qc.change_note, c.name, qc2.qc_idseq "
             + "from sbrext.quest_contents_view_ext qc, sbrext.quest_contents_view_ext qc2, sbr.contexts_view c "
             + "where qc2.qc_idseq in (?) and qc2.qtl_name = 'QUESTION' and qc2.p_mod_idseq is null and "
             + "qc.qc_idseq = qc2.dn_crf_idseq and c.conte_idseq = qc.conte_idseq "
-            + "order by id asc";
+            + "order by id asc, cid asc";
 
         return selectAC(select, qcq_);
     }
@@ -5430,7 +5477,7 @@ public class DBAlert
             pstmt = _conn.prepareStatement(update);
             pstmt.setTimestamp(1, stamp_);
             pstmt.setString(2, id_);
-            int xxx = pstmt.executeUpdate();
+            pstmt.executeUpdate();
             pstmt.close();
             _needCommit = true;
             return 0;
@@ -5651,12 +5698,6 @@ public class DBAlert
     private String              _schemeItemVals[];
 
     private String              _schemeItemSchemes[];
-
-    private String              _conceptList[];
-
-    private String              _conceptVals[];
-
-    private String              _conceptContext[];
 
     private Connection          _conn;
 

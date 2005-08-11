@@ -143,7 +143,6 @@ public class ACData
      * @param val_
      *        An array of strings to concatenate into a single String.
      * @return The bytes for output.
-     */
     static private byte[] dumpConvert(String val_[])
     {
         if (val_ == null)
@@ -163,6 +162,7 @@ public class ACData
         }
         return result.getBytes();
     }
+     */
 
     /**
      * Return the byte representation for a String with null and empty as
@@ -378,8 +378,14 @@ public class ACData
                 }
                 else
                 {
+                    String dchg = val._rec._dates[0];
                     for (int chgcnt = 0; chgcnt < val._rec._changes.length; ++chgcnt)
                     {
+                        if (dchg.compareTo(val._rec._dates[chgcnt]) != 0)
+                        {
+                            dchg = val._rec._dates[chgcnt];
+                            fout_.write("\t\t\t<tr><td colspan=\"3\"><hr /></td></tr>\n".getBytes());
+                        }
                         fout_
                             .write("\t\t\t<tr><td title=\"Attribute Name\">"
                                 .getBytes());
@@ -660,10 +666,10 @@ public class ACData
         fout_.write("<html>\n\t<head>\n\t\t<title>".getBytes());
         fout_.write("Sentinel Report for ".getBytes());
         fout_.write(dumpConvert(rec_.getName()));
-        fout_.write("</title>\n\t</head>\n<body>\n".getBytes());
+        fout_.write("</title>\n".getBytes());
         fout_.write("\t<style>\n".getBytes());
         fout_.write(style_.getBytes());
-        fout_.write("\t</style>\n".getBytes());
+        fout_.write("\t</style>\n</head>\n<body>\n".getBytes());
         fout_.write("\t<hr><table class=\"t1prop\">\n".getBytes());
         fout_.write("\t<colgroup>\n".getBytes());
         fout_.write("\t<col class=\"c1prop\">\n".getBytes());
@@ -1216,11 +1222,12 @@ public class ACData
      *        The new value which is not necessarily the current value in the
      *        database.
      */
-    public void setChanges(String changes_[], String old_[], String new_[])
+    public void setChanges(String changes_[], String old_[], String new_[], String dates_[])
     {
         _changes = changes_;
         _old = old_;
         _new = new_;
+        _dates = dates_;
     }
 
     /**
@@ -1471,6 +1478,34 @@ public class ACData
         return results;
     }
 
+    /**
+     * Compare two ACData instances using the record ID and context ID.  Record
+     * ID takes precedence and when equal, determine the result from the context
+     * ID.
+     * 
+     * @param rec_ The other ACData being compared.
+     * @return -1 when this < rec_, 0 when this == rec_ and 1 when this > rec_.
+     */
+    public int compareUsingIDS(ACData rec_)
+    {
+        int rc = _idseq.compareTo(rec_._idseq);
+        if (rc == 0)
+        {
+            if (_contextID == null)
+            {
+                if (rec_._contextID == null)
+                    rc = 0;
+                else
+                    rc = -1;
+            }
+            else if (rec_._contextID == null)
+                rc = 1;
+            else
+                rc = _contextID.compareTo(rec_._contextID);
+        }
+        return rc;
+    }
+
     private static boolean _debug;       // *** development purposes only
 
     private boolean        _resolveNames; // Can not resolve the names more than
@@ -1536,4 +1571,7 @@ public class ACData
     // the primary table of the database as multiple changes could have been
     // made since
     // the last Alert run.
+    
+    private String         _dates[];     // The corresponding date of the change as
+                                         // recorded in the _old and _new arrays.
 }

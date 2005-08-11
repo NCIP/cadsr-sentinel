@@ -225,6 +225,18 @@ public class AlertRec
     }
 
     /**
+     * Reset data members based on dependancies with other data
+     * members.  This will resolve any data interrelationships after
+     * all updates are made to the Alert Definition.
+     *
+     */
+    public void setDependancies()
+    {
+        if (_freq == 'D')
+            _day = 0;
+    }
+
+    /**
      * Format an integer to a String and guarantee at least 2 digits by
      * prefixing a "0" if necessary.
      * 
@@ -469,15 +481,12 @@ public class AlertRec
     {
         String temp;
         String sep = (flag_) ? "<br>" : " ";
-        if (_day > 0)
-        {
-            if (_freq == 'W')
-                temp = "Weekly" + sep + weekdays[_day - 1];
-            else
-                temp = "Monthly" + sep + Integer.toString(_day);
-        }
-        else
+        if (_freq == 'D')
             temp = "Daily";
+        else if (_freq == 'W')
+            temp = "Weekly" + sep + weekdays[_day - 1];
+        else
+            temp = "Monthly" + sep + Integer.toString(_day);
         return temp;
     }
 
@@ -491,6 +500,8 @@ public class AlertRec
     public void setName(String val_)
     {
         _name = (val_ == null) ? "" : val_.replaceAll("[\"\\r\\n]", "");
+        if (_name.length() > DBAlert._MAXNAMELEN)
+            _name = _name.substring(0, DBAlert._MAXNAMELEN);
     }
 
     /**
@@ -548,7 +559,7 @@ public class AlertRec
     {
         _freq = val_.charAt(0);
         if (_freq == 'D')
-            ;
+            _day = 0;
         else if (_freq == 'W')
             _day = Integer.parseInt(week_);
         else
@@ -802,6 +813,8 @@ public class AlertRec
     public void setInactiveReason(String val_)
     {
         _inactiveReason = val_;
+        if (_inactiveReason != null && _inactiveReason.length() > DBAlert._MAXREASONLEN)
+            _inactiveReason = _inactiveReason.substring(0, DBAlert._MAXREASONLEN);
     }
 
     /**
@@ -842,6 +855,8 @@ public class AlertRec
             _intro = val_.replaceAll("\r", "");
         else
             _intro = val_;
+        if (_intro.length() > DBAlert._MAXINTROLEN)
+            _intro = _intro.substring(0, DBAlert._MAXINTROLEN);
     }
 
     /**
@@ -1391,11 +1406,23 @@ public class AlertRec
     public void setRecipients(String val_[])
     {
         _recipients = val_;
+        if (_recipients == null)
+            return;
+        for (int ndx = 0; ndx < _recipients.length; ++ndx)
+        {
+            if (_recipients[ndx] != null && _recipients[ndx].length() > DBAlert._MAXEMAILLEN)
+                _recipients[ndx] = _recipients[ndx].substring(0, DBAlert._MAXEMAILLEN);
+        }
     }
     public void setRecipients(int ndx_, String val_)
     {
-        if (ndx_ < _recipients.length)
-            _recipients[ndx_] = val_;
+        if (_recipients != null && ndx_ < _recipients.length)
+        {
+            if (val_ != null && val_.length() > DBAlert._MAXEMAILLEN)
+                _recipients[ndx_] = val_.substring(0, DBAlert._MAXEMAILLEN);
+            else
+                _recipients[ndx_] = val_;
+        }
     }
 
     /**

@@ -55,4 +55,6 @@ public class FootTag extends TagSupport
         }
         return EVAL_PAGE;
     }
+
+    private static final long serialVersionUID = -4073456777204188509L;
 }

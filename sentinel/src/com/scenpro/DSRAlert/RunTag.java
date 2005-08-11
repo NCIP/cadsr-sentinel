@@ -99,4 +99,6 @@ public class RunTag extends TagSupport
     private String    _section;
 
     private AlertBean _ub;
+
+    private static final long serialVersionUID = -1503025373047301625L;
 }

@@ -98,4 +98,6 @@ public class ListForm extends ActionForm
     private String _listShow;
 
     private String _nextScreen;
+
+    private static final long serialVersionUID = -7463737781075371910L;
 }

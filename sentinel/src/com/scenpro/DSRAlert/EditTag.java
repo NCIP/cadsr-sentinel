@@ -3,7 +3,6 @@
 package com.scenpro.DSRAlert;
 
 import java.io.IOException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -48,7 +47,6 @@ public class EditTag extends TagSupport
         // Set the class data.
         HttpSession session = pageContext.getSession();
         _ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
-        _request = pageContext.getRequest();
 
         // Process the desired section.
         String temp = null;
@@ -546,12 +544,9 @@ public class EditTag extends TagSupport
     {
         _section = null;
         _ub = null;
-        _request = null;
         _namesList = null;
         _namesVals = null;
         _namesExempt = null;
-        _displayList = null;
-        _displayVals = null;
         _groupsList = null;
         _groupsVals = null;
         _contextList = null;
@@ -579,17 +574,11 @@ public class EditTag extends TagSupport
 
     private AlertBean      _ub;
 
-    private ServletRequest _request;
-
     private String         _namesList[];
 
     private String         _namesVals[];
 
     private String         _namesExempt;
-
-    private String         _displayList[];
-
-    private String         _displayVals[];
 
     private String         _groupsList[];
 
@@ -632,4 +621,6 @@ public class EditTag extends TagSupport
     private StringBuffer   _buf;
     
     private int            _bufLen;
+
+    private static final long serialVersionUID = 1822843268148691725L;
 }

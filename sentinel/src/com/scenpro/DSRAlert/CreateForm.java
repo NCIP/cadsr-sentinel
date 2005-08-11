@@ -153,4 +153,6 @@ public class CreateForm extends ActionForm
     private String _nextScreen;
 
     private String _propDesc;
+
+    private static final long serialVersionUID = -6363464073035486126L;
 }
