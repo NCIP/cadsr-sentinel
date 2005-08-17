@@ -876,7 +876,7 @@ public class AutoProcessAlerts
         logError(_db.getError());
         ACData qcmm[] = ACData.merge(qcm, _db.selectQCMfromQCQ(qcqm));
         logError(_db.getError());
-        ACData qca[] = ACData.merge(qc, _db.selectQCfromQCM(qcm));
+        ACData qca[] = ACData.merge(qc, _db.selectQCfromQCM(qcmm));
         logError(_db.getError());
         qca = ACData.merge(qca, _db.selectQCfromQCQ(qcqm));
         logError(_db.getError());
