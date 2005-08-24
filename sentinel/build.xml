@@ -160,6 +160,9 @@
     <target name="ospack">
         <delete dir="ospackage"/>
         <mkdir dir="ospackage"/>
+        <copy todir="ospackage">
+            <fileset file="build.xml"/>
+        </copy>
         <mkdir dir="ospackage/conf"/>
         <mkdir dir="ospackage/conf/common"/>
         <copy todir="ospackage/conf/common">
@@ -248,7 +251,7 @@
     </target>
 
     <target name="init">
-        <echo message="This build script must be run with the name of the desired target: build-proto, build-dev, build-qa, build-stage, build-prod, build-doc."/>
+        <echo message="This build script must be run with the name of the desired target: build-proto, build-dev, build-qa, build-stage, build-prod, build-doc, build-ospackage."/>
     </target>
 
     <target name="build-proto">
