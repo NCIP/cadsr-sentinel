@@ -1251,6 +1251,9 @@ public class ACData
      */
     static public void resolveChanges(DBAlert db, ACData list_[])
     {
+        if (list_ == null)
+            return;
+
         for (int ndx = 0; ndx < list_.length; ++ndx)
         {
             db.selectNames(list_[ndx]._changes, list_[ndx]._old);

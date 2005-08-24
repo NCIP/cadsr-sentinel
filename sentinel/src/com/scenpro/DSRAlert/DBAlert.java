@@ -4154,16 +4154,20 @@ public class DBAlert
         String select[] = new String[4];
         select[0] = "select 'p', 1, 'prop', prop.prop_idseq as id, prop.version, prop.prop_id, "
             + "prop.long_name, prop.conte_idseq as cid, "
-            + "prop.date_modified, prop.date_created, prop.modified_by, prop.created_by, prop.change_note, c.name, '' "
-            + "from sbrext.properties_view_ext prop, sbr.contexts_view c "
-            + "where c.conte_idseq = prop.conte_idseq and ";
+            + "prop.date_modified, prop.date_created, prop.modified_by, prop.created_by, prop.change_note, c.name, '', "
+            + "'CON_IDSEQ', '', ccv.con_idseq as nvalue, prop.date_created "
+//            + "from sbrext.properties_view_ext prop, sbr.contexts_view c "
+//            + "where c.conte_idseq = prop.conte_idseq and ";
+            + "from sbrext.properties_view_ext prop, sbr.contexts_view c, sbrext.component_concepts_view_ext ccv "
+            + "where c.conte_idseq = prop.conte_idseq "
+            + "and ccv.condr_idseq = prop.condr_idseq and ";
         select[1] = "prop.created_by in (?) and ";
         select[2] = "prop.modified_by in (?) and ";
         select[3] = "((prop.date_modified is not null and prop.date_modified "
             + _DATECHARS[dates_][0] + " ? and prop.date_modified " + _DATECHARS[dates_][1] + " ?) "
             + "or (prop.date_created is not null and prop.date_created "
             + _DATECHARS[dates_][2] + " ? and prop.date_created " + _DATECHARS[dates_][3] + " ?)) "
-            + "order by id asc, cid asc";
+            + "order by id asc, cid asc, nvl(prop.date_modified, prop.date_created) asc, ccv.display_order desc";
 
         return selectAC(select, start_, end_, 2, creators_, modifiers_);
     }
@@ -4182,18 +4186,29 @@ public class DBAlert
         String creators_[], String modifiers_[])
     {
         String select[] = new String[4];
+/*
         select[0] = "select 'p', 1, 'oc', oc.oc_idseq as id, oc.version, oc.oc_id, "
             + "oc.long_name, oc.conte_idseq as cid, "
-            + "oc.date_modified, oc.date_created, oc.modified_by, oc.created_by, oc.change_note, c.name, '' "
-            + "from sbrext.object_classes_view_ext oc, sbr.contexts_view c "
-            + "where c.conte_idseq = oc.conte_idseq and ";
+            + "oc.date_modified, oc.date_created, oc.modified_by, oc.created_by, oc.change_note, c.name, '', "
+//            + "cdr.crtl_name, '', oc.origin || ' ' || cdr.name as nvalue, oc.date_created "
+            + "'Source', '', '{' || oc.origin || '} {' || cdr.name || '}' as nvalue, oc.date_created "
+            + "from sbrext.object_classes_view_ext oc, sbr.contexts_view c, sbrext.con_derivation_rules_view_ext cdr "
+            + "where c.conte_idseq = oc.conte_idseq and cdr.condr_idseq = oc.condr_idseq and ";
+*/
+        select[0] = "select 'p', 1, 'oc', oc.oc_idseq as id, oc.version, oc.oc_id, "
+            + "oc.long_name, oc.conte_idseq as cid, "
+            + "oc.date_modified, oc.date_created, oc.modified_by, oc.created_by, oc.change_note, c.name, '', "
+            + "'CON_IDSEQ', '', ccv.con_idseq as nvalue, oc.date_created "
+            + "from sbrext.object_classes_view_ext oc, sbr.contexts_view c, sbrext.component_concepts_view_ext ccv "
+            + "where c.conte_idseq = oc.conte_idseq "
+            + "and ccv.condr_idseq = oc.condr_idseq and ";
         select[1] = "oc.created_by in (?) and ";
         select[2] = "oc.modified_by in (?) and ";
         select[3] = "((oc.date_modified is not null and oc.date_modified "
             + _DATECHARS[dates_][0] + " ? and oc.date_modified " + _DATECHARS[dates_][1] + " ?) "
             + "or (oc.date_created is not null and oc.date_created "
             + _DATECHARS[dates_][2] + " ? and oc.date_created " + _DATECHARS[dates_][3] + " ?)) "
-            + "order by id asc, cid asc";
+            + "order by id asc, cid asc, nvl(oc.date_modified, oc.date_created) asc, ccv.display_order desc";
 
         return selectAC(select, start_, end_, 2, creators_, modifiers_);
     }
@@ -4361,7 +4376,11 @@ public class DBAlert
             + "c.name, '', ach.changed_column, ach.old_value, ach.new_value, ach.change_datetimestamp as stime "
             + "from sbrext.ac_change_history_ext ach, sbr.data_elements_view de, sbr.contexts_view c "
             + "where ach.changed_table = 'DATA_ELEMENTS' and de.de_idseq = ach.changed_table_idseq and "
-            + "c.conte_idseq = de.conte_idseq and ";
+/*            + "where ach.ac_idseq in "
+            + "(select ch2.changed_table_idseq from sbrext.ac_change_history_ext ch2 "
+            + "where ch2.changed_table = 'DATA_ELEMENTS' group by ch2.changed_table_idseq) "
+            + "and de.de_idseq = ach.ac_idseq and "
+*/            + "c.conte_idseq = de.conte_idseq and ";
         select[1] = "de.created_by in (?) and ";
         select[2] = "ach.changed_by in (?) and ";
         if (_INCdesignations)
@@ -5765,7 +5784,7 @@ public class DBAlert
     private static final String _DBMAP1KEYS[] = { 
         "AC_CSI_IDSEQ", "AC_IDSEQ", "ASL_NAME", 
         "BEGIN_DATE",
-        "CDE_ID", "CDR_IDSEQ", "CD_IDSEQ", "CHANGE_NOTE", "CONCAT_CHAR", "CONTE_IDSEQ", "CREATED_BY",
+        "CDE_ID", "CDR_IDSEQ", "CD_IDSEQ", "CHANGE_NOTE", "CON_IDSEQ", "CONCAT_CHAR", "CONTE_IDSEQ", "CREATED_BY",
         "CRTL_NAME", "CS_CSI_IDSEQ", "C_DEC_IDSEQ", "C_DE_IDSEQ", "C_VD_IDSEQ",
         "DATE_CREATED", "DATE_MODIFIED", "DCTL_NAME", "DECIMAL_PLACE", "DEC_ID", "DEC_IDSEQ", "DEC_REC_IDSEQ",
         "DELETED_IND", "DESCRIPTION", "DESIG_IDSEQ", "DETL_NAME", "DE_IDSEQ", "DE_REC_IDSEQ", "DISPLAY_ORDER",
@@ -5787,7 +5806,7 @@ public class DBAlert
     private static final String _DBMAP1VALS[] = { "Associated with Classification Scheme Item",
         "Associated with Administered Component", "Workflow Status",
         "Begin Date", "Public ID", "Associated with Complex DE", "Associated with Conceptual Domain",
-        "Change Note", "Concatenation Character", "Associated with Context", "Created By",
+        "Change Note", "Associated with Concept Class", "Concatenation Character", "Associated with Context", "Created By",
         "Associated with Complex Representation", "Associated with CS/CSI",
         "Associated with Child DEC", "Associated with Child DE", "Associated with Child VD",
         "Created Date", "Modified Date", "Associated with Document Type",
@@ -5804,26 +5823,33 @@ public class DBAlert
         "Associated with Relationship", "Rule", "Unit Of Measure", "URL", "Public ID",
         "Associated with Value Domain", "VD_REC_IDSEQ", "Enumerated/Non-enumerated", "Version" };
 
-    private static final String _DBMAP2KEYS[] = { "CD_IDSEQ", "CONTE_IDSEQ",
+    private static final String _DBMAP2KEYS[] = {
+        "CD_IDSEQ", "CON_IDSEQ", "CONTE_IDSEQ",
         "CREATED_BY", "DEC_IDSEQ", "DE_IDSEQ", "MODIFIED_BY", "OC_IDSEQ",
-        "PROP_IDSEQ", "REP_IDSEQ", "UA_NAME", "VD_IDSEQ" };
+        "PROP_IDSEQ", "RD_IDSEQ", "REP_IDSEQ", "UA_NAME", "VD_IDSEQ" };
 
     private static final String _DBMAP2VALS[] = {
-        "sbr.conceptual_domains_view", "sbr.contexts_view",
+        "sbr.conceptual_domains_view", "sbrext.concepts_view_ext", "sbr.contexts_view",
         "sbrext.user_accounts_view", "sbr.data_element_concepts_view",
         "sbr.data_elements_view", "sbrext.user_accounts_view",
         "sbrext.object_classes_view_ext", "sbrext.properties_view_ext",
+        "sbr.reference_documents_view",
         "sbrext.representations_view_ext", "sbrext.user_accounts_view",
         "sbr.value_domains_view"             };
 
     private static final String _DBMAP2SUBS[] = {
         "long_name || ' (' || cd_id || 'v' || version || ')' as label",
-        "name || ' (v' || version || ')' as label", "",
+        "long_name || ' (' || con_id || 'v' || version || ') (' || origin || ':' || preferred_name || ')' as label",
+        "name || ' (v' || version || ')' as label",
+        "",
         "long_name || ' (' || dec_id || 'v' || version || ')' as label",
-        "long_name || ' (' || cde_id || 'v' || version || ')' as label", "",
+        "long_name || ' (' || cde_id || 'v' || version || ')' as label",
+        "",
         "long_name || ' (' || oc_id || 'v' || version || ')' as label",
         "long_name || ' (' || prop_id || 'v' || version || ')' as label",
-        "long_name || ' (' || rep_id || 'v' || version || ')' as label", "",
+        "name || ' (' || nvl(doc_text, url) || ')' as label",
+        "long_name || ' (' || rep_id || 'v' || version || ')' as label",
+        "",
         "long_name || ' (' || vd_id || 'v' || version || ')' as label" };
 
     public static final int _ACTYPE_CD     = 0;

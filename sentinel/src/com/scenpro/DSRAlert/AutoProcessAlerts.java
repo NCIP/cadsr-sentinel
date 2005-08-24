@@ -787,6 +787,8 @@ public class AutoProcessAlerts
                     acdList_[rc] = _db.selectCONTE(dates, _start, _end, creators, modifiers);
                     break;
             }
+            if (acdList_[rc] == null)
+                acdList_[rc] = new ACData[0];
             logError(_db.getError());
             acdList_[rc] = filter(acdList_[rc], rec_);
         }
