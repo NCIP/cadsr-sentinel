@@ -3995,7 +3995,8 @@ public class DBAlert
             + "vd.date_modified as ctime, vd.date_created, vd.modified_by, vd.created_by, vd.change_note, "
             + "c.name, '', ach.changed_column, ach.old_value, ach.new_value, ach.change_datetimestamp as stime "
             + "from sbrext.ac_change_history_ext ach, sbr.value_domains_view vd, sbr.contexts_view c "
-            + "where ach.changed_table = 'VALUE_DOMAINS' and vd.vd_idseq = ach.changed_table_idseq and "
+            + "where ach.changed_table = 'VALUE_DOMAINS' and ach.changed_column not in ('DATE_MODIFIED', 'DATE_CREATED') "
+            + "and vd.vd_idseq = ach.changed_table_idseq and "
             + "c.conte_idseq = vd.conte_idseq and ";
         select[1] = "vd.created_by in (?) and ";
         select[2] = "ach.changed_by in (?) and ";
@@ -4472,7 +4473,8 @@ public class DBAlert
             + "dec.date_modified as ctime, dec.date_created, dec.modified_by, dec.created_by, dec.change_note, "
             + "c.name, '', ach.changed_column, ach.old_value, ach.new_value, ach.change_datetimestamp as stime "
             + "from sbrext.ac_change_history_ext ach, sbr.data_element_concepts_view dec, sbr.contexts_view c "
-            + "where ach.changed_table = 'DATA_ELEMENT_CONCEPTS' and dec.dec_idseq = ach.changed_table_idseq and "
+            + "where ach.changed_table = 'DATA_ELEMENT_CONCEPTS' and ach.changed_column not in ('DATE_MODIFIED', 'DATE_CREATED') "
+            + "and dec.dec_idseq = ach.changed_table_idseq and "
             + "c.conte_idseq = dec.conte_idseq and ";
         select[1] = "dec.created_by in (?) and ";
         select[2] = "ach.changed_by in (?) and ";
