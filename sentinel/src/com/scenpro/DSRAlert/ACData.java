@@ -392,17 +392,17 @@ public class ACData
                     {
                         if (dchg.compareTo(val._rec._dates[chgcnt]) != 0)
                         {
-                            dchg = val._rec._dates[chgcnt];
                             fout_.write("\t\t\t<tr><td colspan=\"3\"><hr /></td></tr>\n".getBytes());
                             fout_
                             .write("\t\t\t<tr><td title=\"Attribute Name\">Activity Date</td><td title=\"Old Value\" class=\"chgcol\">"
                                     .getBytes());
-                            fout_.write(dumpConvert(null));
+                            fout_.write(AlertRec.dateToString(dchg, true, true).getBytes());
                             fout_
                                 .write("</td><td title=\"New Value\" class=\"chgcol\">"
                                     .getBytes());
                             fout_.write(AlertRec.dateToString(val._rec._dates[chgcnt], true, true).getBytes());
                             fout_.write("</td></tr>\n".getBytes());
+                            dchg = val._rec._dates[chgcnt];
                         }
                         fout_
                             .write("\t\t\t<tr><td title=\"Attribute Name\">"
