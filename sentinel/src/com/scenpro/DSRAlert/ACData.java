@@ -378,13 +378,31 @@ public class ACData
                 }
                 else
                 {
-                    String dchg = val._rec._dates[0];
+                    Timestamp dchg = val._rec._dates[0];
+                    fout_
+                    .write("\t\t\t<tr><td title=\"Attribute Name\">Activity Date</td><td title=\"Old Value\" class=\"chgcol\">"
+                            .getBytes());
+                    fout_.write(dumpConvert(null));
+                    fout_
+                        .write("</td><td title=\"New Value\" class=\"chgcol\">"
+                            .getBytes());
+                    fout_.write(AlertRec.dateToString(val._rec._dates[0], true, true).getBytes());
+                    fout_.write("</td></tr>\n".getBytes());
                     for (int chgcnt = 0; chgcnt < val._rec._changes.length; ++chgcnt)
                     {
                         if (dchg.compareTo(val._rec._dates[chgcnt]) != 0)
                         {
                             dchg = val._rec._dates[chgcnt];
                             fout_.write("\t\t\t<tr><td colspan=\"3\"><hr /></td></tr>\n".getBytes());
+                            fout_
+                            .write("\t\t\t<tr><td title=\"Attribute Name\">Activity Date</td><td title=\"Old Value\" class=\"chgcol\">"
+                                    .getBytes());
+                            fout_.write(dumpConvert(null));
+                            fout_
+                                .write("</td><td title=\"New Value\" class=\"chgcol\">"
+                                    .getBytes());
+                            fout_.write(AlertRec.dateToString(val._rec._dates[chgcnt], true, true).getBytes());
+                            fout_.write("</td></tr>\n".getBytes());
                         }
                         fout_
                             .write("\t\t\t<tr><td title=\"Attribute Name\">"
@@ -1222,7 +1240,7 @@ public class ACData
      *        The new value which is not necessarily the current value in the
      *        database.
      */
-    public void setChanges(String changes_[], String old_[], String new_[], String dates_[])
+    public void setChanges(String changes_[], String old_[], String new_[], Timestamp dates_[])
     {
         _changes = changes_;
         _old = old_;
@@ -1575,6 +1593,6 @@ public class ACData
     // made since
     // the last Alert run.
     
-    private String         _dates[];     // The corresponding date of the change as
+    private Timestamp         _dates[];     // The corresponding date of the change as
                                          // recorded in the _old and _new arrays.
 }

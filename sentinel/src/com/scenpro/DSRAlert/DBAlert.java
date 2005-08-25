@@ -3543,6 +3543,13 @@ public class DBAlert
             temp[ndx] = (String) list_.get(ndx);
         return temp;
     }
+    private Timestamp[] paste2(Vector list_)
+    {
+        Timestamp temp[] = new Timestamp[list_.size()];
+        for (int ndx = 0; ndx < temp.length; ++ndx)
+            temp[ndx] = (Timestamp) list_.get(ndx);
+        return temp;
+    }
 
     /**
      * Copy the result set to an ACData array.
@@ -3563,7 +3570,7 @@ public class DBAlert
         String clist[] = null;
         String olist[] = null;
         String nlist[] = null;
-        String dlist[] = null;
+        Timestamp dlist[] = null;
         ACData oldrec = null;
         int cols = rs_.getMetaData().getColumnCount();
         while (rs_.next())
@@ -3586,7 +3593,7 @@ public class DBAlert
                     clist = paste(changes);
                     olist = paste(oval);
                     nlist = paste(nval);
-                    dlist = paste(dval);
+                    dlist = paste2(dval);
                     oldrec.setChanges(clist, olist, nlist, dlist);
                     data.add(oldrec);
 
@@ -3614,7 +3621,7 @@ public class DBAlert
                     changes.add(ctext);
                     oval.add(rs_.getString(17));
                     nval.add(rs_.getString(18));
-                    dval.add(rs_.getString(19));
+                    dval.add(rs_.getTimestamp(19));
                 }
             }
 
@@ -3625,7 +3632,7 @@ public class DBAlert
             clist = paste(changes);
             olist = paste(oval);
             nlist = paste(nval);
-            dlist = paste(dval);
+            dlist = paste2(dval);
             oldrec.setChanges(clist, olist, nlist, dlist);
             data.add(oldrec);
         }
@@ -4155,7 +4162,7 @@ public class DBAlert
         select[0] = "select 'p', 1, 'prop', prop.prop_idseq as id, prop.version, prop.prop_id, "
             + "prop.long_name, prop.conte_idseq as cid, "
             + "prop.date_modified, prop.date_created, prop.modified_by, prop.created_by, prop.change_note, c.name, '', "
-            + "'CON_IDSEQ', '', ccv.con_idseq as nvalue, prop.date_created "
+            + "'CON_IDSEQ', '', ccv.con_idseq as nvalue, nvl(prop.date_modified, prop.date_created) "
 //            + "from sbrext.properties_view_ext prop, sbr.contexts_view c "
 //            + "where c.conte_idseq = prop.conte_idseq and ";
             + "from sbrext.properties_view_ext prop, sbr.contexts_view c, sbrext.component_concepts_view_ext ccv "
@@ -4198,7 +4205,7 @@ public class DBAlert
         select[0] = "select 'p', 1, 'oc', oc.oc_idseq as id, oc.version, oc.oc_id, "
             + "oc.long_name, oc.conte_idseq as cid, "
             + "oc.date_modified, oc.date_created, oc.modified_by, oc.created_by, oc.change_note, c.name, '', "
-            + "'CON_IDSEQ', '', ccv.con_idseq as nvalue, oc.date_created "
+            + "'CON_IDSEQ', '', ccv.con_idseq as nvalue, nvl(oc.date_modified, oc.date_created) "
             + "from sbrext.object_classes_view_ext oc, sbr.contexts_view c, sbrext.component_concepts_view_ext ccv "
             + "where c.conte_idseq = oc.conte_idseq "
             + "and ccv.condr_idseq = oc.condr_idseq and ";
@@ -4375,7 +4382,8 @@ public class DBAlert
             + "de.date_modified as ctime, de.date_created, de.modified_by, de.created_by, de.change_note, "
             + "c.name, '', ach.changed_column, ach.old_value, ach.new_value, ach.change_datetimestamp as stime "
             + "from sbrext.ac_change_history_ext ach, sbr.data_elements_view de, sbr.contexts_view c "
-            + "where ach.changed_table = 'DATA_ELEMENTS' and de.de_idseq = ach.changed_table_idseq and "
+            + "where ach.changed_table = 'DATA_ELEMENTS' and ach.changed_column not in ('DATE_MODIFIED', 'DATE_CREATED') "
+            + "and de.de_idseq = ach.changed_table_idseq and "
 /*            + "where ach.ac_idseq in "
             + "(select ch2.changed_table_idseq from sbrext.ac_change_history_ext ch2 "
             + "where ch2.changed_table = 'DATA_ELEMENTS' group by ch2.changed_table_idseq) "
@@ -5784,7 +5792,7 @@ public class DBAlert
     private static final String _DBMAP1KEYS[] = { 
         "AC_CSI_IDSEQ", "AC_IDSEQ", "ASL_NAME", 
         "BEGIN_DATE",
-        "CDE_ID", "CDR_IDSEQ", "CD_IDSEQ", "CHANGE_NOTE", "CON_IDSEQ", "CONCAT_CHAR", "CONTE_IDSEQ", "CREATED_BY",
+        "CDE_ID", "CDR_IDSEQ", "CD_IDSEQ", "CHANGE_NOTE", "CONCAT_CHAR", "CONTE_IDSEQ", "CON_IDSEQ", "CREATED_BY",
         "CRTL_NAME", "CS_CSI_IDSEQ", "C_DEC_IDSEQ", "C_DE_IDSEQ", "C_VD_IDSEQ",
         "DATE_CREATED", "DATE_MODIFIED", "DCTL_NAME", "DECIMAL_PLACE", "DEC_ID", "DEC_IDSEQ", "DEC_REC_IDSEQ",
         "DELETED_IND", "DESCRIPTION", "DESIG_IDSEQ", "DETL_NAME", "DE_IDSEQ", "DE_REC_IDSEQ", "DISPLAY_ORDER",
@@ -5806,7 +5814,7 @@ public class DBAlert
     private static final String _DBMAP1VALS[] = { "Associated with Classification Scheme Item",
         "Associated with Administered Component", "Workflow Status",
         "Begin Date", "Public ID", "Associated with Complex DE", "Associated with Conceptual Domain",
-        "Change Note", "Associated with Concept Class", "Concatenation Character", "Associated with Context", "Created By",
+        "Change Note", "Concatenation Character", "Associated with Context", "Associated with Concept Class", "Created By",
         "Associated with Complex Representation", "Associated with CS/CSI",
         "Associated with Child DEC", "Associated with Child DE", "Associated with Child VD",
         "Created Date", "Modified Date", "Associated with Document Type",
@@ -5824,12 +5832,12 @@ public class DBAlert
         "Associated with Value Domain", "VD_REC_IDSEQ", "Enumerated/Non-enumerated", "Version" };
 
     private static final String _DBMAP2KEYS[] = {
-        "CD_IDSEQ", "CON_IDSEQ", "CONTE_IDSEQ",
+        "CD_IDSEQ", "CONTE_IDSEQ", "CON_IDSEQ",
         "CREATED_BY", "DEC_IDSEQ", "DE_IDSEQ", "MODIFIED_BY", "OC_IDSEQ",
         "PROP_IDSEQ", "RD_IDSEQ", "REP_IDSEQ", "UA_NAME", "VD_IDSEQ" };
 
     private static final String _DBMAP2VALS[] = {
-        "sbr.conceptual_domains_view", "sbrext.concepts_view_ext", "sbr.contexts_view",
+        "sbr.conceptual_domains_view", "sbr.contexts_view", "sbrext.concepts_view_ext",
         "sbrext.user_accounts_view", "sbr.data_element_concepts_view",
         "sbr.data_elements_view", "sbrext.user_accounts_view",
         "sbrext.object_classes_view_ext", "sbrext.properties_view_ext",
@@ -5839,8 +5847,8 @@ public class DBAlert
 
     private static final String _DBMAP2SUBS[] = {
         "long_name || ' (' || cd_id || 'v' || version || ')' as label",
-        "long_name || ' (' || con_id || 'v' || version || ') (' || origin || ':' || preferred_name || ')' as label",
         "name || ' (v' || version || ')' as label",
+        "long_name || ' (' || con_id || 'v' || version || ') (' || origin || ':' || preferred_name || ')' as label",
         "",
         "long_name || ' (' || dec_id || 'v' || version || ')' as label",
         "long_name || ' (' || cde_id || 'v' || version || ')' as label",
