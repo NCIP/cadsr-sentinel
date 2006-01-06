@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/AlertBean.java,v 1.4 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import java.util.Date;
@@ -24,9 +27,29 @@ public class AlertBean
      */
     public AlertBean(String user_, String userName_, String pswd_)
     {
+        init(null, user_, userName_, pswd_);
+    }
+    
+    /**
+     * Constructor for a proxy.
+     * 
+     * @param proxy_ The proxy user id.
+     * @param user_ The user id.
+     * @param userName_ The user name.
+     * @param pswd_ The user password.
+     */
+    public AlertBean(String proxy_, String user_, String userName_, String pswd_)
+    {
+        init(proxy_, user_, userName_, pswd_);
+    }
+    
+    private void init(String proxy_, String user_, String userName_, String pswd_)
+    {
         _user = user_;
+        _proxyUser = proxy_;
         _userName = userName_;
         _pswd = pswd_;
+        _admin = false;
 
         // Set List.jsp defaults.
         _listShow = _SHOWPRIV;
@@ -44,6 +67,26 @@ public class AlertBean
         _runPrev = Constants._ACTLIST;
     }
 
+    /**
+     * Get the proxy user id.
+     * 
+     * @return The proxy user id.
+     */
+    public String getProxy()
+    {
+        return _proxyUser;
+    }
+    
+    /**
+     * Set the proxy user id.
+     * 
+     * @param val_ The proxy user id.
+     */
+    public void setProxy(String val_)
+    {
+        _proxyUser = val_;
+    }
+    
     /**
      * Return the user id.
      * 
@@ -82,6 +125,16 @@ public class AlertBean
     public String getUserName()
     {
         return _userName;
+    }
+    
+    /**
+     * Set the user name.
+     * 
+     * @param val_ The user name.
+     */
+    public void setUserName(String val_)
+    {
+        _userName = val_;
     }
 
     /**
@@ -219,6 +272,26 @@ public class AlertBean
     {
         _working = rec_;
     }
+    
+    /**
+     * Test for the user's administration privileges.
+     * 
+     * @return true if a tool administrator, otherwise false.
+     */
+    public boolean isAdmin()
+    {
+        return _admin;
+    }
+    
+    /**
+     * Set the user's administration privileges.
+     * 
+     * @param flag_ true if the user is granted privileges, otherwise false.
+     */
+    public void setAdmin(boolean flag_)
+    {
+        _admin = flag_;
+    }
 
     /**
      * The session name for the bean. Defined to ensure consistency and avoid
@@ -229,11 +302,15 @@ public class AlertBean
     /*
      * Class data.
      */
+    private String             _proxyUser;
+    
     private String             _user;
 
     private String             _pswd;
 
     private String             _userName;
+    
+    private boolean            _admin;
 
     private char               _listShow;
 
@@ -249,8 +326,14 @@ public class AlertBean
     private String             _lastUserTab;
 
     private String             _lastMainTab;
-    
+
+    /**
+     * Value to display the Show All button on the List page.
+     */
     public static final char _SHOWALL = 'a';
     
+    /**
+     * Value to display the Show Private button on the List page.
+     */
     public static final char _SHOWPRIV = 'p';
 }

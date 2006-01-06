@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/LogonForm.java,v 1.5 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,28 +98,14 @@ public class LogonForm extends ActionForm
         if (_userid.length() > 0)
         {
             // Verify the guest account is not being used.
-            if (_userid.compareToIgnoreCase("guest") == 0)
+            int msgnum = initialize(_userid, request_, null);
+            if (msgnum == -1)
             {
                 errors.add("logon", new ActionMessage("error.logon.guest"));
                 return errors;
             }
-            
-            // Get the default information needed to connect to the database.
-            // This requires
-            // an entry in the TNSNAMES.ORA file. If problems occur, first
-            // verify the database
-            // is accessible using the same information through SQL Plus.
-            MessageResources msgs = (MessageResources) request_.getSession()
-                .getServletContext().getAttribute(Constants._RESOURCES);
-            String driver = msgs.getMessage(Constants._DBDRIVER);
-            String tnsname = msgs.getMessage(Constants._DBTNSNAME);
-            String username = msgs.getMessage(Constants._DBUSER);
-            String password = msgs.getMessage(Constants._DBPSWD);
 
-            // Setup the database pool.
             ActionMessage am;
-            int msgnum = DBAlert.setupPool(request_, driver, tnsname, username,
-                password);
             if (msgnum != 0)
             {
                 // We had a problem.
@@ -133,11 +122,21 @@ public class LogonForm extends ActionForm
                 msgnum = db.open(request_, _userid, _pswd);
                 if (msgnum == 0)
                 {
-                    // It's good.
-                    _userName = db.selectUserName(_userid);
-                    if (_userName == null || _userName.length() == 0)
-                        errors.add("logon", new ActionMessage(
-                            "error.logon.blankname"));
+                    // Test database dependencies.
+                    String msg = db.testDBoptions(); 
+                    if (msg != null)
+                    {
+                        am = new ActionMessage("error.logon.baddb", msg);
+                        errors.add("logon", am);
+                    }
+                    else
+                    {
+                        // It's good.
+                        _userName = db.selectUserName(_userid);
+                        if (_userName == null || _userName.length() == 0)
+                            errors.add("logon", new ActionMessage(
+                                "error.logon.blankname"));
+                    }
                 }
                 else
                 {
@@ -157,6 +156,44 @@ public class LogonForm extends ActionForm
         }
 
         return errors;
+    }
+    
+    /**
+     * Initialize the database pool.
+     * 
+     * @param userid_ The user id to establish the pool.
+     * @param request_ The HTTP request.
+     * @param accnt_ The account information returned from the properties file.
+     * @return The database error code, 0 is successful.
+     */
+    public static int initialize(String userid_, HttpServletRequest request_, String accnt_[])
+    {
+        // Verify the guest account is not being used.
+        if (userid_.compareToIgnoreCase("guest") == 0)
+            return -1;
+        
+        // Get the default information needed to connect to the database.
+        // This requires
+        // an entry in the TNSNAMES.ORA file. If problems occur, first
+        // verify the database
+        // is accessible using the same information through SQL Plus.
+        MessageResources msgs = (MessageResources) request_.getSession()
+            .getServletContext().getAttribute(Constants._RESOURCES);
+        String tnsname = msgs.getMessage(Constants._DBTNSNAME);
+        String username = msgs.getMessage(Constants._DBUSER);
+        String password = msgs.getMessage(Constants._DBPSWD);
+        
+        if (accnt_ != null)
+        {
+            accnt_[0] = username;
+            accnt_[1] = password;
+        }
+
+        // Setup the database pool.
+        int msgnum = DBAlert.setupPool(request_, tnsname, username,
+            password);
+
+        return msgnum;
     }
 
     // Class data.

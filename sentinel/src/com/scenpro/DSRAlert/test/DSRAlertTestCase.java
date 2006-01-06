@@ -1,8 +1,8 @@
-/*
- * Created on Jan 20, 2005
- *
- * Copyright (c) 2004 ScenPro, Inc
- */
+// Copyright (c) 2004 ScenPro, Inc
+
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/test/DSRAlertTestCase.java,v 1.5 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert.test;
 
 import java.util.PropertyResourceBundle;
@@ -19,8 +19,9 @@ import com.scenpro.DSRAlert.DBAlert;
 import servletunit.struts.MockStrutsTestCase;
 
 /**
+ * This is the base test class which extends the Mock Struts Test Case class.
+ * 
  * @author James McAndrew
- *
  */
 public class DSRAlertTestCase extends MockStrutsTestCase
 {
@@ -29,6 +30,11 @@ public class DSRAlertTestCase extends MockStrutsTestCase
   protected String _invalidUserid;
   protected String _invalidPswd;
 
+  /**
+   * Constructor.
+   * 
+   * @param testName The name of the class for the test.
+   */
   public DSRAlertTestCase(String testName)
   {
     super(testName);
@@ -70,13 +76,12 @@ public class DSRAlertTestCase extends MockStrutsTestCase
     //information through SQL Plus.
     MessageResources msgs = (MessageResources)getSession().getServletContext()
         .getAttribute(Constants._RESOURCES);
-    String driver = msgs.getMessage(Constants._DBDRIVER);
     String tnsname = msgs.getMessage(Constants._DBTNSNAME);
     String username = msgs.getMessage(Constants._DBUSER);
     String password = msgs.getMessage(Constants._DBPSWD);
 
     // Setup the database pool.
-    DBAlert.setupPool(getSession(), driver, tnsname, username, password);
+    DBAlert.setupPool(getSession(), tnsname, username, password);
     getSession().setAttribute(AlertBean._SESSIONNAME,
         new AlertBean(_validUserid, "", _validPswd));
   }

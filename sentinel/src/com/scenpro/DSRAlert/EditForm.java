@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/EditForm.java,v 1.7 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +26,29 @@ public class EditForm extends ActionForm
     public EditForm()
     {
         _nextScreen = Constants._ACTEDIT;
+        _infoAssocLvl = 9;
     }
 
+    /**
+     * Set the Associated To reporting Level
+     * 
+     * @param val_ The level value, 0 no Associated content, 9 all Assocatiated content.
+     */
+    public void setInfoAssocLvl(String val_)
+    {
+        _infoAssocLvl = Integer.parseInt(val_);
+    }
+
+    /**
+     * Return the Associated To reporting Level
+     * 
+     * @return The current reporting level.
+     */
+    public String getInfoAssocLvl()
+    {
+        return Integer.toString(_infoAssocLvl);
+    }
+    
     /**
      * Set the Date Filter.
      * 
@@ -149,6 +173,17 @@ public class EditForm extends ActionForm
     }
 
     /**
+     * Set the Protocol selections on the Criteria tab.
+     * 
+     * @param val_
+     *        The CS id list.
+     */
+    public void setInfoProtos(String val_[])
+    {
+        _infoProtos = val_;
+    }
+
+    /**
      * Set the Classification Schemes selections on the Criteria tab.
      * 
      * @param val_
@@ -168,6 +203,16 @@ public class EditForm extends ActionForm
     public void setInfoSchemeItems(String val_[])
     {
         _infoSchemeItems = val_;
+    }
+
+    /**
+     * Get the Protocol selections.
+     * 
+     * @return The Protocol id list.
+     */
+    public String[] getInfoProtos()
+    {
+        return _infoProtos;
     }
 
     /**
@@ -299,9 +344,9 @@ public class EditForm extends ActionForm
      * 
      * @param val_
      */
-    public void setInfoWorkflowStatus(String val_[])
+    public void setInfoWorkflow(String val_[])
     {
-        _infoWorkflowStatus = val_;
+        _infoWorkflow = val_;
     }
 
     /**
@@ -309,9 +354,9 @@ public class EditForm extends ActionForm
      * 
      * @return TBD
      */
-    public String[] getInfoWorkflowStatus()
+    public String[] getInfoWorkflow()
     {
-        return _infoWorkflowStatus;
+        return _infoWorkflow;
     }
 
     /**
@@ -1237,10 +1282,12 @@ public class EditForm extends ActionForm
     private String           _repAttributes[];
 
     private String           _infoSearchIn;
+    
+    private int              _infoAssocLvl;
 
     private String           _actWorkflowStatus[];
 
-    private String           _infoWorkflowStatus[];
+    private String           _infoWorkflow[];
 
     private String           _actRegStatus[];
 
@@ -1249,6 +1296,8 @@ public class EditForm extends ActionForm
     private String           _infoCreator[];
 
     private String           _infoModifier[];
+
+    private String           _infoProtos[];
 
     private String           _infoSchemes[];
 

@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/AlertRec.java,v 1.10 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import java.sql.Timestamp;
@@ -90,6 +93,8 @@ public class AlertRec
      * a manual run of an Alert as the user is not required to Save changes to
      * an Alert and we want to run using the on screen settings. It also allows
      * the user the flexibility to test "what if" situations before saving.
+     * 
+     * @param rec_ The object to duplicate.
      */
     public AlertRec(AlertRec rec_)
     {
@@ -118,6 +123,7 @@ public class AlertRec
         _day = rec_._day;
         _active = rec_._active;
         _freq = rec_._freq;
+        _infoAssocLvl = rec_._infoAssocLvl;
         _incPropSect = rec_._incPropSect;
         _reportStyle = rec_._reportStyle;
         _reportEmpty = rec_._reportEmpty;
@@ -137,17 +143,18 @@ public class AlertRec
         _attrs = copy(rec_._attrs);
         _recipients = copy(rec_._recipients);
         _aWorkflow = copy(rec_._aWorkflow);
-        _iWorkflow = copy(rec_._iWorkflow);
+        _cWorkflow = copy(rec_._cWorkflow);
         _aRegis = copy(rec_._aRegis);
-        _iRegis = copy(rec_._iRegis);
         _searchAC = copy(rec_._searchAC);
         _forms = copy(rec_._forms);
         _schemes = copy(rec_._schemes);
+        _protocols = copy(rec_._protocols);
         _schemeItems = copy(rec_._schemeItems);
         _domains = copy(rec_._domains);
         _creators = copy(rec_._creators);
         _modifiers = copy(rec_._modifiers);
         _contexts = copy(rec_._contexts);
+        _cRegStatus = copy(rec_._cRegStatus);
         _ACTypes = copy(rec_._ACTypes);
         _dateFilter = rec_._dateFilter;
     }
@@ -171,6 +178,7 @@ public class AlertRec
         setCreator(creator_);
         setInactiveReason(null);
         setInfoVerNum("");
+        setIAssocLvl(0);
         setIntro(null, false);
         setIncPropSect(false);
         setReportStyle(null);
@@ -197,8 +205,6 @@ public class AlertRec
         temp[0] = creator_;
         setRecipients(temp);
 
-        setIWorkflow(null);
-        setIRegis(null);
         setSearchAC(null);
         setDomains(null);
         clearQuery();
@@ -211,13 +217,16 @@ public class AlertRec
     {
         setSummary("");
         setContexts(null);
+        setCRegStatus(null);
         setACTypes(null);
+        setProtocols(null);
         setForms(null);
         setSchemes(null);
         setSchemeItems(null);
         setCreators(null);
         setModifiers(null);
         setAWorkflow(null);
+        setCWorkflow(null);
         setARegis(null);
         setAVersion(null);
         setActVerNum("");
@@ -283,7 +292,7 @@ public class AlertRec
     {
         // Be sure we have an object.
         if (var_ == null)
-            return "";
+            return (html_) ? "<i>&lt;null&gt;</i>" : "";
         Calendar cal = Calendar.getInstance();
         cal.setTime(var_);
 
@@ -475,6 +484,7 @@ public class AlertRec
      * </tr>
      * </table>
      * 
+     * @param flag_ true for HTML and false for non-HTML
      * @return The auto run frequency in HTML compatible format.
      */
     public String getFreq(boolean flag_)
@@ -502,6 +512,8 @@ public class AlertRec
         _name = (val_ == null) ? "" : val_.replaceAll("[\"\\r\\n]", "");
         if (_name.length() > DBAlert._MAXNAMELEN)
             _name = _name.substring(0, DBAlert._MAXNAMELEN);
+        if (_name != null)
+            _name = _name.trim();
     }
 
     /**
@@ -1414,6 +1426,12 @@ public class AlertRec
                 _recipients[ndx] = _recipients[ndx].substring(0, DBAlert._MAXEMAILLEN);
         }
     }
+    
+    /**
+     * Set the recipient for the Alert Definition.
+     * @param ndx_ The index into the recipient list.
+     * @param val_ The new recipient value.
+     */
     public void setRecipients(int ndx_, String val_)
     {
         if (_recipients != null && ndx_ < _recipients.length)
@@ -1460,16 +1478,16 @@ public class AlertRec
      * 
      * @param val_
      */
-    public void setIWorkflow(String val_[])
+    public void setCWorkflow(String val_[])
     {
         if (val_ == null)
         {
-            _iWorkflow = new String[1];
-            _iWorkflow[0] = Constants._STRALL;
+            _cWorkflow = new String[1];
+            _cWorkflow[0] = Constants._STRALL;
         }
         else
         {
-            _iWorkflow = val_;
+            _cWorkflow = val_;
         }
     }
 
@@ -1490,24 +1508,6 @@ public class AlertRec
         else
         {
             _aRegis = val_;
-        }
-    }
-
-    /**
-     * Future enhancements.
-     * 
-     * @param val_
-     */
-    public void setIRegis(String val_[])
-    {
-        if (val_ == null)
-        {
-            _iRegis = new String[1];
-            _iRegis[0] = Constants._STRALL;
-        }
-        else
-        {
-            _iRegis = val_;
         }
     }
 
@@ -1590,6 +1590,27 @@ public class AlertRec
     }
 
     /**
+     * Set the list of protocols for the criteria.
+     * 
+     * @param val_
+     *        The protocol database keys to qualify the criteria
+     *        when searching for changes. If null, then all protocols are
+     *        included.
+     */
+    public void setProtocols(String val_[])
+    {
+        if (val_ == null)
+        {
+            _protocols = new String[1];
+            _protocols[0] = Constants._STRALL;
+        }
+        else
+        {
+            _protocols = val_;
+        }
+    }
+
+    /**
      * Set the list of classification schemes for the criteria.
      * 
      * @param val_
@@ -1666,6 +1687,26 @@ public class AlertRec
         else
         {
             _contexts = val_;
+        }
+    }
+
+    /**
+     * Set the list of registration statuses for the criteria.
+     * 
+     * @param val_
+     *        The registration status database keys to qualify the criteria when searching
+     *        for changes. If null, then all statuses are included.
+     */
+    public void setCRegStatus(String val_[])
+    {
+        if (val_ == null)
+        {
+            _cRegStatus = new String[1];
+            _cRegStatus[0] = Constants._STRALL;
+        }
+        else
+        {
+            _cRegStatus = val_;
         }
     }
 
@@ -1813,6 +1854,8 @@ public class AlertRec
     /**
      * Return true if the alert is "Active", otherwise false.
      * 
+     * @param target_ The time stamp to compare to the Active setting
+     *      in the Alert Definition.
      * @return True if active.
      */
     public boolean isActive(Timestamp target_)
@@ -1893,6 +1936,8 @@ public class AlertRec
     /**
      * Return the inactive reason description.
      * 
+     * @param flag_ true for a result compatible with Javascript,
+     *      otherwise false.
      * @return The inactive reason.
      */
     public String getInactiveReason(boolean flag_)
@@ -1992,6 +2037,7 @@ public class AlertRec
      * id representing all users with write access to that context. Otherwise it
      * is a specific user database id.
      * 
+     * @param ndx_ The index into the list.
      * @return A report recipient.
      */
     public String getRecipients(int ndx_)
@@ -2014,6 +2060,7 @@ public class AlertRec
      * Return a single workflow status to monitor. Anyone beginning with a '('
      * is a special value, otherwise it is the database id for the status.
      * 
+     * @param ndx_ The index into the list.
      * @return A workflow status id.
      */
     public String getAWorkflow(int ndx_)
@@ -2036,6 +2083,7 @@ public class AlertRec
      * Return a single registration status to monitor. Anyone beginning with a
      * '(' is a special value, otherwise it is the database id for the status.
      * 
+     * @param ndx_ The index into the list.
      * @return A registration status id.
      */
     public String getARegis(int ndx_)
@@ -2058,11 +2106,37 @@ public class AlertRec
      * Return the specific form database id to include in the criteria. "(All)"
      * is a special value and will be the sole value if present.
      * 
+     * @param ndx_ The index into the list.
      * @return A form id.
      */
     public String getForms(int ndx_)
     {
         return _forms[ndx_];
+    }
+
+    /**
+     * Return the specific protocol database ids to include in the
+     * criteria. "(All)" is a special value and will be the sole value if
+     * present.
+     * 
+     * @return The protocol ids.
+     */
+    public String[] getProtocols()
+    {
+        return _protocols;
+    }
+
+    /**
+     * Return the specific protocol database id to include in the
+     * criteria. "(All)" is a special value and will be the sole value if
+     * present.
+     * 
+     * @param ndx_ The index into the list.
+     * @return The protocol id.
+     */
+    public String getProtocols(int ndx_)
+    {
+        return _protocols[ndx_];
     }
 
     /**
@@ -2082,6 +2156,7 @@ public class AlertRec
      * criteria. "(All)" is a special value and will be the sole value if
      * present.
      * 
+     * @param ndx_ The index into the list.
      * @return A classification scheme id.
      */
     public String getSchemes(int ndx_)
@@ -2106,6 +2181,7 @@ public class AlertRec
      * the criteria. "(All)" is a special value and will be the sole value if
      * present.
      * 
+     * @param ndx_ The index into the list.
      * @return A classification scheme id.
      */
     public String getSchemeItems(int ndx_)
@@ -2128,6 +2204,7 @@ public class AlertRec
      * Return the specific creator database id to include in the criteria.
      * "(All)" is a special value and will be the sole value if present.
      * 
+     * @param ndx_ The index into the list.
      * @return A creator id.
      */
     public String getCreators(int ndx_)
@@ -2150,6 +2227,7 @@ public class AlertRec
      * Return the specific modifier database id to include in the criteria.
      * "(All)" is a special value and will be the sole value if present.
      * 
+     * @param ndx_ The index into the list.
      * @return A modifier id.
      */
     public String getModifiers(int ndx_)
@@ -2166,6 +2244,28 @@ public class AlertRec
     public String[] getContexts()
     {
         return _contexts;
+    }
+
+    /**
+     * Return the specific registration status database ids to include in the criteria.
+     * "(All)" is a special value and will be the sole value if present.
+     * 
+     * @return The registration status ids.
+     */
+    public String[] getCRegStatus()
+    {
+        return _cRegStatus;
+    }
+
+    /**
+     * Return the specific workflow status database ids to include in the criteria.
+     * "(All)" is a special value and will be the sole value if present.
+     * 
+     * @return The workflow status ids.
+     */
+    public String[] getCWorkflow()
+    {
+        return _cWorkflow;
     }
     
     /**
@@ -2189,6 +2289,30 @@ public class AlertRec
     public String getContexts(int ndx_)
     {
         return _contexts[ndx_];
+    }
+
+    /**
+     * Return the specific registration status database id to include in the criteria.
+     * "(All)" is a special value and will be the sole value if present.
+     * 
+     * @param ndx_ The index into the registration status list.
+     * @return A context id.
+     */
+    public String getCRegStatus(int ndx_)
+    {
+        return _cRegStatus[ndx_];
+    }
+
+    /**
+     * Return the specific workflow status database id to include in the criteria.
+     * "(All)" is a special value and will be the sole value if present.
+     * 
+     * @param ndx_ The index into the workflow status list.
+     * @return A context id.
+     */
+    public String getCWorkflow(int ndx_)
+    {
+        return _cWorkflow[ndx_];
     }
 
     /**
@@ -2287,6 +2411,17 @@ public class AlertRec
     }
 
     /**
+     * Check for the use of all Protocols.
+     * 
+     * @return true if all should be used.
+     */
+    public boolean isPROTOall()
+    {
+        return (_protocols == null || _protocols.length == 0 ||
+            _protocols[0].charAt(0) == '(');
+    }
+
+    /**
      * Check for the use of all Forms/Templates.
      * 
      * @return true if all should be used.
@@ -2307,6 +2442,46 @@ public class AlertRec
     }
 
     /**
+     * Check for the use of all Registration Statuses.
+     * 
+     * @return true if all should be used.
+     */
+    public boolean isCWFSall()
+    {
+        return (_cWorkflow == null || _cWorkflow.length == 0 || _cWorkflow[0].charAt(0) == '(');
+    }
+
+    /**
+     * Check for the use of all Registration Statuses.
+     * 
+     * @return true if all should be used.
+     */
+    public boolean isCRSall()
+    {
+        return (_cRegStatus == null || _cRegStatus.length == 0 ||
+            (_cRegStatus[0].charAt(0) == '(' && _cRegStatus[0].charAt(1) == 'A'));
+    }
+
+    /**
+     * Check for the use of no Registration Status.
+     * 
+     * @return true if all should be used.
+     */
+    public boolean isCRSnone()
+    {
+        if (_cRegStatus == null || _cRegStatus.length == 0)
+            return false;
+        
+        for (int ndx = 0; ndx < _cRegStatus.length; ++ndx)
+        {
+            if (_cRegStatus[ndx].charAt(0) == '(' && _cRegStatus[ndx].charAt(1) == 'n')
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Check for the use of all Record Types.
      * 
      * @return true if all should be used.
@@ -2316,6 +2491,12 @@ public class AlertRec
         return (_ACTypes == null || _ACTypes.length == 0 || _ACTypes[0].charAt(0) == '(');
     }
 
+    /**
+     * Test the AC type to see if it appears in the AC Type list.
+     * 
+     * @param val_ The index in the definition type list.
+     * @return The numeric AC Type if it's used.
+     */
     public int isACTypeUsed(int val_)
     {
         if (isACTYPEall())
@@ -2453,6 +2634,36 @@ public class AlertRec
         return _dateFilter;
     }
     
+    /**
+     * Set the Associated To reporting Level
+     * 
+     * @param val_ The level, 0 none, 9 all
+     */
+    public void setIAssocLvl(int val_)
+    {
+        _infoAssocLvl = (0 <= val_ && val_ <= 9) ? val_ : 9;
+    }
+    
+    /**
+     * Set the Associated To reporting Level
+     * 
+     * @param val_ The level, 0 none, 9 all
+     */
+    public void setIAssocLvl(String val_)
+    {
+        setIAssocLvl(Integer.parseInt(val_));
+    }
+
+    /**
+     * Return the Associated To Reporting Level
+     * 
+     * @return The level number.
+     */
+    public int getIAssocLvl()
+    {
+        return _infoAssocLvl;
+    }
+    
     // Class data elements.
     private String              _name;
 
@@ -2502,17 +2713,17 @@ public class AlertRec
 
     private String              _aWorkflow[];
 
-    private String              _iWorkflow[];
+    private String              _cWorkflow[];
 
     private String              _aRegis[];
-
-    private String              _iRegis[];
 
     private String              _searchAC[];
 
     private String              _searchIn;
 
     private String              _forms[];
+
+    private String              _protocols[];
 
     private String              _schemes[];
 
@@ -2527,6 +2738,8 @@ public class AlertRec
     private String              _contexts[];
     
     private String              _ACTypes[];
+    
+    private String              _cRegStatus[];
 
     private char                _iuse;
 
@@ -2559,6 +2772,8 @@ public class AlertRec
     private String              _reportRecNum;
     
     private int                 _dateFilter;
+    
+    private int                 _infoAssocLvl;
 
     private static final String weekdays[] = { "Sun", "Mon", "Tue", "Wed",
         "Thu", "Fri", "Sat"               };

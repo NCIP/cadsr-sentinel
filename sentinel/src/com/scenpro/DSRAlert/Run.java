@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/Run.java,v 1.4 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import java.sql.Timestamp;
@@ -36,6 +39,7 @@ public class Run extends Action
      *        The servlet request object.
      * @param response_
      *        The servlet response object.
+     * @return The action to continue processing.
      */
     public ActionForward execute(ActionMapping mapping_, ActionForm form_,
         HttpServletRequest request_, HttpServletResponse response_)

@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/ACDataLink.java,v 1.2 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import java.util.Stack;
@@ -106,7 +109,7 @@ public class ACDataLink
      *        The range of list elements to dump.
      * @return true if the method pushed records on the stack, otherwise false.
      */
-    private boolean checkLeaf(Stack results_, int indent_, ACDataFindRange fr_)
+    private boolean checkLeaf(Stack<RepRows> results_, int indent_, ACDataFindRange fr_)
     {
         if (_leaf)
         {
@@ -128,7 +131,7 @@ public class ACDataLink
      *        The indentation level.
      * @return true if the method pushed records on the stack, otherwise false.
      */
-    private boolean follow2(String id_, Stack results_, int indent_)
+    private boolean follow2(String id_, Stack<RepRows> results_, int indent_)
     {
         boolean rc = false;
         ACDataFindRange fr;
@@ -157,7 +160,7 @@ public class ACDataLink
      *        The range of elements in the list to be used for the search.
      * @return true if the method pushed records on the stack, otherwise false.
      */
-    public boolean follow(Stack results_, int indent_, ACDataFindRange fr_)
+    public boolean follow(Stack<RepRows> results_, int indent_, ACDataFindRange fr_)
     {
         boolean rc = false;
         for (int ndx = fr_._min; ndx < fr_._max; ++ndx)

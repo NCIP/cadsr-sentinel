@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/EditTag.java,v 1.8 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import java.io.IOException;
@@ -119,6 +122,10 @@ public class EditTag extends TagSupport
             _schemeItemList = db.getSchemeItemList();
             _schemeItemVals = db.getSchemeItemVals();
             _schemeItemSchemes = db.getSchemeItemSchemes();
+            db.getProtos();
+            _protoList = db.getProtoList();
+            _protoVals = db.getProtoVals();
+            _protoContext = db.getProtoContext();
             db.getForms();
             _formsList = db.getFormsList();
             _formsVals = db.getFormsVals();
@@ -129,9 +136,13 @@ public class EditTag extends TagSupport
             db.getWorkflow();
             _workflowList = db.getWorkflowList();
             _workflowVals = db.getWorkflowVals();
+            _cworkflowList = db.getCWorkflowList();
+            _cworkflowVals = db.getCWorkflowVals();
             db.getRegistrations();
             _regstatusList = db.getRegStatusList();
             _regstatusVals = db.getRegStatusVals();
+            _regcstatusList = db.getRegCStatusList();
+            _regcstatusVals = db.getRegCStatusVals();
             db.getACTypes();
             _actypesList = db.getACTypesList();
             _actypesVals = db.getACTypesVals();
@@ -243,7 +254,7 @@ public class EditTag extends TagSupport
             .findAttribute(Constants._RESOURCES);
 
         int tspot = 0;
-        String temp[] = new String[86];
+        String temp[] = new String[106];
         temp[tspot++] = "var MstatusReason = false;\nvar Mprev = \""
             + _ub.getEditPrev() + "\";\n";
 
@@ -274,11 +285,23 @@ public class EditTag extends TagSupport
         temp[tspot++] = "var DBworkflowVals = ";
         temp[tspot++] = stringList(_workflowVals);
 
+        temp[tspot++] = "var DBcworkflowList = ";
+        temp[tspot++] = stringList(_cworkflowList);
+
+        temp[tspot++] = "var DBcworkflowVals = ";
+        temp[tspot++] = stringList(_cworkflowVals);
+
         temp[tspot++] = "var DBregStatusList = ";
         temp[tspot++] = stringList(_regstatusList);
 
         temp[tspot++] = "var DBregStatusVals = ";
         temp[tspot++] = stringList(_regstatusVals);
+
+        temp[tspot++] = "var DBregCStatusList = ";
+        temp[tspot++] = stringList(_regcstatusList);
+
+        temp[tspot++] = "var DBregCStatusVals = ";
+        temp[tspot++] = stringList(_regcstatusVals);
 
         temp[tspot++] = "var RecSchemes = ";
         temp[tspot++] = stringList(_ub.getWorking().getSchemes());
@@ -303,6 +326,18 @@ public class EditTag extends TagSupport
 
         temp[tspot++] = "var DBschemeItemSchemes = ";
         temp[tspot++] = stringList(_schemeItemSchemes);
+
+        temp[tspot++] = "var RecProtos = ";
+        temp[tspot++] = stringList(_ub.getWorking().getProtocols());
+
+        temp[tspot++] = "var DBprotoList = ";
+        temp[tspot++] = stringList(_protoList);
+
+        temp[tspot++] = "var DBprotoVals = ";
+        temp[tspot++] = stringList(_protoVals);
+
+        temp[tspot++] = "var DBprotoContexts = ";
+        temp[tspot++] = stringList(_protoContext);
 
         temp[tspot++] = "var RecForms = ";
         temp[tspot++] = stringList(_ub.getWorking().getForms());
@@ -339,6 +374,12 @@ public class EditTag extends TagSupport
         // Add the exempt list to the display.
         if (_namesExempt == null)
             temp[tspot++] = "";
+        else if (_namesExempt.length() > 256)
+            temp[tspot++] =
+                "exemptlist.innerHTML = \"The following users only receive Alert "
+                + "Broadcasts when added as specific Recipients.<br>\\\n<textarea class=\\\"sstd100\\\" rows=\\\"3\\\" readonly>"
+                + _namesExempt
+                + "</textarea>\";\n";
         else
             temp[tspot++] = 
                 "exemptlist.innerHTML = \"The following users only receive Alert "
@@ -367,6 +408,10 @@ public class EditTag extends TagSupport
         else
             temp[tspot++] = "";
 
+        temp[tspot++] = "editForm.infoAssocLvl.value = \"" + _ub.getWorking().getIAssocLvl()
+            + "\";\n"
+            + "editForm.infoAssocLvl.options[" + _ub.getWorking().getIAssocLvl() + "].selected = true;\n";
+        
         if (_ub.getWorking().getIntro(false) == null)
             temp[tspot++] = "editForm.propIntro.value = \""
                 + msgs.getMessage("edit.static") + "\";\n";
@@ -439,6 +484,8 @@ public class EditTag extends TagSupport
 
         temp[tspot++] = selectFromList("actWorkflowStatus", _workflowVals, _ub
                 .getWorking().getAWorkflow(), true);
+        temp[tspot++] = selectFromList("infoWorkflow", _cworkflowVals, _ub
+            .getWorking().getCWorkflow(), true);
         temp[tspot++] = selectFromList("actRegStatus", _regstatusVals, _ub.getWorking()
                 .getARegis(), true);
         temp[tspot++] = selectFromList("infoCreator", _namesVals, _ub.getWorking()
@@ -447,11 +494,14 @@ public class EditTag extends TagSupport
                 .getModifiers(), true);
         temp[tspot++] = selectFromList("infoACTypes", _actypesVals, _ub.getWorking()
                 .getACTypes(), true);
+        temp[tspot++] = selectFromList("infoRegStatus", _regcstatusVals, _ub.getWorking()
+            .getCRegStatus(), true);
         temp[tspot++] = selectFromList("infoContext", _contextVals, _ub.getWorking()
                 .getContexts(), true);
         temp[tspot++] = "changedContext();\n";
         temp[tspot++] = "setSelected(editForm.infoForms, RecForms);\n";
         temp[tspot++] = "setSelected(editForm.infoSchemes, RecSchemes);\n";
+        temp[tspot++] = "setSelected(editForm.infoProtos, RecProtos);\n";
         temp[tspot++] = "changedCS();\n";
         temp[tspot++] = "setSelected(editForm.infoSchemeItems, RecSchemeItems);\n";
 
@@ -554,6 +604,9 @@ public class EditTag extends TagSupport
         _schemeList = null;
         _schemeVals = null;
         _schemeContext = null;
+        _protoList = null;
+        _protoVals = null;
+        _protoContext = null;
         _formsList = null;
         _formsVals = null;
         _formsContext = null;
@@ -562,8 +615,12 @@ public class EditTag extends TagSupport
         _schemeItemSchemes = null;
         _workflowList = null;
         _workflowVals = null;
+        _cworkflowList = null;
+        _cworkflowVals = null;
         _regstatusList = null;
         _regstatusVals = null;
+        _regcstatusList = null;
+        _regcstatusVals = null;
         _buf = null;
         _bufLen = 0;
         super.release();
@@ -594,6 +651,12 @@ public class EditTag extends TagSupport
 
     private String         _schemeContext[];
 
+    private String         _protoList[];
+
+    private String         _protoVals[];
+
+    private String         _protoContext[];
+
     private String         _formsList[];
 
     private String         _formsVals[];
@@ -610,9 +673,17 @@ public class EditTag extends TagSupport
 
     private String         _workflowVals[];
 
+    private String         _cworkflowList[];
+
+    private String         _cworkflowVals[];
+
     private String         _regstatusList[];
 
     private String         _regstatusVals[];
+
+    private String         _regcstatusList[];
+
+    private String         _regcstatusVals[];
     
     private String         _actypesList[];
     

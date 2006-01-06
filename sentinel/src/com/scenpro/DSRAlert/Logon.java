@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/Logon.java,v 1.3 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,14 +45,29 @@ public class Logon extends Action
     public ActionForward execute(ActionMapping mapping_, ActionForm form_,
         HttpServletRequest request_, HttpServletResponse response_)
     {
-        // Creat the bean for all our processing and present the Alert List.
+        // Create the bean for all our processing and present the Alert List.
         LogonForm form = (LogonForm) form_;
-        AlertBean ub = new AlertBean(form.getUserid(), form.getUserName(), form
-            .getPswd());
+        createBean(request_, form.getUserid(), form.getUserName(), form.getPswd());
+
+        return mapping_.findForward(Constants._ACTLIST);
+    }
+    
+    /**
+     * Create the Alert Bean for the user session.
+     * 
+     * @param request_ The HTTP request.
+     * @param user_ The user id.
+     * @param name_ The user name.
+     * @param pswd_ The user password.
+     * @return The session specific bean.
+     */
+    public static AlertBean createBean(HttpServletRequest request_, String user_, String name_, String pswd_)
+    {
+        AlertBean ub = new AlertBean(user_, name_, pswd_);
 
         HttpSession session = request_.getSession();
         session.setAttribute(AlertBean._SESSIONNAME, ub);
-
-        return mapping_.findForward(Constants._ACTLIST);
+        
+        return ub;
     }
 }

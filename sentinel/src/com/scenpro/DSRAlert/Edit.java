@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/Edit.java,v 1.5 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +38,7 @@ public class Edit extends Action
      *        The servlet request object.
      * @param response_
      *        The servlet response object.
+     * @return The action to continue processing.
      */
     public ActionForward execute(ActionMapping mapping_, ActionForm form_,
         HttpServletRequest request_, HttpServletResponse response_)
@@ -160,9 +164,9 @@ public class Edit extends Action
         rec.setAttrs(form_.getRepAttributes());
         rec.setSearchIn(form_.getInfoSearchIn());
         rec.setAWorkflow(form_.getActWorkflowStatus());
-        rec.setIWorkflow(form_.getInfoWorkflowStatus());
+        rec.setCWorkflow(form_.getInfoWorkflow());
         rec.setARegis(form_.getActRegStatus());
-        rec.setIRegis(form_.getInfoRegStatus());
+        rec.setCRegStatus(form_.getInfoRegStatus());
         rec.setCreators(form_.getInfoCreator());
         rec.setModifiers(form_.getInfoModifier());
         rec.setSearchAC(form_.getInfoSearchFor());
@@ -170,9 +174,11 @@ public class Edit extends Action
         rec.setSchemeItems(form_.getInfoSchemeItems());
         rec.setDomains(form_.getInfoConceptDomain());
         rec.setContexts(form_.getInfoContext());
+        rec.setProtocols(form_.getInfoProtos());
         rec.setForms(form_.getInfoForms());
         rec.setDateFilter((form_.getInfoDateFilter()));
         rec.setACTypes(form_.getInfoACTypes());
+        rec.setIAssocLvl(form_.getInfoAssocLvl());
 
         return rec;
     }

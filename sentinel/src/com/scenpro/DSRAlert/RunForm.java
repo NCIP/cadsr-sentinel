@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/RunForm.java,v 1.4 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -150,6 +153,9 @@ public class RunForm extends ActionForm
 
     private String _nextScreen;
     
+    /**
+     * The recipients option value to send the report to the Creator only. 
+     */
     public static final char _RECIPIENTS = 'C';
 
     private static final long serialVersionUID = 6780909133861681552L;

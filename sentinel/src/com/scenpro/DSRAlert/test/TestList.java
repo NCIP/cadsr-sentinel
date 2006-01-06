@@ -1,8 +1,8 @@
-/*
- * Created on Jan 25, 2005
- *
- * Copyright (c) 2004 ScenPro, Inc
- */
+// Copyright (c) 2004 ScenPro, Inc
+
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/test/TestList.java,v 1.2 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert.test;
 
 import com.scenpro.DSRAlert.AlertBean;
@@ -12,11 +12,17 @@ import com.scenpro.DSRAlert.DBAlert;
 import com.scenpro.DSRAlert.ListForm;
 
 /**
+ * Test the Alert List logic.
+ * 
  * @author James McAndrew
- *
  */
 public class TestList extends DSRAlertTestCase
 {
+    /**
+     * The main entry to run the test case.
+     * 
+     * @param args Command line arguments - none at this time.
+     */
   public static void main(String[] args)
   {
     junit.textui.TestRunner.run(TestList.class);
@@ -24,6 +30,8 @@ public class TestList extends DSRAlertTestCase
 
   /**
    * Constructor
+   * 
+   * @param testName The name of the class to test.
    */
   public TestList(String testName)
   {

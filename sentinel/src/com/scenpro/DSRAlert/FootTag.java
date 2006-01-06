@@ -1,8 +1,12 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/FootTag.java,v 1.4 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import java.io.IOException;
+import java.io.File;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts.util.MessageResources;
@@ -32,21 +36,24 @@ public class FootTag extends TagSupport
     {
         try
         {
+            String jboss = System.getenv("JBOSS_HOME");
+            jboss = (jboss == null) ? "" : jboss.substring(jboss.lastIndexOf(File.separatorChar) + 1);
             MessageResources msgs = (MessageResources) pageContext
                 .findAttribute(Constants._RESOURCES);
             JspWriter out = pageContext.getOut();
             out
-                .print("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n"
-                    + "<tr><td>&nbsp;</td></tr>\n"
-                    + "<tr><td class=\"ncifmenu\" valign=\"middle\" align=\"left\"><span style=\"color: #dddddd\">"
+                .print("<table class=\"table3\"><colgroup></colgroup><tbody class=\"secttbody\" />\n"
+                    + "<tr><td class=\"ncifmenu\"><span style=\"color: #dddddd\">"
                     + msgs.getMessage("Appl.version")
+                    + "&nbsp;(" + jboss + "/" + System.getProperty("java.version") + ")"
                     + "</span></td></tr>\n"
-                    + "<tr class=\"nciftrtable\">\n<td valign=\"top\">\n<div align=\"center\">\n"
+                    + "<tr>\n<td class=\"nciftrtable\">\n"
+                    + "<a href=\"mailto:ncicb@pop.nci.nih.gov?subject=caDSR%20Sentinel%20Tool\"><span class=\"wdemail\" title=\"Email NCICB Help Desk\">&#42;</span></a>\n"
                     + "<a target=\"_blank\" href=\"http://www.cancer.gov/\"><img border=\"0\" src=\"footer_nci.gif\" alt=\"National Cancer Institute Logo\" title=\"National Cancer Institute\"></a>\n"
                     + "<a target=\"_blank\" href=\"http://www.dhhs.gov/\"><img border=\"0\" src=\"footer_hhs.gif\" alt=\"Department of Health and Human Services Logo\" title=\"Department of Health and Human Services\"></a>\n"
                     + "<a target=\"_blank\" href=\"http://www.nih.gov/\"><img border=\"0\" src=\"footer_nih.gif\" alt=\"National Institutes of Health Logo\" title=\"National Institutes of Health\"></a>\n"
                     + "<a target=\"_blank\" href=\"http://www.firstgov.gov/\"><img border=\"0\" src=\"footer_firstgov.gif\" alt=\"FirstGov.gov\" title=\"FirstGov.gov\"></a>\n"
-                    + "</div>\n</td>\n</tr>\n</table>\n");
+                    + "</td>\n</tr>\n</table>\n");
             //            out.print("<hr class=hrf><p style=\"text-align: right;
             // margin-top: 0px\">" + msgs.getMessage("Appl.version") +"</p>");
         }

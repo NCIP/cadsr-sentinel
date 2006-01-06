@@ -1,6 +1,11 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/AutoProcessAlerts.java,v 1.16 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
+
+// import com.scenpro.DSRAlertAPI.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -70,7 +74,6 @@ public class AutoProcessAlerts
         _logErrorCnt = 0;
 
         // Default database information if the properties file is missing.
-        _driver = "oci8";
         _tnsname = "test";
         _user = "test";
         _pswd = "test";
@@ -89,8 +92,7 @@ public class AutoProcessAlerts
         _reports[0] = new ReportItem[0];
 
         // Get the current date and time.
-        Date now = new Date();
-        _today = new Timestamp(now.getTime());
+        _today = Timemarker.timeNow();
     }
 
     /**
@@ -113,15 +115,40 @@ public class AutoProcessAlerts
 
     /**
      * This private class is used to track local process information about each
-     * Alert. It seems best to have this wrapper for the extra informaiton
+     * Alert. It seems best to have this wrapper for the extra information
      * rather than add it to the AlertRec class.
      */
     private class ProcessRec
     {
+        /**
+         * Constructor
+         */
+        public ProcessRec()
+        {
+            _alert = null;
+            _reportFile = null;
+            _parts = 1;
+            _errors = false;
+        }
+
+        /**
+         * The Alert Definition.
+         */
         public AlertRec _alert;
 
+        /**
+         * The report file name.
+         */
         public String   _reportFile;
+        
+        /**
+         * The number of parts the report is broken into.
+         */
+        public int _parts;
 
+        /**
+         * True if errors exist in the file.
+         */
         public boolean  _errors;
     }
 
@@ -155,17 +182,35 @@ public class AutoProcessAlerts
      */
     private class ReportItem
     {
+        /**
+         * Constructor
+         */
         public ReportItem()
         {
             _file = "";
             _name = "";
             _rows = 0;
+            _parts = 1;
         }
 
+        /**
+         * The file name.
+         */
         public String _file;
 
+        /**
+         * The name of the Alert Report.
+         */
         public String _name;
         
+        /**
+         * The number of parts for the report.
+         */
+        public int _parts;
+        
+        /**
+         * The number of rows in the report.
+         */
         public int _rows;
     }
 
@@ -180,8 +225,12 @@ public class AutoProcessAlerts
      *        The file containing the report output.
      * @param name_
      *        The name of the Alert definition.
+     * @param rows_
+     *        The number of rows in the report.
+     * @param parts_
+     *        The number of parts to the report.
      */
-    private void appendReport(int pos_, String file_, String name_, int rows_)
+    private void appendReport(int pos_, String file_, String name_, int rows_, int parts_)
     {
         // Increase the array by 1 element.
         int len = _reports[pos_].length + 1;
@@ -199,6 +248,7 @@ public class AutoProcessAlerts
         temp[ndx]._file = file_;
         temp[ndx]._name = name_;
         temp[ndx]._rows = rows_;
+        temp[ndx]._parts = parts_;
 
         // Discard the old list in preference to the new one.
         _reports[pos_] = temp;
@@ -258,6 +308,7 @@ public class AutoProcessAlerts
         String list[] = rec_._alert.getRecipients();
         String file;
         String name = rec_._alert.getName();
+        int parts = rec_._parts;
         int rowCnt;
         if (rec_._errors)
         {
@@ -320,7 +371,7 @@ public class AutoProcessAlerts
                         // When the recipient is already in the list we need
                         // only
                         // add the report name.
-                        appendReport(pos, file, name, rowCnt);
+                        appendReport(pos, file, name, rowCnt, parts);
                         break;
                     }
                     else if (compare > 0)
@@ -331,7 +382,7 @@ public class AutoProcessAlerts
                             // to position the name alphabetically and add
                             // the report also.
                             insertRecipient(++pos, temp[ndx]);
-                            appendReport(pos, file, name, rowCnt);
+                            appendReport(pos, file, name, rowCnt, parts);
                             break;
                         }
                         min = pos;
@@ -344,7 +395,7 @@ public class AutoProcessAlerts
                             // to position the name alphabetically and add
                             // the report also.
                             insertRecipient(pos, temp[ndx]);
-                            appendReport(pos, file, name, rowCnt);
+                            appendReport(pos, file, name, rowCnt, parts);
                             break;
                         }
                         max = pos;
@@ -364,10 +415,10 @@ public class AutoProcessAlerts
         AlertRec alerts[] = getAlertList();
         if (alerts == null)
         {
-            log("\tNo Alerts available to run on " + _today.toString());
+            log1("No Alerts available to run on " + _today.toString());
             return;
         }
-        log("Alert Definitions to process: " + alerts.length + "\n");
+        logAlert("Alert Definitions to process: " + alerts.length);
         ProcessRec list[] = new ProcessRec[alerts.length];
         for (int ndx = 0; ndx < list.length; ++ndx)
         {
@@ -398,7 +449,7 @@ public class AutoProcessAlerts
                 // Use midnight of the last run date as a start point.
                 _start = setToMidnight(_start);
             }
-            log("\nProcessing Alert Definition: " + ndx + ": "
+            logAlert("Processing Alert Definition: " + ndx + ": "
                 + list[ndx]._alert.getName() + " (" + _start.toString()
                 + " TO " + _end.toString() + ")");
 
@@ -444,9 +495,9 @@ public class AutoProcessAlerts
         getResources();
 
         // Flag the start of the log.
-        log("caDSR Sentinel Alert Auto Run Process Starts... "
-            + _today.toString() + "\n\tDatabase = " + _dbname + " (" + _tnsname
-            + ")\n\tWorking folder prefix = " + _work);
+        logAlert("Auto Run Process Starts... " + _today.toString());
+        log1("Database = " + _dbname + " (" + _tnsname + ")");
+        log1("Working folder prefix = " + _work);
 
         // Process the Alerts.
         autoRun2();
@@ -460,8 +511,7 @@ public class AutoProcessAlerts
         sendEmails();
 
         // Flag the end of the log.
-        log("caDSR Sentinel Alert Auto Run Process Ends... "
-            + _today.toString());
+        logAlert("Auto Run Process Ends... " + _today.toString());
         sendLog();
         closeLog();
     }
@@ -492,12 +542,12 @@ public class AutoProcessAlerts
      */
     private void sendEmails()
     {
-        log("\nSending emails...");
+        logAlert("Sending emails...");
 
         // Be sure we have something to send.
         if (_recipients.length < 2)
         {
-            log("No activity to email.");
+            log1("No activity to email.");
             return;
         }
 
@@ -510,30 +560,33 @@ public class AutoProcessAlerts
             boolean hasErrors;
             hasErrors = false;
             String prefix = "";
-            String body = "\n";
-            log("\tTo: " + _recipients[ndx] + "\n\t\tNumber of reports: "
-                + _reports[ndx].length);
+            String body = "<colgroup><col /><col /></colgroup><tbody />";
             for (int ndx2 = 0; ndx2 < _reports[ndx].length; ++ndx2)
             {
-                String link = _reports[ndx][ndx2]._file;
-                if (link.length() == 0)
+                String link1 = _reports[ndx][ndx2]._file;
+                String link2;
+                if (link1.length() == 0)
                 {
                     if (prefix.length() == 0)
-                        prefix = "\n\n" + _adminIntroError;
-                    link = "*** Errors ***";
+                        prefix = "<p>" + _adminIntroError + "</p>";
+                    link1 = "";
+                    link2 = "*** Errors ***";
                     hasErrors = true;
                 }
                 else
                 {
-                    link = _http
-                        + link.substring(link.lastIndexOf(File.separator) + 1);
-                    link = link.replaceAll(" ", "%20");
+                    link1 = _http + link1.substring(_work.length());
+                    link1 = link1.replaceAll(" ", "%20");
+                    link2 = link1;
                 }
+                String parts = "";
+                if (_reports[ndx][ndx2]._parts > 1)
+                    parts = "&nbsp;(In&nbsp;" + _reports[ndx][ndx2]._parts + "&nbsp;parts.)";
                 body = body
-                    + "\n"
-                    + "Alert Definition Name:    " + _reports[ndx][ndx2]._name + "\n"
-                    + "Link to Alert Report:     " + link + "\n"
-                    + "Number of Rows in Report: " + _reports[ndx][ndx2]._rows + "\n";
+                    + "<tr><td>Alert Definition Name:</td><td>" + _reports[ndx][ndx2]._name + "</td></tr>"
+                    + "<tr><td>Link to Alert Report:</td><td><a href=\"" + link1 + "\">" + link2 + "</a></td></tr>"
+                    + "<tr><td>Number of Rows in Report:</td><td>" + _reports[ndx][ndx2]._rows + parts + "</td></tr>"
+                    + "<tr><td colspan=\"2\">&nbsp;</td></tr>";
             }
 
             // Complete subject and body and send to recipient.
@@ -541,17 +594,28 @@ public class AutoProcessAlerts
                 + ((_id.charAt(0) == 'A') ? " Auto Run" : " Manual Run")
                 + " for " + _today.toString().substring(0, 10)
                 + ((hasErrors) ? " has Errors" : "");
-            body = _adminIntro + prefix + body;
-            sendEmail((hasErrors) ? 1 : 0, _recipients[ndx], "", subject, body);
+            String message = "<html><body style=\"font-family: arial; font-size: 10pt\"><p>"
+                + _adminIntro + "</p>" + prefix
+                + "<table style=\"font-size: 10pt\">" + body + "</table></body></html>";
+            sendEmail((hasErrors) ? 1 : 0, _recipients[ndx], "", subject, message);
+            logHR();
+            log0("To: " + _recipients[ndx]);
+            log0("Subject: " + subject);
+            logTable(body);
         }
-        log("Completed emails...\n");
+        logHR();
+        logAlert("Completed emails...\n");
     }
-
+    
     /**
      * Create a thread wrapper around the processing of a single Alert.
      */
     private class AlertThread extends Thread
     {
+        /**
+         * Constructor
+         * @param rec_ The Alert Defition to process.
+         */
         public AlertThread(AlertRec rec_)
         {
             _rec = rec_;
@@ -562,13 +626,20 @@ public class AutoProcessAlerts
          */
         public void run()
         {
+            // Test code.
+            /*
+            DSRAlertAPI tapi = DSRAlertAPIimpl.factory("http://cadsrsentinel-dev.nci.nih.gov");
+            int rc = tapi.createAlert("hebell", "E2538C9F-E9E7-3303-E034-0003BA12F5E7");
+            tapi = null;
+            */
+            
             // Get configuration information.
             getResources();
-            log("caDSR Sentinel Alert Manual Run Process Starts... "
-                + _today.toString() + "\n\tDatabase = " + _dbname + " (" + _tnsname
-                + ")\n\tWorking folder prefix = " + _work);
+            logAlert("Manual Run Process Starts... " + _today.toString());
+            log1("Database = " + _dbname + " (" + _tnsname + ")");
+            log1("Working folder prefix = " + _work);
 
-            log("\nProcessing Alert Definition: "
+            logAlert("Processing Alert Definition: "
                 + _rec.getName() + " (" + _start.toString()
                 + " TO " + _end.toString() + ")");
 
@@ -598,7 +669,7 @@ public class AutoProcessAlerts
             sendEmails();
 
             // We're done.
-            log("Manual Run for Sentinel Alert ends: " + _rec.getName());
+            logAlert("Manual Run for Sentinel Alert ends: " + _rec.getName());
             sendLog();
             closeLog();
         }
@@ -638,18 +709,23 @@ public class AutoProcessAlerts
     {
         String temp = rec_._alert.getName().replaceAll("\\W", "_");
         String ts = "_"
-            + new Timestamp(new Date().getTime()).toString().replaceAll("\\D",
+            + Timemarker.timeNow().toString().replaceAll("\\D",
                 "") + ".html";
         rec_._reportFile = _work + temp + ts;
         temp = _http + temp + ts;
-        log("\tCreated by " + rec_._alert.getCreator()
-            + "\n\tOutput File is\n\t\t" + rec_._reportFile + "\n\t\t" + temp);
+        log1("Created by " + rec_._alert.getCreator());
+        log1("Output File is");
+        log2(rec_._reportFile);
+        log2("<a href=\"" + temp + "\" target=\"_blank\">" + temp + "</a>");
     }
 
     /**
      * Dump the report records to output.
+     * 
+     * @param save_ The report content.
+     * @param rec_ The processing record for the report.
      */
-    private void dump(Stack save_, ProcessRec rec_)
+    private void dump(Stack<RepRows> save_, ProcessRec rec_)
     {
         try
         {
@@ -664,8 +740,8 @@ public class AutoProcessAlerts
             if (_outForm == 1)
             {
                 // Header first.
-                ACData.dumpHeader1(_dbname, _style, cemail, rec_._alert,
-                    _start, _end, fout);
+                ACData.dumpHeader1(_dbname, _style, cemail, _db.selectRecipientNames(rec_._alert.getRecipients()),
+                    rec_._alert, _start, _end, fout);
 
                 // Body
                 _outRows += ACData.dumpDetail1(_db, save_, _outRows, fout);
@@ -676,16 +752,73 @@ public class AutoProcessAlerts
             }
             else if (_outForm == 2)
             {
-                // Header first.
-                ACData.dumpHeader2(_dbname, _style, cemail, rec_._alert,
-                    _start, _end, fout);
+                // Add calculation of parts and break save_ into multiple pieces. Watch out for the
+                // Associated To Limit - will want to break up the final report.
+                Stack<RepRows> report = ACData.dumpTrim(save_, rec_._alert.getIAssocLvl());
+                if (_threshold < report.size())
+                {
+                    int parts = 0;
+                    int total = report.size();
+                    String namePattern = rec_._reportFile.substring(_work.length());
+                    namePattern = namePattern.replace(".html", "_part_{0}.html");
+                    while (total > 0)
+                    {
+                        Stack<RepRows> working = new Stack<RepRows>();
+                        ++parts;
 
-                // Body
-                _outRows += ACData.dumpDetail2(_db, save_, _outRows, fout);
-                logError(_db.getError());
+                        // Find the report break by jumping into the stack and working back to the nearest
+                        // Primary record.
+                        int start = (_threshold < report.size()) ? _threshold : report.size();
+                        for (int ndx = report.size() - start; ndx > 0; --ndx)
+                        {
+                            RepRows val = report.get(ndx);
+                            if (val._rec.isPrimary())
+                            {
+                                --start;
+                                break;
+                            }
+                            ++start;
+                        }
+                        total -= start;
+                        for (; start > 0; --start)
+                        {
+                            working.add(0, report.pop());
+                        }
+                        
+                        // Open the report file.
+                        fout.close();
+                        String filename = _work + namePattern.replace("{0}", Integer.toString(parts));
+                        fout = new FileOutputStream(filename, false);
 
-                // Footer
-                ACData.dumpFooter2((_outRows == 0), _version, rec_._alert, fout);
+                        // Header first.
+                        ACData.dumpHeader2(_dbname, _style, cemail, _db.selectRecipientNames(rec_._alert.getRecipients()),
+                            rec_._alert, _start, _end, parts, total > 0, namePattern, fout);
+        
+                        // Body
+                        _outRows += ACData.dumpDetail2(_db, working, _outRows, fout);
+                        logError(_db.getError());
+        
+                        // Footer
+                        ACData.dumpFooter2((_outRows == 0), _version, rec_._alert, fout);
+                    }
+                    fout.close();
+                    fout = new FileOutputStream(rec_._reportFile, false);
+                    ACData.dumpParts(rec_._alert.getName(), namePattern, _threshold, parts, fout);
+                    rec_._parts = parts;
+                }
+                else
+                {
+                    // Header first.
+                    ACData.dumpHeader2(_dbname, _style, cemail, _db.selectRecipientNames(rec_._alert.getRecipients()),
+                        rec_._alert, _start, _end, 0, false, null, fout);
+    
+                    // Body
+                    _outRows += ACData.dumpDetail2(_db, report, _outRows, fout);
+                    logError(_db.getError());
+    
+                    // Footer
+                    ACData.dumpFooter2((_outRows == 0), _version, rec_._alert, fout);
+                }
             }
 
             // Close file.
@@ -737,60 +870,176 @@ public class AutoProcessAlerts
             acdList_[ndx] = new ACData[0];
 
         int length = (rec_.isACTYPEall()) ? DBAlert._ACTYPE_LENGTH : rec_.getACTypes().length;
+        boolean isCWFSall = rec_.isCWFSall();
+        String CWorkflow[] = (isCWFSall) ? null : rec_.getCWorkflow();
+        boolean isCRSall = rec_.isCRSall();
+        String CRegStatus[] = (isCRSall) ? null : rec_.getCRegStatus();
         
+        Timemarker timer = new Timemarker(null);
+        log1("Find changes");
+        String text = "";
         for (int ndx = 0; ndx < length; ++ndx)
         {
             int rc = rec_.isACTypeUsed(ndx);
             if (rc == -1) continue;
             switch (rc)
             {
+                case DBAlert._ACTYPE_PROTO:
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectPROTO(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>PROTO</td><td>" + timer.check() + "</td></tr>";
+                    break;
                 case DBAlert._ACTYPE_PROP:
-                    acdList_[rc] = _db.selectPROP(dates, _start, _end, creators, modifiers);
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectPROP(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>PROP</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_OC:
-                    acdList_[rc] = _db.selectOC(dates, _start, _end, creators, modifiers);
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectOC(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>OC</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_QCV:
-                    acdList_[rc] = _db.selectQCV(dates, _start, _end, creators, modifiers);
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectQCV(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>QCV</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_QCQ:
-                    acdList_[rc] = _db.selectQCQ(dates, _start, _end, creators, modifiers);
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectQCQ(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>QCQ</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_QCM:
-                    acdList_[rc] = _db.selectQCM(dates, _start, _end, creators, modifiers);
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectQCM(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>QCM</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_QC:
-                    acdList_[rc] = _db.selectQC(dates, _start, _end, creators, modifiers);
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectQC(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>QC</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_PV:
-                    acdList_[rc] = _db.selectPV(dates, _start, _end, creators, modifiers);
+                    if (isCWFSall && isCRSall)
+                        acdList_[rc] = _db.selectPV(dates, _start, _end, creators, modifiers);
+                    text = text + "<tr><td>PV</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_VD:
-                    acdList_[rc] = _db.selectVD(dates, _start, _end, creators, modifiers);
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectVD(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>VD</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_CD:
-                    acdList_[rc] = _db.selectCD(dates, _start, _end, creators, modifiers);
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectCD(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>CD</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_DEC:
-                    acdList_[rc] = _db.selectDEC(dates, _start, _end, creators, modifiers);
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectDEC(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>DEC</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_DE:
-                    acdList_[rc] = _db.selectDE(dates, _start, _end, creators, modifiers);
+                    acdList_[rc] = _db.selectDE(dates, _start, _end, creators, modifiers, CWorkflow, CRegStatus);
+                    text = text + "<tr><td>DE</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_CSI:
-                    acdList_[rc] = _db.selectCSI(dates, _start, _end, creators, modifiers);
+                    if (isCWFSall && isCRSall)
+                        acdList_[rc] = _db.selectCSI(dates, _start, _end, creators, modifiers);
+                    text = text + "<tr><td>CSI</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_CS:
-                    acdList_[rc] = _db.selectCS(dates, _start, _end, creators, modifiers);
+                    if (isCRSall)
+                        acdList_[rc] = _db.selectCS(dates, _start, _end, creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>CS</td><td>" + timer.check() + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_CONTE:
-                    acdList_[rc] = _db.selectCONTE(dates, _start, _end, creators, modifiers);
+                    if (isCWFSall && isCRSall)
+                        acdList_[rc] = _db.selectCONTE(dates, _start, _end, creators, modifiers);
+                    text = text + "<tr><td>CONTE</td><td>" + timer.check() + "</td></tr>";
                     break;
             }
+            logError(_db.getError());
             if (acdList_[rc] == null)
                 acdList_[rc] = new ACData[0];
-            logError(_db.getError());
-            acdList_[rc] = filter(acdList_[rc], rec_);
+            else
+                acdList_[rc] = filter(acdList_[rc], rec_);
+            text = text + "<tr><td><i>&nbsp;&nbsp;&nbsp;filter</i></td><td>" + timer.check() + "</td></tr>";
+        }
+        text = text + "<tr><td>Total</td><td>" + timer.reset() + "</td></tr>";
+        logMatrix(text);
+    }
+
+    /**
+     * Form the table rows for the list provided.
+     * 
+     * @param list_ The list of row entries.
+     * 
+     * @return The HTML table rows.
+     */
+    private String DBopenStatRows(String list_[])
+    {
+        String text = "";
+        int scnt = 0;
+        for (int ndx = 0; ndx < list_.length; ++ndx)
+        {
+            if (list_[ndx] != null)
+            {
+                String stripe = ((scnt % 2) == 0) ? " style=\"background-color: #ccffff\"" : "";
+                text = text + "<tr" + stripe + "><td>" + list_[ndx].replaceAll("::", "</td><td>") + "</td></tr>\n";
+                ++scnt;
+            }
+        }
+        return text;
+    }
+
+    /**
+     * Construct the row header for the table section.
+     * 
+     * @param title_ The title of the section.
+     * @param count_ The count of rows in the section or -1.
+     * @return The composite table row string.
+     */
+    private String DBopenStatHeader(String title_, int count_)
+    {
+        String text = 
+            "<tr><td style=\"border-bottom: solid black 1px\"><b>&nbsp;<br>"
+            + title_ + "</b></td><td style=\"border-bottom: solid black 1px\">";
+        if (count_ > -1)
+            text = text + "<b>&nbsp;<br>" + count_ + "</b>";
+        else
+            text = text + "&nbsp;";
+        return text + "</td></tr>\n";
+    }
+    
+    /**
+     * Process initialization after the database connection is open.
+     */
+    private void DBopen()
+    {
+        _adminEmail = _db.selectAlertReportAdminEmails();
+        _threshold = _db.selectReportThreshold();
+
+        // During an Auto Run report the statistics.
+        if (_id.charAt(0) == 'A')
+        {
+            String counts[] = _db.getRowCounts();
+            String text = DBopenStatHeader("Row Counts", -1);
+            text = text + DBopenStatRows(counts);
+
+            counts = _db.getUnusedProperties();
+            text = text + DBopenStatHeader("Unused Properties", counts.length);
+            text = text + DBopenStatRows(counts);
+
+            counts = _db.getUnusedObjectClasses();
+            text = text + DBopenStatHeader("Unused Object Classes", counts.length);
+            text = text + DBopenStatRows(counts);
+
+            counts = _db.getUnusedDEC();
+            text = text + DBopenStatHeader("Unused Data Element Concepts", counts.length);
+            text = text + DBopenStatRows(counts);
+
+            logMatrix(text);
         }
     }
     
@@ -802,24 +1051,31 @@ public class AutoProcessAlerts
      */
     private void pullDBchanges(ProcessRec rec_)
     {
+        // Report section timings.
+        Timemarker timer = new Timemarker();
+        
         // Be sure we have a database connection.
         if (_db == null)
         {
             _db = new DBAlert();
-            if (_db.open(_driver, _tnsname, _user, _pswd) != 0)
+            if (_db.open(_tnsname, _user, _pswd) != 0)
             {
                 logError(_db.getError());
                 _db = null;
                 return;
             }
+            DBopen();
         }
         
         // Determine file name that will eventually hold the output.
         getFileName(rec_);
+        log1("Initialization");
+        log2(timer.check());
 
         // Get the changes from the database.
         ACData actypes[][] = new ACData[DBAlert._ACTYPE_LENGTH][];
         findChanges(rec_._alert, actypes);
+        ACData proto[] = actypes[DBAlert._ACTYPE_PROTO];
         ACData prop[]  = actypes[DBAlert._ACTYPE_PROP];
         ACData oc[]    = actypes[DBAlert._ACTYPE_OC];
         ACData qcv[]   = actypes[DBAlert._ACTYPE_QCV];
@@ -837,14 +1093,23 @@ public class AutoProcessAlerts
         actypes = null;
 
         // Report on the raw change counts.
-        log("\tChange count:"
-            + " qcv " + qcv.length + " qcq " + qcq.length
-            + ", qcm " + qcm.length + " qc " + qc.length
-            + ", pv " + pv.length + ", vd " + vd.length
-            + ", cd " + cd.length + ", oc " + oc.length
-            + ", prop " + prop.length + ", dec " + dec.length
-            + ", de " + de.length + ", csi " + csi.length
-            + ", cs " + cs.length + ", conte " + conte.length);
+        log1("Change count:"
+            + " qcv "    + qcv.length
+            + ", qcq "   + qcq.length
+            + ", qcm "   + qcm.length
+            + ", qc "    + qc.length
+            + ", proto " + proto.length
+            + ", pv "    + pv.length
+            + ", vd "    + vd.length
+            + ", cd "    + cd.length
+            + ", oc "    + oc.length
+            + ", prop "  + prop.length
+            + ", dec "   + dec.length
+            + ", de "    + de.length
+            + ", csi "   + csi.length
+            + ", cs "    + cs.length
+            + ", conte " + conte.length);
+        log2(timer.check());
 
         // Get the data associated to the changed data. This is done one step at
         // a time using the following associations.
@@ -882,6 +1147,10 @@ public class AutoProcessAlerts
         logError(_db.getError());
         qca = ACData.merge(qca, _db.selectQCfromQCQ(qcqm));
         logError(_db.getError());
+        ACData protom[] = ACData.merge(proto, _db.selectPROTOfromQC(qcvm));
+        protom = ACData.merge(protom, _db.selectPROTOfromQC(qcqm));
+        protom = ACData.merge(protom, _db.selectPROTOfromQC(qcmm));
+        protom = ACData.merge(protom, _db.selectPROTOfromQC(qca));
         ACData cdm[] = new ACData[0];
         ACData csim[] = ACData.merge(csi, _db.selectCSIfromDE(dem));
         logError(_db.getError());
@@ -895,11 +1164,13 @@ public class AutoProcessAlerts
         logError(_db.getError());
         contem = ACData.merge(contem, _db.selectCONTEfromQC(qca));
         logError(_db.getError());
+        contem = ACData.merge(contem, _db.selectCONTEfromPROTO(protom));
+        logError(_db.getError());
 
         // If a CSI, CS or Form is specified, we can not get to a Context
         // directly from the Administered Components.
         if (rec_._alert.isCSIall() && rec_._alert.isCSall()
-            && rec_._alert.isFORMSall())
+            && rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
         {
             cdm = ACData.merge(cd, _db.selectCDfromVD(vdm));
             logError(_db.getError());
@@ -924,8 +1195,9 @@ public class AutoProcessAlerts
             cd = new ACData[0];
 
         // Report on the related counts.
-        log("\tRelated count:"
+        log1("Related count:"
             + " qca " + ((qca == null) ? -1 : qca.length)
+            + ", protom " + ((protom == null) ? -1 : protom.length)
             + ", vdm " + ((vdm == null) ? -1 : vdm.length)
             + ", cdm " + ((cdm == null) ? -1 : cdm.length)
             + ", decm " + ((decm == null) ? -1 : decm.length)
@@ -933,6 +1205,7 @@ public class AutoProcessAlerts
             + ", csim " + ((csim == null) ? -1 : csim.length)
             + ", csm " + ((csm == null) ? -1 : csm.length)
             + ", contem " + ((contem == null) ? -1 : contem.length));
+        log2(timer.check());
 
         // Scrub the lists and remove everything that is not part of the
         // Criteria.
@@ -953,16 +1226,27 @@ public class AutoProcessAlerts
             qca = ACData.clean(rec_._alert.getForms(), qca);
             qc = ACData.clean(rec_._alert.getForms(), qc);
         }
+        if (!rec_._alert.isPROTOall())
+        {
+            protom = ACData.clean(rec_._alert.getProtocols(), protom);
+            proto = ACData.clean(rec_._alert.getProtocols(), proto);
+        }
 
         // Report the scrubbed numbers.
-        log("\tClean count:" + " qca " + qca.length + ", csim " + csim.length
-            + ", csm " + csm.length + ", contem " + contem.length + ", conte "
-            + conte.length);
+        log1("Clean count:"
+            + " qca "     + qca.length
+            + ", protom " + protom.length
+            + ", csim "   + csim.length
+            + ", csm "    + csm.length
+            + ", contem " + contem.length
+            + ", conte "  + conte.length);
+        log2(timer.check());
 
         // We are about to do a lot of searches using the related id for each
         // record so take
         // a little time to resort everything.
         ACData.sortRelated(qca);
+        ACData.sortRelated(protom);
         ACData.sortRelated(vdm);
         ACData.sortRelated(cdm);
         ACData.sortRelated(decm);
@@ -986,12 +1270,14 @@ public class AutoProcessAlerts
         ACDataLink lqcq = new ACDataLink(qcq);
         ACDataLink lqcm = new ACDataLink(qcm);
         ACDataLink lqc = new ACDataLink(qc);
+        ACDataLink lproto = new ACDataLink(proto);
         ACDataLink chainVD = new ACDataLink(vdm);
         ACDataLink chainDEC = new ACDataLink(decm);
         ACDataLink chainDE = new ACDataLink(dem);
         ACDataLink chainCS = new ACDataLink(csm);
         ACDataLink chainCSI = new ACDataLink(csim);
         ACDataLink chainCD = new ACDataLink(cdm);
+        ACDataLink chainPROTO = new ACDataLink(protom);
         ACDataLink chainQC = new ACDataLink(qca);
         ACDataLink chainQCM = new ACDataLink(qcmm);
         ACDataLink chainQCQ = new ACDataLink(qcqm);
@@ -1002,8 +1288,8 @@ public class AutoProcessAlerts
         // If we can't it means the CSI, CS, FORM or Context was removed from
         // the list in earlier
         // logic and the change should be ignored by the report.
-        Stack results = new Stack();
-        if (rec_._alert.isFORMSall())
+        Stack<RepRows> results = new Stack<RepRows>();
+        if (rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
         {
             // Qualify results by CS and CSI (i.e. Forms/Templates is "All").
             chainCS.add(lconte);
@@ -1032,10 +1318,15 @@ public class AutoProcessAlerts
         if (rec_._alert.isCSIall() && rec_._alert.isCSall())
         {
             // Qualify results by Forms/Templates (i.e. CS and CSI is "All").
+            chainPROTO.add(lconte);
             chainQC.add(lconte);
+            chainQC.add(chainPROTO);
+            chainQCM.add(chainPROTO);
             chainQCM.add(chainQC);
+            chainQCQ.add(chainPROTO);
             chainQCQ.add(chainQCM);
             chainQCQ.add(chainQC);
+            chainQCV.add(chainPROTO);
             chainQCV.add(chainQCQ);
             chainVD.add(chainQCV);
             chainVD.add(chainDE);
@@ -1046,17 +1337,22 @@ public class AutoProcessAlerts
             lvd.add(chainQCV);
             lde.add(chainQCQ);
             lqcv.add(chainQCQ);
+            lqcv.add(chainPROTO);
             lqcq.add(chainQCM);
             lqcq.add(chainQC);
+            lqcq.add(chainPROTO);
             lqcm.add(chainQC);
+            lqcm.add(chainPROTO);
+            lqc.add(chainPROTO);
             lqc.add(lconte);
+            lproto.add(lconte);
             lpv.add(chainVD);
             lvd.add(chainDE);
             lvd.add(chainQCQ);
             ldec.add(chainDE);
         }
         if (rec_._alert.isCSIall() && rec_._alert.isCSall()
-            && rec_._alert.isFORMSall())
+            && rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
         {
             chainDE.add(lconte);
             chainDEC.add(lconte);
@@ -1076,11 +1372,14 @@ public class AutoProcessAlerts
         chainCS = null;
         chainCSI = null;
         chainCD = null;
+        chainPROTO = null;
         chainQC = null;
         chainQCM = null;
         chainQCQ = null;
         chainQCV = null;
         lconte = null;
+        log1("Linked changed and related records.");
+        log2(timer.check());
 
         lprop.follow(results, 0, lprop.getRange());
         loc.follow(results, 0, loc.getRange());
@@ -1095,17 +1394,24 @@ public class AutoProcessAlerts
         lqcq.follow(results, 0, lqcq.getRange());
         lqcm.follow(results, 0, lqcm.getRange());
         lqc.follow(results, 0, lqc.getRange());
+        lproto.follow(results, 0, lproto.getRange());
         ACData.remember(results, conte);
+        log1("Created data chains.");
+        log2(timer.check());
 
         // What ever is placed on the stack ("results") should be output to a
         // file.
         dump(results, rec_);
+        log1("Created report.");
+        log2(timer.check());
+        log1("Processing for this Alert Definition.");
+        log2(timer.reset());
 
         // Did we do anything?
         if (_outRows == 0)
-            log("\tNo activity to report.");
+            log1("No activity to report.");
         else
-            log("\tActivity to report: " + _outRows + " rows.");
+            log1("Activity to report: " + _outRows + " rows.");
     }
 
     /**
@@ -1163,12 +1469,13 @@ public class AutoProcessAlerts
         {
             // Haven't connected to the database yet.
             _db = new DBAlert();
-            if (_db.open(_driver, _tnsname, _user, _pswd) != 0)
+            if (_db.open(_tnsname, _user, _pswd) != 0)
             {
                 logError(_db.getError());
                 _db = null;
                 return recs;
             }
+            DBopen();
         }
 
         // Get the eligible Alerts.
@@ -1222,7 +1529,6 @@ public class AutoProcessAlerts
                     + _RESOURCES);
             return -1;
         }
-        _driver = prb.getString(Constants._DBDRIVER);
         _tnsname = prb.getString(Constants._DBTNSNAME);
         _user = prb.getString(Constants._DBUSER);
         _pswd = prb.getString(Constants._DBPSWD);
@@ -1230,10 +1536,11 @@ public class AutoProcessAlerts
         _version = prb.getString(Constants._APLVERS);
         _work = prb.getString(_WORKING);
         _subject = prb.getString(_SUBJECT);
-        _adminEmail = prb.getString(_ADMINEMAIL);
         _adminName = prb.getString(_ADMINNAME);
         _adminIntro = prb.getString(_ADMININTRO);
         _adminIntroError = prb.getString(_ADMININTROERROR);
+        _adminEmail = new String[1];
+        _adminEmail[0] = prb.getString(_ADMINEMAIL);
         _emailHost = prb.getString(_EMAILHOST);
         _emailUser = prb.getString(_EMAILUSER);
         _emailPswd = prb.getString(_EMAILPSWD);
@@ -1255,7 +1562,7 @@ public class AutoProcessAlerts
         {
             _logErrors = true;
             ++_logErrorCnt;
-            log(txt_);
+            logText("</p><p class=\"alert\"><pre>\n" + txt_ + "\n</pre>");
         }
     }
 
@@ -1266,7 +1573,7 @@ public class AutoProcessAlerts
      * @param txt_
      *        The message to log.
      */
-    private void log(String txt_)
+    private void logText(String txt_)
     {
         try
         {
@@ -1285,13 +1592,32 @@ public class AutoProcessAlerts
                     _logFile = _logFile.replaceAll(File.separator, "_");
 
                 // This should be a unique workable file name.
-                _logFile = _work + _logFile + ".txt";
+                _logFile = _work + _logFile + ".html";
                 _log = new FileOutputStream(_logFile, false);
                 System.out.println("Opened log: " + _today.toString() + ": "
                     + _logFile);
+                String temp;
+                temp = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n"
+                    + "<html><head>\n"
+                    + "<meta http-equiv=Content-Type content=\"text/html; charset=windows-1252\">\n"
+                    + "<title>Sentinel Alert Run Report</title>"
+                    + "<style>\n"
+                    + "\tBODY { font-family: Arial; font-size: 10pt }\n"
+                    + "\tP { margin-top: 0in; margin-bottom: 0in }\n"
+                    + "\tP.ALERT { font-weight: bold; margin-top: 0.1in; margin-bottom: 0.1in }\n"
+                    + "\tP.DETAIL0 { MARGIN-LEFT: 0.0in; margin-top: 0.1in; margin-bottom: 0.1in }\n"
+                    + "\tP.DETAIL1 { margin-left: 0.5in }\n"
+                    + "\tP.DETAIL2 { margin-left: 1.0in }\n"
+                    + "\tTABLE { font-family: Arial; font-size: 10pt }\n"
+                    + "\tTABLE.MATRIX { margin-left: 1.0in; margin-bottom: 0.1in; border-spacing: 0in; border-collapse: collapse }\n"
+                    + "</style>\n"
+                    + "</head>\n"
+                    + "<body>\n"
+                    + "<p class=\"alert\">caDSR Sentinel " + _version + "</p>\n";
+                _log.write(temp.getBytes());
             }
 
-            // Write message to log file and add a newline.
+            // Write message to log file and add a new line.
             _log.write(txt_.getBytes());
             _log.write("\n".getBytes());
 
@@ -1309,28 +1635,66 @@ public class AutoProcessAlerts
             System.err.println(ex.toString());
         }
     }
+    
+    private void log0(String msg_)
+    {
+        logText("<p class=\"detail0\">" + msg_ + "</p>");
+    }
+    
+    private void log1(String msg_)
+    {
+        logText("<p class=\"detail1\">" + msg_ + "</p>");
+    }
+    
+    private void log2(String msg_)
+    {
+        logText("<p class=\"detail2\">" + msg_ + "</p>");
+    }
+    
+    private void logAlert(String msg_)
+    {
+        logText("<p class=\"alert\">" + msg_ + "</p>");
+    }
+    
+    private void logTable(String msg_)
+    {
+        logText("<table style=\"font-size: 10pt\">" + msg_ + "</table>");
+    }
+    
+    private void logMatrix(String msg_)
+    {
+        logText("<table class=\"matrix\"><colgroup>"
+            + "<col style=\"padding-right: 0.1in\" /><col style=\"text-align: right\" /></colgroup><tbody />\n"
+            + msg_ + "\n</table>\n");
+    }
+    
+    private void logHR()
+    {
+        logText("<hr>");
+    }
 
     /**
      * Send the Log file to the system administrator.
      */
     private void sendLog()
     {
-        String body;
+        String body = "<html><body style=\"font-family: arial; font-size: 10pt\">"
+            + "<p>The following log was created using the Sentinel Alert Version "
+            + _version + "</p>";
         if (_log == null)
         {
             // This is bad - a log file should ALWAYS be created.
-            body = "*** Alert Run Log file was not created.";
+            body += "<p><b>*** Alert Run Log file was not created.</b></p>";
             _logErrorCnt = 1;
             System.err.println(body);
         }
         else
         {
             // Send link to log file.
-            String temp = _http
-                + _logFile.substring(_logFile.lastIndexOf(File.separator) + 1);
+            String temp = _http + _logFile.substring(_work.length());
             temp = temp.replaceAll(" ", "%20");
-            body = "Please review the LOG from the caDSR Alert Run.\n\n\""
-                + _logFile + "\"\n\n\"" + temp + "\"";
+            body += "<p>Please review the LOG from the caDSR Alert Run.</p><p><a href=\""
+                + _logFile + "\">" + _logFile + "</a></p><a href=\"" + temp + "\">" + temp + "</a></p>";
         }
 
         // Create subject.
@@ -1340,7 +1704,8 @@ public class AutoProcessAlerts
             + ((_logErrorCnt > 0) ? " with ERRORS" : "");
 
         // Send email.
-        sendEmail(_logErrorCnt, _adminEmail, _adminName, subject, body);
+        for (int ndx = 0; ndx < _adminEmail.length; ++ndx)
+            sendEmail(_logErrorCnt, _adminEmail[ndx], _adminName, subject, body + "</body></html>");
     }
 
     /**
@@ -1377,12 +1742,19 @@ public class AutoProcessAlerts
             // errors during the
             // run.
             message.setSubject(subject_);
-            message.setFrom(new InternetAddress(_adminEmail, _adminName));
+            message.setFrom(new InternetAddress(_adminEmail[0], _adminName));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(
                 toEmail_, toName_));
 
             // Give the real location and the "http" location.
-            message.setText(body_);
+            if (body_.substring(0, 6).compareToIgnoreCase("<html>") == 0)
+            {
+                message.setContent(body_, "text/html");
+            }
+            else
+            {
+                message.setText(body_);
+            }
 
             // Give to the mail server.
             message.saveChanges();
@@ -1435,28 +1807,12 @@ public class AutoProcessAlerts
         try
         {
             // Report the processing time.
-            Date now = new Date();
-            Timestamp today = new Timestamp(now.getTime());
-            long elapsed = today.getTime() - _today.getTime();
-            int hrs = (int) (elapsed / (1000 * 60 * 60));
-            elapsed -= hrs * 1000 * 60 * 60;
-            hrs += 100;
-            int mins = (int) (elapsed / (1000 * 60));
-            elapsed -= mins * 1000 * 60;
-            mins += 100;
-            int secs = (int) (elapsed / 1000);
-            elapsed -= secs * 1000;
-            secs += 100;
-            elapsed += 1000;
-            String msg = String.valueOf(hrs).substring(1) + ":"
-                + String.valueOf(mins).substring(1) + ":"
-                + String.valueOf(secs).substring(1) + "."
-                + String.valueOf(elapsed).substring(1);
-            msg = "\nEnd timestamp: " + today.toString()
-                + "\nElapsed processing time: " + msg + "\n";
-            _log.write(msg.getBytes());
-            msg = "\ncaDSR Sentinel " + _version + "\n";
-            _log.write(msg.getBytes());
+            Timestamp today = Timemarker.timeNow();
+            String msg = Timemarker.timeDiff(today, _today);
+            log1("End timestamp: " + today.toString());
+            log1("Elapsed processing time: " + msg);
+            logAlert("caDSR Sentinel " + _version);
+            logText("</body></html>");
 
             // Close the file and make it permanent.
             _log.flush();
@@ -1472,8 +1828,6 @@ public class AutoProcessAlerts
     }
 
     // Class data elements.
-    private String              _driver;
-
     private String              _tnsname;
 
     private String              _user;
@@ -1496,7 +1850,7 @@ public class AutoProcessAlerts
 
     private String              _subject;
 
-    private String              _adminEmail;
+    private String              _adminEmail[];
 
     private String              _adminName;
 
@@ -1529,8 +1883,10 @@ public class AutoProcessAlerts
     private String              _logFile;
 
     private String              _id;
-
+    
     private int                 _outForm;
+    
+    private int                 _threshold;
 
     private static final String _RESOURCES       = "com.scenpro.DSRAlert.DSRAlert";
 

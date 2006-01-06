@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/ListTag.java,v 1.6 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import java.io.IOException;
@@ -123,10 +126,10 @@ public class ListTag extends TagSupport
     {
         String temp = (String) pageContext.getRequest().getAttribute(
             Constants._ACTSAVE);
-        String script = "var Muserid = \""
-            + _ub.getUserUpper()
-            + "\";\n"
-            + "function cmdList() { "
+        String script =
+            "var Muserid = \"" + _ub.getUserUpper() + "\";\n"
+            + "var Madmin = " + _ub.isAdmin() + ";\n"
+            + "\nfunction cmdList() { "
             + "checkCount = 0; "
             + "listForm.listShow.value = (listForm.listShow.value == \"p\") ? \"a\" : \"p\"; "
             + "listForm.submit(); }";
@@ -197,8 +200,10 @@ public class ListTag extends TagSupport
 
             if (database != null && database.length > 0)
                 count = database.length;
+
+            _ub.setAdmin(db.checkToolAdministrator(_ub.getUser()));
+            db.close();
         }
-        db.close();
         pageContext.getRequest().setAttribute("alertList", database);
         pageContext.getRequest().setAttribute("count", Integer.toString(count));
 
@@ -215,6 +220,28 @@ public class ListTag extends TagSupport
         String temp = "\n";
         AlertRec list[] = (AlertRec[]) pageContext.getRequest().getAttribute(
             "alertList");
+
+        MessageResources msgs = (MessageResources) pageContext
+            .findAttribute(Constants._RESOURCES);
+        if (list != null && list.length > 4)
+            temp = temp + "<div style=\"height: 7.5in; border: solid black 1px; overflow: scroll\">\n";
+        temp = temp
+            + "<table id=\"theList\" class=\"table4\" summary=\"" + msgs.getMessage("list.table") + "\">\n"
+            + "<colgroup></colgroup><tbody style=\"padding: 0.1in 0.1in 0.1in 0.1in\" /><tr>\n"
+            + "<th id=\"t0\"><input type=\"checkbox\" value=\"Y\" onclick=\"setAllChecks();\"></th>\n"
+            + "<th id=\"t1\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
+            + "onclick=\"sortCol(cName, 1);\" title=\"" + msgs.getMessage("list.nametitle") + "\">" + msgs.getMessage("list.name") + "</span><span id=\"cName\" class=\"wd\">&#32;</span></th>\n"
+            + "<th id=\"t2\">" + msgs.getMessage("list.summary") + "</th>\n"
+            + "<th id=\"t3\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
+            + "onclick=\"sortCol(cFreq, 3);\" title=\"" + msgs.getMessage("list.freqtitle") + "\">" + msgs.getMessage("list.freq") + "</span><span id=\"cFreq\" class=\"wd\">&#32;</span></th>\n"
+            + "<th id=\"t4\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
+            + "onclick=\"sortCol(cLast, 4);\" title=\"" + msgs.getMessage("list.runtitle") + "\">" + msgs.getMessage("list.run") + "</span><span id=\"cLast\" class=\"wd\">&#32;</span></th>\n"
+            + "<th id=\"t5\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
+            + "onclick=\"sortCol(cStatus, 5);\" title=\"" + msgs.getMessage("list.statustitle") + "\">" + msgs.getMessage("list.status") + "</span><span id=\"cStatus\" class=\"wd\">&#32;</span></th>\n"
+            + "<th id=\"t6\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
+            + "onclick=\"sortCol(cCreator, 6);\" title=\"" + msgs.getMessage("list.creatortitle") + "\">" + msgs.getMessage("list.creator") + "</span><span id=\"cCreator\" class=\"wd\">&#32;</span></th>\n"
+            + "</tr>";
+
         if (list != null)
         {
             for (int ndx = 0; ndx < list.length; ++ndx)
@@ -241,6 +268,11 @@ public class ListTag extends TagSupport
                     + list[ndx].getCreator() + "</td>\n</tr>\n";
             }
         }
+        
+        temp = temp + "</table>\n";
+        if (list!= null && list.length > 4)
+            temp = temp + "</div>\n";
+
         return temp;
     }
 

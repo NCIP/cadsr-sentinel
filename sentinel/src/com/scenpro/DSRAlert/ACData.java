@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/ACData.java,v 1.12 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import java.io.FileOutputStream;
@@ -20,7 +23,7 @@ import java.util.Stack;
 public class ACData
 {
     /**
-     * Create a default instance.
+     * Constructor.
      */
     public ACData()
     {
@@ -38,7 +41,7 @@ public class ACData
      */
     public boolean isEquivalent(ACData rec_)
     {
-        if (!_table.equals(rec_._table))
+        if (!_tableCode.equals(rec_._tableCode))
             return false;
         if (!_idseq.equals(rec_._idseq))
             return false;
@@ -95,7 +98,7 @@ public class ACData
     static private byte[] dumpConvertLevel(char val_)
     {
         if (val_ == 'p')
-            return "Changes&nbsp;to&nbsp;the".getBytes();
+            return "Changes&nbsp;to".getBytes();
         else
             return "Associated&nbsp;To".getBytes();
     }
@@ -219,6 +222,103 @@ public class ACData
     }
 
     /**
+     * Trim the report stack to contain only rows of interest.
+     * 
+     * @param save_ The original full report content.
+     * @param sectLimit_ 
+     * 
+     * @return The trimmed report stack.
+     */
+    static public Stack<RepRows> dumpTrim(Stack<RepRows> save_, int sectLimit_)
+    {
+        // If the report is to contain everything then just return the original
+        // stack.
+        if (sectLimit_ == 9)
+            return save_;
+
+        Stack<RepRows> report = new Stack<RepRows>();
+        
+        // Don't waste time with an empty list.
+        if (save_ == null || save_.empty())
+            return report;
+
+        // This represents the longest association chain that could be created.
+        int indentLimit = (sectLimit_ == 9) ? 100 : sectLimit_;
+
+        while (!save_.empty())
+        {
+            RepRows val = save_.pop();
+            if (val._indent > indentLimit)
+                continue;
+            report.add(0, val);
+        }
+
+        return report;
+    }
+    
+    /**
+     * Test for a primary record type.
+     * 
+     * @return true if a primary record.
+     */
+    public boolean isPrimary()
+    {
+        return (_level == 'p');
+    }
+    
+    /**
+     * Write the report introduction when multiple part report files are created.
+     * 
+     * @param name_ The Alert Report name.
+     * @param namePattern_ The name pattern of the part files.
+     * @param threshold_ The configuration threshold.
+     * @param parts_ The number of report parts.
+     * @param fout_ The main output report file.
+     * @throws IOException When an I/O problem occurs.
+     */
+    static public void dumpParts(String name_, String namePattern_, int threshold_, int parts_, FileOutputStream fout_) throws IOException
+    {
+        String intro =
+            "<html>\n"
+            + "<head>\n"
+            + "<title>Multi-part Alert Report for " + name_ + "</title>\n"
+            + "</title>\n"
+            + "<style>\n"
+            + "BODY { font-family: arial; font-size: 10pt }\n"
+            + "P { font-family: arial; font-size: 10pt }\n"
+            + "OL { font-family: arial; font-size: 10pt }\n"
+            + "LI { font-family: arial; font-size: 10pt; margin-top: 0.1in; margin-bottom: 0.1in }\n"
+            + "</style>\n"
+            + "</head>\n"
+            + "<body>\n"
+            + "<p><b>Alert Definition: " + name_ + "</b></p>"
+            + "<p>This report exceeds the configuration threshold of " + threshold_ + " rows. "
+            + "Consequently the report has been split into " + parts_ + " parts, each of which "
+            + "may be opened using the following links.</p>\n<ol>\n";
+        fout_.write(intro.getBytes());
+        for (int ndx = 0; ndx < parts_; ++ndx)
+        {
+            String url = namePattern_.replace("{0}", Integer.toString(ndx + 1));
+            url = "<li><a href=\"" + url + "\" target=\"_blank\">" + url + "</a></li>\n";
+            fout_.write(url.getBytes());
+        }
+        fout_.write("</ol>\n</body>\n</html>\n".getBytes());
+    }
+
+    /**
+     * Be sure the Version number has a decimal point.
+     * 
+     * @param ver_ The version from the database.
+     * @return The version is ".0" appended if needed.
+     */
+    private static String fixVersion(String ver_)
+    {
+        if (ver_.indexOf('.') > -1)
+            return ver_;
+        return ver_ + ".0";
+    }
+    
+    /**
      * Dump the results in HTML format to an output stream. The form is in a
      * complex spreadsheet with sub-tables and merged columns.
      * 
@@ -238,7 +338,7 @@ public class ACData
      * @see com.scenpro.DSRAlert.ACData#dumpHeader2 dumpHeader2()
      * @see com.scenpro.DSRAlert.ACData#dumpFooter2 dumpFooter2()
      */
-    static public int dumpDetail2(DBAlert db_, Stack save_, int rows_,
+    static public int dumpDetail2(DBAlert db_, Stack<RepRows> save_, int rows_,
         FileOutputStream fout_) throws IOException
     {
         // Don't waste time with an empty list.
@@ -246,8 +346,7 @@ public class ACData
             return 0;
 
         // This represents the longest association chain that could be created.
-        int maxSections = 20;
-        int sections[] = new int[maxSections];
+        int sections[] = new int[20];
         int count;
         for (count = 0; count < sections.length; ++count)
             sections[count] = 0;
@@ -259,21 +358,15 @@ public class ACData
         byte basics[][] = new byte[10][];
         int basicNdx;
 
-        // Set this variable to zero (0) to see only the Primary changes. The
-        // limit controls how "deep"
-        // to show the associated records.
-        int indentLimit = maxSections;
-
-        // Dumpe the stack.
+        // Dump the stack.
+        CDEBrowserAPI browser = new CDEBrowserAPI(db_.getConnection());
         while (!save_.empty())
         {
-            RepRows val = (RepRows) save_.pop();
-            if (val._indent > indentLimit)
-                continue;
+            RepRows val = save_.pop();
             resolveNames(db_, val._rec);
             ++count;
             String display;
-            if (val._rec._level == 'p' && indentLimit > 0)
+            if (val._rec._level == 'p')
                 display = "pstripe";
             else
                 display = "stripe";
@@ -297,12 +390,41 @@ public class ACData
                 fout_.write(String.valueOf(sections[ndx]).getBytes());
             }
             lastIndent = val._indent;
-            fout_.write(new String("</td><td class=\"" + display + "\" colspan=\"6\">").getBytes());
+            String detailsURL = null;
+            if (browser.isPresent())
+            {
+                if (val._rec._tableCode.compareTo("de") == 0)
+                {
+                    detailsURL = browser.getLinkForDE(val._rec._idseq);
+                }
+                else if (val._rec._tableCode.compareTo("oc") == 0)
+                {
+                    detailsURL = browser.getLinkForOC(val._rec._idseq);
+                }
+                if (detailsURL != null)
+                    detailsURL = "</td><td class=\""
+                        + display
+                        + "\" align=\"right\"><a target=\"_blank\" href=\""
+                        + detailsURL
+                        + "\">(Details)</a>";
+            }
+            if (detailsURL != null)
+            {
+                fout_.write(new String("</td><td class=\"" + display + "\" colspan=\"5\">").getBytes());
+            }
+            else
+            {
+                fout_.write(new String("</td><td class=\"" + display + "\" colspan=\"6\">").getBytes());
+            }
             fout_.write(dumpConvertLevel(val._rec._level));
             fout_.write("&nbsp;".getBytes());
             fout_.write(val._rec._table.getBytes());
             fout_.write(":&nbsp;".getBytes());
             fout_.write(dumpConvert(val._rec._name));
+            if (detailsURL != null)
+            {
+                fout_.write(detailsURL.getBytes());
+            }
             fout_.write("</td></tr>\n\t\t<tr><td colspan=\"2\">&nbsp;</td>"
                 .getBytes());
             basicNdx = 0;
@@ -316,25 +438,27 @@ public class ACData
             }
             if (val._rec._version != null && val._rec._version.length() > 0)
             {
-                basics[basicNdx++] = new String("<td>Version<br>" + val._rec._version + "</td>").getBytes();
+                basics[basicNdx++] = new String("<td>Version<br>" + fixVersion(val._rec._version) + "</td>").getBytes();
             }
             else
             {
                 basics[basicNdx++] = "<td><span class=\"na\">Version<br>N/A</span></td>".getBytes();
             }
-            if (val._rec._modifier != null && val._rec._modifier.length() > 0)
+            basics[basicNdx++] = new String("<td>Modified&nbsp;By<br>"
+                + ((val._rec._modifier == null) ? "<i>&lt;null&gt;</i>" : val._rec._modifier)
+                + "</td>").getBytes();
+            basics[basicNdx++] = new String("<td>Modified&nbsp;Date<br>"
+                + AlertRec.dateToString(val._rec._modified, true, true)
+                + "</td>").getBytes();
+/*          if (val._rec._modifier != null && val._rec._modifier.length() > 0)
             {
-                basics[basicNdx++] = new String("<td>Modified&nbsp;By<br>" + val._rec._modifier
-                    + "</td>").getBytes();
-                basics[basicNdx++] = new String("<td>Modified&nbsp;Date<br>"
-                    + AlertRec.dateToString(val._rec._modified, true, true)
-                    + "</td>").getBytes();
             }
             else
             {
                 basics[basicNdx++] = "<td>Modified&nbsp;By<br>&nbsp;</td>".getBytes();
                 basics[basicNdx++] = "<td>Modified&nbsp;Date<br>&nbsp;</td>".getBytes();
             }
+*/
             basics[basicNdx++] = new String("<td>Created&nbsp;By<br>" + val._rec._creator + "</td>").getBytes();
             basics[basicNdx++] = new String("<td>Created&nbsp;Date<br>"
                 + AlertRec.dateToString(val._rec._created, true, true)
@@ -346,10 +470,9 @@ public class ACData
 
             if (val._rec._note != null && val._rec._note.length() > 0)
             {
-                --basicNdx;
-                fout_.write(new String("\t\t<tr><td colspan=\"2\">&nbsp;</td><td>Change&nbsp;Note&nbsp;/<br>Comment</td><td colspan=\""
+                fout_.write(new String("\t\t<tr><td colspan=\"2\">&nbsp;</td><td colspan=\""
                     + basicNdx
-                    + "\">").getBytes());
+                    + "\">Comment/Change&nbsp;Note:&nbsp;").getBytes());
                 fout_.write(dumpConvert2(val._rec._note));
                 fout_.write("</td></tr>\n".getBytes());
             }
@@ -379,30 +502,15 @@ public class ACData
                 else
                 {
                     Timestamp dchg = val._rec._dates[0];
-                    fout_
-                    .write("\t\t\t<tr><td title=\"Attribute Name\">Activity Date</td><td title=\"Old Value\" class=\"chgcol\">"
-                            .getBytes());
-                    fout_.write(dumpConvert(null));
-                    fout_
-                        .write("</td><td title=\"New Value\" class=\"chgcol\">"
-                            .getBytes());
-                    fout_.write(AlertRec.dateToString(val._rec._dates[0], true, true).getBytes());
-                    fout_.write("</td></tr>\n".getBytes());
+                    String chgby = val._rec._chgby[0];
+                    dumpActivityMarker(dchg, chgby, fout_);
                     for (int chgcnt = 0; chgcnt < val._rec._changes.length; ++chgcnt)
                     {
                         if (dchg.compareTo(val._rec._dates[chgcnt]) != 0)
                         {
-                            fout_.write("\t\t\t<tr><td colspan=\"3\"><hr /></td></tr>\n".getBytes());
-                            fout_
-                            .write("\t\t\t<tr><td title=\"Attribute Name\">Activity Date</td><td title=\"Old Value\" class=\"chgcol\">"
-                                    .getBytes());
-                            fout_.write(AlertRec.dateToString(dchg, true, true).getBytes());
-                            fout_
-                                .write("</td><td title=\"New Value\" class=\"chgcol\">"
-                                    .getBytes());
-                            fout_.write(AlertRec.dateToString(val._rec._dates[chgcnt], true, true).getBytes());
-                            fout_.write("</td></tr>\n".getBytes());
                             dchg = val._rec._dates[chgcnt];
+                            chgby = val._rec._chgby[chgcnt];
+                            dumpActivityMarker(dchg, chgby, fout_);
                         }
                         fout_
                             .write("\t\t\t<tr><td title=\"Attribute Name\">"
@@ -426,6 +534,25 @@ public class ACData
         }
 
         return count;
+    }
+
+    /**
+     * Output the activity marker separator in the Attribute/Old/New table.
+     * 
+     * @param dchg_ The date to display on the marker.
+     * @param chgby_ The user name to display on the marker.
+     * @param fout_ The report output file.
+     * @throws IOException
+     */
+    private static void dumpActivityMarker(Timestamp dchg_, String chgby_, FileOutputStream fout_) throws IOException
+    {
+        fout_
+        .write("\t\t\t<tr><td title=\"Activity\" colspan=\"3\" style=\"border-top: black solid 1px; border-bottom: black solid 1px; background-color: #eeeeee\">"
+                .getBytes());
+        fout_.write(dumpConvert(chgby_));
+        fout_.write("&nbsp;made&nbsp;the&nbsp;following&nbsp;changes&nbsp;on&nbsp;".getBytes());
+        fout_.write(AlertRec.dateToString(dchg_, true, true).getBytes());
+        fout_.write("</td></tr>\n".getBytes());
     }
 
     /**
@@ -605,6 +732,10 @@ public class ACData
     /**
      * Write the footer for the dump file.
      * 
+     * @param empty_
+     *        The report is empty.
+     * @param msg_
+     *        The addition text for the report footer.
      * @param rec_
      *        The sentinel being processed.
      * @param fout_
@@ -623,6 +754,10 @@ public class ACData
     /**
      * Write the footer for the dump file.
      * 
+     * @param empty_
+     *        The report is empty.
+     * @param msg_
+     *        The addition text for the report footer.
      * @param rec_
      *        The sentinel being processed.
      * @param fout_
@@ -659,10 +794,14 @@ public class ACData
     /**
      * Dump the common header shared by all output formats
      * 
+     * @param db_
+     *        The name of the source database used for the report.
      * @param style_
      *        The HTML Style block to appear in the document.
      * @param cemail_
      *        The email of the Alert creator.
+     * @param recips_
+     *        The list of recipients for this report.
      * @param rec_
      *        The sentinel alert definition being processed.
      * @param start_
@@ -671,11 +810,18 @@ public class ACData
      *        The end date for this report content.
      * @param fout_
      *        The file output stream to which to write.
+     * @param part_
+     *        The report part number, zero (0) means a single complete file.
+     * @param next_
+     *        Will there be a next part to the report.
+     * @param filePattern_
+     *        The file name pattern for the next/prev links for multi-part reports.
      * @throws java.io.IOException
      *         When there is a problem with the output file.
      */
     static private void dumpCommonHeader(String db_, String style_,
-        String cemail_, AlertRec rec_, Timestamp start_, Timestamp end_,
+        String cemail_, String recips_, AlertRec rec_,
+        Timestamp start_, Timestamp end_, int part_, boolean next_, String filePattern_,
         FileOutputStream fout_) throws IOException
     {
         Date today = new Date();
@@ -684,19 +830,34 @@ public class ACData
         fout_.write("<html>\n\t<head>\n\t\t<title>".getBytes());
         fout_.write("Sentinel Report for ".getBytes());
         fout_.write(dumpConvert(rec_.getName()));
+        String part = "";
+        if (part_ > 0)
+        {
+            part = " (Part " + part_ + ")";
+            fout_.write(part.getBytes());
+            if (part_ > 1)
+                part = part + " &nbsp;<a href=\"" + filePattern_.replace("{0}", Integer.toString(part_ - 1)) + "\">Prev</a>&nbsp;";
+            else
+                part = part + " &nbsp;Prev&nbsp;";
+            if (next_)
+                part = part + " &nbsp;<a href=\"" + filePattern_.replace("{0}", Integer.toString(part_ + 1)) + "\">Next</a>&nbsp;";
+            else
+                part = part + " &nbsp;Next&nbsp;";
+        }
         fout_.write("</title>\n".getBytes());
         fout_.write("\t<style>\n".getBytes());
         fout_.write(style_.getBytes());
         fout_.write("\t</style>\n</head>\n<body>\n".getBytes());
         fout_.write("\t<hr><table class=\"t1prop\">\n".getBytes());
         fout_.write("\t<colgroup>\n".getBytes());
-        fout_.write("\t<col class=\"c1prop\">\n".getBytes());
-        fout_.write("\t<col>\n".getBytes());
+        fout_.write("\t<col class=\"c1prop\" />\n".getBytes());
+        fout_.write("\t<col />\n".getBytes());
         fout_.write("\t</colgroup>\n".getBytes());
-        fout_.write("\t<tbody class=\"t1body\">\n".getBytes());
+        fout_.write("\t<tbody class=\"t1body\" />\n".getBytes());
 
         fout_.write("\t\t<tr><td>Sentinel&nbsp;Name:</td><td>".getBytes());
         fout_.write(dumpConvert(rec_.getName()));
+        fout_.write(part.getBytes());
         if (rec_.getIntro(false) != null)
         {
             fout_.write("</td></tr>\n\t\t<tr><td>Introduction:</td><td>"
@@ -716,6 +877,8 @@ public class ACData
             fout_.write(dumpConvert(rec_.getCreatorName()));
             fout_.write("</a>".getBytes());
         }
+        fout_.write("</td></tr>\n\t\t<tr><td>Recipients:</td><td>".getBytes());
+        fout_.write(recips_.getBytes());
         fout_.write("</td></tr>\n\t\t<tr><td>Summary:</td><td>".getBytes());
         fout_.write(dumpConvert(rec_.getSummary(false)));
         if (rec_.getIncPropSect())
@@ -728,6 +891,13 @@ public class ACData
             fout_.write(dumpConvert(rec_.getFreq(false)));
             fout_.write("</td></tr>\n\t\t<tr><td>Status:</td><td>".getBytes());
             fout_.write(dumpConvert(rec_.getStatus()));
+            fout_.write("</td></tr>\n\t\t<tr><td>Reporting Level:</td><td>".getBytes());
+            if (rec_.getIAssocLvl() == 0)
+                fout_.write("0 - Do not show Associated To".getBytes());
+            else if (rec_.getIAssocLvl() == 9)
+                fout_.write("9 - Show all Associated To".getBytes());
+            else
+                fout_.write(Integer.toString(rec_.getIAssocLvl()).getBytes());
         }
         fout_.write("</td></tr>\n\t\t<tr><td>Reporting&nbsp;Dates:</td><td>"
             .getBytes());
@@ -740,31 +910,41 @@ public class ACData
         fout_.write("</td></tr>\n\t\t<tr><td>Source&nbsp;Database:</td><td>"
             .getBytes());
         fout_.write(dumpConvert(db_));
-//        fout_.write("</td></tr>\n\t\t<tr><td>&nbsp;</td><td>&nbsp;".getBytes());
         fout_
-            .write(new String("</td></tr>\n\t\t<tr><td>&nbsp;</td><td><i>" +
-                "Information in the report is displayed in blocks. " +
-                "Change blocks are indicated by a bright blue color, a " +
-                "whole number under the Group column, and the prefix: " +
-                "\"Changes to the ...\" The change details appear under the " +
-                "headings \"Attribute Name\", \"Old Value\" and \"New Value\". " +
-                "If no details are available, the text \"Details not available\" " +
-                "appears. Associated blocks are indicated by a light grey " +
-                "color, one or more decimal Group numbers, and the prefix " +
-                "\"Associated To ...\". These blocks indicate information associated " +
-                "to the preceding change block. The first number of the " +
-                "Associated To block corresponds to the related change.<br><br>" +
-                "Note all dates are month/day/year (mm/dd/yyyy).</i></td></tr>\n\t</table><br><br>\n")
+            .write(new String("</td></tr>\n\t</table>"
+                + "<p style=\"font-weight: normal; font-style: italic\">"
+                + "Information in the report is displayed in blocks. "
+                + "Change blocks are indicated by a bright blue color, a "
+                + "whole number under the Group column, and the prefix: "
+                + "\"Changes to the ...\" The change details appear under the "
+                + "headings \"Attribute Name\", \"Old Value\" and \"New Value\".\n"
+                + "<ul style=\"font-weight: normal; font-style: italic\">"
+                + "<li>If no details are available, the text \"Details not available\" appears."
+                + "</li><li>When \"Old Value\" is \"&lt;null&gt;\" the attribute "
+                + "was either missing or not set and the \"New Value\" shows the added value."
+                + "</li><li>When \"New Value\" is \"&lt;null&gt;\" the attribute has been removed or cleared."
+                + "</li><li>When both the old and new values are not \"&lt;null&gt;\" the attribute value has been changed or replaced."
+                + "</li></ul>\n"
+                + "<p style=\"font-weight: normal; font-style: italic\">Associated blocks are indicated by a light blue "
+                + "color, one or more decimal Group numbers, and the prefix "
+                + "\"Associated To ...\". These blocks indicate information associated "
+                + "to the preceding change block. The first number of the "
+                + "Associated To block corresponds to the related change.<br><br>"
+                + "Note all dates are month/day/year (mm/dd/yyyy).</p>\n")
                 .getBytes());
     }
 
     /**
      * Output a header to describe the dump file content.
      * 
+     * @param db_
+     *        The name of the source database used for the report.
      * @param style_
      *        The HTML Style block to appear in the document.
      * @param cemail_
      *        The email of the Alert creator.
+     * @param recips_
+     *        The list of recipients for this report.
      * @param rec_
      *        The sentinel alert definition being processed.
      * @param start_
@@ -773,16 +953,22 @@ public class ACData
      *        The end date for this report content.
      * @param fout_
      *        The file output stream to which to write.
+     * @param part_
+     *        The part number of this report, zero (0) means a single complete file.
+     * @param next_
+     *        true if there is a next part to this report.
+     * @param filePattern_
+     *        The file name pattern for a multi-part report.
      * @throws java.io.IOException
      *         When there is a problem with the output file.
      * @see com.scenpro.DSRAlert.ACData#dumpDetail2 dumpDetail2()
      * @see com.scenpro.DSRAlert.ACData#dumpFooter2 dumpFooter2()
      */
-    static public void dumpHeader2(String db_, String style_, String cemail_,
-        AlertRec rec_, Timestamp start_, Timestamp end_, FileOutputStream fout_)
+    static public void dumpHeader2(String db_, String style_, String cemail_, String recips_,
+        AlertRec rec_, Timestamp start_, Timestamp end_, int part_, boolean next_, String filePattern_, FileOutputStream fout_)
         throws IOException
     {
-        dumpCommonHeader(db_, style_, cemail_, rec_, start_, end_, fout_);
+        dumpCommonHeader(db_, style_, cemail_, recips_, rec_, start_, end_, part_, next_, filePattern_, fout_);
         fout_.write("\t<table class=\"t2prop\">\n".getBytes());
         fout_.write("\t<colgroup>\n".getBytes());
         fout_.write("\t<col class=\"c2propl\">\n".getBytes());
@@ -804,10 +990,14 @@ public class ACData
     /**
      * Output a header to describe the dump file content.
      * 
+     * @param db_
+     *        The name of the source database used for the report.
      * @param style_
      *        The HTML Style block to appear in the document.
      * @param cemail_
      *        The email of the Alert creator.
+     * @param recips_
+     *        The list of recipients for this report.
      * @param rec_
      *        The sentinel alert definition being processed.
      * @param start_
@@ -821,11 +1011,11 @@ public class ACData
      * @see com.scenpro.DSRAlert.ACData#dumpDetail1 dumpDetail1()
      * @see com.scenpro.DSRAlert.ACData#dumpFooter1 dumpFooter1()
      */
-    static public void dumpHeader1(String db_, String style_, String cemail_,
+    static public void dumpHeader1(String db_, String style_, String cemail_, String recips_,
         AlertRec rec_, Timestamp start_, Timestamp end_, FileOutputStream fout_)
         throws IOException
     {
-        dumpCommonHeader(db_, style_, cemail_, rec_, start_, end_, fout_);
+        dumpCommonHeader(db_, style_, cemail_, recips_, rec_, start_, end_, 0, false, null, fout_);
 
         fout_.write("\t<table class=\"t2prop\">\n".getBytes());
         fout_.write("\t<colgroup>\n".getBytes());
@@ -971,9 +1161,6 @@ public class ACData
         for (int ndx = 0; ndx < keep.length; ++ndx)
             keep[ndx] = false;
 
-        // If we do remove anything it is best to know the calculated length.
-        int keepLen = 0;
-
         // Perform a binary search. This seems the most efficient given the
         // nature of the data.
         int max;
@@ -998,7 +1185,6 @@ public class ACData
                         && ids_[check].equals(rows_[ndx]._idseq); ++ndx)
                     {
                         keep[ndx] = true;
-                        keepLen++;
                     }
                     break;
                 }
@@ -1023,6 +1209,12 @@ public class ACData
         }
 
         // Keep everything. Unexpected but possible.
+        int keepLen = 0;
+        for (int ndx = 0; ndx < keep.length; ++ndx)
+        {
+            if (keep[ndx])
+                keepLen++;
+        }
         if (keepLen == rows_.length)
             return rows_;
 
@@ -1173,7 +1365,7 @@ public class ACData
      * @param p_
      *        The caDSR records to report.
      */
-    static public void remember(Stack results_, ACData p_[])
+    static public void remember(Stack<RepRows> results_, ACData p_[])
     {
         if (p_ == null)
             return;
@@ -1208,25 +1400,23 @@ public class ACData
         _level = level_;
         _category = category_;
         _table = table_;
+        _tableCode = table_;
         _idseq = idseq_;
         _version = version_;
         _publicID = publicID_;
         _name = (name_ == null) ? "" : name_;
-        _contextID = contextID_;
+        _contextID = (contextID_ == null) ? "" : contextID_;
         _modified = modified_;
         _created = created_;
         _modifier = modifier_;
         _creator = creator_;
         _note = note_;
         _context = context_;
-        _relatedID = relatedID_;
-        if (_relatedID == null)
-            _relatedID = "";
-        if (_contextID == null)
-            _contextID = "";
+        _relatedID = (relatedID_ == null) ? "" : relatedID_;
         _changes = null;
         _old = null;
         _new = null;
+        _chgtable = null;
     }
 
     /**
@@ -1239,13 +1429,21 @@ public class ACData
      * @param new_
      *        The new value which is not necessarily the current value in the
      *        database.
+     * @param dates_
+     *        The change timestamp for each record.
+     * @param chgtable_
+     *        The changed table name for each record.
+     * @param chgby_
+     *        The user id of each recorded change.
      */
-    public void setChanges(String changes_[], String old_[], String new_[], Timestamp dates_[])
+    public void setChanges(String changes_[], String old_[], String new_[], Timestamp dates_[], String chgtable_[], String chgby_[])
     {
         _changes = changes_;
         _old = old_;
         _new = new_;
         _dates = dates_;
+        _chgtable = chgtable_;
+        _chgby = chgby_;
     }
 
     /**
@@ -1277,8 +1475,11 @@ public class ACData
             db.selectNames(list_[ndx]._changes, list_[ndx]._old);
             db.selectNames(list_[ndx]._changes, list_[ndx]._new);
             for (int ndx2 = 0; ndx2 < list_[ndx]._changes.length; ++ndx2)
+            {
                 list_[ndx]._changes[ndx2] = DBAlert
-                    .translateColumn(list_[ndx]._changes[ndx2]);
+                    .translateColumn(list_[ndx]._chgtable[ndx2], list_[ndx]._changes[ndx2]);
+                list_[ndx]._chgby[ndx2] = db.selectName(null, DBAlert._UNAME, list_[ndx]._chgby[ndx2]);
+            }
         }
     }
 
@@ -1302,7 +1503,7 @@ public class ACData
             if (list_._modifier != null && list_._modifier.length() > 0)
                 list_._modifier = dumpConvertBlanks(list_._modifier);
             list_._table = dumpConvertBlanks(DBAlert
-                .translateTable(list_._table));
+                .translateTable(list_._tableCode));
             list_._resolveNames = false;
         }
     }
@@ -1542,6 +1743,9 @@ public class ACData
     private String         _table;       // A table identifier, for example 'de'
                                          // is sbr.data_elements.
 
+    private String         _tableCode;   // A table identifier, for example 'de'
+                                         // is sbr.data_elements.
+
     private String         _idseq;       // The id of the record in the table.
 
     private String         _version;     // The record version value.
@@ -1593,6 +1797,12 @@ public class ACData
     // made since
     // the last Alert run.
     
-    private Timestamp         _dates[];     // The corresponding date of the change as
+    private Timestamp      _dates[];     // The corresponding date of the change as
                                          // recorded in the _old and _new arrays.
+
+    // The list of tables actually changed related to the old, new and dates lists
+    // above.
+    private String         _chgtable[];
+    
+    private String         _chgby[];
 }

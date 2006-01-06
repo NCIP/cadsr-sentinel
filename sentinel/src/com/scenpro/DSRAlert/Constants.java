@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/Constants.java,v 1.3 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 /**
@@ -66,12 +69,6 @@ public class Constants
     public static final String _APLVERS           = "Appl.version";
     
     /**
-     * The property name for the database driver value coded in
-     * DSRAlert.properties.
-     */
-    public static final String _DBDRIVER          = "DB.driver";
-
-    /**
      * The database "name" to display on Alert Reports to identify the source of
      * the data for the report coded in DSRAlert.properties.
      */
@@ -117,6 +114,12 @@ public class Constants
      * ignored.
      */
     public static final String _STRIGNORE         = "(Ignore)";
+
+    /**
+     * The literal string used in lists to represent the attribute is
+     * blank or empty.
+     */
+    public static final String _STRNONE           = "(none)";
 
     /**
      * Constructor.

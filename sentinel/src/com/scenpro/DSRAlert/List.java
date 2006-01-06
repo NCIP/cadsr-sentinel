@@ -1,5 +1,8 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/List.java,v 1.5 2006-01-06 16:14:26 hebell Exp $
+// $Name: not supported by cvs2svn $
+
 package com.scenpro.DSRAlert;
 
 import java.util.Vector;
@@ -36,6 +39,7 @@ public class List extends Action
      * @param form_ The struts form defined in the struts-config.xml file.
      * @param request_ The servlet request object.
      * @param response_ The servlet response object.
+     * @return The action to continue processing.
      */
     public ActionForward execute(ActionMapping mapping_, ActionForm form_,
         HttpServletRequest request_, HttpServletResponse response_)
@@ -54,7 +58,7 @@ public class List extends Action
         if (form.getNextScreen().equals(Constants._ACTDELETE))
         {
             form.setNextScreen(Constants._ACTLIST);
-            Vector dlist = new Vector();
+            Vector<String> dlist = new Vector<String>();
             for (int ndx = 0; ndx < count; ++ndx)
             {
                 String temp = request_.getParameter("cb" + Integer.toString(ndx)); 
