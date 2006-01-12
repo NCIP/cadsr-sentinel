@@ -1,6 +1,7 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/AutoProcessAlerts.java,v 1.16 2006-01-06 16:14:26 hebell Exp $
+// $Header: /CVSNT/sentinel/src/com/scenpro/DSRAlert/AutoProcessAlerts.java,v
+// 1.20 2005/12/07 21:42:52 lhebel Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.DSRAlert;
@@ -140,11 +141,11 @@ public class AutoProcessAlerts
          * The report file name.
          */
         public String   _reportFile;
-        
+
         /**
          * The number of parts the report is broken into.
          */
-        public int _parts;
+        public int      _parts;
 
         /**
          * True if errors exist in the file.
@@ -202,16 +203,16 @@ public class AutoProcessAlerts
          * The name of the Alert Report.
          */
         public String _name;
-        
+
         /**
          * The number of parts for the report.
          */
-        public int _parts;
-        
+        public int    _parts;
+
         /**
          * The number of rows in the report.
          */
-        public int _rows;
+        public int    _rows;
     }
 
     /**
@@ -230,7 +231,8 @@ public class AutoProcessAlerts
      * @param parts_
      *        The number of parts to the report.
      */
-    private void appendReport(int pos_, String file_, String name_, int rows_, int parts_)
+    private void appendReport(int pos_, String file_, String name_, int rows_,
+        int parts_)
     {
         // Increase the array by 1 element.
         int len = _reports[pos_].length + 1;
@@ -581,11 +583,14 @@ public class AutoProcessAlerts
                 }
                 String parts = "";
                 if (_reports[ndx][ndx2]._parts > 1)
-                    parts = "&nbsp;(In&nbsp;" + _reports[ndx][ndx2]._parts + "&nbsp;parts.)";
-                body = body
-                    + "<tr><td>Alert Definition Name:</td><td>" + _reports[ndx][ndx2]._name + "</td></tr>"
-                    + "<tr><td>Link to Alert Report:</td><td><a href=\"" + link1 + "\">" + link2 + "</a></td></tr>"
-                    + "<tr><td>Number of Rows in Report:</td><td>" + _reports[ndx][ndx2]._rows + parts + "</td></tr>"
+                    parts = "&nbsp;(In&nbsp;" + _reports[ndx][ndx2]._parts
+                        + "&nbsp;parts.)";
+                body = body + "<tr><td>Alert Definition Name:</td><td>"
+                    + _reports[ndx][ndx2]._name + "</td></tr>"
+                    + "<tr><td>Link to Alert Report:</td><td><a href=\""
+                    + link1 + "\">" + link2 + "</a></td></tr>"
+                    + "<tr><td>Number of Rows in Report:</td><td>"
+                    + _reports[ndx][ndx2]._rows + parts + "</td></tr>"
                     + "<tr><td colspan=\"2\">&nbsp;</td></tr>";
             }
 
@@ -595,9 +600,14 @@ public class AutoProcessAlerts
                 + " for " + _today.toString().substring(0, 10)
                 + ((hasErrors) ? " has Errors" : "");
             String message = "<html><body style=\"font-family: arial; font-size: 10pt\"><p>"
-                + _adminIntro + "</p>" + prefix
-                + "<table style=\"font-size: 10pt\">" + body + "</table></body></html>";
-            sendEmail((hasErrors) ? 1 : 0, _recipients[ndx], "", subject, message);
+                + _adminIntro
+                + "</p>"
+                + prefix
+                + "<table style=\"font-size: 10pt\">"
+                + body
+                + "</table></body></html>";
+            sendEmail((hasErrors) ? 1 : 0, _recipients[ndx], "", subject,
+                message);
             logHR();
             log0("To: " + _recipients[ndx]);
             log0("Subject: " + subject);
@@ -606,7 +616,7 @@ public class AutoProcessAlerts
         logHR();
         logAlert("Completed emails...\n");
     }
-    
+
     /**
      * Create a thread wrapper around the processing of a single Alert.
      */
@@ -614,7 +624,9 @@ public class AutoProcessAlerts
     {
         /**
          * Constructor
-         * @param rec_ The Alert Defition to process.
+         * 
+         * @param rec_
+         *        The Alert Defition to process.
          */
         public AlertThread(AlertRec rec_)
         {
@@ -628,20 +640,20 @@ public class AutoProcessAlerts
         {
             // Test code.
             /*
-            DSRAlertAPI tapi = DSRAlertAPIimpl.factory("http://cadsrsentinel-dev.nci.nih.gov");
-            int rc = tapi.createAlert("hebell", "E2538C9F-E9E7-3303-E034-0003BA12F5E7");
-            tapi = null;
-            */
-            
+             * DSRAlertAPI tapi =
+             * DSRAlertAPIimpl.factory("http://cadsrsentinel-dev.nci.nih.gov");
+             * int rc = tapi.createAlert("hebell",
+             * "E2538C9F-E9E7-3303-E034-0003BA12F5E7"); tapi = null;
+             */
+
             // Get configuration information.
             getResources();
             logAlert("Manual Run Process Starts... " + _today.toString());
             log1("Database = " + _dbname + " (" + _tnsname + ")");
             log1("Working folder prefix = " + _work);
 
-            logAlert("Processing Alert Definition: "
-                + _rec.getName() + " (" + _start.toString()
-                + " TO " + _end.toString() + ")");
+            logAlert("Processing Alert Definition: " + _rec.getName() + " ("
+                + _start.toString() + " TO " + _end.toString() + ")");
 
             ProcessRec rec = new ProcessRec();
             rec._alert = _rec;
@@ -708,9 +720,8 @@ public class AutoProcessAlerts
     private void getFileName(ProcessRec rec_)
     {
         String temp = rec_._alert.getName().replaceAll("\\W", "_");
-        String ts = "_"
-            + Timemarker.timeNow().toString().replaceAll("\\D",
-                "") + ".html";
+        String ts = "_" + Timemarker.timeNow().toString().replaceAll("\\D", "")
+            + ".html";
         rec_._reportFile = _work + temp + ts;
         temp = _http + temp + ts;
         log1("Created by " + rec_._alert.getCreator());
@@ -722,8 +733,10 @@ public class AutoProcessAlerts
     /**
      * Dump the report records to output.
      * 
-     * @param save_ The report content.
-     * @param rec_ The processing record for the report.
+     * @param save_
+     *        The report content.
+     * @param rec_
+     *        The processing record for the report.
      */
     private void dump(Stack<RepRows> save_, ProcessRec rec_)
     {
@@ -740,7 +753,8 @@ public class AutoProcessAlerts
             if (_outForm == 1)
             {
                 // Header first.
-                ACData.dumpHeader1(_dbname, _style, cemail, _db.selectRecipientNames(rec_._alert.getRecipients()),
+                ACData.dumpHeader1(_dbname, _style, cemail, _db
+                    .selectRecipientNames(rec_._alert.getRecipients()),
                     rec_._alert, _start, _end, fout);
 
                 // Body
@@ -748,27 +762,34 @@ public class AutoProcessAlerts
                 logError(_db.getError());
 
                 // Footer
-                ACData.dumpFooter1((_outRows == 0), _version, rec_._alert, fout);
+                ACData
+                    .dumpFooter1((_outRows == 0), _version, rec_._alert, fout);
             }
             else if (_outForm == 2)
             {
-                // Add calculation of parts and break save_ into multiple pieces. Watch out for the
+                // Add calculation of parts and break save_ into multiple
+                // pieces. Watch out for the
                 // Associated To Limit - will want to break up the final report.
-                Stack<RepRows> report = ACData.dumpTrim(save_, rec_._alert.getIAssocLvl());
+                Stack<RepRows> report = ACData.dumpTrim(save_, rec_._alert
+                    .getIAssocLvl());
                 if (_threshold < report.size())
                 {
                     int parts = 0;
                     int total = report.size();
-                    String namePattern = rec_._reportFile.substring(_work.length());
-                    namePattern = namePattern.replace(".html", "_part_{0}.html");
+                    String namePattern = rec_._reportFile.substring(_work
+                        .length());
+                    namePattern = namePattern
+                        .replace(".html", "_part_{0}.html");
                     while (total > 0)
                     {
                         Stack<RepRows> working = new Stack<RepRows>();
                         ++parts;
 
-                        // Find the report break by jumping into the stack and working back to the nearest
+                        // Find the report break by jumping into the stack and
+                        // working back to the nearest
                         // Primary record.
-                        int start = (_threshold < report.size()) ? _threshold : report.size();
+                        int start = (_threshold < report.size()) ? _threshold
+                            : report.size();
                         for (int ndx = report.size() - start; ndx > 0; --ndx)
                         {
                             RepRows val = report.get(ndx);
@@ -784,40 +805,49 @@ public class AutoProcessAlerts
                         {
                             working.add(0, report.pop());
                         }
-                        
+
                         // Open the report file.
                         fout.close();
-                        String filename = _work + namePattern.replace("{0}", Integer.toString(parts));
+                        String filename = _work
+                            + namePattern.replace("{0}", Integer
+                                .toString(parts));
                         fout = new FileOutputStream(filename, false);
 
                         // Header first.
-                        ACData.dumpHeader2(_dbname, _style, cemail, _db.selectRecipientNames(rec_._alert.getRecipients()),
-                            rec_._alert, _start, _end, parts, total > 0, namePattern, fout);
-        
+                        ACData.dumpHeader2(_dbname, _style, cemail, _db
+                            .selectRecipientNames(rec_._alert.getRecipients()),
+                            rec_._alert, _start, _end, parts, total > 0,
+                            namePattern, fout);
+
                         // Body
-                        _outRows += ACData.dumpDetail2(_db, working, _outRows, fout);
+                        _outRows += ACData.dumpDetail2(_db, working, _outRows,
+                            fout);
                         logError(_db.getError());
-        
+
                         // Footer
-                        ACData.dumpFooter2((_outRows == 0), _version, rec_._alert, fout);
+                        ACData.dumpFooter2((_outRows == 0), _version,
+                            rec_._alert, fout);
                     }
                     fout.close();
                     fout = new FileOutputStream(rec_._reportFile, false);
-                    ACData.dumpParts(rec_._alert.getName(), namePattern, _threshold, parts, fout);
+                    ACData.dumpParts(rec_._alert.getName(), namePattern,
+                        _threshold, parts, fout);
                     rec_._parts = parts;
                 }
                 else
                 {
                     // Header first.
-                    ACData.dumpHeader2(_dbname, _style, cemail, _db.selectRecipientNames(rec_._alert.getRecipients()),
+                    ACData.dumpHeader2(_dbname, _style, cemail, _db
+                        .selectRecipientNames(rec_._alert.getRecipients()),
                         rec_._alert, _start, _end, 0, false, null, fout);
-    
+
                     // Body
                     _outRows += ACData.dumpDetail2(_db, report, _outRows, fout);
                     logError(_db.getError());
-    
+
                     // Footer
-                    ACData.dumpFooter2((_outRows == 0), _version, rec_._alert, fout);
+                    ACData.dumpFooter2((_outRows == 0), _version, rec_._alert,
+                        fout);
                 }
             }
 
@@ -855,8 +885,10 @@ public class AutoProcessAlerts
     /**
      * Find the records that have actually changed in the database.
      * 
-     * @param rec_ The Alert Definition.
-     * @param acdList_ The lists of record changes.
+     * @param rec_
+     *        The Alert Definition.
+     * @param acdList_
+     *        The lists of record changes.
      */
     private void findChanges(AlertRec rec_, ACData acdList_[][])
     {
@@ -869,94 +901,126 @@ public class AutoProcessAlerts
         for (int ndx = 0; ndx < acdList_.length; ++ndx)
             acdList_[ndx] = new ACData[0];
 
-        int length = (rec_.isACTYPEall()) ? DBAlert._ACTYPE_LENGTH : rec_.getACTypes().length;
+        int length = (rec_.isACTYPEall()) ? DBAlert._ACTYPE_LENGTH : rec_
+            .getACTypes().length;
         boolean isCWFSall = rec_.isCWFSall();
         String CWorkflow[] = (isCWFSall) ? null : rec_.getCWorkflow();
         boolean isCRSall = rec_.isCRSall();
         String CRegStatus[] = (isCRSall) ? null : rec_.getCRegStatus();
-        
+
         Timemarker timer = new Timemarker(null);
         log1("Find changes");
         String text = "";
         for (int ndx = 0; ndx < length; ++ndx)
         {
             int rc = rec_.isACTypeUsed(ndx);
-            if (rc == -1) continue;
+            if (rc == -1)
+                continue;
             switch (rc)
             {
                 case DBAlert._ACTYPE_PROTO:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectPROTO(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>PROTO</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectPROTO(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>PROTO</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_PROP:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectPROP(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>PROP</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectPROP(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>PROP</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_OC:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectOC(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>OC</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectOC(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>OC</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_QCV:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectQCV(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>QCV</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectQCV(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>QCV</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_QCQ:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectQCQ(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>QCQ</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectQCQ(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>QCQ</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_QCM:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectQCM(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>QCM</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectQCM(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>QCM</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_QC:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectQC(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>QC</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectQC(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>QC</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_PV:
                     if (isCWFSall && isCRSall)
-                        acdList_[rc] = _db.selectPV(dates, _start, _end, creators, modifiers);
-                    text = text + "<tr><td>PV</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectPV(dates, _start, _end,
+                            creators, modifiers);
+                    text = text + "<tr><td>PV</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_VD:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectVD(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>VD</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectVD(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>VD</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_CD:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectCD(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>CD</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectCD(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>CD</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_DEC:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectDEC(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>DEC</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectDEC(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>DEC</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_DE:
-                    acdList_[rc] = _db.selectDE(dates, _start, _end, creators, modifiers, CWorkflow, CRegStatus);
-                    text = text + "<tr><td>DE</td><td>" + timer.check() + "</td></tr>";
+                    acdList_[rc] = _db.selectDE(dates, _start, _end, creators,
+                        modifiers, CWorkflow, CRegStatus);
+                    text = text + "<tr><td>DE</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_CSI:
                     if (isCWFSall && isCRSall)
-                        acdList_[rc] = _db.selectCSI(dates, _start, _end, creators, modifiers);
-                    text = text + "<tr><td>CSI</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectCSI(dates, _start, _end,
+                            creators, modifiers);
+                    text = text + "<tr><td>CSI</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_CS:
                     if (isCRSall)
-                        acdList_[rc] = _db.selectCS(dates, _start, _end, creators, modifiers, CWorkflow);
-                    text = text + "<tr><td>CS</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectCS(dates, _start, _end,
+                            creators, modifiers, CWorkflow);
+                    text = text + "<tr><td>CS</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
                 case DBAlert._ACTYPE_CONTE:
                     if (isCWFSall && isCRSall)
-                        acdList_[rc] = _db.selectCONTE(dates, _start, _end, creators, modifiers);
-                    text = text + "<tr><td>CONTE</td><td>" + timer.check() + "</td></tr>";
+                        acdList_[rc] = _db.selectCONTE(dates, _start, _end,
+                            creators, modifiers);
+                    text = text + "<tr><td>CONTE</td><td>" + timer.check()
+                        + "</td></tr>";
                     break;
             }
             logError(_db.getError());
@@ -964,7 +1028,8 @@ public class AutoProcessAlerts
                 acdList_[rc] = new ACData[0];
             else
                 acdList_[rc] = filter(acdList_[rc], rec_);
-            text = text + "<tr><td><i>&nbsp;&nbsp;&nbsp;filter</i></td><td>" + timer.check() + "</td></tr>";
+            text = text + "<tr><td><i>&nbsp;&nbsp;&nbsp;filter</i></td><td>"
+                + timer.check() + "</td></tr>";
         }
         text = text + "<tr><td>Total</td><td>" + timer.reset() + "</td></tr>";
         logMatrix(text);
@@ -973,8 +1038,8 @@ public class AutoProcessAlerts
     /**
      * Form the table rows for the list provided.
      * 
-     * @param list_ The list of row entries.
-     * 
+     * @param list_
+     *        The list of row entries.
      * @return The HTML table rows.
      */
     private String DBopenStatRows(String list_[])
@@ -985,8 +1050,10 @@ public class AutoProcessAlerts
         {
             if (list_[ndx] != null)
             {
-                String stripe = ((scnt % 2) == 0) ? " style=\"background-color: #ccffff\"" : "";
-                text = text + "<tr" + stripe + "><td>" + list_[ndx].replaceAll("::", "</td><td>") + "</td></tr>\n";
+                String stripe = ((scnt % 2) == 0) ? " style=\"background-color: #ccffff\""
+                    : "";
+                text = text + "<tr" + stripe + "><td>"
+                    + list_[ndx].replaceAll("::", "</td><td>") + "</td></tr>\n";
                 ++scnt;
             }
         }
@@ -996,14 +1063,15 @@ public class AutoProcessAlerts
     /**
      * Construct the row header for the table section.
      * 
-     * @param title_ The title of the section.
-     * @param count_ The count of rows in the section or -1.
+     * @param title_
+     *        The title of the section.
+     * @param count_
+     *        The count of rows in the section or -1.
      * @return The composite table row string.
      */
     private String DBopenStatHeader(String title_, int count_)
     {
-        String text = 
-            "<tr><td style=\"border-bottom: solid black 1px\"><b>&nbsp;<br>"
+        String text = "<tr><td style=\"border-bottom: solid black 1px\"><b>&nbsp;<br>"
             + title_ + "</b></td><td style=\"border-bottom: solid black 1px\">";
         if (count_ > -1)
             text = text + "<b>&nbsp;<br>" + count_ + "</b>";
@@ -1011,7 +1079,7 @@ public class AutoProcessAlerts
             text = text + "&nbsp;";
         return text + "</td></tr>\n";
     }
-    
+
     /**
      * Process initialization after the database connection is open.
      */
@@ -1032,17 +1100,20 @@ public class AutoProcessAlerts
             text = text + DBopenStatRows(counts);
 
             counts = _db.getUnusedObjectClasses();
-            text = text + DBopenStatHeader("Unused Object Classes", counts.length);
+            text = text
+                + DBopenStatHeader("Unused Object Classes", counts.length);
             text = text + DBopenStatRows(counts);
 
             counts = _db.getUnusedDEC();
-            text = text + DBopenStatHeader("Unused Data Element Concepts", counts.length);
+            text = text
+                + DBopenStatHeader("Unused Data Element Concepts",
+                    counts.length);
             text = text + DBopenStatRows(counts);
 
             logMatrix(text);
         }
     }
-    
+
     /**
      * Create a dataset of all changes from the caDSR.
      * 
@@ -1051,367 +1122,373 @@ public class AutoProcessAlerts
      */
     private void pullDBchanges(ProcessRec rec_)
     {
-        // Report section timings.
-        Timemarker timer = new Timemarker();
-        
-        // Be sure we have a database connection.
-        if (_db == null)
+        try
         {
-            _db = new DBAlert();
-            if (_db.open(_tnsname, _user, _pswd) != 0)
+            // Report section timings.
+            Timemarker timer = new Timemarker();
+
+            // Be sure we have a database connection.
+            if (_db == null)
             {
-                logError(_db.getError());
-                _db = null;
-                return;
+                _db = new DBAlert();
+                if (_db.open(_tnsname, _user, _pswd) != 0)
+                {
+                    logError(_db.getError());
+                    _db = null;
+                    return;
+                }
+                DBopen();
             }
-            DBopen();
-        }
-        
-        // Determine file name that will eventually hold the output.
-        getFileName(rec_);
-        log1("Initialization");
-        log2(timer.check());
 
-        // Get the changes from the database.
-        ACData actypes[][] = new ACData[DBAlert._ACTYPE_LENGTH][];
-        findChanges(rec_._alert, actypes);
-        ACData proto[] = actypes[DBAlert._ACTYPE_PROTO];
-        ACData prop[]  = actypes[DBAlert._ACTYPE_PROP];
-        ACData oc[]    = actypes[DBAlert._ACTYPE_OC];
-        ACData qcv[]   = actypes[DBAlert._ACTYPE_QCV];
-        ACData qcq[]   = actypes[DBAlert._ACTYPE_QCQ];
-        ACData qcm[]   = actypes[DBAlert._ACTYPE_QCM];
-        ACData qc[]    = actypes[DBAlert._ACTYPE_QC];
-        ACData pv[]    = actypes[DBAlert._ACTYPE_PV];
-        ACData vd[]    = actypes[DBAlert._ACTYPE_VD];
-        ACData cd[]    = actypes[DBAlert._ACTYPE_CD];
-        ACData dec[]   = actypes[DBAlert._ACTYPE_DEC];
-        ACData de[]    = actypes[DBAlert._ACTYPE_DE];
-        ACData csi[]   = actypes[DBAlert._ACTYPE_CSI];
-        ACData cs[]    = actypes[DBAlert._ACTYPE_CS];
-        ACData conte[] = actypes[DBAlert._ACTYPE_CONTE];
-        actypes = null;
+            // Determine file name that will eventually hold the output.
+            getFileName(rec_);
+            log1("Initialization");
+            log2(timer.check());
 
-        // Report on the raw change counts.
-        log1("Change count:"
-            + " qcv "    + qcv.length
-            + ", qcq "   + qcq.length
-            + ", qcm "   + qcm.length
-            + ", qc "    + qc.length
-            + ", proto " + proto.length
-            + ", pv "    + pv.length
-            + ", vd "    + vd.length
-            + ", cd "    + cd.length
-            + ", oc "    + oc.length
-            + ", prop "  + prop.length
-            + ", dec "   + dec.length
-            + ", de "    + de.length
-            + ", csi "   + csi.length
-            + ", cs "    + cs.length
-            + ", conte " + conte.length);
-        log2(timer.check());
+            // Get the changes from the database.
+            ACData actypes[][] = new ACData[DBAlert._ACTYPE_LENGTH][];
+            findChanges(rec_._alert, actypes);
+            ACData proto[] = actypes[DBAlert._ACTYPE_PROTO];
+            ACData prop[] = actypes[DBAlert._ACTYPE_PROP];
+            ACData oc[] = actypes[DBAlert._ACTYPE_OC];
+            ACData qcv[] = actypes[DBAlert._ACTYPE_QCV];
+            ACData qcq[] = actypes[DBAlert._ACTYPE_QCQ];
+            ACData qcm[] = actypes[DBAlert._ACTYPE_QCM];
+            ACData qc[] = actypes[DBAlert._ACTYPE_QC];
+            ACData pv[] = actypes[DBAlert._ACTYPE_PV];
+            ACData vd[] = actypes[DBAlert._ACTYPE_VD];
+            ACData cd[] = actypes[DBAlert._ACTYPE_CD];
+            ACData dec[] = actypes[DBAlert._ACTYPE_DEC];
+            ACData de[] = actypes[DBAlert._ACTYPE_DE];
+            ACData csi[] = actypes[DBAlert._ACTYPE_CSI];
+            ACData cs[] = actypes[DBAlert._ACTYPE_CS];
+            ACData conte[] = actypes[DBAlert._ACTYPE_CONTE];
+            actypes = null;
 
-        // Get the data associated to the changed data. This is done one step at
-        // a time using the following associations.
-        //      Object Class associate to Data Element Concepts
-        //      Permissible Values associate to Value Domains
-        //      Value Domains associate to Data Elements and Valid Values
-        //      Valid Values associate to Questions
-        //      Data Element Concepts associate to Data Elements.
-        //      Data Elements associate to Questions and Classification Scheme Items
-        //      Questions associate to Modules and Forms/Templates
-        //      Forms/Templates associate to Contexts
-        //      Classification Scheme Items associate to Classification Schemes
-        //      Classification Schemes associate to Contexts.
-        ACData vdm[] = ACData.merge(vd, _db.selectVDfromPV(pv));
-        logError(_db.getError());
-        ACData dem[] = ACData.merge(de, _db.selectDEfromVD(vdm));
-        logError(_db.getError());
-        ACData decm[] = ACData.merge(dec, _db.selectDECfromOC(oc));
-        logError(_db.getError());
-        decm = ACData.merge(decm, _db.selectDECfromPROP(prop));
-        logError(_db.getError());
-        dem = ACData.merge(dem, _db.selectDEfromDEC(decm));
-        logError(_db.getError());
-        ACData qcvm[] = ACData.merge(qcv, _db.selectQCVfromVD(vdm));
-        logError(_db.getError());
-        ACData qcqm[] = ACData.merge(qcq, _db.selectQCQfromQCV(qcvm));
-        logError(_db.getError());
-        qcqm = ACData.merge(qcqm, _db.selectQCQfromVD(vdm));
-        logError(_db.getError());
-        qcqm = ACData.merge(qcqm, _db.selectQCQfromDE(dem));
-        logError(_db.getError());
-        ACData qcmm[] = ACData.merge(qcm, _db.selectQCMfromQCQ(qcqm));
-        logError(_db.getError());
-        ACData qca[] = ACData.merge(qc, _db.selectQCfromQCM(qcmm));
-        logError(_db.getError());
-        qca = ACData.merge(qca, _db.selectQCfromQCQ(qcqm));
-        logError(_db.getError());
-        ACData protom[] = ACData.merge(proto, _db.selectPROTOfromQC(qcvm));
-        protom = ACData.merge(protom, _db.selectPROTOfromQC(qcqm));
-        protom = ACData.merge(protom, _db.selectPROTOfromQC(qcmm));
-        protom = ACData.merge(protom, _db.selectPROTOfromQC(qca));
-        ACData cdm[] = new ACData[0];
-        ACData csim[] = ACData.merge(csi, _db.selectCSIfromDE(dem));
-        logError(_db.getError());
-        csim = ACData.merge(csim, _db.selectCSIfromDEC(decm));
-        logError(_db.getError());
-        csim = ACData.merge(csim, _db.selectCSIfromVD(vdm));
-        logError(_db.getError());
-        ACData csm[] = ACData.merge(cs, _db.selectCSfromCSI(csim));
-        logError(_db.getError());
-        ACData contem[] = ACData.merge(conte, _db.selectCONTEfromCS(csm));
-        logError(_db.getError());
-        contem = ACData.merge(contem, _db.selectCONTEfromQC(qca));
-        logError(_db.getError());
-        contem = ACData.merge(contem, _db.selectCONTEfromPROTO(protom));
-        logError(_db.getError());
+            // Report on the raw change counts.
+            log1("Change count:" + " qcv " + qcv.length + ", qcq " + qcq.length
+                + ", qcm " + qcm.length + ", qc " + qc.length + ", proto "
+                + proto.length + ", pv " + pv.length + ", vd " + vd.length
+                + ", cd " + cd.length + ", oc " + oc.length + ", prop "
+                + prop.length + ", dec " + dec.length + ", de " + de.length
+                + ", csi " + csi.length + ", cs " + cs.length + ", conte "
+                + conte.length);
+            log2(timer.check());
 
-        // If a CSI, CS or Form is specified, we can not get to a Context
-        // directly from the Administered Components.
-        if (rec_._alert.isCSIall() && rec_._alert.isCSall()
-            && rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
-        {
-            cdm = ACData.merge(cd, _db.selectCDfromVD(vdm));
+            // Get the data associated to the changed data. This is done one
+            // step at
+            // a time using the following associations.
+            // Object Class associate to Data Element Concepts
+            // Permissible Values associate to Value Domains
+            // Value Domains associate to Data Elements and Valid Values
+            // Valid Values associate to Questions
+            // Data Element Concepts associate to Data Elements.
+            // Data Elements associate to Questions and Classification Scheme
+            // Items
+            // Questions associate to Modules and Forms/Templates
+            // Forms/Templates associate to Contexts
+            // Classification Scheme Items associate to Classification Schemes
+            // Classification Schemes associate to Contexts.
+            ACData vdm[] = ACData.merge(vd, _db.selectVDfromPV(pv));
             logError(_db.getError());
-            cdm = ACData.merge(cdm, _db.selectCDfromDEC(decm));
+            ACData dem[] = ACData.merge(de, _db.selectDEfromVD(vdm));
             logError(_db.getError());
-            contem = ACData.merge(contem, _db.selectCONTEfromCD(cdm));
+            ACData decm[] = ACData.merge(dec, _db.selectDECfromOC(oc));
             logError(_db.getError());
-            contem = ACData.merge(contem, _db.selectCONTEfromVD(vdm));
+            decm = ACData.merge(decm, _db.selectDECfromPROP(prop));
             logError(_db.getError());
-            contem = ACData.merge(contem, _db.selectCONTEfromDE(dem));
+            dem = ACData.merge(dem, _db.selectDEfromDEC(decm));
             logError(_db.getError());
-            contem = ACData.merge(contem, _db.selectCONTEfromDEC(decm));
+            ACData qcvm[] = ACData.merge(qcv, _db.selectQCVfromVD(vdm));
             logError(_db.getError());
-            contem = ACData.merge(contem, _db.selectCONTEfromOC(oc));
+            ACData qcqm[] = ACData.merge(qcq, _db.selectQCQfromQCV(qcvm));
             logError(_db.getError());
-            contem = ACData.merge(contem, _db.selectCONTEfromPROP(prop));
+            qcqm = ACData.merge(qcqm, _db.selectQCQfromVD(vdm));
             logError(_db.getError());
+            qcqm = ACData.merge(qcqm, _db.selectQCQfromDE(dem));
+            logError(_db.getError());
+            ACData qcmm[] = ACData.merge(qcm, _db.selectQCMfromQCQ(qcqm));
+            logError(_db.getError());
+            ACData qca[] = ACData.merge(qc, _db.selectQCfromQCM(qcmm));
+            logError(_db.getError());
+            qca = ACData.merge(qca, _db.selectQCfromQCQ(qcqm));
+            logError(_db.getError());
+            ACData protom[] = ACData.merge(proto, _db.selectPROTOfromQC(qcvm));
+            protom = ACData.merge(protom, _db.selectPROTOfromQC(qcqm));
+            protom = ACData.merge(protom, _db.selectPROTOfromQC(qcmm));
+            protom = ACData.merge(protom, _db.selectPROTOfromQC(qca));
+            ACData cdm[] = new ACData[0];
+            ACData csim[] = ACData.merge(csi, _db.selectCSIfromDE(dem));
+            logError(_db.getError());
+            csim = ACData.merge(csim, _db.selectCSIfromDEC(decm));
+            logError(_db.getError());
+            csim = ACData.merge(csim, _db.selectCSIfromVD(vdm));
+            logError(_db.getError());
+            ACData csm[] = ACData.merge(cs, _db.selectCSfromCSI(csim));
+            logError(_db.getError());
+            ACData contem[] = ACData.merge(conte, _db.selectCONTEfromCS(csm));
+            logError(_db.getError());
+            contem = ACData.merge(contem, _db.selectCONTEfromQC(qca));
+            logError(_db.getError());
+            contem = ACData.merge(contem, _db.selectCONTEfromPROTO(protom));
+            logError(_db.getError());
+
+            // If a CSI, CS or Form is specified, we can not get to a Context
+            // directly from the Administered Components.
+            if (rec_._alert.isCSIall() && rec_._alert.isCSall()
+                && rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
+            {
+                cdm = ACData.merge(cd, _db.selectCDfromVD(vdm));
+                logError(_db.getError());
+                cdm = ACData.merge(cdm, _db.selectCDfromDEC(decm));
+                logError(_db.getError());
+                contem = ACData.merge(contem, _db.selectCONTEfromCD(cdm));
+                logError(_db.getError());
+                contem = ACData.merge(contem, _db.selectCONTEfromVD(vdm));
+                logError(_db.getError());
+                contem = ACData.merge(contem, _db.selectCONTEfromDE(dem));
+                logError(_db.getError());
+                contem = ACData.merge(contem, _db.selectCONTEfromDEC(decm));
+                logError(_db.getError());
+                contem = ACData.merge(contem, _db.selectCONTEfromOC(oc));
+                logError(_db.getError());
+                contem = ACData.merge(contem, _db.selectCONTEfromPROP(prop));
+                logError(_db.getError());
+            }
+
+            // Turns out we don't want the Conceptual Domain right now.
+            else
+                cd = new ACData[0];
+
+            // Report on the related counts.
+            log1("Related count:" + " qca " + ((qca == null) ? -1 : qca.length)
+                + ", protom " + ((protom == null) ? -1 : protom.length)
+                + ", vdm " + ((vdm == null) ? -1 : vdm.length) + ", cdm "
+                + ((cdm == null) ? -1 : cdm.length) + ", decm "
+                + ((decm == null) ? -1 : decm.length) + ", dem "
+                + ((dem == null) ? -1 : dem.length) + ", csim "
+                + ((csim == null) ? -1 : csim.length) + ", csm "
+                + ((csm == null) ? -1 : csm.length) + ", contem "
+                + ((contem == null) ? -1 : contem.length));
+            log2(timer.check());
+
+            // Scrub the lists and remove everything that is not part of the
+            // Criteria.
+            conte = ACData.clean(rec_._alert.getContexts(), conte);
+            contem = ACData.clean(rec_._alert.getContexts(), contem);
+            if (!rec_._alert.isCSIall())
+            {
+                csim = ACData.clean(rec_._alert.getSchemeItems(), csim);
+                csi = ACData.clean(rec_._alert.getSchemeItems(), csi);
+            }
+            if (!rec_._alert.isCSall())
+            {
+                csm = ACData.clean(rec_._alert.getSchemes(), csm);
+                cs = ACData.clean(rec_._alert.getSchemes(), cs);
+            }
+            if (!rec_._alert.isFORMSall())
+            {
+                qca = ACData.clean(rec_._alert.getForms(), qca);
+                qc = ACData.clean(rec_._alert.getForms(), qc);
+            }
+            if (!rec_._alert.isPROTOall())
+            {
+                protom = ACData.clean(rec_._alert.getProtocols(), protom);
+                proto = ACData.clean(rec_._alert.getProtocols(), proto);
+            }
+
+            // Report the scrubbed numbers.
+            log1("Clean count:" + " qca " + qca.length + ", protom "
+                + protom.length + ", csim " + csim.length + ", csm "
+                + csm.length + ", contem " + contem.length + ", conte "
+                + conte.length);
+            log2(timer.check());
+
+            // We are about to do a lot of searches using the related id for
+            // each
+            // record so take
+            // a little time to resort everything.
+            ACData.sortRelated(qca);
+            ACData.sortRelated(protom);
+            ACData.sortRelated(vdm);
+            ACData.sortRelated(cdm);
+            ACData.sortRelated(decm);
+            ACData.sortRelated(dem);
+            ACData.sortRelated(csim);
+            ACData.sortRelated(csm);
+            ACData.sortRelated(contem);
+
+            // Build the network for traversing possible related objects.
+            ACDataLink lconte = new ACDataLink(contem, true);
+            ACDataLink lpv = new ACDataLink(pv);
+            ACDataLink lvd = new ACDataLink(vd);
+            ACDataLink lprop = new ACDataLink(prop);
+            ACDataLink loc = new ACDataLink(oc);
+            ACDataLink lde = new ACDataLink(de);
+            ACDataLink ldec = new ACDataLink(dec);
+            ACDataLink lcs = new ACDataLink(cs);
+            ACDataLink lcsi = new ACDataLink(csi);
+            ACDataLink lcd = new ACDataLink(cd);
+            ACDataLink lqcv = new ACDataLink(qcv);
+            ACDataLink lqcq = new ACDataLink(qcq);
+            ACDataLink lqcm = new ACDataLink(qcm);
+            ACDataLink lqc = new ACDataLink(qc);
+            ACDataLink lproto = new ACDataLink(proto);
+            ACDataLink chainVD = new ACDataLink(vdm);
+            ACDataLink chainDEC = new ACDataLink(decm);
+            ACDataLink chainDE = new ACDataLink(dem);
+            ACDataLink chainCS = new ACDataLink(csm);
+            ACDataLink chainCSI = new ACDataLink(csim);
+            ACDataLink chainCD = new ACDataLink(cdm);
+            ACDataLink chainPROTO = new ACDataLink(protom);
+            ACDataLink chainQC = new ACDataLink(qca);
+            ACDataLink chainQCM = new ACDataLink(qcmm);
+            ACDataLink chainQCQ = new ACDataLink(qcqm);
+            ACDataLink chainQCV = new ACDataLink(qcvm);
+
+            // In all cases we must be able to follow a principle change all the
+            // way
+            // to a Context.
+            // If we can't it means the CSI, CS, FORM or Context was removed
+            // from
+            // the list in earlier
+            // logic and the change should be ignored by the report.
+            Stack<RepRows> results = new Stack<RepRows>();
+            if (rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
+            {
+                // Qualify results by CS and CSI (i.e. Forms/Templates is
+                // "All").
+                chainCS.add(lconte);
+                chainCSI.add(chainCS);
+                chainDE.add(chainCSI);
+                chainDEC.add(chainDE);
+                chainCD.add(lconte);
+                chainDEC.add(chainCD);
+                chainDEC.add(chainCSI);
+                chainVD.add(chainDE);
+                chainVD.add(chainCD);
+                chainVD.add(chainCSI);
+                lprop.add(chainDEC);
+                loc.add(chainDEC);
+                lpv.add(chainVD);
+                lvd.add(chainCD);
+                lvd.add(chainDE);
+                lvd.add(chainCSI);
+                ldec.add(chainCD);
+                ldec.add(chainDE);
+                ldec.add(chainCSI);
+                lde.add(chainCSI);
+                lcsi.add(chainCS);
+                lcs.add(lconte);
+            }
+            if (rec_._alert.isCSIall() && rec_._alert.isCSall())
+            {
+                // Qualify results by Forms/Templates (i.e. CS and CSI is
+                // "All").
+                chainPROTO.add(lconte);
+                chainQC.add(lconte);
+                chainQC.add(chainPROTO);
+                chainQCM.add(chainPROTO);
+                chainQCM.add(chainQC);
+                chainQCQ.add(chainPROTO);
+                chainQCQ.add(chainQCM);
+                chainQCQ.add(chainQC);
+                chainQCV.add(chainPROTO);
+                chainQCV.add(chainQCQ);
+                chainVD.add(chainQCV);
+                chainVD.add(chainDE);
+                chainDEC.add(chainDE);
+                chainDE.add(chainQCQ);
+                lprop.add(chainDEC);
+                loc.add(chainDEC);
+                lvd.add(chainQCV);
+                lde.add(chainQCQ);
+                lqcv.add(chainQCQ);
+                lqcv.add(chainPROTO);
+                lqcq.add(chainQCM);
+                lqcq.add(chainQC);
+                lqcq.add(chainPROTO);
+                lqcm.add(chainQC);
+                lqcm.add(chainPROTO);
+                lqc.add(chainPROTO);
+                lqc.add(lconte);
+                lproto.add(lconte);
+                lpv.add(chainVD);
+                lvd.add(chainDE);
+                lvd.add(chainQCQ);
+                ldec.add(chainDE);
+            }
+            if (rec_._alert.isCSIall() && rec_._alert.isCSall()
+                && rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
+            {
+                chainDE.add(lconte);
+                chainDEC.add(lconte);
+                chainVD.add(lconte);
+                lprop.add(chainDEC);
+                lprop.add(lconte);
+                loc.add(chainDEC);
+                loc.add(lconte);
+                lvd.add(lconte);
+                ldec.add(lconte);
+                lde.add(lconte);
+                lcd.add(lconte);
+            }
+            chainVD = null;
+            chainDE = null;
+            chainDEC = null;
+            chainCS = null;
+            chainCSI = null;
+            chainCD = null;
+            chainPROTO = null;
+            chainQC = null;
+            chainQCM = null;
+            chainQCQ = null;
+            chainQCV = null;
+            lconte = null;
+            log1("Linked changed and related records.");
+            log2(timer.check());
+
+            lprop.follow(results, 0, lprop.getRange());
+            loc.follow(results, 0, loc.getRange());
+            lpv.follow(results, 0, lpv.getRange());
+            lvd.follow(results, 0, lvd.getRange());
+            lde.follow(results, 0, lde.getRange());
+            ldec.follow(results, 0, ldec.getRange());
+            lcs.follow(results, 0, lcs.getRange());
+            lcsi.follow(results, 0, lcsi.getRange());
+            lcd.follow(results, 0, lcd.getRange());
+            lqcv.follow(results, 0, lqcv.getRange());
+            lqcq.follow(results, 0, lqcq.getRange());
+            lqcm.follow(results, 0, lqcm.getRange());
+            lqc.follow(results, 0, lqc.getRange());
+            lproto.follow(results, 0, lproto.getRange());
+            ACData.remember(results, conte);
+            log1("Created data chains.");
+            log2(timer.check());
+
+            // What ever is placed on the stack ("results") should be output to
+            // a
+            // file.
+            dump(results, rec_);
+            log1("Created report.");
+            log2(timer.check());
+            log1("Processing for this Alert Definition.");
+            log2(timer.reset());
+
+            // Did we do anything?
+            if (_outRows == 0)
+                log1("No activity to report.");
+            else
+                log1("Activity to report: " + _outRows + " rows.");
         }
-        
-        // Turns out we don't want the Conceptual Domain right now.
-        else
-            cd = new ACData[0];
-
-        // Report on the related counts.
-        log1("Related count:"
-            + " qca " + ((qca == null) ? -1 : qca.length)
-            + ", protom " + ((protom == null) ? -1 : protom.length)
-            + ", vdm " + ((vdm == null) ? -1 : vdm.length)
-            + ", cdm " + ((cdm == null) ? -1 : cdm.length)
-            + ", decm " + ((decm == null) ? -1 : decm.length)
-            + ", dem " + ((dem == null) ? -1 : dem.length)
-            + ", csim " + ((csim == null) ? -1 : csim.length)
-            + ", csm " + ((csm == null) ? -1 : csm.length)
-            + ", contem " + ((contem == null) ? -1 : contem.length));
-        log2(timer.check());
-
-        // Scrub the lists and remove everything that is not part of the
-        // Criteria.
-        conte = ACData.clean(rec_._alert.getContexts(), conte);
-        contem = ACData.clean(rec_._alert.getContexts(), contem);
-        if (!rec_._alert.isCSIall())
+        catch (Exception ex)
         {
-            csim = ACData.clean(rec_._alert.getSchemeItems(), csim);
-            csi = ACData.clean(rec_._alert.getSchemeItems(), csi);
+            logError(ex.toString());
         }
-        if (!rec_._alert.isCSall())
+        catch (OutOfMemoryError ex)
         {
-            csm = ACData.clean(rec_._alert.getSchemes(), csm);
-            cs = ACData.clean(rec_._alert.getSchemes(), cs);
+            logError(ex.toString());
         }
-        if (!rec_._alert.isFORMSall())
-        {
-            qca = ACData.clean(rec_._alert.getForms(), qca);
-            qc = ACData.clean(rec_._alert.getForms(), qc);
-        }
-        if (!rec_._alert.isPROTOall())
-        {
-            protom = ACData.clean(rec_._alert.getProtocols(), protom);
-            proto = ACData.clean(rec_._alert.getProtocols(), proto);
-        }
-
-        // Report the scrubbed numbers.
-        log1("Clean count:"
-            + " qca "     + qca.length
-            + ", protom " + protom.length
-            + ", csim "   + csim.length
-            + ", csm "    + csm.length
-            + ", contem " + contem.length
-            + ", conte "  + conte.length);
-        log2(timer.check());
-
-        // We are about to do a lot of searches using the related id for each
-        // record so take
-        // a little time to resort everything.
-        ACData.sortRelated(qca);
-        ACData.sortRelated(protom);
-        ACData.sortRelated(vdm);
-        ACData.sortRelated(cdm);
-        ACData.sortRelated(decm);
-        ACData.sortRelated(dem);
-        ACData.sortRelated(csim);
-        ACData.sortRelated(csm);
-        ACData.sortRelated(contem);
-
-        // Build the network for traversing possible related objects.
-        ACDataLink lconte = new ACDataLink(contem, true);
-        ACDataLink lpv = new ACDataLink(pv);
-        ACDataLink lvd = new ACDataLink(vd);
-        ACDataLink lprop = new ACDataLink(prop);
-        ACDataLink loc = new ACDataLink(oc);
-        ACDataLink lde = new ACDataLink(de);
-        ACDataLink ldec = new ACDataLink(dec);
-        ACDataLink lcs = new ACDataLink(cs);
-        ACDataLink lcsi = new ACDataLink(csi);
-        ACDataLink lcd = new ACDataLink(cd);
-        ACDataLink lqcv = new ACDataLink(qcv);
-        ACDataLink lqcq = new ACDataLink(qcq);
-        ACDataLink lqcm = new ACDataLink(qcm);
-        ACDataLink lqc = new ACDataLink(qc);
-        ACDataLink lproto = new ACDataLink(proto);
-        ACDataLink chainVD = new ACDataLink(vdm);
-        ACDataLink chainDEC = new ACDataLink(decm);
-        ACDataLink chainDE = new ACDataLink(dem);
-        ACDataLink chainCS = new ACDataLink(csm);
-        ACDataLink chainCSI = new ACDataLink(csim);
-        ACDataLink chainCD = new ACDataLink(cdm);
-        ACDataLink chainPROTO = new ACDataLink(protom);
-        ACDataLink chainQC = new ACDataLink(qca);
-        ACDataLink chainQCM = new ACDataLink(qcmm);
-        ACDataLink chainQCQ = new ACDataLink(qcqm);
-        ACDataLink chainQCV = new ACDataLink(qcvm);
-
-        // In all cases we must be able to follow a principle change all the way
-        // to a Context.
-        // If we can't it means the CSI, CS, FORM or Context was removed from
-        // the list in earlier
-        // logic and the change should be ignored by the report.
-        Stack<RepRows> results = new Stack<RepRows>();
-        if (rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
-        {
-            // Qualify results by CS and CSI (i.e. Forms/Templates is "All").
-            chainCS.add(lconte);
-            chainCSI.add(chainCS);
-            chainDE.add(chainCSI);
-            chainDEC.add(chainDE);
-            chainCD.add(lconte);
-            chainDEC.add(chainCD);
-            chainDEC.add(chainCSI);
-            chainVD.add(chainDE);
-            chainVD.add(chainCD);
-            chainVD.add(chainCSI);
-            lprop.add(chainDEC);
-            loc.add(chainDEC);
-            lpv.add(chainVD);
-            lvd.add(chainCD);
-            lvd.add(chainDE);
-            lvd.add(chainCSI);
-            ldec.add(chainCD);
-            ldec.add(chainDE);
-            ldec.add(chainCSI);
-            lde.add(chainCSI);
-            lcsi.add(chainCS);
-            lcs.add(lconte);
-        }
-        if (rec_._alert.isCSIall() && rec_._alert.isCSall())
-        {
-            // Qualify results by Forms/Templates (i.e. CS and CSI is "All").
-            chainPROTO.add(lconte);
-            chainQC.add(lconte);
-            chainQC.add(chainPROTO);
-            chainQCM.add(chainPROTO);
-            chainQCM.add(chainQC);
-            chainQCQ.add(chainPROTO);
-            chainQCQ.add(chainQCM);
-            chainQCQ.add(chainQC);
-            chainQCV.add(chainPROTO);
-            chainQCV.add(chainQCQ);
-            chainVD.add(chainQCV);
-            chainVD.add(chainDE);
-            chainDEC.add(chainDE);
-            chainDE.add(chainQCQ);
-            lprop.add(chainDEC);
-            loc.add(chainDEC);
-            lvd.add(chainQCV);
-            lde.add(chainQCQ);
-            lqcv.add(chainQCQ);
-            lqcv.add(chainPROTO);
-            lqcq.add(chainQCM);
-            lqcq.add(chainQC);
-            lqcq.add(chainPROTO);
-            lqcm.add(chainQC);
-            lqcm.add(chainPROTO);
-            lqc.add(chainPROTO);
-            lqc.add(lconte);
-            lproto.add(lconte);
-            lpv.add(chainVD);
-            lvd.add(chainDE);
-            lvd.add(chainQCQ);
-            ldec.add(chainDE);
-        }
-        if (rec_._alert.isCSIall() && rec_._alert.isCSall()
-            && rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
-        {
-            chainDE.add(lconte);
-            chainDEC.add(lconte);
-            chainVD.add(lconte);
-            lprop.add(chainDEC);
-            lprop.add(lconte);
-            loc.add(chainDEC);
-            loc.add(lconte);
-            lvd.add(lconte);
-            ldec.add(lconte);
-            lde.add(lconte);
-            lcd.add(lconte);
-        }
-        chainVD = null;
-        chainDE = null;
-        chainDEC = null;
-        chainCS = null;
-        chainCSI = null;
-        chainCD = null;
-        chainPROTO = null;
-        chainQC = null;
-        chainQCM = null;
-        chainQCQ = null;
-        chainQCV = null;
-        lconte = null;
-        log1("Linked changed and related records.");
-        log2(timer.check());
-
-        lprop.follow(results, 0, lprop.getRange());
-        loc.follow(results, 0, loc.getRange());
-        lpv.follow(results, 0, lpv.getRange());
-        lvd.follow(results, 0, lvd.getRange());
-        lde.follow(results, 0, lde.getRange());
-        ldec.follow(results, 0, ldec.getRange());
-        lcs.follow(results, 0, lcs.getRange());
-        lcsi.follow(results, 0, lcsi.getRange());
-        lcd.follow(results, 0, lcd.getRange());
-        lqcv.follow(results, 0, lqcv.getRange());
-        lqcq.follow(results, 0, lqcq.getRange());
-        lqcm.follow(results, 0, lqcm.getRange());
-        lqc.follow(results, 0, lqc.getRange());
-        lproto.follow(results, 0, lproto.getRange());
-        ACData.remember(results, conte);
-        log1("Created data chains.");
-        log2(timer.check());
-
-        // What ever is placed on the stack ("results") should be output to a
-        // file.
-        dump(results, rec_);
-        log1("Created report.");
-        log2(timer.check());
-        log1("Processing for this Alert Definition.");
-        log2(timer.reset());
-
-        // Did we do anything?
-        if (_outRows == 0)
-            log1("No activity to report.");
-        else
-            log1("Activity to report: " + _outRows + " rows.");
     }
 
     /**
@@ -1454,7 +1531,7 @@ public class AutoProcessAlerts
     private Timestamp setToMidnight(Timestamp time_)
     {
         String time = time_.toString().substring(0, 10);
-        return Timestamp.valueOf( time + " 00:00:00.0");
+        return Timestamp.valueOf(time + " 00:00:00.0");
     }
 
     /**
@@ -1491,27 +1568,14 @@ public class AutoProcessAlerts
      * Search for the DSRAlert.properties file on the current drive.
      * 
      * @param path_
-    private void findResources(String path_)
-    {
-        if (new File(path_ + File.separator + _RESOURCES).exists())
-        {
-            _resourcePath = path_ + File.separator + _RESOURCES;
-            return;
-        }
-
-        String list[] = new File(path_).list();
-        for (int ndx = 0; ndx < list.length; ++ndx)
-        {
-            String dir = path_ + File.separator + list[ndx];
-            File temp = new File(dir);
-            if (temp.isDirectory())
-            {
-                findResources(temp.getAbsolutePath());
-                if (_resourcePath.length() > 0)
-                    return;
-            }
-        }
-    }
+     *        private void findResources(String path_) { if (new File(path_ +
+     *        File.separator + _RESOURCES).exists()) { _resourcePath = path_ +
+     *        File.separator + _RESOURCES; return; } String list[] = new
+     *        File(path_).list(); for (int ndx = 0; ndx < list.length; ++ndx) {
+     *        String dir = path_ + File.separator + list[ndx]; File temp = new
+     *        File(dir); if (temp.isDirectory()) {
+     *        findResources(temp.getAbsolutePath()); if (_resourcePath.length() >
+     *        0) return; } } }
      */
 
     /**
@@ -1613,7 +1677,9 @@ public class AutoProcessAlerts
                     + "</style>\n"
                     + "</head>\n"
                     + "<body>\n"
-                    + "<p class=\"alert\">caDSR Sentinel " + _version + "</p>\n";
+                    + "<p class=\"alert\">caDSR Sentinel "
+                    + _version
+                    + "</p>\n";
                 _log.write(temp.getBytes());
             }
 
@@ -1635,39 +1701,39 @@ public class AutoProcessAlerts
             System.err.println(ex.toString());
         }
     }
-    
+
     private void log0(String msg_)
     {
         logText("<p class=\"detail0\">" + msg_ + "</p>");
     }
-    
+
     private void log1(String msg_)
     {
         logText("<p class=\"detail1\">" + msg_ + "</p>");
     }
-    
+
     private void log2(String msg_)
     {
         logText("<p class=\"detail2\">" + msg_ + "</p>");
     }
-    
+
     private void logAlert(String msg_)
     {
         logText("<p class=\"alert\">" + msg_ + "</p>");
     }
-    
+
     private void logTable(String msg_)
     {
         logText("<table style=\"font-size: 10pt\">" + msg_ + "</table>");
     }
-    
+
     private void logMatrix(String msg_)
     {
         logText("<table class=\"matrix\"><colgroup>"
             + "<col style=\"padding-right: 0.1in\" /><col style=\"text-align: right\" /></colgroup><tbody />\n"
             + msg_ + "\n</table>\n");
     }
-    
+
     private void logHR()
     {
         logText("<hr>");
@@ -1694,7 +1760,12 @@ public class AutoProcessAlerts
             String temp = _http + _logFile.substring(_work.length());
             temp = temp.replaceAll(" ", "%20");
             body += "<p>Please review the LOG from the caDSR Alert Run.</p><p><a href=\""
-                + _logFile + "\">" + _logFile + "</a></p><a href=\"" + temp + "\">" + temp + "</a></p>";
+                + _logFile
+                + "\">"
+                + _logFile
+                + "</a></p><a href=\""
+                + temp
+                + "\">" + temp + "</a></p>";
         }
 
         // Create subject.
@@ -1705,7 +1776,8 @@ public class AutoProcessAlerts
 
         // Send email.
         for (int ndx = 0; ndx < _adminEmail.length; ++ndx)
-            sendEmail(_logErrorCnt, _adminEmail[ndx], _adminName, subject, body + "</body></html>");
+            sendEmail(_logErrorCnt, _adminEmail[ndx], _adminName, subject, body
+                + "</body></html>");
     }
 
     /**
@@ -1883,9 +1955,9 @@ public class AutoProcessAlerts
     private String              _logFile;
 
     private String              _id;
-    
+
     private int                 _outForm;
-    
+
     private int                 _threshold;
 
     private static final String _RESOURCES       = "com.scenpro.DSRAlert.DSRAlert";
