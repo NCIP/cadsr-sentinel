@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/HeadTag.java,v 1.1 2006-01-06 16:08:58 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/HeadTag.java,v 1.2 2006-01-17 00:13:49 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.DSRAlert;
@@ -57,15 +57,13 @@ public class HeadTag extends TagSupport
               + "<td valign=\"center\" align=\"right\"><a href=\"http://www.cancer.gov\" target=\"_blank\" alt=\"NCI Logo\">\n"
               + "<img src=\"tagline_nologo.gif\" border=\"0\"></a></td></tr>\n"
               + "</table>\n"
-              + "<table class=\"secttable\"><colgroup><col/></colgroup><tbody class=\"secttbody\" />\n"
-              + "<tr><td><colgroup><col /></colgroup><tbody class=\"secttbody\" /><tr><td>\n"
-              + "<img style=\"border: 0px solid black\" title=\"National Cancer Institute\" src=\"sentinel_banner.gif\" usemap=\"#map1\"></a>\n"
-              + "</td><td>&nbsp;</td></tr>\n"
-              + "<map name=\"map1\"><area style=\"border: 0px solid black\" target=\"_blank\" href=\"http://cancer.gov\" alt=\"National Cancer Institute Logo\" shape=\"rect\" coords=\"0,0,110,50\"/>\n"
-              + "<area style=\"border: 0px solid black\" target=\"_blank\" href=\"http://ncicb.nci.nih.gov/core/caDSR\" alt=\"caDSR Logo\" shape=\"rect\" coords=\"110,0,500,50\"/></map>\n"
-              + "</td></tr>\n"
+              + "<table class=\"secttable\"><colgroup><col /></colgroup><tbody class=\"secttbody\" />\n"
+              + "<tr><td><img style=\"border: 0px solid black\" title=\"National Cancer Institute\" src=\"sentinel_banner.gif\" usemap=\"#map1\"></td></tr>\n"
               + "<tr><td align=\"center\"><p class=\"ttl18\">" + msgs.getMessage(_key) + "</p></td></tr>\n"
-              + "</table>\n");
+              + "</table>\n"
+              + "<map name=\"map1\"><area style=\"border: 0px solid black\" target=\"_blank\" href=\"http://cancer.gov\" alt=\"National Cancer Institute Logo\" shape=\"rect\" coords=\"0,0,110,50\"/>\n"
+              + "<area style=\"border: 0px solid black\" target=\"_blank\" href=\"http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr\" alt=\"caDSR Logo\" shape=\"rect\" coords=\"110,0,500,50\"/></map>\n"
+              );
 
         }
         catch (IOException ex)
