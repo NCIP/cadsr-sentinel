@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/HeadTag.java,v 1.2 2006-01-17 00:13:49 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/HeadTag.java,v 1.3 2006-01-19 19:41:00 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.DSRAlert;
