@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.12 2006-01-06 15:38:40 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.13 2006-01-24 16:51:44 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -16,9 +16,10 @@
     <property name="odoc" location="${oroot}/doc"/>
     <property name="owebinf" location="${oroot}/WEB-INF"/>
     <property name="oclasses" location="${owebinf}/classes"/>
-    <property name="orootC2" location="${oclasses}/com"/>
-    <property name="orootC3" location="${oclasses}/com/scenpro"/>
-    <property name="orootC4" location="${oclasses}/com/scenpro/DSRAlert"/>
+    <property name="orootC2" location="${oclasses}/gov"/>
+    <property name="orootC3" location="${oclasses}/gov/nih"/>
+    <property name="orootC3B" location="${oclasses}/gov/nih/nci"/>
+    <property name="orootC4" location="${oclasses}/gov/nih/nci/cadsralert"/>
     <property name="olib" location="${owebinf}/lib"/>
     <property name="otld" location="${owebinf}/tld"/>
     <property name="owar" location="distrib/war"/>
@@ -119,7 +120,7 @@
         <jar destfile="${owar}/cadsrsentinel.jar" basedir="${oclasses}"/>
         <jar destfile="${owar}/cadsrsentinelapi.jar">
             <fileset dir="${oclasses}">
-                <include name="com/scenpro/DSRAlertAPI/*.class" />
+                <include name="gov/nih/nci/cadsralertapi/*.class" />
             </fileset>
         </jar>
     </target>
@@ -247,14 +248,14 @@
             </classpath>
 			
             <packageset dir="${java}" defaultexcludes="yes">
-                <include name="com/scenpro/DSRAlert/**" />
-                <include name="com/scenpro/DSRAlertAPI/**" />
+                <include name="gov/nih/nci/cadsralert/**" />
+                <include name="gov/nih/nci/cadsralertapi/**" />
             </packageset>
 			
             <doctitle><![CDATA[<h1>caDSR Sentinel Tool</h1>]]></doctitle>
 			<bottom><![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]></bottom>
 			<tag name="todo" scope="all" description="To do:" />
-			<group title="Source Package" packages="com.scenpro.DSRAlert;com.scenpro.DSRAlert.Test"/>
+			<group title="Source Package" packages="gov.nih.nci.cadsralert;gov.nih.nci.cadsralert.Test"/>
 			<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="D:\temp"/>
         </javadoc>
         <zip destfile="distrib/doc/sentinel_doc.zip">
