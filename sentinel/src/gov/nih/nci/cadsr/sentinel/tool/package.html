@@ -1,0 +1,26 @@
+<html>
+<!--
+    $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/package.html,v 1.1.2.1 2006-01-31 18:33:45 hebell Exp $
+    $Name: not supported by cvs2svn $
+-->
+<body>
+<p>This is the primary package for the Sentinel Tool User Interface and Report
+Generation. The package contains a number of classes which encapsulate the user
+interface, processing logic and database access.
+</p>
+<p>The user interface is built on the Struts MVC framework. The action classes
+match the name of the JSP and JS files, e.g. Edit.java is the action class. The
+form classes use the action class names suffixed with "Form", e.g. EditForm.java.
+Tag libraries have also been written for JSP processing and when present are
+suffixed with "Tag", e.g. EditTag.java. The first JSP displayed to the user is
+Logon.jsp with the matching logic in Logon.java and LogonForm.java.
+</p>
+<p>The processing logic is contained in a number of utility classes named by the
+object of interest, e.g. ACData.java. These are used by various pieces of logic
+throughout the package.
+</p>
+<p>The database access is encapsulated in DBAlert.java. All data access is through
+utility methods in this class.
+</p>
+</body>
+</html>
