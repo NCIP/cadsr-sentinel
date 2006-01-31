@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.13 2006-01-24 16:51:44 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.14 2006-01-31 18:57:45 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -19,7 +19,8 @@
     <property name="orootC2" location="${oclasses}/gov"/>
     <property name="orootC3" location="${oclasses}/gov/nih"/>
     <property name="orootC3B" location="${oclasses}/gov/nih/nci"/>
-    <property name="orootC4" location="${oclasses}/gov/nih/nci/cadsralert"/>
+    <property name="orootC3C" location="${oclasses}/gov/nih/nci/cadsr"/>
+    <property name="orootC4" location="${oclasses}/gov/nih/nci/cadsr/sentinel"/>
     <property name="olib" location="${owebinf}/lib"/>
     <property name="otld" location="${owebinf}/tld"/>
     <property name="owar" location="distrib/war"/>
@@ -43,6 +44,8 @@
     	<mkdir dir="${orootC3}"/>
     	<mkdir dir="${orootC4}"/>
         <mkdir dir="${orootC4}/test"/>
+        <mkdir dir="${orootC4}/tool"/>
+        <mkdir dir="${orootC4}/util"/>
     	<mkdir dir="${olib}"/>
     	<mkdir dir="${otld}"/>
         <mkdir dir="${owar}"/>
@@ -107,7 +110,7 @@
             <classpath path="${lib}/commons-validator.jar"/>
             <classpath path="${lib}/jakarta-oro.jar"/>
             <classpath path="${lib}/struts.jar"/>
-            <classpath path="${lib}/classes12.jar"/>
+            <classpath path="${lib}/ojdbc14.jar"/>
             <classpath path="${lib}/nls_charset12.jar"/>
             <classpath path="${lib}/activation.jar"/>
             <classpath path="${lib}/mail.jar"/>
@@ -117,10 +120,16 @@
         </javac>
         <delete file="${owar}/cadsrsentinel.jar"/>
         <delete file="${owar}/cadsrsentinelapi.jar"/>
-        <jar destfile="${owar}/cadsrsentinel.jar" basedir="${oclasses}"/>
+        <jar destfile="${owar}/cadsrsentinel.jar">
+            <fileset dir="${oclasses}">
+                <include name="gov/nih/nci/cadsr/sentinel/*.properties" />
+                <include name="gov/nih/nci/cadsr/sentinel/tool/*.class" />
+                <include name="gov/nih/nci/cadsr/sentinel/test/*.class" />
+            </fileset>
+        </jar>
         <jar destfile="${owar}/cadsrsentinelapi.jar">
             <fileset dir="${oclasses}">
-                <include name="gov/nih/nci/cadsralertapi/*.class" />
+                <include name="gov/nih/nci/cadsr/sentinel/util/*.class" />
             </fileset>
         </jar>
     </target>
@@ -248,14 +257,13 @@
             </classpath>
 			
             <packageset dir="${java}" defaultexcludes="yes">
-                <include name="gov/nih/nci/cadsralert/**" />
-                <include name="gov/nih/nci/cadsralertapi/**" />
+                <include name="gov/nih/nci/cadsr/sentinel/**" />
             </packageset>
 			
             <doctitle><![CDATA[<h1>caDSR Sentinel Tool</h1>]]></doctitle>
 			<bottom><![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]></bottom>
 			<tag name="todo" scope="all" description="To do:" />
-			<group title="Source Package" packages="gov.nih.nci.cadsralert;gov.nih.nci.cadsralert.Test"/>
+			<group title="Source Package" packages="gov.nih.nci.cadsr.sentinel.tool;gov.nih.nci.cadsr.sentinel.tool.Test"/>
 			<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="D:\temp"/>
         </javadoc>
         <zip destfile="distrib/doc/sentinel_doc.zip">
