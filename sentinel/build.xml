@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.14 2006-01-31 18:57:45 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.15 2006-02-03 19:37:03 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -136,7 +136,7 @@
 
 	<target name="test" unless="notest">
         <delete><fileset dir="${test-results}" includes="**/*"/></delete>
-        <junit printsummary="on" haltonfailure="yes" showoutput="yes">
+        <junit printsummary="on" haltonfailure="yes" showoutput="yes" filtertrace="off">
             <classpath>
                 <pathelement location="${oroot}"/>
                 <pathelement location="${oclasses}"/>
@@ -146,13 +146,13 @@
             </classpath>
             <sysproperty key="test.propfile" value="${conf}/DSRAlertTest.properties"/>
             <formatter type="plain"/>
-            <batchtest fork="yes" todir="${test-results}" filtertrace="on">
+            <batchtest fork="yes" todir="${test-results}" filtertrace="off">
                 <fileset dir="${java}">
-                    <include name="**/TestDatabase.java"/>
+                    <include name="**/test/TestDatabase.java"/>
                 </fileset>
             </batchtest>
         </junit>
-    	<junit printsummary="on" haltonfailure="yes" showoutput="yes">
+    	<junit printsummary="on" haltonfailure="yes" showoutput="yes" filtertrace="off">
     		<classpath>
     			<pathelement location="${oroot}"/>
   		      	<pathelement location="${oclasses}"/>
@@ -162,9 +162,9 @@
     		</classpath>
     		<sysproperty key="test.propfile" value="${conf}/DSRAlertTest.properties"/>
     	  	<formatter type="plain"/>
-    	  	<batchtest fork="yes" todir="${test-results}" filtertrace="on">
+    	  	<batchtest fork="yes" todir="${test-results}" filtertrace="off">
     	    	<fileset dir="${java}">
-    	      		<include name="**/Test*.java"/>
+    	      		<include name="**/test/Test*.java"/>
     	    	</fileset>
     	  	</batchtest>
     	</junit>

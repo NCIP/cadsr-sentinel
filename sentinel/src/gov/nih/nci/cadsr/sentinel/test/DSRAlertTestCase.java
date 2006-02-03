@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/DSRAlertTestCase.java,v 1.4 2006-02-01 16:26:18 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/DSRAlertTestCase.java,v 1.5 2006-02-03 19:37:29 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.test;
@@ -52,7 +52,7 @@ public class DSRAlertTestCase extends MockStrutsTestCase
     super.setUp();
 
     // Grab the useris/password combos from the properties file
-    ResourceBundle testProperties = PropertyResourceBundle.getBundle("gov.nih.nci.cadsr.sentinel.tool.test.DSRAlertTest");
+    ResourceBundle testProperties = PropertyResourceBundle.getBundle("gov.nih.nci.cadsr.sentinel.test.DSRAlertTest");
     _validUserid = testProperties.getString("valid.userid");
     _validPswd = testProperties.getString("valid.pswd");
     _invalidUserid = testProperties.getString("invalid.userid");
