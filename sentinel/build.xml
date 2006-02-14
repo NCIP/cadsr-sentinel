@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.17 2006-02-07 19:47:21 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.18 2006-02-14 21:38:11 hardingr Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
