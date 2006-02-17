@@ -471,12 +471,11 @@ public class AutoProcessAlerts
             {
                 // Build the recipient list for this report.
                 queueReport(list[ndx]);
-
-                // Reset the last run time in the database. If we don't queue a
-                // report we
-                // don't update the time as the processing produced no results.
-                resetAutoRun(list[ndx]);
             }
+
+            // Reset the last run time in the database. Always do this
+            // update whether or not a report is created. 
+            resetAutoRun(list[ndx]);
         }
     }
 
