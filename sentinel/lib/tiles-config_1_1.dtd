@@ -8,7 +8,7 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
        "http://struts.apache.org/dtds/tiles-config_1_1.dtd">
 
-     $Id: tiles-config_1_1.dtd,v 1.6 2006-02-17 21:45:05 hardingr Exp $
+     $Id: tiles-config_1_1.dtd,v 1.7 2006-02-20 20:59:33 hardingr Exp $
 -->
 
 
