@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.7 2006-02-20 20:59:33 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.8 2006-03-02 22:57:59 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -70,6 +70,9 @@ public class DSRAlertV1 implements DSRAlert
      */
     public int createAlert(String user_, String idseq_)
     {
+        String url = _url + "crf?version=" + _version + "&user=" + user_ + "&idseq=" + idseq_;
+        // System.err.println("DSRAlert 0: [" + url + "]");
+
         int rc = DSRAlert.RC_FAILED;
         _alertName = "";
         if (user_ != null && user_.length() > 0 &&
@@ -77,7 +80,7 @@ public class DSRAlertV1 implements DSRAlert
         {
             try
             {
-                URL rps = new URL(_url + "crf?version=" + _version + "&user=" + user_ + "&idseq=" + idseq_);
+                URL rps = new URL(url);
                 HttpURLConnection http = (HttpURLConnection) rps.openConnection();
                 http.setUseCaches(false);
                 switch (http.getResponseCode())
@@ -102,11 +105,11 @@ public class DSRAlertV1 implements DSRAlert
             }
             catch(MalformedURLException ex)
             {
-                System.err.println("DSRAlert 1: " + ex.toString());
+                System.err.println("DSRAlert 1: [" + url + "] " + ex.toString());
             }
             catch(IOException ex)
             {
-                System.err.println("DSRAlert 2: " + ex.toString());
+                System.err.println("DSRAlert 2: [" + url + "] " + ex.toString());
             }
         }
         return rc;
