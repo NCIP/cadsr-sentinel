@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/ACDataFindRange.java,v 1.2 2006-01-06 16:14:26 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/com/scenpro/DSRAlert/ACDataFindRange.java,v 1.3 2006-05-17 20:17:00 hardingr Exp $
 // $Name: not supported by cvs2svn $
 
 package com.scenpro.DSRAlert;
