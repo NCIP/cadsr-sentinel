@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/Constants.java,v 1.10 2006-05-17 20:17:01 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/Constants.java,v 1.11 2006-09-08 22:32:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -67,33 +67,9 @@ public class Constants
      * The property name for the application version number.
      */
     public static final String _APLVERS           = "Appl.version";
-    
-    /**
-     * The database "name" to display on Alert Reports to identify the source of
-     * the data for the report coded in DSRAlert.properties.
-     */
-    public static final String _DBNAME            = "DB.displayname";
 
     /**
-     * The property name for the database user id password value coded in
-     * DSRAlert.properties.
-     */
-    public static final String _DBPSWD            = "DB.password";
-
-    /**
-     * The property name for the database tnsname.ora entry value coded in
-     * DSRAlert.properties.
-     */
-    public static final String _DBTNSNAME         = "DB.tnsname";
-
-    /**
-     * The property name for the database user id value coded in
-     * DSRAlert.properties.
-     */
-    public static final String _DBUSER            = "DB.username";
-
-    /**
-     * The Struts session id for the message rource.
+     * The Struts session id for the message resource.
      */
     public static final String _RESOURCES         = "org.apache.struts.action.MESSAGE";
 
@@ -120,7 +96,27 @@ public class Constants
      * blank or empty.
      */
     public static final String _STRNONE           = "(none)";
-
+    
+    /**
+     * The name of the datasource url.
+     */
+    public static final String _DSURL = "DSurl";
+    
+    /**
+     * The name of the default datasource access account.
+     */
+    public static final String _DSUSER = "DSusername";
+    
+    /**
+     * The password for the default datasource access account.
+     */
+    public static final String _DSPSWD = "DSpassword";
+    
+    /**
+     * The datasource test properties.
+     */
+    public static final String _DSTESTPROP = "sentinelDSTestProperties";
+    
     /**
      * Constructor.
      */

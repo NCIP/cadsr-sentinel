@@ -1,13 +1,13 @@
 // Copyright (c) 2004 ScenPro, Inc
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestLogon.java,v 1.10 2006-05-17 20:17:01 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestLogon.java,v 1.11 2006-09-08 22:32:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.test;
 
-import gov.nih.nci.cadsr.sentinel.tool.AlertBean;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
-import gov.nih.nci.cadsr.sentinel.tool.LogonForm;
+import gov.nih.nci.cadsr.sentinel.ui.AlertBean;
+import gov.nih.nci.cadsr.sentinel.ui.LogonForm;
 
 /**
  * Test the Alert Login logic.
@@ -63,8 +63,8 @@ public class TestLogon extends DSRAlertTestCase
     actionPerform();
 
     // Verify there were no errors and we got to the launcher page
-    verifyForward(Constants._ACTLIST);
     verifyNoActionErrors();
+    verifyForward(Constants._ACTLIST);
 
     // Verify there is a user bean in the session
     assertNotNull(getSession().getAttribute(AlertBean._SESSIONNAME));

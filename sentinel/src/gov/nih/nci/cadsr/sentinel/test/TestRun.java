@@ -1,15 +1,16 @@
 // Copyright (c) 2004 ScenPro, Inc
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestRun.java,v 1.10 2006-05-17 20:17:01 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestRun.java,v 1.11 2006-09-08 22:32:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.test;
 
-import gov.nih.nci.cadsr.sentinel.tool.AlertBean;
+import gov.nih.nci.cadsr.sentinel.database.DBAlert;
+import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
-import gov.nih.nci.cadsr.sentinel.tool.DBAlert;
-import gov.nih.nci.cadsr.sentinel.tool.RunForm;
+import gov.nih.nci.cadsr.sentinel.ui.AlertBean;
+import gov.nih.nci.cadsr.sentinel.ui.RunForm;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -73,7 +74,7 @@ public class TestRun extends DSRAlertTestCase
     alertBean.setRunPrev(Constants._ACTLIST);
     AlertRec alertRec = alertBean.getWorking();
     alertRec.setName("struts_test_temp_alert");
-    DBAlert dbAlert = new DBAlert();
+    DBAlert dbAlert = DBAlertUtil.factory();
     assertEquals(dbAlert.open(getSession().getServletContext(), alertBean
         .getUser(), alertBean.getPswd()), 0);
     assertEquals(dbAlert.insertAlert(alertRec), 0);

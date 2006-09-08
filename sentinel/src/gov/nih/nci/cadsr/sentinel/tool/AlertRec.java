@@ -1,10 +1,11 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AlertRec.java,v 1.10 2006-05-17 20:17:01 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AlertRec.java,v 1.11 2006-09-08 22:32:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
 
+import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -2494,14 +2495,15 @@ public class AlertRec
     /**
      * Test the AC type to see if it appears in the AC Type list.
      * 
+     * @param db_ The database interface object.
      * @param val_ The index in the definition type list.
      * @return The numeric AC Type if it's used.
      */
-    public int isACTypeUsed(int val_)
+    public int isACTypeUsed(DBAlert db_, int val_)
     {
         if (isACTYPEall())
             return val_;
-        return DBAlert.isACTypeUsed(_ACTypes[val_]);
+        return db_.isACTypeUsed(_ACTypes[val_]);
     }
     
     /**

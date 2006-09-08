@@ -6,11 +6,12 @@
 
 package gov.nih.nci.cadsr.sentinel.test;
 
-import gov.nih.nci.cadsr.sentinel.tool.AlertBean;
+import gov.nih.nci.cadsr.sentinel.database.DBAlert;
+import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
-import gov.nih.nci.cadsr.sentinel.tool.DBAlert;
-import gov.nih.nci.cadsr.sentinel.tool.EditForm;
+import gov.nih.nci.cadsr.sentinel.ui.AlertBean;
+import gov.nih.nci.cadsr.sentinel.ui.EditForm;
 
 /**
  * Test the Alert Edit logic.
@@ -72,7 +73,7 @@ public class TestEdit extends DSRAlertTestCase
         // Create the alert to edit
         AlertRec alertRec = _alertBean.getWorking();
         alertRec.setName("struts_test_temp_alert");
-        DBAlert dbAlert = new DBAlert();
+        DBAlert dbAlert = DBAlertUtil.factory();
         assertEquals(dbAlert.open(getSession().getServletContext(), _alertBean
             .getUser(), _alertBean.getPswd()), 0);
         assertEquals(dbAlert.insertAlert(alertRec), 0);

@@ -1,10 +1,11 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACData.java,v 1.10 2006-05-17 20:17:01 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACData.java,v 1.11 2006-09-08 22:32:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
 
+import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -95,30 +96,30 @@ public class ACData
      *        A 'p' or 's'.
      * @return The bytes for output.
      */
-    static private byte[] dumpConvertLevel(char val_)
+    static private String dumpConvertLevel(char val_)
     {
         if (val_ == 'p')
-            return "Changes&nbsp;to".getBytes();
+            return "Changes&nbsp;to";
         else
-            return "Associated&nbsp;To".getBytes();
+            return "Associated&nbsp;To";
     }
 
     /**
-     * Return the byte representation for a String with special values for
+     * Return the string representation for a String with special values for
      * 'null' and 'empty'.
      * 
      * @param val_
      *        A string.
-     * @return The bytes for output.
+     * @return The String for output.
      */
-    static private byte[] dumpConvert(String val_)
+    static private String dumpConvertString(String val_)
     {
         if (val_ == null)
-            return "<i>&lt;null&gt;</i>".getBytes();
+            return "<i>&lt;null&gt;</i>";
         else if (val_.length() == 0)
-            return "<i>&lt;empty&gt;</i>".getBytes();
+            return "<i>&lt;empty&gt;</i>";
         else
-            return AlertRec.getHTMLString(val_).getBytes();
+            return AlertRec.getHTMLString(val_);
     }
 
     /**
@@ -175,14 +176,14 @@ public class ACData
      *        A string.
      * @return The byte representation.
      */
-    static private byte[] dumpConvert2(String val_)
+    static private String dumpConvertString2(String val_)
     {
         if (val_ == null)
-            return "&nbsp;".getBytes();
+            return "&nbsp;";
         else if (val_.length() == 0)
-            return "&nbsp;".getBytes();
+            return "&nbsp;";
         else
-            return AlertRec.getHTMLString(val_).getBytes();
+            return AlertRec.getHTMLString(val_);
     }
 
     /**
@@ -248,7 +249,7 @@ public class ACData
         while (!save_.empty())
         {
             RepRows val = save_.pop();
-            if (val._indent > indentLimit)
+            if (val._indent > indentLimit && (val._indent != 1 || !val._rec._tableCode.equals("conte")))
                 continue;
             report.add(0, val);
         }
@@ -353,28 +354,13 @@ public class ACData
         count = 0;
         int lastIndent = 0;
 
-        // Create a byte array to keep track of the variable length 'basic'
-        // information.
-        byte basics[][] = new byte[10][];
-        int basicNdx;
-
         // Dump the stack.
         CDEBrowserAPI browser = new CDEBrowserAPI(db_.getConnection());
         while (!save_.empty())
         {
             RepRows val = save_.pop();
-            resolveNames(db_, val._rec);
+            val._rec.resolveNames(db_);
             ++count;
-            String display;
-            if (val._rec._level == 'p')
-                display = "pstripe";
-            else
-                display = "stripe";
-            fout_.write(new String("\t\t<tr class=\"" + display + "\">").getBytes());
-            display = display + "2";
-            fout_.write(new String("<td class=\"" + display + "\" title=\"Row Number\">").getBytes());
-            fout_.write(String.valueOf(++rows_).getBytes());
-            fout_.write(new String("</td><td class=\"" + display + "\" title=\"Group Number\">").getBytes());
 
             // Handle the group/section number column
             if (lastIndent == val._indent)
@@ -383,176 +369,236 @@ public class ACData
                 ++(sections[val._indent]);
             else
                 sections[val._indent] = 1;
-            fout_.write(String.valueOf(sections[0]).getBytes());
-            for (int ndx = 1; ndx <= val._indent; ++ndx)
-            {
-                fout_.write(".".getBytes());
-                fout_.write(String.valueOf(sections[ndx]).getBytes());
-            }
             lastIndent = val._indent;
-            String detailsURL = null;
-            if (browser.isPresent())
-            {
-                if (val._rec._tableCode.compareTo("de") == 0)
-                {
-                    detailsURL = browser.getLinkForDE(val._rec._idseq);
-                }
-                else if (val._rec._tableCode.compareTo("oc") == 0)
-                {
-                    detailsURL = browser.getLinkForOC(val._rec._idseq);
-                }
-                if (detailsURL != null)
-                    detailsURL = "</td><td class=\""
-                        + display
-                        + "\" align=\"right\"><a target=\"_blank\" href=\""
-                        + detailsURL
-                        + "\">(Details)</a>";
-            }
-            if (detailsURL != null)
-            {
-                fout_.write(new String("</td><td class=\"" + display + "\" colspan=\"5\">").getBytes());
-            }
-            else
-            {
-                fout_.write(new String("</td><td class=\"" + display + "\" colspan=\"6\">").getBytes());
-            }
-            fout_.write(dumpConvertLevel(val._rec._level));
-            fout_.write("&nbsp;".getBytes());
-            fout_.write(val._rec._table.getBytes());
-            fout_.write(":&nbsp;".getBytes());
-            fout_.write(dumpConvert(val._rec._name));
-            if (detailsURL != null)
-            {
-                fout_.write(detailsURL.getBytes());
-            }
-            fout_.write("</td></tr>\n\t\t<tr><td colspan=\"2\">&nbsp;</td>"
-                .getBytes());
-            basicNdx = 0;
-            if (val._rec._publicID > -1)
-            {
-                basics[basicNdx++] = new String("<td>Public&nbsp;ID<br>" + val._rec._publicID + "</td>").getBytes();
-            }
-            else
-            {
-                basics[basicNdx++] = "<td><span class=\"na\">Public&nbsp;ID<br>N/A</span></td>".getBytes();
-            }
-            if (val._rec._version != null && val._rec._version.length() > 0)
-            {
-                basics[basicNdx++] = new String("<td>Version<br>" + fixVersion(val._rec._version) + "</td>").getBytes();
-            }
-            else
-            {
-                basics[basicNdx++] = "<td><span class=\"na\">Version<br>N/A</span></td>".getBytes();
-            }
-            basics[basicNdx++] = new String("<td>Modified&nbsp;By<br>"
-                + ((val._rec._modifier == null) ? "<i>&lt;null&gt;</i>" : val._rec._modifier)
-                + "</td>").getBytes();
-            basics[basicNdx++] = new String("<td>Modified&nbsp;Date<br>"
-                + AlertRec.dateToString(val._rec._modified, true, true)
-                + "</td>").getBytes();
-/*          if (val._rec._modifier != null && val._rec._modifier.length() > 0)
-            {
-            }
-            else
-            {
-                basics[basicNdx++] = "<td>Modified&nbsp;By<br>&nbsp;</td>".getBytes();
-                basics[basicNdx++] = "<td>Modified&nbsp;Date<br>&nbsp;</td>".getBytes();
-            }
-*/
-            basics[basicNdx++] = new String("<td>Created&nbsp;By<br>" + val._rec._creator + "</td>").getBytes();
-            basics[basicNdx++] = new String("<td>Created&nbsp;Date<br>"
-                + AlertRec.dateToString(val._rec._created, true, true)
-                + "</td>").getBytes();
 
-            for (int ndx = 0; ndx < basicNdx; ++ndx)
-                fout_.write(basics[ndx]);
+            // Output the section header
+            fout_.write(formatSection(browser, ++rows_, val._rec._level, val._indent, sections, val._rec._tableCode, val._rec._idseq, val._rec._table, val._rec._name).getBytes());
+            
+            // Output basic record information.
+            fout_.write("\t\t<tr><td colspan=\"2\">&nbsp;</td>".getBytes());
+            fout_.write(formatBasicProperties(val._rec._publicID, val._rec._version, val._rec._modifier, val._rec._modified, val._rec._creator, val._rec._created).getBytes());
             fout_.write("</tr>\n".getBytes());
 
+            // Output the comment / change note if it's present.
             if (val._rec._note != null && val._rec._note.length() > 0)
             {
-                fout_.write(new String("\t\t<tr><td colspan=\"2\">&nbsp;</td><td colspan=\""
-                    + basicNdx
-                    + "\">Comment/Change&nbsp;Note:&nbsp;").getBytes());
-                fout_.write(dumpConvert2(val._rec._note));
-                fout_.write("</td></tr>\n".getBytes());
+                fout_.write(new String("\t\t<tr><td colspan=\"2\">&nbsp;</td><td colspan=\"6\">Comment/Change&nbsp;Note:&nbsp;"
+                    + dumpConvertString2(val._rec._note)
+                    + "</td></tr>\n").getBytes());
             }
+            
+            // Output change details if this is the primary record and not an "associated" record.
             if (val._rec._level == 'p')
             {
-                fout_.write(new String(
-                    "\t\t<tr><td colspan=\"2\">&nbsp;</td>" +
-                    "<td colspan=\"6\"><table class=\"t3prop\">" +
-                    "<colgroup><col /><col /><col /></colgroup>" +
-                    "<tbody class=\"t3body\" />" +
-                    "<tr>").getBytes());
-                fout_
-                    .write("<td class=\"chghead\">Attribute&nbsp;Name</td><td class=\"chghead\">Old&nbsp;Value</td><td class=\"chghead\">New&nbsp;Value</td></tr>\n"
-                        .getBytes());
-                if (val._rec._changes == null || val._rec._changes.length == 0)
-                {
-                    fout_.write("\t\t\t<tr>".getBytes());
-                    if (val._rec._modified == null)
-                        fout_.write("<td colspan=\"3\">(New&nbsp;Record)"
-                            .getBytes());
-                    else
-                        fout_
-                            .write("<td colspan=\"3\"><i>(Details&nbsp;not&nbsp;available.)</i>"
-                                .getBytes());
-                    fout_.write("</td></tr>\n".getBytes());
-                }
-                else
-                {
-                    Timestamp dchg = val._rec._dates[0];
-                    String chgby = val._rec._chgby[0];
-                    dumpActivityMarker(dchg, chgby, fout_);
-                    for (int chgcnt = 0; chgcnt < val._rec._changes.length; ++chgcnt)
-                    {
-                        if (dchg.compareTo(val._rec._dates[chgcnt]) != 0)
-                        {
-                            dchg = val._rec._dates[chgcnt];
-                            chgby = val._rec._chgby[chgcnt];
-                            dumpActivityMarker(dchg, chgby, fout_);
-                        }
-                        fout_
-                            .write("\t\t\t<tr><td title=\"Attribute Name\">"
-                                .getBytes());
-                        fout_
-                            .write(dumpConvertBlanks(val._rec._changes[chgcnt])
-                                .getBytes());
-                        fout_
-                            .write("</td><td title=\"Old Value\" class=\"chgcol\">"
-                                .getBytes());
-                        fout_.write(dumpConvert(val._rec._old[chgcnt]));
-                        fout_
-                            .write("</td><td title=\"New Value\" class=\"chgcol\">"
-                                .getBytes());
-                        fout_.write(dumpConvert(val._rec._new[chgcnt]));
-                        fout_.write("</td></tr>\n".getBytes());
-                    }
-                }
-                fout_.write("\t\t</table></td></tr>\n".getBytes());
+                fout_.write("\t\t<tr><td colspan=\"2\">&nbsp;</td><td colspan=\"6\">\n".getBytes());
+                fout_.write(formatChangeHistory(val._rec._changes, val._rec._modified, val._rec._dates, val._rec._chgby, val._rec._old, val._rec._new).getBytes());
+                fout_.write("</td></tr>\n".getBytes());
             }
         }
 
         return count;
     }
+    
+    /**
+     * Format the ACData record into HTML output for display to the user. The resulting HTML uses
+     * embedded styles to control the visual display and not classes. This ensures a consistent display
+     * with the Alert Report output.
+     * 
+     * @param db_ The database connection for alerts. 
+     * 
+     * @return the HTML string.
+     */
+    public String formatACHistoryHTML(DBAlert db_)
+    {
+        resolveNames(db_);
+        
+        String html = "";
+        html = html + "<p>" + _table + ":&nbsp;" + _name + "</p>\n";
+        html = html
+            + "<table style=\"border-collapse: collapse; margin: 0.1in 0.1in 0.1in 0.1in\"><colgroup>"
+            + "<col style=\"padding: 0.1in 0.1in 0.1in 0.1in\"/>"
+            + "<col style=\"padding: 0.1in 0.1in 0.1in 0.1in\"/>"
+            + "<col style=\"padding: 0.1in 0.1in 0.1in 0.1in\"/>"
+            + "<col style=\"padding: 0.1in 0.1in 0.1in 0.1in\"/>"
+            + "<col style=\"padding: 0.1in 0.1in 0.1in 0.1in\"/>"
+            + "<col style=\"padding: 0.1in 0.1in 0.1in 0.1in\"/>"
+            + "</colgroup><tbody />\n"
+            + formatBasicProperties(_publicID, _version, _modifier, _modified, _creator, _created)
+            + "</table>\n";
+        html = html + formatChangeHistory(_changes, _modified, _dates, _chgby, _old, _new);
+        return html;
+    }
 
+    private static String formatSection(
+                    CDEBrowserAPI browser_, int row_, char level_, int indent_, int[] sections_, String tableCode_, String idseq_, String table_, String name_)
+    {
+        String display = (level_ == 'p') ? "pstripe" : "stripe";
+        String sectrow = "\t\t<tr class=\"" + display + "\">";
+        
+        sectrow = sectrow
+            + "<td class=\""
+            + display
+            + "\" title=\"Row Number\">"
+            + String.valueOf(row_)
+            + "</td><td class=\""
+            + display
+            + "\" title=\"Group Number\">";
+
+        sectrow = sectrow + String.valueOf(sections_[0]);
+        for (int ndx = 1; ndx <= indent_; ++ndx)
+        {
+            sectrow = sectrow + "." + String.valueOf(sections_[ndx]);
+        }
+        sectrow = sectrow + "</td>"
+            + "</td><td class=\"" + display + "\" colspan=\"";
+
+        String detailsURL = null;
+        if (browser_.isPresent())
+        {
+            if (tableCode_.compareTo("de") == 0)
+            {
+                detailsURL = browser_.getLinkForDE(idseq_);
+            }
+            else if (tableCode_.compareTo("oc") == 0)
+            {
+                detailsURL = browser_.getLinkForOC(idseq_);
+            }
+            if (detailsURL != null)
+            {
+                detailsURL = "<td class=\""
+                    + display
+                    + "\" align=\"right\"><a target=\"_blank\" href=\""
+                    + detailsURL
+                    + "\">(Details)</a></td>";
+                sectrow = sectrow + "5";
+            }
+            else
+                sectrow = sectrow + "6";
+        }
+        else
+            sectrow = sectrow + "6";
+
+        sectrow = sectrow
+            + "\">"
+            + dumpConvertLevel(level_)
+            + "&nbsp;"
+            + table_
+            + ":&nbsp;"
+            + dumpConvertString(name_);
+
+        if (detailsURL != null)
+        {
+            sectrow = sectrow + detailsURL;
+        }
+        sectrow = sectrow + "</td></tr>\n";
+        
+        return sectrow;
+    }
+    
+    /**
+     * Format the history information into an HTML string to be used in a &lt;table&gt; element. The
+     * arrays must all be equal length and should be sorted ascending or descending on the "dates_"
+     * and then the "changes_" to provide consistency to the output.
+     * 
+     * @param changes_ The list of attribute names
+     * @param modified_ The modified date from the record
+     * @param dates_ The dates of each change
+     * @param chgby_ The user that made the change
+     * @param old_ The old value of the attribute
+     * @param new_ The new value for the attribute
+     * @return HTML formatted result
+     */
+    static public String formatChangeHistory(String[] changes_, Timestamp modified_, Timestamp[] dates_, String[] chgby_, String[] old_, String[] new_)
+    {
+        String html = "<table style=\"border-collapse: collapse\">\n\t<colgroup><col /><col /><col /></colgroup>"
+            + "\n\t<tbody style=\"padding: 0.05in 0.1in 0.05in 0.1in\" />\n\t<tr>"
+            + "\n\t\t<td style=\"border-bottom: 1px solid black; font-weight: bold\">Attribute&nbsp;Name</td>"
+            + "\n\t\t<td style=\"border-bottom: 1px solid black; font-weight: bold\">Old&nbsp;Value</td>"
+            + "\n\t\t<td style=\"border-bottom: 1px solid black; font-weight: bold\">New&nbsp;Value</td>\n\t</tr>";
+
+        if (changes_ == null || changes_.length == 0)
+        {
+            html = html + "\n\t<tr>";
+            if (modified_ == null)
+                html = html + "\n\t\t<td colspan=\"3\">(New&nbsp;Record)";
+            else
+                html = html + "\n\t\t<td colspan=\"3\"><i>(Details&nbsp;not&nbsp;available.)</i>";
+            html = html + "</td>\n\t</tr>";
+        }
+        else
+        {
+            Timestamp dchg = dates_[0];
+            String chgby = chgby_[0];
+            html = html + formatActivityMarker(dchg, chgby);
+            for (int chgcnt = 0; chgcnt < changes_.length; ++chgcnt)
+            {
+                if (dchg.compareTo(dates_[chgcnt]) != 0)
+                {
+                    dchg = dates_[chgcnt];
+                    chgby = chgby_[chgcnt];
+                    html = html + formatActivityMarker(dchg, chgby);
+                }
+                html = html + "\n\t<tr>\n\t\t<td title=\"Attribute Name\">"
+                    + dumpConvertBlanks(changes_[chgcnt])
+                    + "</td>\n\t\t<td title=\"Old Value\" style=\"border-left: 1px solid black\">"
+                    + dumpConvertString(old_[chgcnt])
+                    + "</td>\n\t\t<td title=\"New Value\" style=\"border-left: 1px solid black\">"
+                    + dumpConvertString(new_[chgcnt])
+                    + "</td>\n\t</tr>";
+            }
+        }
+        html = html + "\n</table>\n";
+        return html;
+    }
+
+    private static String formatBasicProperties(int pid_, String vers_, String mby_, Timestamp mdate_, String cby_, Timestamp cdate_)
+    {
+        String html = "";
+        if (pid_ > -1)
+        {
+            html = html + "<td>Public&nbsp;ID<br>" + pid_ + "</td>";
+        }
+        else
+        {
+            html = html + "<td><span style=\"color: #aaaaaa\">Public&nbsp;ID<br>N/A</span></td>";
+        }
+        if (vers_ != null && vers_.length() > 0)
+        {
+            html = html + "<td>Version<br>" + fixVersion(vers_) + "</td>";
+        }
+        else
+        {
+            html = html + "<td><span style=\"color: #aaaaaa\">Version<br>N/A</span></td>";
+        }
+        html = html + "<td>Modified&nbsp;By<br>"
+            + ((mby_ == null) ? "<i>&lt;null&gt;</i>" : mby_)
+            + "</td><td>Modified&nbsp;Date<br>"
+            + AlertRec.dateToString(mdate_, true, true)
+            + "</td><td>Created&nbsp;By<br>"
+            + cby_
+            + "</td><td>Created&nbsp;Date<br>"
+            + AlertRec.dateToString(cdate_, true, true)
+            + "</td>";
+        
+        return html;
+    }
+    
     /**
      * Output the activity marker separator in the Attribute/Old/New table.
      * 
-     * @param dchg_ The date to display on the marker.
-     * @param chgby_ The user name to display on the marker.
-     * @param fout_ The report output file.
-     * @throws IOException
+     * @param dchg_
+     *            The date to display on the marker.
+     * @param chgby_
+     *            The user name to display on the marker.
+     * @return The string separator marker.
      */
-    private static void dumpActivityMarker(Timestamp dchg_, String chgby_, FileOutputStream fout_) throws IOException
+    private static String formatActivityMarker(Timestamp dchg_, String chgby_)
     {
-        fout_
-        .write("\t\t\t<tr><td title=\"Activity\" colspan=\"3\" style=\"border-top: black solid 1px; border-bottom: black solid 1px; background-color: #eeeeee\">"
-                .getBytes());
-        fout_.write(dumpConvert(chgby_));
-        fout_.write("&nbsp;made&nbsp;the&nbsp;following&nbsp;changes&nbsp;on&nbsp;".getBytes());
-        fout_.write(AlertRec.dateToString(dchg_, true, true).getBytes());
-        fout_.write("</td></tr>\n".getBytes());
+        return "\n\t<tr>\n\t\t<td title=\"Activity\" colspan=\"3\" style=\"border-top: black solid 1px; border-bottom: black solid 1px; background-color: #eeeeee\">"
+            + dumpConvertString(chgby_)
+            + "&nbsp;made&nbsp;the&nbsp;following&nbsp;changes&nbsp;on&nbsp;"
+            + AlertRec.dateToString(dchg_, true, true)
+            + "</td>\n\t</tr>";
     }
 
     /**
@@ -602,7 +648,7 @@ public class ACData
             RepRows val = (RepRows) save_.pop();
             if (val._indent > indentLimit)
                 continue;
-            resolveNames(db_, val._rec);
+            val._rec.resolveNames(db_);
             ++count;
             if (val._rec._level == 'p' && indentLimit > 0)
                 fout_.write("\t\t<tr class=\"pstripe\">".getBytes());
@@ -611,7 +657,7 @@ public class ACData
             else
                 fout_.write("\t\t<tr>".getBytes());
             fout_.write("<td title=\"Row Number\">".getBytes());
-            fout_.write(dumpConvert(String.valueOf(++rows_)));
+            fout_.write(dumpConvertString(String.valueOf(++rows_)).getBytes());
             fout_.write("</td><td title=\"Group Number\">".getBytes());
 
             // Handle the group/section number column
@@ -621,11 +667,11 @@ public class ACData
                 ++(sections[val._indent]);
             else
                 sections[val._indent] = 1;
-            fout_.write(dumpConvert(String.valueOf(sections[0])));
+            fout_.write(dumpConvertString(String.valueOf(sections[0])).getBytes());
             for (int ndx = 1; ndx <= val._indent; ++ndx)
             {
                 fout_.write(".".getBytes());
-                fout_.write(dumpConvert(String.valueOf(sections[ndx])));
+                fout_.write(dumpConvertString(String.valueOf(sections[ndx])).getBytes());
             }
             lastIndent = val._indent;
 
@@ -634,52 +680,52 @@ public class ACData
             if (_debug)
             {
                 colcnt = 20;
-                fout_.write(dumpConvert(String.valueOf(val._rec._level)));
+                fout_.write(dumpConvertString(String.valueOf(val._rec._level)).getBytes());
                 fout_.write("</td><td>".getBytes());
-                fout_.write(dumpConvert(String.valueOf(val._rec._category)));
+                fout_.write(dumpConvertString(String.valueOf(val._rec._category)).getBytes());
                 fout_.write("</td><td>".getBytes());
-                fout_.write(dumpConvert(val._rec._contextID));
+                fout_.write(dumpConvertString(val._rec._contextID).getBytes());
                 fout_.write("</td><td>".getBytes());
-                fout_.write(dumpConvert(val._rec._relatedID));
+                fout_.write(dumpConvertString(val._rec._relatedID).getBytes());
                 fout_.write("</td><td>".getBytes());
-                fout_.write(dumpConvert(val._rec._idseq));
+                fout_.write(dumpConvertString(val._rec._idseq).getBytes());
                 fout_.write("</td><td>".getBytes());
-                fout_.write(dumpConvert(val._rec._table));
+                fout_.write(dumpConvertString(val._rec._table).getBytes());
             }
             else
             {
                 colcnt = 16;
-                fout_.write(dumpConvertLevel(val._rec._level));
+                fout_.write(dumpConvertLevel(val._rec._level).getBytes());
                 fout_.write("</td><td title=\"Type\">".getBytes());
-                fout_.write(dumpConvert(val._rec._table));
+                fout_.write(dumpConvertString(val._rec._table).getBytes());
             }
             String temp = "</td><td title=\"Name / Value\"><p class=\"i"
                 + val._indent + "\">";
             fout_.write(temp.getBytes());
-            fout_.write(dumpConvert(val._rec._name));
+            fout_.write(dumpConvertString(val._rec._name).getBytes());
             fout_.write("</p></td><td title=\"Public ID\">".getBytes());
             fout_.write(dumpConvert2(val._rec._publicID));
             fout_.write("</td><td title=\"Version\">".getBytes());
-            fout_.write(dumpConvert2(val._rec._version));
+            fout_.write(dumpConvertString2(val._rec._version).getBytes());
             fout_.write("</td><td title=\"Context\">".getBytes());
             if (_debug)
-                fout_.write(dumpConvert(val._rec._context));
+                fout_.write(dumpConvertString(val._rec._context).getBytes());
             else
                 fout_.write(dumpConvert3(val._rec._context,
                     ((val._rec._category == 1) ? "Owned" : "Used")
                         + "&nbsp;By<br>"));
             fout_.write("</td><td title=\"Modified By\">".getBytes());
-            fout_.write(dumpConvert2(val._rec._modifier));
+            fout_.write(dumpConvertString2(val._rec._modifier).getBytes());
             fout_.write("</td><td title=\"Modified Date\">".getBytes());
-            fout_.write(dumpConvert2(AlertRec.dateToString(val._rec._modified,
-                true, true)));
+            fout_.write(dumpConvertString2(AlertRec.dateToString(val._rec._modified,
+                true, true)).getBytes());
             fout_.write("</td><td title=\"Created By\">".getBytes());
-            fout_.write(dumpConvert(val._rec._creator));
+            fout_.write(dumpConvertString(val._rec._creator).getBytes());
             fout_.write("</td><td title=\"Created Date\">".getBytes());
-            fout_.write(dumpConvert(AlertRec.dateToString(val._rec._created,
-                true, true)));
+            fout_.write(dumpConvertString(AlertRec.dateToString(val._rec._created,
+                true, true)).getBytes());
             fout_.write("</td><td title=\"Change Note / Comment\">".getBytes());
-            fout_.write(dumpConvert(val._rec._note));
+            fout_.write(dumpConvertString(val._rec._note).getBytes());
             fout_.write("</td><td title=\"Change\">".getBytes());
             if (val._rec._changes == null || val._rec._changes.length == 0)
             {
@@ -699,11 +745,11 @@ public class ACData
             }
             else if (val._rec._changes.length == 1)
             {
-                fout_.write(dumpConvert(val._rec._changes[0]));
+                fout_.write(dumpConvertString(val._rec._changes[0]).getBytes());
                 fout_.write("</td><td title=\"Old Value\">".getBytes());
-                fout_.write(dumpConvert(val._rec._old[0]));
+                fout_.write(dumpConvertString(val._rec._old[0]).getBytes());
                 fout_.write("</td><td title=\"New Value\">".getBytes());
-                fout_.write(dumpConvert(val._rec._new[0]));
+                fout_.write(dumpConvertString(val._rec._new[0]).getBytes());
                 fout_.write("</td></tr>\n".getBytes());
             }
             else
@@ -714,14 +760,14 @@ public class ACData
                 for (int chgcnt = 0; chgcnt < val._rec._changes.length; ++chgcnt)
                 {
                     fout_
-                        .write(dumpConvert("\t\t<tr class=\"pstripe\"><td colspan=\""
+                        .write(dumpConvertString("\t\t<tr class=\"pstripe\"><td colspan=\""
                             + (colcnt - 3)
-                            + "\">&nbsp;</td><td title=\"Change\">"));
-                    fout_.write(dumpConvert(val._rec._changes[chgcnt]));
+                            + "\">&nbsp;</td><td title=\"Change\">").getBytes());
+                    fout_.write(dumpConvertString(val._rec._changes[chgcnt]).getBytes());
                     fout_.write("</td><td title=\"Old Value\">".getBytes());
-                    fout_.write(dumpConvert(val._rec._old[chgcnt]));
+                    fout_.write(dumpConvertString(val._rec._old[chgcnt]).getBytes());
                     fout_.write("</td><td title=\"New Value\">".getBytes());
-                    fout_.write(dumpConvert(val._rec._new[chgcnt]));
+                    fout_.write(dumpConvertString(val._rec._new[chgcnt]).getBytes());
                     fout_.write("</td></tr>\n".getBytes());
                 }
             }
@@ -829,7 +875,7 @@ public class ACData
 
         fout_.write("<html>\n\t<head>\n\t\t<title>".getBytes());
         fout_.write("Sentinel Report for ".getBytes());
-        fout_.write(dumpConvert(rec_.getName()));
+        fout_.write(dumpConvertString(rec_.getName()).getBytes());
         String part = "";
         if (part_ > 0)
         {
@@ -856,17 +902,17 @@ public class ACData
         fout_.write("\t<tbody class=\"t1body\" />\n".getBytes());
 
         fout_.write("\t\t<tr><td>Sentinel&nbsp;Name:</td><td>".getBytes());
-        fout_.write(dumpConvert(rec_.getName()));
+        fout_.write(dumpConvertString(rec_.getName()).getBytes());
         fout_.write(part.getBytes());
         if (rec_.getIntro(false) != null)
         {
             fout_.write("</td></tr>\n\t\t<tr><td>Introduction:</td><td>"
                 .getBytes());
-            fout_.write(dumpConvert(rec_.getIntro(false)));
+            fout_.write(dumpConvertString(rec_.getIntro(false)).getBytes());
         }
         fout_.write("</td></tr>\n\t\t<tr><td>Created&nbsp;By:</td><td>".getBytes());
         if (cemail_ == null || cemail_.length() == 0)
-            fout_.write(dumpConvert(rec_.getCreatorName()));
+            fout_.write(dumpConvertString(rec_.getCreatorName()).getBytes());
         else
         {
             String temp;
@@ -874,23 +920,23 @@ public class ACData
                 + "?subject=Concerning%20caDSR%20Sentinel%20Alert%20Name%20"
                 + rec_.getName().replaceAll(" ", "%20") + "\">";
             fout_.write(temp.getBytes());
-            fout_.write(dumpConvert(rec_.getCreatorName()));
+            fout_.write(dumpConvertString(rec_.getCreatorName()).getBytes());
             fout_.write("</a>".getBytes());
         }
         fout_.write("</td></tr>\n\t\t<tr><td>Recipients:</td><td>".getBytes());
         fout_.write(recips_.getBytes());
         fout_.write("</td></tr>\n\t\t<tr><td>Summary:</td><td>".getBytes());
-        fout_.write(dumpConvert(rec_.getSummary(false)));
+        fout_.write(dumpConvertString(rec_.getSummary(false)).getBytes());
         if (rec_.getIncPropSect())
         {
             fout_.write("</td></tr>\n\t\t<tr><td>Last&nbsp;Auto&nbsp;Run&nbsp;Date:</td><td>"
                 .getBytes());
-            fout_.write(dumpConvert(rec_.getADate()));
+            fout_.write(dumpConvertString(rec_.getADate()).getBytes());
             fout_.write("</td></tr>\n\t\t<tr><td>Frequency:</td><td>"
                 .getBytes());
-            fout_.write(dumpConvert(rec_.getFreq(false)));
+            fout_.write(dumpConvertString(rec_.getFreq(false)).getBytes());
             fout_.write("</td></tr>\n\t\t<tr><td>Status:</td><td>".getBytes());
-            fout_.write(dumpConvert(rec_.getStatus()));
+            fout_.write(dumpConvertString(rec_.getStatus()).getBytes());
             fout_.write("</td></tr>\n\t\t<tr><td>Reporting Level:</td><td>".getBytes());
             if (rec_.getIAssocLvl() == 0)
                 fout_.write("0 - Do not show Associated To".getBytes());
@@ -901,15 +947,15 @@ public class ACData
         }
         fout_.write("</td></tr>\n\t\t<tr><td>Reporting&nbsp;Dates:</td><td>"
             .getBytes());
-        fout_.write(dumpConvert(AlertRec.dateToString(start_, false)));
+        fout_.write(dumpConvertString(AlertRec.dateToString(start_, false)).getBytes());
         fout_.write("&nbsp;<b>To</b>&nbsp;".getBytes());
-        fout_.write(dumpConvert(AlertRec.dateToString(end_, false)));
+        fout_.write(dumpConvertString(AlertRec.dateToString(end_, false)).getBytes());
         fout_.write("</td></tr>\n\t\t<tr><td>Report&nbsp;Created&nbsp;On:</td><td>"
             .getBytes());
-        fout_.write(dumpConvert(AlertRec.dateToString(now, true)));
+        fout_.write(dumpConvertString(AlertRec.dateToString(now, true)).getBytes());
         fout_.write("</td></tr>\n\t\t<tr><td>Source&nbsp;Database:</td><td>"
             .getBytes());
-        fout_.write(dumpConvert(db_));
+        fout_.write(dumpConvertString(db_).getBytes());
         fout_
             .write(new String("</td></tr>\n\t</table>"
                 + "<p style=\"font-weight: normal; font-style: italic\">"
@@ -1297,11 +1343,8 @@ public class ACData
         }
 
         // Send it back sorted.
-        //        System.out.println("Old\tNew");
         for (int ndx = 0; ndx < list_.length; ++ndx)
         {
-            //            System.out.println(list_[ndx]._relatedID + "\t" +
-            // temp[ndx]._relatedID);
             list_[ndx] = temp[ndx];
         }
     }
@@ -1330,8 +1373,6 @@ public class ACData
         {
             int ndx = (max + min) / 2;
             int compare = id_.compareTo(list_[ndx]._relatedID);
-            //            System.out.println("id, target, compare " + id_ + " " +
-            // list_[ndx]._relatedID + " " + compare);
             if (compare == 0)
             {
                 for (--ndx; ndx >= 0 && id_.equals(list_[ndx]._relatedID); --ndx)
@@ -1460,25 +1501,25 @@ public class ACData
      * Translate the internal codes used to track changes and resolve the id's
      * into readable names for the old and new values.
      * 
-     * @param db
+     * @param db_
      *        The database connection.
      * @param list_
      *        The caDSR change records.
      */
-    static public void resolveChanges(DBAlert db, ACData list_[])
+    static public void resolveChanges(DBAlert db_, ACData list_[])
     {
         if (list_ == null)
             return;
 
         for (int ndx = 0; ndx < list_.length; ++ndx)
         {
-            db.selectNames(list_[ndx]._changes, list_[ndx]._old);
-            db.selectNames(list_[ndx]._changes, list_[ndx]._new);
+            db_.selectNames(list_[ndx]._changes, list_[ndx]._old);
+            db_.selectNames(list_[ndx]._changes, list_[ndx]._new);
             for (int ndx2 = 0; ndx2 < list_[ndx]._changes.length; ++ndx2)
             {
-                list_[ndx]._changes[ndx2] = DBAlert
+                list_[ndx]._changes[ndx2] = db_
                     .translateColumn(list_[ndx]._chgtable[ndx2], list_[ndx]._changes[ndx2]);
-                list_[ndx]._chgby[ndx2] = db.selectName(null, DBAlert._UNAME, list_[ndx]._chgby[ndx2]);
+                list_[ndx]._chgby[ndx2] = db_.selectName(null, DBAlert._UNAME, list_[ndx]._chgby[ndx2]);
             }
         }
     }
@@ -1489,22 +1530,20 @@ public class ACData
      * 
      * @param db_
      *        The database connection.
-     * @param list_
-     *        The caDSR record.
      */
-    static public void resolveNames(DBAlert db_, ACData list_)
+    public void resolveNames(DBAlert db_)
     {
-        if (list_._resolveNames)
+        if (_resolveNames)
         {
-            list_._creator = dumpConvertBlanks(db_.selectName(null,
-                DBAlert._UNAME, list_._creator));
-            list_._modifier = db_.selectName(null, DBAlert._UNAME,
-                list_._modifier);
-            if (list_._modifier != null && list_._modifier.length() > 0)
-                list_._modifier = dumpConvertBlanks(list_._modifier);
-            list_._table = dumpConvertBlanks(DBAlert
-                .translateTable(list_._tableCode));
-            list_._resolveNames = false;
+            _creator = dumpConvertBlanks(db_.selectName(null,
+                DBAlert._UNAME, _creator));
+            _modifier = db_.selectName(null, DBAlert._UNAME,
+                _modifier);
+            if (_modifier != null && _modifier.length() > 0)
+                _modifier = dumpConvertBlanks(_modifier);
+            _table = dumpConvertBlanks(db_
+                .translateTable(_tableCode));
+            _resolveNames = false;
         }
     }
 

@@ -1,15 +1,16 @@
 // Copyright (c) 2004 ScenPro, Inc
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestCreate.java,v 1.10 2006-05-17 20:17:01 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestCreate.java,v 1.11 2006-09-08 22:32:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.test;
 
-import gov.nih.nci.cadsr.sentinel.tool.AlertBean;
+import gov.nih.nci.cadsr.sentinel.database.DBAlert;
+import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
-import gov.nih.nci.cadsr.sentinel.tool.CreateForm;
-import gov.nih.nci.cadsr.sentinel.tool.DBAlert;
+import gov.nih.nci.cadsr.sentinel.ui.AlertBean;
+import gov.nih.nci.cadsr.sentinel.ui.CreateForm;
 
 /**
  * Test the Alert Create logic.
@@ -75,7 +76,7 @@ public class TestCreate extends DSRAlertTestCase
     verifyNoActionErrors();
 
     // Verify that the alert got added to the database
-    DBAlert dbAlert = new DBAlert();
+    DBAlert dbAlert = DBAlertUtil.factory();
     assertEquals(dbAlert.open(getSession().getServletContext(), _alertBean
         .getUser(), _alertBean.getPswd()), 0);
     assertNotNull(dbAlert.selectAlert(_alertBean.getWorking().getAlertRecNum()));
