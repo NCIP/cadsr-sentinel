@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.2 2006-09-18 16:10:35 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -426,6 +426,17 @@ public class DBAlertOracle implements DBAlert
      */
     public int close()
     {
+/*
+        try
+        {
+            throw new Exception("Trace");
+        }
+        catch (Exception ex)
+        {
+            _logger.debug("Trace", ex);
+        }
+*/
+
         // We only need to do something if a connection is obtained.
         if (_conn != null)
         {
@@ -539,8 +550,8 @@ public class DBAlertOracle implements DBAlert
                 rec.setSummary(select);
                 results.add(rec);
             }
-            pstmt.close();
             rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -612,8 +623,8 @@ public class DBAlertOracle implements DBAlert
                     }
                 }
             }
-            pstmt.close();
             rs.close();
+            pstmt.close();
 
             // Move the data to an array and drop the Vector.
             if (rlist.size() > 0)
@@ -676,8 +687,8 @@ public class DBAlertOracle implements DBAlert
                 rec_.setIntro(rs.getString(6), true);
                 rec_.setIAssocLvl(rs.getInt(7));
             }
-            pstmt.close();
             rs.close();
+            pstmt.close();
 
             return selectRecipients(rec_);
         }
@@ -749,8 +760,8 @@ public class DBAlertOracle implements DBAlert
                 // This shouldn't happen but just in case...
                 rec_.setAlertRecNum(null);
             }
-            pstmt.close();
             rs.close();
+            pstmt.close();
             return 0;
         }
         catch (SQLException ex)
@@ -2584,8 +2595,8 @@ public class DBAlertOracle implements DBAlert
                 // User must have some kind of write permissions.
                 result = null;
             }
-            pstmt.close();
             rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -2708,8 +2719,8 @@ public class DBAlertOracle implements DBAlert
                 rec._label = rs.getString(2);
                 results.add(rec);
             }
-            pstmt.close();
             rs.close();
+            pstmt.close();
 
             // We know there will always be someone in the table but we should
             // follow good
@@ -3284,8 +3295,8 @@ public class DBAlertOracle implements DBAlert
                 rec._preferredDefinition = rs.getString(8);
                 list.add(rec);
             }
-            stmt.close();
             rs.close();
+            stmt.close();
         }
         catch (SQLException ex)
         {
@@ -4059,8 +4070,8 @@ public class DBAlertOracle implements DBAlert
                 rec._label = rs.getString(3);
                 results.add(rec);
             }
-            pstmt.close();
             rs.close();
+            pstmt.close();
 
             // Move the list from a Vector to an array and add "(All)" to
             // the beginning.
@@ -4174,8 +4185,8 @@ public class DBAlertOracle implements DBAlert
                 rec._label2 = rs.getString(5);
                 results.add(rec);
             }
-            pstmt.close();
             rs.close();
+            pstmt.close();
 
             // Move the list from a Vector to an array and add "(All)" to
             // the beginning.
