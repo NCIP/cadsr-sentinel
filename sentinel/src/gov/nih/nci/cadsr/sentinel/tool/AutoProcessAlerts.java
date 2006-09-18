@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.7 2006-09-08 22:32:54 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.8 2006-09-18 21:10:50 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -31,6 +31,7 @@ import javax.mail.Store;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -1284,7 +1285,7 @@ public class AutoProcessAlerts
                 + ", qcm " + qcm.length + ", qc " + qc.length
                 + ", proto " + proto.length + ", pv " + pv.length
                 + ", vm " + vm.length + ", vd " + vd.length
-                + ", cd " + cd.length + ", con" + con.length
+                + ", cd " + cd.length + ", con " + con.length
                 + ", oc " + oc.length
                 + ", prop " + prop.length + ", dec " + dec.length
                 + ", de " + de.length + ", csi " + csi.length
@@ -1376,6 +1377,8 @@ public class AutoProcessAlerts
                 contem = ACData.merge(contem, _db.selectCONTEfromDE(dem));
                 _logSummary.writeError(_db.getError());
                 contem = ACData.merge(contem, _db.selectCONTEfromDEC(decm));
+                _logSummary.writeError(_db.getError());
+                contem = ACData.merge(contem, _db.selectCONTEfromCON(con));
                 _logSummary.writeError(_db.getError());
                 contem = ACData.merge(contem, _db.selectCONTEfromOC(ocm));
                 _logSummary.writeError(_db.getError());
@@ -1579,6 +1582,7 @@ public class AutoProcessAlerts
                 chainOC.add(lconte);
                 lcon.add(chainPROP);
                 lcon.add(chainOC);
+                lcon.add(lconte);
                 lprop.add(chainDEC);
                 lprop.add(lconte);
                 loc.add(chainDEC);
@@ -1819,7 +1823,11 @@ public class AutoProcessAlerts
             _db = DBAlertUtil.factory();
             int rc = -1;
             if (_api != null)
-                rc = _db.open(_api.getDataSource(), _api.getUser(), _api.getPswd());
+            {
+                DataSource ds = _api.getDataSource();
+                _dsurl = ds.getClass().getName() + " " + ds.toString();
+                rc = _db.open(ds, _api.getUser(), _api.getPswd());
+            }
             else if (_dsurl != null)
                 rc = _db.open(_dsurl, _user, _pswd);
             else

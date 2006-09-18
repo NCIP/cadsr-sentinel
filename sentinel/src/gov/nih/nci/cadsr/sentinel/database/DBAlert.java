@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.2 2006-09-18 21:10:50 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -1520,6 +1520,15 @@ public interface DBAlert
      * @return The array of related contexts.
      */
     public ACData[] selectCONTEfromPROP(ACData prop_[]);
+
+    /**
+     * Select the Contexts affected by the Concepts provided.
+     * 
+     * @param con_
+     *        The object class list.
+     * @return The array of related concepts.
+     */
+    public ACData[] selectCONTEfromCON(ACData con_[]);
 
     /**
      * Select the Contexts affected by the Object Classes provided.

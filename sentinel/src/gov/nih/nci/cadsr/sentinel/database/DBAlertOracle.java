@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.2 2006-09-18 16:10:35 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.3 2006-09-18 21:10:50 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -6652,6 +6652,24 @@ public class DBAlertOracle implements DBAlert
             + "order by id asc";
 
         return selectAC(select, oc_);
+    }
+
+    /**
+     * Select the Contexts affected by the Concepts provided.
+     * 
+     * @param con_
+     *        The object class list.
+     * @return The array of related concepts.
+     */
+    public ACData[] selectCONTEfromCON(ACData con_[])
+    {
+        String select = "select 's', 1, 'conte', c.conte_idseq as id, c.version, -1, c.name, '', "
+            + "c.date_modified, c.date_created, c.modified_by, c.created_by, '', '', con.con_idseq "
+            + "from sbr.contexts_view c, sbrext.concepts_view_ext con "
+            + "where con.con_idseq in (?) and c.conte_idseq = con.conte_idseq "
+            + "order by id asc";
+
+        return selectAC(select, con_);
     }
 
     /**
