@@ -1,9 +1,11 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertUtil.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertUtil.java,v 1.2 2006-09-19 15:23:35 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
+
+import java.sql.SQLException;
 
 
 // import org.apache.log4j.Logger;
@@ -150,6 +152,31 @@ public class DBAlertUtil
                 max = ndx;
             }
         }
+    }
+    
+    /**
+     * Sometimes the SQL error code isn't set and we have to pull it from the message.
+     * 
+     * @param ex_ the SQL exception
+     * @return the correct error code.
+     */
+    static public int getSQLErrorCode(SQLException ex_)
+    {
+        int error = ex_.getErrorCode();
+        if (error != 0)
+            return error;
+        
+        String msg = ex_.toString();
+        int pos = msg.indexOf("ORA-");
+        if (pos < 0)
+            return -9999;
+
+        pos += 4;
+        String[] temp = msg.substring(pos).split("[:]");
+        if (temp.length < 2)
+            return -9998;
+
+        return Integer.valueOf(temp[0]);
     }
 
 //    private static final Logger _logger = Logger.getLogger(DBAlert.class.getName());

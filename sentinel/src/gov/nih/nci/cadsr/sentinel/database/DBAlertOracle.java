@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.3 2006-09-18 21:10:50 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.4 2006-09-19 15:23:35 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -295,7 +295,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // There seems to be a problem.
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + ex.toString();
             _logger.fatal(_errorMsg);
             _sc = null;
@@ -380,7 +380,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg =  _errorCode + ": " + ex.toString();
             _logger.fatal(_errorMsg);
             return _errorCode;
@@ -450,7 +450,7 @@ public class DBAlertOracle implements DBAlert
             catch (SQLException ex)
             {
                 // There seems to be a problem.
-                _errorCode = ex.getErrorCode();
+                _errorCode = DBAlertUtil.getSQLErrorCode(ex);
                 _errorMsg = _errorCode + ": "
                     + ex.toString();
                 _logger.fatal(_errorMsg);
@@ -465,7 +465,7 @@ public class DBAlertOracle implements DBAlert
             catch (SQLException ex)
             {
                 // There seems to be a problem.
-                _errorCode = ex.getErrorCode();
+                _errorCode = DBAlertUtil.getSQLErrorCode(ex);
                 _errorMsg = _errorCode + ": "
                     + ex.toString();
                 _logger.fatal(_errorMsg);
@@ -555,7 +555,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
             _logger.fatal(_errorMsg);
@@ -645,7 +645,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // We've got trouble.
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
             _logger.fatal(_errorMsg);
@@ -695,7 +695,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // We've got trouble.
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
             _logger.fatal(_errorMsg);
@@ -767,7 +767,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // We've got trouble.
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
             _logger.fatal(_errorMsg);
@@ -850,7 +850,7 @@ public class DBAlertOracle implements DBAlert
         {
             // It's bad...
             _conn.rollback();
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -895,7 +895,7 @@ public class DBAlertOracle implements DBAlert
         {
             // It's bad...
             _conn.rollback();
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -933,7 +933,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + ex.toString();
             _logger.fatal(_errorMsg);
             return _errorCode;
@@ -1034,7 +1034,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // It's bad...
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + delete
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -1086,7 +1086,7 @@ public class DBAlertOracle implements DBAlert
         {
             // Ooops...
             _conn.rollback();
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -1159,7 +1159,7 @@ public class DBAlertOracle implements DBAlert
         {
             // Ooops...
             _conn.rollback();
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + insert
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -1254,7 +1254,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             temp = ex.toString();
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + temp;
             _logger.fatal(_errorMsg);
@@ -1590,10 +1590,10 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Ooops...
-            int _errorCode = ex.getErrorCode();
-            String _errorMsg = _errorCode + ": " + update
+            int errorCode = ex.getErrorCode();
+            String errorMsg = errorCode + ": " + update
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.fatal(errorMsg);
         }
     }
 
@@ -1641,10 +1641,10 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Ooops...
-            int _errorCode = ex.getErrorCode();
-            String _errorMsg = _errorCode + ": " + select
+            int errorCode = ex.getErrorCode();
+            String errorMsg = errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.fatal(errorMsg);
         }
         return out;
     }
@@ -1678,10 +1678,10 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Ooops...
-            int _errorCode = ex.getErrorCode();
-            String _errorMsg = _errorCode + ": " + select
+            int errorCode = ex.getErrorCode();
+            String errorMsg = errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.fatal(errorMsg);
         }
 
         return rc;
@@ -1729,7 +1729,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Ooops...
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -1762,7 +1762,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Ooops...
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -2019,7 +2019,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Ooops...
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -2056,7 +2056,7 @@ public class DBAlertOracle implements DBAlert
         {
             // Ooops...
             _conn.rollback();
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -2281,7 +2281,7 @@ public class DBAlertOracle implements DBAlert
         {
             // Ooops...
             _conn.rollback();
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = "(" + marker + "): " + _errorCode + ": "
                 + insert + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -2409,7 +2409,7 @@ public class DBAlertOracle implements DBAlert
             // Ooops...
             rec_.setAlertRecNum(null);
             _conn.rollback();
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + insert
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -2459,7 +2459,7 @@ public class DBAlertOracle implements DBAlert
             // Ooops...
             rec_.setAlertRecNum(null);
             _conn.rollback();
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + insert
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -2495,7 +2495,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Ooops...
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + ex.toString();
             _logger.fatal(_errorMsg);
             return null;
@@ -2552,7 +2552,7 @@ public class DBAlertOracle implements DBAlert
         {
             // Ooops...
             rec_.setAlertRecNum(null);
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + ex.toString();
             _logger.fatal(_errorMsg);
             return _errorCode;
@@ -2601,7 +2601,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // We've got trouble.
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -2678,7 +2678,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Bad...
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -2761,7 +2761,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Bad...
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -2806,7 +2806,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -3301,7 +3301,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Bad...
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -4096,7 +4096,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Bad...
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -4218,7 +4218,7 @@ public class DBAlertOracle implements DBAlert
         catch (SQLException ex)
         {
             // Bad...
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -4552,7 +4552,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -4754,7 +4754,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -4852,7 +4852,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -4940,7 +4940,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -4961,7 +4961,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -5002,7 +5002,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -6085,7 +6085,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -6904,7 +6904,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -6968,7 +6968,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -7047,7 +7047,7 @@ public class DBAlertOracle implements DBAlert
             }
             catch (SQLException ex)
             {
-                _errorCode = ex.getErrorCode();
+                _errorCode = DBAlertUtil.getSQLErrorCode(ex);
                 _errorMsg = _errorCode + ": " + select
                     + "\n\n" + ex.toString();
                 _logger.fatal(_errorMsg);
@@ -7099,7 +7099,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -7135,7 +7135,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.fatal(_errorMsg);
@@ -7166,7 +7166,7 @@ public class DBAlertOracle implements DBAlert
         }
         catch (SQLException ex)
         {
-            _errorCode = ex.getErrorCode();
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = select_ + "\n" + ex.toString();
             return -1;
         }
@@ -7638,7 +7638,7 @@ public class DBAlertOracle implements DBAlert
             }
             catch (SQLException ex)
             {
-                _errorCode = ex.getErrorCode();
+                _errorCode = DBAlertUtil.getSQLErrorCode(ex);
                 _errorMsg = temp + "\n" + ex.toString();
                 counts[ndx] = name + ": " + _errorMsg;
             }
