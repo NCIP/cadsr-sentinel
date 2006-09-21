@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.2 2006-09-21 21:46:23 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -456,8 +456,11 @@ public class AuditConceptToEVS extends AuditReport
                         _msg += "\nDefinition matches unnamed source but was expecting source to be [" + _rec._definitionSource + "]";
                 }
 
-                if (defFlag)
+                else if (defFlag)
                     _msg += "\nDefinition does not match EVS. [" + _rec._definitionSource + "]";
+                
+                else
+                    _msg += "\nDefinition and Source found for concept but Definition matches source [" + defSource + "] and expecting source [" + _rec._definitionSource + "]";
             }
         }
     }
