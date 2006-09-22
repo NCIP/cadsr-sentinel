@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.2 2006-09-21 21:46:23 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.3 2006-09-22 14:56:46 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -365,8 +365,8 @@ public class AuditConceptToEVS extends AuditReport
             }
             catch (ClassCastException ex)
             {
-                // The data in the caDSR is mislabeled. This concept code is not for Meta.
-                _msg += "\nMislabeled as a MetaThesaurus Concept.";
+                // Mislabeled as a MetaThesaurus Concept
+                _msg += formatMsg(_MSG001);
                 _flag = false;
                 _logger.warn(ex.toString());
                 
@@ -390,10 +390,13 @@ public class AuditConceptToEVS extends AuditReport
                         break;
                     }
                 }
+                // The caDSR definition source is missing and EVS has possible definitions
                 if (defFlag)
-                    _msg += "\nThe definition source is missing and EVS has possible definitions.";
+                    _msg += formatMsg(_MSG002);
+                
+                // EVS has no definitions for this term and the caDSR contains definition text
                 else if (_rec._preferredDefinition.length() > 0)
-                    _msg += "\nEVS has no definitions for this term and the caDSR contains definition text.";
+                    _msg += formatMsg(_MSG003);
             }
             else
             {
@@ -442,25 +445,33 @@ public class AuditConceptToEVS extends AuditReport
 
                 if (defCol)
                 {
-                    _msg += "\nNo definitions exist in EVS and the caDSR contains a definition source [" + _rec._definitionSource + "]";
+                    // No definitions exist in EVS and the caDSR contains a definition source [{0}]
+                    _msg += formatMsg(_MSG004, _rec._definitionSource);
                     return;
                 }
 
                 if (srcFlag)
                 {
+                    // Definition Source [{0}] does not exist for this Concept
                     if (defFlag)
-                        _msg += "\nDefinition Source [" + _rec._definitionSource + "] does not exist for this Concept.";
+                        _msg += formatMsg(_MSG005, _rec._definitionSource);
+                    
+                    // Definition matches source [{0}] but was expecting source to be [{1}]
                     else if (defSource != null)
-                        _msg += "\nDefinition matches source [" + defSource + "] but was expecting source to be [" + _rec._definitionSource + "]";
+                        _msg += formatMsg(_MSG006, defSource, _rec._definitionSource);
+                    
+                    // Definition matches unnamed source but was expecting source to be [{0}]
                     else
-                        _msg += "\nDefinition matches unnamed source but was expecting source to be [" + _rec._definitionSource + "]";
+                        _msg += formatMsg(_MSG007, _rec._definitionSource);
                 }
 
+                // Definition does not match EVS. [{0}]
                 else if (defFlag)
-                    _msg += "\nDefinition does not match EVS. [" + _rec._definitionSource + "]";
+                    _msg += formatMsg(_MSG008, _rec._definitionSource);
                 
+                // Definition and Source found for concept but Definition matches source [{0}] and expecting source [{1}]
                 else
-                    _msg += "\nDefinition and Source found for concept but Definition matches source [" + defSource + "] and expecting source [" + _rec._definitionSource + "]";
+                    _msg += formatMsg(_MSG009, defSource, _rec._definitionSource);
             }
         }
     }
@@ -560,7 +571,8 @@ public class AuditConceptToEVS extends AuditReport
                         prop = (Property) collection.get(n);
                         if (_rec._longName.compareToIgnoreCase(prop.getValue()) == 0)
                         {
-                            _msg += "Name matches on property " + prop.getName() + " but expected to match on property " + ((_vocab._preferredNameProp == null) ? "(default)" : _vocab._preferredNameProp);
+                            // Name matches on property {0} but expected to match on property {1}
+                            _msg += formatMsg(_MSG010, prop.getName(),  ((_vocab._preferredNameProp == null) ? "(default)" : _vocab._preferredNameProp));
                             _flag = false;
                             break;
                         }
@@ -571,8 +583,8 @@ public class AuditConceptToEVS extends AuditReport
             }
             catch (ClassCastException ex)
             {
-                // The Concept is marked as a non-Meta source and it should be Meta.
-                _msg += "\nMislabeled, should be a MetaThesaurus Concept.";
+                // Mislabeled, should be a MetaThesaurus Concept
+                _msg += formatMsg(_MSG011);
                 _flag = false;
                 _logger.warn(ex.toString());
                 
@@ -604,17 +616,20 @@ public class AuditConceptToEVS extends AuditReport
                             text = text.substring(0, tDefSrc);
                             if (text.length() == 0)
                             {
+                                // The EVS definition source is missing, caDSR is [{0}]
                                 if  (_rec._definitionSource != null && _rec._definitionSource.length() > 0)
-                                    _msg += "\nThe EVS definition source is missing, caDSR is [" + _rec._definitionSource + "].";
+                                    _msg += formatMsg(_MSG012, _rec._definitionSource);
                             }
                             else
                             {
+                                // The caDSR definition source is missing, EVS is [{0}]
                                 if  (_rec._definitionSource == null || _rec._definitionSource.length() == 0)
-                                    _msg += "\nThe caDSR definition source is missing, EVS is [" + text + "].";
+                                    _msg += formatMsg(_MSG013, text);
                                 else
                                 {
+                                    // The caDSR definition source [{0}] does not match EVS. [{1}]
                                     if (!text.equals(_rec._definitionSource))
-                                        _msg += "\nThe caDSR definition source does not match EVS. [" + _rec._definitionSource + "] [" + text + "]";
+                                        _msg += formatMsg(_MSG014, _rec._definitionSource, text);
                                 }
                             }
                         }
@@ -643,15 +658,19 @@ public class AuditConceptToEVS extends AuditReport
             }
             if (srcFlag)
             {
+                // No definitions exist in EVS for property [{0}] can not compare definitions
                 if (_rec._preferredDefinition.length() > 0)
-                    _msg += "\nNo definitions exist in EVS for property [" + _vocab._preferredDefinitionProp + "] can not compare definitions.";
+                    _msg += formatMsg(_MSG015, _vocab._preferredDefinitionProp);
             }
             else if (defFlag)
             {
+                // Definition does not match EVS
                 if (_rec._definitionSource == null)
-                    _msg += "\nDefinition does not match EVS.";
+                    _msg += formatMsg(_MSG016);
+                
+                // Definition does not match EVS [{0}]
                 else
-                    _msg += "\nDefinition does not match EVS [" + _rec._definitionSource + "].";
+                    _msg += formatMsg(_MSG017, _rec._definitionSource);
             }
         }
     }
@@ -696,10 +715,10 @@ public class AuditConceptToEVS extends AuditReport
             EVSVocab vocab = null;;
             while (true)
             {
-                // Verify the EVS Vocabulary reference.
+                // Missing EVS Source
                 if (rec._evsSource == null || rec._evsSource.length() == 0)
                 {
-                    msg += "\nMissing EVS Source";
+                    msg += formatMsg(_MSG020);
                     break;
                 }
 
@@ -720,17 +739,17 @@ public class AuditConceptToEVS extends AuditReport
                         vocab = vocabs[0];
                 }
 
-                // We have to do either Meta or a Vocabulary.
+                // Unknown EVS Source {0}
                 if (vocab == null)
                 {
-                    msg += "\nUnknown EVS Source " + rec._evsSource;
+                    msg += formatMsg(_MSG021, rec._evsSource);
                     break;
                 }
                 
-                // The concept code is required and is stored in the preferred name column - yeah don't ask.
+                // Missing Concept Code
                 if (rec._preferredName== null || rec._preferredName.length() == 0)
                 {
-                    msg += "\nMissing Concept Code";
+                    msg += formatMsg(_MSG022);
                     break;
                 }
 
@@ -748,16 +767,18 @@ public class AuditConceptToEVS extends AuditReport
                 }
                 catch (ApplicationException ex)
                 {
-                    // The concept code recorded in the preferred name is no longer valid.
+                    // Invalid concept code
                     if (ex.toString().indexOf("Invalid concept code") > -1)
                     {
-                        msg += "\nInvalid concept code.";
+                        msg += formatMsg(_MSG023);
                         _logger.warn(ex.toString());
                         break;
                     }
+                    
+                    // Invalid concept ID
                     else if (ex.toString().indexOf("Invalid conceptID") > -1)
                     {
-                        msg += "\nInvalid concept ID.";
+                        msg += formatMsg(_MSG024);
                         _logger.warn(ex.toString());
                         break;
                     }
@@ -773,19 +794,17 @@ public class AuditConceptToEVS extends AuditReport
                     }
                 }
 
-                // The concept code doesn't exist in EVS.
+                // Failed to retrieve EVS concept
                 if (ed._cons.size() == 0)
                 {
-                    msg += "\nFailed to retrieve EVS concept";
+                    msg += formatMsg(_MSG025);
                     break;
                 }
                     
-                // Verify the caDSR Concept has a name. This should never happen but we must
-                // allow for any state in the data. This is not only because of the tiers, DEV, QA, Stage
-                // and Production, but also because data corruption could occur and must be caught.
+                // Missing Concept Long Name, recommend using [{0}]
                 if (rec._longName == null || rec._longName.length() == 0)
                 {
-                    msg += "\nMissing Concept Long Name, recommend using [" + ed.recommendName() + "]";
+                    msg += formatMsg(_MSG026, ed.recommendName());
                     break;
                 }
 
@@ -802,9 +821,13 @@ public class AuditConceptToEVS extends AuditReport
                 // The name of the concept in the caDSR doesn't match anything in EVS for this concept code.
                 if (flag)
                 {
-                    msg += "\nConcept name does not match EVS";
-                    if (name != null)
-                        msg += ", expected [" + name + "]";
+                    // Concept name does not match EVS
+                    if (name == null)
+                        msg += formatMsg(_MSG018);
+                    
+                    // Concept name does not match EVS, expected [{0}]
+                    else
+                        msg += formatMsg(_MSG019, name);
                 }
 
                 break;
@@ -827,6 +850,17 @@ public class AuditConceptToEVS extends AuditReport
         return msgs;
     }
     
+    private static String formatMsg(String msg_, String ... subs_)
+    {
+        String text = msg_;
+        for (int i = 0; i < subs_.length; ++i)
+        {
+            String temp = "{" + i +  "}";
+            text = text.replace(temp, subs_[i]);
+        }
+        return "\n" + text;
+    }
+    
     private String formatMsg(ConceptItem rec_, EVSVocab vocab_, String msg_)
     {
         return rec_._longName + "::" + rec_._publicID + "::" + rec_._version + "::" + ((vocab_ == null) ? "" : vocab_._display) + "::" + rec_._preferredName + "::"
@@ -842,6 +876,33 @@ public class AuditConceptToEVS extends AuditReport
     {
         return "Concept::Public ID::Version::Vocabulary::Concept Code::Message";
     }
+    
+    private static final String _MSG001 = "Mislabeled as a MetaThesaurus Concept.";
+    private static final String _MSG002 = "The caDSR definition source is missing and EVS has possible definitions.";
+    private static final String _MSG003 = "EVS has no definitions for this term and the caDSR contains definition text.";
+    private static final String _MSG004 = "No definitions exist in EVS and the caDSR contains a definition source [{0}].";
+    private static final String _MSG005 = "Definition Source [{0}] does not exist for this Concept.";
+    private static final String _MSG006 = "Definition matches source [{0}] but was expecting source to be [{1}]";
+    private static final String _MSG007 = "Definition matches unnamed source but was expecting source to be [{0}]";
+    private static final String _MSG008 = "Definition does not match EVS. [{0}]";
+    private static final String _MSG009 = "Definition and Source found for concept but Definition matches source [{0}] and expecting source [{1}]";
+    private static final String _MSG010 = "Name matches on property [{0}] but expected to match on property [{1}]";
+    private static final String _MSG011 = "Mislabeled, should be a MetaThesaurus Concept.";
+    private static final String _MSG012 = "The EVS definition source is missing, caDSR is [{0}].";
+    private static final String _MSG013 = "The caDSR definition source is missing, EVS is [{0}].";
+    private static final String _MSG014 = "The caDSR definition source [{0}] does not match EVS [{1}]";
+    private static final String _MSG015 = "No definitions exist in EVS for property [{0}] can not compare definitions.";
+    private static final String _MSG016 = "Definition does not match EVS.";
+    private static final String _MSG017 = "Definition does not match EVS [{0}].";
+    private static final String _MSG018 = "Concept name does not match EVS";
+    private static final String _MSG019 = "Concept name does not match EVS, expected [{0}].";
+    private static final String _MSG020 = "Missing EVS Source";
+    private static final String _MSG021 = "Unknown EVS Source [{0}]";
+    private static final String _MSG022 = "Missing Concept Code";
+    private static final String _MSG023 = "Invalid concept code.";
+    private static final String _MSG024 = "Invalid concept ID.";
+    private static final String _MSG025 = "Failed to retrieve EVS concept";
+    private static final String _MSG026 = "Missing Concept Long Name, recommend using [{0}]";
     
     private static final int _maxMsgs = 200;
     private static final Logger _logger = Logger.getLogger(AuditConceptToEVS.class.getName());
