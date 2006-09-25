@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.4 2006-09-19 15:23:35 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.5 2006-09-25 17:44:55 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -1713,7 +1713,7 @@ public class DBAlertOracle implements DBAlert
     public String selectBrowserURL()
     {
         String select = "select value from sbrext.tool_options_view_ext "
-            + "where tool_name = 'BROWSER' and property = 'URL'";
+            + "where tool_name = 'CDEBrowser' and property = 'URL'";
         
         String rc = null;
 

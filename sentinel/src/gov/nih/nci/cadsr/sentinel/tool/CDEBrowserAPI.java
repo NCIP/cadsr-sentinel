@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/CDEBrowserAPI.java,v 1.10 2006-05-17 20:17:01 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/CDEBrowserAPI.java,v 1.11 2006-09-25 17:44:55 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class encapsulates remote calls to the CDE Browser.
@@ -40,7 +42,7 @@ public class CDEBrowserAPI
     {
         _isPresent = false;
         String select = "select value from sbrext.tool_options_view_ext "
-            + "where tool_name = 'BROWSER' and property = 'URL'";
+            + "where tool_name = 'CDEBrowser' and property = 'URL'";
         
         try
         {
@@ -58,9 +60,9 @@ public class CDEBrowserAPI
         {
             // Ooops...
             int errorCode = ex.getErrorCode();
-            String errorMsg = "CDEBrowserAPI: " + errorCode + ": " + select
+            String errorMsg = errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            System.err.println(errorMsg);
+            _logger.fatal(errorMsg);
         }
     }
     
@@ -104,4 +106,6 @@ public class CDEBrowserAPI
     private String _url;
     
     private boolean _isPresent;
+    
+    private static final Logger _logger = Logger.getLogger(CDEBrowserAPI.class.getName());
 }
