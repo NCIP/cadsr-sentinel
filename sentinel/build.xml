@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.24 2006-09-08 22:32:53 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.25 2006-10-23 22:01:23 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -103,29 +103,30 @@
     </target>
 
     <path id="libpath">
+            <fileset file="${lib}/activation.jar"/>
             <fileset file="${lib}/ant.jar"/>
             <fileset file="${lib}/antlr.jar"/>
+            <fileset file="${lib}/asm.jar"/>
+            <fileset file="${lib}/cacore32-client.jar"/>
+            <fileset file="${lib}/cglib-2.1.3.jar"/>
             <fileset file="${lib}/commons-beanutils.jar"/>
             <fileset file="${lib}/commons-collections.jar"/>
             <fileset file="${lib}/commons-digester.jar"/>
             <fileset file="${lib}/commons-fileupload.jar"/>
-            <fileset file="${lib}/commons-logging.jar"/>
+            <fileset file="${lib}/commons-logging-1.1.jar"/>
             <fileset file="${lib}/commons-validator.jar"/>
             <fileset file="${lib}/freestyle.jar"/>
+            <fileset file="${lib}/hibernate3.jar"/>
+            <fileset file="${lib}/j2ee.jar"/>
+            <fileset file="${lib}/jakarta-oro.jar"/>
             <fileset file="${lib}/jasper-compiler.jar"/>
             <fileset file="${lib}/jasper-runtime.jar"/>
-            <fileset file="${lib}/log4j-1.2.8.jar"/>
-            <fileset file="${lib}/jakarta-oro.jar"/>
-            <fileset file="${lib}/struts.jar"/>
-            <fileset file="${lib}/ojdbc14.jar"/>
-            <fileset file="${lib}/nls_charset12.jar"/>
-            <fileset file="${lib}/activation.jar"/>
+            <fileset file="${lib}/log4j-1.2.13.jar"/>
             <fileset file="${lib}/mail.jar"/>
-            <fileset file="${lib}/j2ee.jar"/>
-            <fileset file="${lib}/client.jar"/>
+            <fileset file="${lib}/nls_charset12.jar"/>
+            <fileset file="${lib}/ojdbc14.jar"/>
             <fileset file="${lib}/spring.jar"/>
-            <fileset file="${lib}/hibernate3.jar"/>
-            <fileset file="${lib}/cglib-full-2.0.1.jar"/>
+            <fileset file="${lib}/struts.jar"/>
             <fileset file="${lib}/test/junit.jar"/>
             <fileset file="${lib}/test/strutstest-2.1.3.jar"/>
     </path>
