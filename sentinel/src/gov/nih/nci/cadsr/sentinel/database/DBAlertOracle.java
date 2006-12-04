@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.5 2006-09-25 17:44:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.6 2006-12-04 21:33:19 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -3240,12 +3240,13 @@ public class DBAlertOracle implements DBAlert
      */
     public DBProperty[] selectEVSVocabs()
     {
-        String select = "select opt.value, opt.property from sbrext.tool_options_view_ext opt where opt.tool_name = 'CURATION' and "
-            + "(opt.property like 'EVS.VOCAB.%.PROPERTY.NAMESEARCH' or "
+        String select = "select opt.value, opt.property from sbrext.tool_options_view_ext opt where opt.tool_name = 'CURATION' and ("
+            + "opt.property like 'EVS.VOCAB.%.PROPERTY.NAMESEARCH' or "
             + "opt.property like 'EVS.VOCAB.%.EVSNAME' or "
             + "opt.property like 'EVS.VOCAB.%.DISPLAY' or "
-            + "opt.property like 'EVS.VOCAB.%.PROPERTY.DEFINITION') "
-            + "order by opt.property";
+            + "opt.property like 'EVS.VOCAB.%.PROPERTY.DEFINITION' or "
+            + "opt.property like 'EVS.VOCAB.%.ACCESSREQUIRED' "
+            + ") order by opt.property";
 
         Results1 rs = getBasicData1(select, false);
         

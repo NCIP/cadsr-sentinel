@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.3 2006-09-22 14:56:46 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.4 2006-12-04 21:33:19 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -14,6 +14,7 @@ import gov.nih.nci.evs.domain.MetaThesaurusConcept;
 import gov.nih.nci.evs.domain.Source;
 import gov.nih.nci.evs.query.EVSQuery;
 import gov.nih.nci.evs.query.EVSQueryImpl;
+import gov.nih.nci.evs.security.SecurityToken;
 import gov.nih.nci.system.applicationservice.ApplicationException;
 import gov.nih.nci.system.applicationservice.ApplicationService;
 import java.util.ArrayList;
@@ -108,6 +109,7 @@ public class AuditConceptToEVS extends AuditReport
         vocabs.add(vocab);
 
         String vDisplay = null;
+        String vAccess = null;
         String vName = null;
         String vDefProp = null;
         String vSearch = null;
@@ -126,6 +128,7 @@ public class AuditConceptToEVS extends AuditReport
                     vocab = new EVSVocab();
                     vocab._display = vDisplay;
                     vocab._vocab = vName;
+                    vocab._access = vAccess;
                     vocab._preferredDefinitionProp = (vDefProp == null) ? defProp : vDefProp;
                     vocab._preferredNameProp = vSearch;
                     vocab._ed = new NonMetaTh(vocab);
@@ -133,6 +136,7 @@ public class AuditConceptToEVS extends AuditReport
                     vocabs.add(vocab);
                     vDisplay = null;
                     vName = null;
+                    vAccess = null;
                     vDefProp = null;
                     vSearch = null;
                     vSource = null;
@@ -162,6 +166,8 @@ public class AuditConceptToEVS extends AuditReport
                         else if (vName.equals("MGED_Ontology"))
                             vSource = "NCI_MO_CODE";
                     }
+                    else if (text[3].equals("ACCESSREQUIRED"))
+                        vAccess = props_[i]._value;
                 }
                 else if (text.length == 5)
                 {
@@ -183,6 +189,7 @@ public class AuditConceptToEVS extends AuditReport
         vocab = new EVSVocab();
         vocab._display = vDisplay;
         vocab._vocab = vName;
+        vocab._access = vAccess;
         vocab._preferredDefinitionProp = (vDefProp == null) ? defProp : vDefProp;
         vocab._preferredNameProp = vSearch;
         vocab._ed = new NonMetaTh(vocab);
@@ -233,6 +240,11 @@ public class AuditConceptToEVS extends AuditReport
         /**
          */
         public EVSData _ed;
+        
+        /**
+         * 
+         */
+        public String _access;
     }
     
     private abstract class EVSData
@@ -491,6 +503,19 @@ public class AuditConceptToEVS extends AuditReport
         @Override
         public void search(EVSQuery query_)
         {
+            if (_vocab._access != null)
+            {
+                SecurityToken token = new gov.nih.nci.evs.security.SecurityToken();
+                token.setAccessToken(_vocab._access);
+                try
+                {
+                    query_.addSecurityToken(_vocab._vocab, token);
+                }
+                catch (Exception ex)
+                {
+                    _logger.error(ex);
+                }
+            }
             query_.getDescLogicConcept(_vocab._vocab, _rec._preferredName, true);
         }
 
