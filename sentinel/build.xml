@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.27 2006-12-15 16:45:33 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.28 2006-12-19 15:46:36 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -62,7 +62,6 @@
             <fileset file="${lib}/commons-digester.jar"/>
             <fileset file="${lib}/commons-fileupload.jar"/>
             <fileset file="${lib}/commons-validator.jar"/>
-            <fileset file="${lib}/freestyle.jar"/>
             <fileset file="${lib}/jakarta-oro.jar"/>
             <fileset file="${lib}/struts-config_1_0.dtd"/>
             <fileset file="${lib}/struts-config_1_1.dtd"/>
@@ -115,7 +114,6 @@
             <fileset file="${lib}/commons-fileupload.jar"/>
             <fileset file="${lib}/commons-logging-1.1.jar"/>
             <fileset file="${lib}/commons-validator.jar"/>
-            <fileset file="${lib}/freestyle.jar"/>
             <fileset file="${lib}/hibernate3.jar"/>
             <fileset file="${lib}/j2ee.jar"/>
             <fileset file="${lib}/jakarta-oro.jar"/>
