@@ -1,10 +1,11 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.6 2006-12-04 21:33:19 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.7 2007-01-25 20:19:24 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
 
+import gov.nih.nci.cadsr.sentinel.audits.AuditReport;
 import gov.nih.nci.cadsr.sentinel.tool.ACData;
 import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.AutoProcessData;
@@ -3091,9 +3092,11 @@ public class DBAlertOracle implements DBAlert
      */
     public String[] reportUnusedConcepts(String[] ids_)
     {
+        String cs1 = AuditReport._ColSeparator;
+        String cs2 = "'" + cs1 + "'";
         String select =
-            "SELECT 'Name::Public ID::Version::Date Accessed::Workflow Status::EVS Source::Concept Code' as title, ' ' as lname from dual UNION ALL "
-            + "SELECT con.long_name || '::' || con.con_id || '::' || con.version || '::' || nvl(date_modified, date_created) || '::' || con.asl_name || '::' || nvl(con.evs_source, ' ') || '::' || nvl(con.preferred_name, ' ') as title, upper(con.long_name) as lname "
+            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Date Accessed" + cs1 + "Workflow Status" + cs1 + "EVS Source" + cs1 + "Concept Code' as title, ' ' as lname from dual UNION ALL "
+            + "SELECT con.long_name || " + cs2 + " || con.con_id || " + cs2 + " || con.version || " + cs2 + " || nvl(date_modified, date_created) || " + cs2 + " || con.asl_name || " + cs2 + " || nvl(con.evs_source, ' ') || " + cs2 + " || nvl(con.preferred_name, ' ') as title, upper(con.long_name) as lname "
             + "FROM sbrext.concepts_view_ext con "
             + "WHERE con.con_idseq in (";
         
@@ -3115,9 +3118,11 @@ public class DBAlertOracle implements DBAlert
      */
     public String[] reportUnusedProperties()
     {
+        String cs1 = AuditReport._ColSeparator;
+        String cs2 = "'" + cs1 + "'";
         String select =
-            "SELECT 'Name::Public ID::Version::Workflow Status::Context' as title, ' ' as lname from dual UNION ALL "
-            + "SELECT prop.long_name || '::' || prop.prop_id || '::' || prop.version || '::' || prop.asl_name || '::' || c.name as title, upper(prop.long_name) as lname "
+            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Workflow Status" + cs1 + "Context' as title, ' ' as lname from dual UNION ALL "
+            + "SELECT prop.long_name || " + cs2 + " || prop.prop_id || " + cs2 + " || prop.version || " + cs2 + " || prop.asl_name || " + cs2 + " || c.name as title, upper(prop.long_name) as lname "
             + "FROM sbrext.properties_view_ext prop, sbr.contexts_view c "
             + "WHERE prop.prop_idseq NOT IN "
             + "(SELECT decv.prop_idseq "
@@ -3136,9 +3141,11 @@ public class DBAlertOracle implements DBAlert
      */
     public String[] reportMissingPublicID()
     {
+        String cs1 = AuditReport._ColSeparator;
+        String cs2 = "'" + cs1 + "'";
         String select = 
-            "SELECT 'AC Type::Name::ID::Context' as title, ' ' as tname, ' ' as lname from dual UNION ALL "
-            + "select ac.actl_name || '::' || ac.long_name || '::' || ac.ac_idseq || '::' || c.name as title, upper(ac.actl_name) as tname, upper(ac.long_name) as lname "
+            "SELECT 'AC Type" + cs1 + "Name" + cs1 + "ID" + cs1 + "Context' as title, ' ' as tname, ' ' as lname from dual UNION ALL "
+            + "select ac.actl_name || " + cs2 + " || ac.long_name || " + cs2 + " || ac.ac_idseq || " + cs2 + " || c.name as title, upper(ac.actl_name) as tname, upper(ac.long_name) as lname "
             + "from sbr.admin_components_view ac, sbr.contexts_view c where ac.public_id is null and c.conte_idseq = ac.conte_idseq "
             + "order by tname asc";
 
@@ -3152,9 +3159,11 @@ public class DBAlertOracle implements DBAlert
      */
     public String[] reportUnusedDEC()
     {
+        String cs1 = AuditReport._ColSeparator;
+        String cs2 = "'" + cs1 + "'";
         String select =
-            "SELECT 'Name::Public ID::Version::Workflow Status::Context' as title, ' ' as lname from dual UNION ALL "
-            + "SELECT dec.long_name || '::' || dec.dec_id || '::' || dec.version || '::' || dec.asl_name || '::' || c.name as title, upper(dec.long_name) as lname "
+            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Workflow Status" + cs1 + "Context' as title, ' ' as lname from dual UNION ALL "
+            + "SELECT dec.long_name || " + cs2 + " || dec.dec_id || " + cs2 + " || dec.version || " + cs2 + " || dec.asl_name || " + cs2 + " || c.name as title, upper(dec.long_name) as lname "
             + "FROM sbr.data_element_concepts_view dec, sbr.contexts_view c "
             + "WHERE dec.dec_idseq NOT IN "
             + "(SELECT de.dec_idseq FROM sbr.data_elements_view de WHERE de.dec_idseq = dec.dec_idseq) "
@@ -3171,9 +3180,11 @@ public class DBAlertOracle implements DBAlert
      */
     public String[] reportUnusedObjectClasses()
     {
+        String cs1 = AuditReport._ColSeparator;
+        String cs2 = "'" + cs1 + "'";
         String select =
-            "SELECT 'Name::Public ID::Version::Workflow Status::Context' as title, ' ' as lname from dual UNION ALL "
-            + "SELECT oc.long_name || '::' || oc.oc_id || '::' || oc.version || '::' || oc.asl_name || '::' || c.name as title, upper(oc.long_name) as lname "
+            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Workflow Status" + cs1 + "Context' as title, ' ' as lname from dual UNION ALL "
+            + "SELECT oc.long_name || " + cs2 + " || oc.oc_id || " + cs2 + " || oc.version || " + cs2 + " || oc.asl_name || " + cs2 + " || c.name as title, upper(oc.long_name) as lname "
             + "FROM sbrext.object_classes_view_ext oc, sbr.contexts_view c "
             + "WHERE oc.oc_idseq NOT IN " 
             +    "(SELECT decv.oc_idseq " 
@@ -3192,9 +3203,11 @@ public class DBAlertOracle implements DBAlert
      */
     public String[] reportMissingQuestionText()
     {
+        String cs1 = AuditReport._ColSeparator;
+        String cs2 = "'" + cs1 + "'";
         String select =
-            "SELECT 'Name::Public ID::Version::Workflow Status::Context' as title, ' ' as lname from dual UNION ALL "
-            + "select de.long_name || '::' || de.cde_id || '::' || de.version || '::' || de.asl_name || '::' || c.name as title, upper(de.long_name) as lname "
+            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Workflow Status" + cs1 + "Context' as title, ' ' as lname from dual UNION ALL "
+            + "select de.long_name || " + cs2 + " || de.cde_id || " + cs2 + " || de.version || " + cs2 + " || de.asl_name || " + cs2 + " || c.name as title, upper(de.long_name) as lname "
             + "from sbr.data_elements_view de, sbr.contexts_view c "
             + "where de.de_idseq in (select qc.de_idseq from sbrext.quest_contents_view_ext qc where qc.de_idseq = de.de_idseq) "
             + "and de.de_idseq not in (select rd.ac_idseq from sbr.reference_documents_view rd where rd.ac_idseq = de.de_idseq and dctl_name in ('Alternate Question Text','Preferred Question Text')) "
@@ -7390,7 +7403,7 @@ public class DBAlertOracle implements DBAlert
      */
     public String selectAlertReportEmailIntro()
     {
-        String select = "select opt.description from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'EMAIL.INTRO'";
+        String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'EMAIL.INTRO'";
 
         String[] list = getBasicData0(select);
 
@@ -7404,7 +7417,7 @@ public class DBAlertOracle implements DBAlert
      */
     public String selectAlertReportEmailError()
     {
-        String select = "select opt.description from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'EMAIL.ERROR'";
+        String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'EMAIL.ERROR'";
 
         String[] list = getBasicData0(select);
 
@@ -7632,7 +7645,7 @@ public class DBAlertOracle implements DBAlert
                 ResultSet rs = pstmt.executeQuery();
                 if (rs.next())
                 {
-                    counts[ndx] = name + "::" + rs.getString(1);
+                    counts[ndx] = name + AuditReport._ColSeparator + rs.getString(1);
                 }
                 rs.close();
                 pstmt.close();

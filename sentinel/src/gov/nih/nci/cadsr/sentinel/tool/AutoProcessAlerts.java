@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.9 2006-09-19 15:23:35 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.10 2007-01-25 20:19:29 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -153,7 +153,7 @@ public class AutoProcessAlerts
     {
         Properties prop = new Properties();
 
-        _logger.info("Loading properties...");
+        _logger.info("\n\nLoading properties...\n\n");
         FileInputStream in = new FileInputStream(propFile_);
         prop.loadFromXML(in);
         in.close();
@@ -1133,50 +1133,6 @@ public class AutoProcessAlerts
     }
 
     /**
-     * Form the table rows for the list provided.
-     * 
-     * @param list_
-     *        The list of row entries.
-     * @return The HTML table rows.
-     */
-    private String DBopenStatRows(String list_[])
-    {
-        String text = "";
-        int scnt = 0;
-        for (int ndx = 0; ndx < list_.length; ++ndx)
-        {
-            if (list_[ndx] != null)
-            {
-                String stripe = ((scnt % 2) == 0) ? " style=\"background-color: #ccffff\""
-                    : "";
-                String temp = "<tr" + stripe + "><td>"
-                    + list_[ndx].replaceAll("::", "</td><td>") + "</td></tr>";
-                text = text + temp.replaceAll("\\n", "<br>") + "\n";
-                ++scnt;
-            }
-        }
-        return text;
-    }
-
-    /**
-     * Construct the row header for the table section.
-     * 
-     * @param title_
-     *        The title of the section.
-     * @param count_
-     *        The count of rows in the section or -1.
-     * @return The composite table row string.
-     */
-    private String DBopenStatHeader(String title_, int count_, int cols_)
-    {
-        String text = "<tr><td colspan=\"" + cols_ + "\" style=\"border-bottom: solid black 1px\"><b>&nbsp;<br>"
-            + title_;
-        if (count_ > 0)
-            text += " (" + (count_ - 1) + " items)";
-        return text + "</b></td></tr>\n";
-    }
-
-    /**
      * Process initialization after the database connection is open.
      */
     private void createAuditReports()
@@ -1197,42 +1153,48 @@ public class AutoProcessAlerts
 
             _logAudits.writeParagraph1("Database: " + _dbname + " (" + _dsurl + ")");
 
-            String[] counts;
+            String[] rows;
             int colcnt;
             String text;
             int index = 0;
 
-            try
+            String splitPattern = AuditReport.getSplitPattern();
+            
+            for (index = 0; index < _audits.length; ++index)
             {
-                for (index = 0; index < _audits.length; ++index)
+                try
                 {
-                    AuditReport ar = (AuditReport) Class.forName(_audits[index]).newInstance();
-                    ar.setDB(_db);
-                    counts = ar.getReportRows();
-                    colcnt = counts[0].split("[:][:]").length;
-                    text = DBopenStatHeader(
-                                    _auditTitles[index],
-                                    (ar.okToDisplayCount()) ? counts.length : -1,
-                                    colcnt);
-                    text = text + DBopenStatRows(counts);
-                    _logAudits.writeMatrix(text, colcnt, ar.rightJustifyLastColumn());
+                        AuditReport ar = (AuditReport) Class.forName(_audits[index]).newInstance();
+                        ar.setDB(_db);
+                        rows = ar.getReportRows();
+                        colcnt = rows[0].split(splitPattern).length;
+                        text = AuditReport.formatHeader(
+                                        _auditTitles[index],
+                                        (ar.okToDisplayCount()) ? rows.length : -1,
+                                        colcnt);
+                        text = text + AuditReport.formatRows(rows);
+                        _logAudits.writeMatrix(text, colcnt, ar.rightJustifyLastColumn());
                 }
-            }
-            catch (InstantiationException ex)
-            {
-                _logSummary.writeError(ex.toString());
-            }
-            catch (IllegalAccessException ex)
-            {
-                _logSummary.writeError(ex.toString());
-            }
-            catch (ClassNotFoundException ex)
-            {
-                _logSummary.writeError(ex.toString());
-            }
-            catch (ClassCastException ex)
-            {
-                _logSummary.writeError("Class " + _audits[index] + " does not extend class AuditReport (" + ex.toString() + ")");
+                catch (InstantiationException ex)
+                {
+                    _logSummary.writeError(ex.toString());
+                }
+                catch (IllegalAccessException ex)
+                {
+                    _logSummary.writeError(ex.toString());
+                }
+                catch (ClassNotFoundException ex)
+                {
+                    _logSummary.writeError(ex.toString());
+                }
+                catch (ClassCastException ex)
+                {
+                    _logSummary.writeError("Class " + _audits[index] + " does not extend class AuditReport (" + ex.toString() + ")");
+                }
+                catch (Exception ex)
+                {
+                    _logSummary.writeError(ex.toString());
+                }
             }
 
             _logAudits.close();

@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.4 2006-12-04 21:33:19 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.5 2007-01-25 20:19:14 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -888,18 +888,18 @@ public class AuditConceptToEVS extends AuditReport
     
     private String formatMsg(ConceptItem rec_, EVSVocab vocab_, String msg_)
     {
-        return rec_._longName + "::" + rec_._publicID + "::" + rec_._version + "::" + ((vocab_ == null) ? "" : vocab_._display) + "::" + rec_._preferredName + "::"
+        return rec_._longName + AuditReport._ColSeparator + rec_._publicID + AuditReport._ColSeparator + rec_._version + AuditReport._ColSeparator + ((vocab_ == null) ? "" : vocab_._display) + AuditReport._ColSeparator + rec_._preferredName + AuditReport._ColSeparator
             + ((msg_.charAt(0) == '\n') ? msg_.substring(1) : msg_);
     }
     
     private String formatMaxMsg()
     {
-        return "*** Maximum Messages ***::***::***::***::***::The Error Message maximum limit [" + _maxMsgs + "] has been reached, report truncated.";
+        return "*** Maximum Messages ***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "The Error Message maximum limit [" + _maxMsgs + "] has been reached, report truncated.";
     }
     
     private String formatTitleMsg()
     {
-        return "Concept::Public ID::Version::Vocabulary::Concept Code::Message";
+        return "Concept" + AuditReport._ColSeparator + "Public ID" + AuditReport._ColSeparator + "Version" + AuditReport._ColSeparator + "Vocabulary" + AuditReport._ColSeparator + "Concept Code" + AuditReport._ColSeparator + "Message";
     }
     
     private static final String _MSG001 = "Mislabeled as a MetaThesaurus Concept.";

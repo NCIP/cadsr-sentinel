@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.28 2006-12-19 15:46:36 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.29 2007-01-25 20:19:06 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -8,10 +8,11 @@
     </description>
     <!-- set global properties for this build -->
 
-    <property name="oroot" location="tmp/cadsrsentinel"/>
     <property name="temp" location="tmp"/>
+    <property name="oroot" location="${temp}/cadsrsentinel"/>
     <property name="test-results" location="test_results"/>
 
+    <property name="ospackage" location="${temp}/ospack"/>
     <property name="ojsp" location="${oroot}/jsp"/>
     <property name="odoc" location="${oroot}/doc"/>
     <property name="owebinf" location="${oroot}/WEB-INF"/>
@@ -213,66 +214,66 @@
     </target>
 
     <target name="ospack">
-        <delete dir="ospackage"/>
-        <mkdir dir="ospackage"/>
-        <copy todir="ospackage">
+        <delete dir="${ospackage}"/>
+        <mkdir dir="${ospackage}"/>
+        <copy todir="${ospackage}">
             <fileset file="build.xml"/>
         </copy>
-        <mkdir dir="ospackage/conf"/>
-        <mkdir dir="ospackage/conf/common"/>
-        <copy todir="ospackage/conf/common">
+        <mkdir dir="${ospackage}/conf"/>
+        <mkdir dir="${ospackage}/conf/common"/>
+        <copy todir="${ospackage}/conf/common">
             <fileset dir="conf/common"/>
         </copy>
-        <mkdir dir="ospackage/conf/web"/>
-        <copy todir="ospackage/conf/web">
+        <mkdir dir="${ospackage}/conf/web"/>
+        <copy todir="${ospackage}/conf/web">
             <fileset dir="conf/web"/>
         </copy>
-        <copy todir="ospackage/conf/web" overwrite="true">
+        <copy todir="${ospackage}/conf/web" overwrite="true">
             <fileset dir="conf/osiweb"/>
         </copy>
-        <mkdir dir="ospackage/conf/prod"/>
-        <copy todir="ospackage/conf/prod">
+        <mkdir dir="${ospackage}/conf/prod"/>
+        <copy todir="${ospackage}/conf/prod">
             <fileset dir="conf/osi"/>
         </copy>
-        <mkdir dir="ospackage/conf/stage"/>
-        <copy todir="ospackage/conf/stage">
+        <mkdir dir="${ospackage}/conf/stage"/>
+        <copy todir="${ospackage}/conf/stage">
             <fileset dir="conf/osi"/>
         </copy>
-        <mkdir dir="ospackage/conf/qa"/>
-        <copy todir="ospackage/conf/qa">
+        <mkdir dir="${ospackage}/conf/qa"/>
+        <copy todir="${ospackage}/conf/qa">
             <fileset dir="conf/osi"/>
         </copy>
-        <mkdir dir="ospackage/conf/dev"/>
-        <copy todir="ospackage/conf/dev">
+        <mkdir dir="${ospackage}/conf/dev"/>
+        <copy todir="${ospackage}/conf/dev">
             <fileset dir="conf/osi"/>
         </copy>
-        <mkdir dir="ospackage/conf/proto"/>
-        <copy todir="ospackage/conf/proto">
+        <mkdir dir="${ospackage}/conf/proto"/>
+        <copy todir="${ospackage}/conf/proto">
             <fileset dir="conf/osi"/>
         </copy>
-        <mkdir dir="ospackage/distrib"/>
-        <copy todir="ospackage/distrib">
+        <mkdir dir="${ospackage}/distrib"/>
+        <copy todir="${ospackage}/distrib">
             <fileset dir="distrib"/>
         </copy>
-        <delete dir="ospackage/distrib/war"/>
-        <mkdir dir="ospackage/doc"/>
-        <copy todir="ospackage/doc">
+        <delete dir="${ospackage}/distrib/war"/>
+        <mkdir dir="${ospackage}/doc"/>
+        <copy todir="${ospackage}/doc">
             <fileset dir="doc"/>
         </copy>
-        <mkdir dir="ospackage/lib"/>
-        <copy todir="ospackage/lib">
+        <mkdir dir="${ospackage}/lib"/>
+        <copy todir="${ospackage}/lib">
             <fileset dir="lib"/>
         </copy>
-        <mkdir dir="ospackage/src"/>
-        <copy todir="ospackage/src">
+        <mkdir dir="${ospackage}/src"/>
+        <copy todir="${ospackage}/src">
             <fileset dir="src"/>
         </copy>
-        <mkdir dir="ospackage/ui"/>
-        <copy todir="ospackage/ui">
+        <mkdir dir="${ospackage}/ui"/>
+        <copy todir="${ospackage}/ui">
             <fileset dir="ui"/>
         </copy>
-        <zip destfile="ospackage/sentinel.zip">
-            <zipfileset dir="ospackage"/>
+        <zip destfile="${owar}/sentinel_ospack.zip">
+            <zipfileset dir="${ospackage}"/>
         </zip>
     </target>
 
@@ -305,7 +306,7 @@
 			<group title="Source Package" packages="gov.nih.nci.cadsr.sentinel.tool;gov.nih.nci.cadsr.sentinel.tool.Test"/>
 			<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="D:\temp"/>
         </javadoc>
-        <zip destfile="distrib/doc/sentinel_doc.zip">
+        <zip destfile="${owar}/sentinel_doc.zip">
             <zipfileset dir="tmp/cadsrsentinel/doc"/>
         </zip>
     </target>
