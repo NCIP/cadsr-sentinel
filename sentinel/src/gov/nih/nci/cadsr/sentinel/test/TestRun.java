@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestRun.java,v 1.11 2006-09-08 22:32:54 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestRun.java,v 1.12 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.test;
@@ -76,7 +76,7 @@ public class TestRun extends DSRAlertTestCase
     alertRec.setName("struts_test_temp_alert");
     DBAlert dbAlert = DBAlertUtil.factory();
     assertEquals(dbAlert.open(getSession().getServletContext(), alertBean
-        .getUser(), alertBean.getPswd()), 0);
+        .getUser()), 0);
     assertEquals(dbAlert.insertAlert(alertRec), 0);
     assertEquals(dbAlert.close(), 0);
     alertBean.setWorking(alertRec);
@@ -91,7 +91,7 @@ public class TestRun extends DSRAlertTestCase
 
     // Delete the record (clean up)
     assertEquals(dbAlert.open(getSession().getServletContext(), alertBean
-        .getUser(), alertBean.getPswd()), 0);
+        .getUser()), 0);
     assertEquals(dbAlert.deleteAlert(((AlertBean)getSession().getAttribute(
         AlertBean._SESSIONNAME)).getWorking().getAlertRecNum()), 0);
 

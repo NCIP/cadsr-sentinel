@@ -2,7 +2,7 @@
  * Copyright (c) 2006 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogHTML.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogHTML.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -83,7 +83,7 @@ public class LogHTML extends Action
         String html = "Unexpected Internal Error";
 
         // Connect to the database.
-        if (db.open(request_, userid, pswd) == 0)
+        if (db.open(request_, userid) == 0)
         {
             // Retrieve record history
             ACData[] history = db.selectWithIDSEQ(form.getIdseq());
@@ -119,7 +119,7 @@ public class LogHTML extends Action
         }
         catch (IOException ex)
         {
-            _logger.fatal(ex.toString());
+            _logger.error(ex.toString());
         }
         
         return null;

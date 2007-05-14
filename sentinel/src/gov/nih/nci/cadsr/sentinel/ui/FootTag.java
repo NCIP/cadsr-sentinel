@@ -1,16 +1,16 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/FootTag.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/FootTag.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
 
-import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import java.io.IOException;
-import java.io.File;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts.util.MessageResources;
+import org.apache.struts.Globals;
+import org.jboss.Version;
 
 /**
  * This is used to place a standard footer on every JSP in the Sentinel Tool
@@ -37,10 +37,9 @@ public class FootTag extends TagSupport
     {
         try
         {
-            String jboss = System.getenv("JBOSS_HOME");
-            jboss = (jboss == null) ? "" : jboss.substring(jboss.lastIndexOf(File.separatorChar) + 1);
+            String jboss = Version.getInstance().getMajor() + "." + Version.getInstance().getMinor() + "." + Version.getInstance().getRevision();
             MessageResources msgs = (MessageResources) pageContext
-                .findAttribute(Constants._RESOURCES);
+                .findAttribute(Globals.MESSAGES_KEY);
             JspWriter out = pageContext.getOut();
             out
                 .print("<table class=\"table3\"><colgroup></colgroup><tbody class=\"secttbody\" />\n"
@@ -53,7 +52,7 @@ public class FootTag extends TagSupport
                     + "<a target=\"_blank\" href=\"http://www.cancer.gov/\"><img border=\"0\" src=\"footer_nci.gif\" alt=\"National Cancer Institute Logo\" title=\"National Cancer Institute\"></a>\n"
                     + "<a target=\"_blank\" href=\"http://www.dhhs.gov/\"><img border=\"0\" src=\"footer_hhs.gif\" alt=\"Department of Health and Human Services Logo\" title=\"Department of Health and Human Services\"></a>\n"
                     + "<a target=\"_blank\" href=\"http://www.nih.gov/\"><img border=\"0\" src=\"footer_nih.gif\" alt=\"National Institutes of Health Logo\" title=\"National Institutes of Health\"></a>\n"
-                    + "<a target=\"_blank\" href=\"http://www.firstgov.gov/\"><img border=\"0\" src=\"footer_firstgov.gif\" alt=\"FirstGov.gov\" title=\"FirstGov.gov\"></a>\n"
+                    + "<a target=\"_blank\" href=\"http://www.usa.gov/\"><img border=\"0\" src=\"footer_usagov.gif\" alt=\"USA.gov\" title=\"USA.gov\"></a>\n"
                     + "</td>\n</tr>\n</table>\n");
         }
         catch (IOException ex)

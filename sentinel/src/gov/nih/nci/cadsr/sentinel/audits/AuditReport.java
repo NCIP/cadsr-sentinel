@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditReport.java,v 1.2 2007-01-25 20:19:19 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditReport.java,v 1.3 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -81,15 +81,45 @@ public abstract class AuditReport
      * @param count_
      *        The count of rows in the section or -1.
      * @param cols_ the number of columns in the report
+     * @param num_ the report number
      * @return The composite table row string.
      */
-    public static String formatHeader(String title_, int count_, int cols_)
+    public static String formatHeader(String title_, int count_, int cols_, int num_)
     {
-        String text = "<tr><td colspan=\"" + cols_ + "\" style=\"border-bottom: solid black 1px\"><b>&nbsp;<br>"
+        String text = "<tr><td colspan=\"" + cols_ + "\" style=\"border-bottom: solid black 1px\"><b>"
+            + "<div onclick=\"reporta" + num_ + ".style.display = 'block'; reportb" + num_ + ".style.display = 'none';\"><span class=\"action\">[Hide]</span> "
             + title_;
         if (count_ > 0)
             text += " (" + (count_ - 1) + " items)";
-        return text + "</b></td></tr>\n";
+        return text + "</div></b></td></tr>\n";
+    }
+    
+    /**
+     * Construct the division section for a report.
+     * 
+     * @param title_ the title of the section
+     * @param num_ the report number
+     * @return the div tag
+     */
+    public static String formatSectionTop(String title_, int num_)
+    {
+        String text = "<div id=\"reporta" + num_
+            + "\" class=\"report\" onclick=\"reportb" + num_
+            + ".style.display = 'block'; reporta" + num_
+            + ".style.display = 'none';\"><span class=\"action\">[View]</span> " + title_ + "</div>\n"
+            + "<div id=\"reportb" + num_ + "\" style=\"display: none\">\n";
+
+        return text;
+    }
+
+    /**
+     * Close the section division
+     * 
+     * @return the closing div tag
+     */
+    public static String formatSectionBottom()
+    {
+        return "</div>\n";
     }
 
     /**

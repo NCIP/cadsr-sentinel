@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts.util.MessageResources;
+import org.apache.struts.Globals;
 
 /**
  * The JSP tags for the edit.jsp page.
@@ -121,8 +122,7 @@ public class EditTag extends TagSupport
     private String getInit()
     {
         DBAlert db = DBAlertUtil.factory();
-        if (db.open(pageContext.getServletContext(), _ub.getUser(), _ub
-            .getPswd()) == 0)
+        if (db.open(pageContext.getServletContext(), _ub.getUser()) == 0)
         {
             _subject = db.selectAlertReportEmailSubject();
 
@@ -270,7 +270,7 @@ public class EditTag extends TagSupport
     private String getScript()
     {
         MessageResources msgs = (MessageResources) pageContext
-            .findAttribute(Constants._RESOURCES);
+            .findAttribute(Globals.MESSAGES_KEY);
 
         int tspot = 0;
         String temp[] = new String[106];

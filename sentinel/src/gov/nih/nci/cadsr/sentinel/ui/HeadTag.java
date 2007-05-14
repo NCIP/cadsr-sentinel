@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/HeadTag.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/HeadTag.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -10,6 +10,7 @@ import java.io.IOException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts.util.MessageResources;
+import org.apache.struts.Globals;
 
 /**
  * This is used to place a standard header on every JSP in the Sentinel Tool
@@ -47,7 +48,7 @@ public class HeadTag extends TagSupport
         try
         {
             MessageResources msgs = (MessageResources) pageContext
-                .findAttribute(Constants._RESOURCES);
+                .findAttribute(Globals.MESSAGES_KEY);
             JspWriter out = pageContext.getOut();
            out.print(
 

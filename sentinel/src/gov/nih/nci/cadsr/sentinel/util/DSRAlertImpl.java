@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertImpl.java,v 1.10 2006-05-17 20:17:01 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertImpl.java,v 1.11 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class exists solely to create an instance of the DSRAlert Interface object.
@@ -29,8 +31,8 @@ public class DSRAlertImpl
      * provided by DSRAlert.
      * 
      * @param url_ The URL to the Sentinel Alert system. For NCI this is
-     *      http://cadsrsentinel.nci.nih.gov. This is also stored in the caDSR sbrext.tool_options_view
-     *      table as SENTINEL, URL.
+     *      http://cadsrsentinel.nci.nih.gov. This is also stored in the caDSR
+     *      within the Tool Options table.
      *      
      * @return An instance of the implementation of the DSRAlert interface.
      */
@@ -69,10 +71,12 @@ public class DSRAlertImpl
         catch (SQLException ex)
         {
             int errorCode = ex.getErrorCode();
-            System.err.println("DSRAlertImpl 1: " + errorCode + ": " + select
+            _logger.error("DSRAlertImpl: " + errorCode + ": " + select
                 + "\n\n" + ex.toString());
         }
 
         return (rc == null) ? null : new DSRAlertV1(rc);
     }
+    
+    private static final Logger _logger = Logger.getLogger(DSRAlertImpl.class.getName());
 }

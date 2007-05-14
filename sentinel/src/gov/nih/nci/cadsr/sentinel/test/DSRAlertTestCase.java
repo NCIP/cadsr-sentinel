@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 import javax.servlet.ServletContext;
 import org.apache.struts.util.MessageResourcesFactory;
 import org.apache.struts.util.PropertyMessageResources;
+import org.apache.struts.Globals;
 import servletunit.struts.MockStrutsTestCase;
 
 /**
@@ -71,7 +72,7 @@ public class DSRAlertTestCase extends MockStrutsTestCase
         _invalidPswd = testProperties.getString("invalid.pswd");
         // Setup the MessageResources object since we are only in a mock environment
         ServletContext sc = getSession().getServletContext();
-        sc.setAttribute(Constants._RESOURCES, new PropertyMessageResources(MessageResourcesFactory.createFactory(),
+        sc.setAttribute(Globals.MESSAGES_KEY, new PropertyMessageResources(MessageResourcesFactory.createFactory(),
                         "gov.nih.nci.cadsr.sentinel.DSRAlert"));
         try
         {
@@ -99,12 +100,8 @@ public class DSRAlertTestCase extends MockStrutsTestCase
             System.out.println(ex.toString());
         }
     }
-
-    /**
-     * The setUpLoginSession method sets up the datasource that is normally created by the LogonForm and adds the alert
-     * bean to the session.
-     */
-    protected void setUpLoginSession()
+    
+    protected void setUpPool()
     {
         // Get the default information needed to connect to the database.
         // This requires an entry in the TNSNAMES.ORA file. If problems
@@ -115,6 +112,15 @@ public class DSRAlertTestCase extends MockStrutsTestCase
         // Setup the database pool.
         DBAlert db = DBAlertUtil.factory();
         db.setupPool(getSession(), pp._dsurl, pp._dsusername, pp._dspassword);
+    }
+
+    /**
+     * The setUpLoginSession method sets up the datasource that is normally created by the LogonForm and adds the alert
+     * bean to the session.
+     */
+    protected void setUpLoginSession()
+    {
+        setUpPool();
         getSession().setAttribute(AlertBean._SESSIONNAME, new AlertBean(_validUserid, "", _validPswd));
     }
 

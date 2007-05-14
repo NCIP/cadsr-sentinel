@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/Create.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/Create.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -67,7 +67,7 @@ public class Create extends Action
             // Set the alert defaults to be all contexts the user can write to.
             case '1':
                 DBAlert db = DBAlertUtil.factory();
-                db.open(request_, ub.getUser(), ub.getPswd());
+                db.open(request_, ub.getUser());
                 String temp[] = db.selectContexts(ub.getUser());
                 db.close();
                 ub.getWorking().setContexts(temp);
@@ -97,7 +97,7 @@ public class Create extends Action
         {
             // Save the new alert.
             DBAlert db = DBAlertUtil.factory();
-            if (db.open(request_, ub.getUser(), ub.getPswd()) == 0)
+            if (db.open(request_, ub.getUser()) == 0)
             {
                 if (db.insertAlert(ub.getWorking()) == 0)
                 {

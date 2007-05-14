@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.29 2007-01-25 20:19:06 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.30 2007-05-14 14:30:29 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -58,20 +58,17 @@
     <target name="setup" depends="clean">
         <copy todir="${olib}">
             <fileset file="${lib}/antlr.jar"/>
-            <fileset file="${lib}/commons-beanutils.jar"/>
-            <fileset file="${lib}/commons-collections.jar"/>
-            <fileset file="${lib}/commons-digester.jar"/>
-            <fileset file="${lib}/commons-fileupload.jar"/>
-            <fileset file="${lib}/commons-validator.jar"/>
-            <fileset file="${lib}/jakarta-oro.jar"/>
-            <fileset file="${lib}/struts-config_1_0.dtd"/>
-            <fileset file="${lib}/struts-config_1_1.dtd"/>
-            <fileset file="${lib}/struts-config_1_2.dtd"/>
-            <fileset file="${lib}/struts.jar"/>
-            <fileset file="${lib}/tiles-config_1_1.dtd"/>
+            <fileset file="${lib}/commons-beanutils-1.7.0.jar"/>
+            <fileset file="${lib}/commons-chain-1.1.jar"/>
+            <fileset file="${lib}/commons-digester-1.6.jar"/>
+            <fileset file="${lib}/commons-fileupload-1.1.1.jar"/>
+            <fileset file="${lib}/commons-logging-1.1.jar"/>
+            <fileset file="${lib}/commons-validator-1.3.0.jar"/>
+            <fileset file="${lib}/struts-config_1_3.dtd"/>
+            <fileset file="${lib}/struts-core-1.3.5.jar" />
+            <fileset file="${lib}/struts-taglib-1.3.5.jar"/>
+            <fileset file="${lib}/tiles-config_1_3.dtd"/>
             <fileset file="${lib}/validator-rules.xml"/>
-            <fileset file="${lib}/web-app_2_2.dtd"/>
-            <fileset file="${lib}/web-app_2_3.dtd"/>
         </copy>
         <copy todir="${otld}">
             <fileset dir="${tld}"/>
@@ -103,31 +100,31 @@
     </target>
 
     <path id="libpath">
+    <!-- 
             <fileset file="${lib}/activation.jar"/>
-            <fileset file="${lib}/ant.jar"/>
             <fileset file="${lib}/antlr.jar"/>
+            <fileset file="${lib}/jakarta-oro.jar"/>
+            <fileset file="${lib}/nls_charset12.jar"/>
+            -->
+            <fileset file="${lib}/ant.jar"/>
             <fileset file="${lib}/asm.jar"/>
             <fileset file="${lib}/cacore32-client.jar"/>
             <fileset file="${lib}/cglib-2.1.3.jar"/>
-            <fileset file="${lib}/commons-beanutils.jar"/>
-            <fileset file="${lib}/commons-collections.jar"/>
-            <fileset file="${lib}/commons-digester.jar"/>
-            <fileset file="${lib}/commons-fileupload.jar"/>
-            <fileset file="${lib}/commons-logging-1.1.jar"/>
-            <fileset file="${lib}/commons-validator.jar"/>
             <fileset file="${lib}/hibernate3.jar"/>
             <fileset file="${lib}/j2ee.jar"/>
             <fileset file="${lib}/jakarta-oro.jar"/>
             <fileset file="${lib}/jasper-compiler.jar"/>
             <fileset file="${lib}/jasper-runtime.jar"/>
+            <fileset file="${lib}/jboss-system.jar"/>
             <fileset file="${lib}/log4j-1.2.13.jar"/>
             <fileset file="${lib}/mail.jar"/>
-            <fileset file="${lib}/nls_charset12.jar"/>
             <fileset file="${lib}/ojdbc14.jar"/>
             <fileset file="${lib}/spring.jar"/>
-            <fileset file="${lib}/struts.jar"/>
-            <fileset file="${lib}/test/junit.jar"/>
-            <fileset file="${lib}/test/strutstest-2.1.3.jar"/>
+            <fileset file="${lib}/test/junit-4.1.jar"/>
+            <fileset file="${lib}/test/strutstest-2.1.3.1.jar"/>
+            <fileset dir="${olib}">
+                <include name="**/*.jar"/>
+            </fileset>
     </path>
 
     <target name="build" depends="setup">
@@ -162,6 +159,7 @@
         <jar destfile="${owar}/cadsrsentinelapi.jar">
             <fileset dir="${oclasses}">
                 <include name="cvsdeploy.txt" />
+                <include name="gov/nih/nci/cadsr/sentinel/*.properties" />
                 <include name="gov/nih/nci/cadsr/sentinel/util/*.class" />
             </fileset>
         </jar>
@@ -342,7 +340,7 @@
     <target name="build-qa">
         <antcall target="deploy">
             <param name="conf" value="conf/qa"/>
-            <param name="jdebug" value="off"/>
+            <param name="jdebug" value="on"/>
         </antcall>
     </target>
 

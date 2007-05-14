@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/Edit.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/Edit.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -78,7 +78,7 @@ public class Edit extends Action
 
             // Connect to the database.
             DBAlert db = DBAlertUtil.factory();
-            if (db.open(request_, ub.getUser(), ub.getPswd()) == 0)
+            if (db.open(request_, ub.getUser()) == 0)
             {
                 // If we started with a database record this is an update
                 // operation.

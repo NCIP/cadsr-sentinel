@@ -75,7 +75,7 @@ public class TestEdit extends DSRAlertTestCase
         alertRec.setName("struts_test_temp_alert");
         DBAlert dbAlert = DBAlertUtil.factory();
         assertEquals(dbAlert.open(getSession().getServletContext(), _alertBean
-            .getUser(), _alertBean.getPswd()), 0);
+            .getUser()), 0);
         assertEquals(dbAlert.insertAlert(alertRec), 0);
         assertEquals(dbAlert.close(), 0);
 
@@ -103,7 +103,7 @@ public class TestEdit extends DSRAlertTestCase
         actionPerform();
 
         assertEquals(dbAlert.open(getSession().getServletContext(), _alertBean
-            .getUser(), _alertBean.getPswd()), 0);
+            .getUser()), 0);
         // Verify that the alert got changed in the database
         assertEquals(dbAlert.selectAlert(alertRec.getAlertRecNum()).getName(),
             "struts_test_temp_alert_edit");

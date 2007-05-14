@@ -2,11 +2,12 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.10 2006-05-17 20:17:01 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.11 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
 
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,6 +33,8 @@ public class DSRAlertV1 implements DSRAlert
      */
     public DSRAlertV1(String url_)
     {
+        _rc = DSRAlert.RC_OK;
+
         _alertName = "";
         if (url_ == null || url_.length() == 0)
         {
@@ -71,7 +74,6 @@ public class DSRAlertV1 implements DSRAlert
     public int createAlert(String user_, String idseq_)
     {
         String url = _url + "crf?version=" + _version + "&user=" + user_ + "&idseq=" + idseq_;
-        // System.err.println("DSRAlert 0: [" + url + "]");
 
         int rc = DSRAlert.RC_FAILED;
         _alertName = "";
@@ -91,7 +93,7 @@ public class DSRAlertV1 implements DSRAlert
                     case HttpURLConnection.HTTP_FORBIDDEN: rc = DSRAlert.RC_UNAUTHORIZED; break;
                     default:
                         rc = DSRAlert.RC_FAILED;
-                        System.err.println("DSRAlert 3: " + http.getResponseMessage());
+                        _logger.error(http.getResponseMessage());
                         break;
                 }
                 
@@ -105,13 +107,15 @@ public class DSRAlertV1 implements DSRAlert
             }
             catch(MalformedURLException ex)
             {
-                System.err.println("DSRAlert 1: [" + url + "] " + ex.toString());
+                _logger.error("[" + url + "] " + ex.toString());
             }
             catch(IOException ex)
             {
-                System.err.println("DSRAlert 2: [" + url + "] " + ex.toString());
+                _logger.error("[" + url + "] " + ex.toString());
             }
         }
+
+        _rc = rc;
         return rc;
     }
     
@@ -124,10 +128,83 @@ public class DSRAlertV1 implements DSRAlert
     {
         return _alertName;
     }
+
+    /**
+     * Get the complete history for the specified ID in pre-formatted HTML.
+     * 
+     * @param idseq_ The database entity ID, a 36 character value.
+     * @return If the history can be retrieved the return will not equal null, otherwise the return is equal
+     *      null and the method getResultCode() must be used to retrieve the operation RC.
+     */
+    public String getItemHistoryHTML(String idseq_)
+    {
+        String url = _url + "loghtml?version=" + _version + "&idseq=" + idseq_;
+        String html = null;
+
+        int rc = DSRAlert.RC_FAILED;
+        _alertName = "";
+        if (idseq_ != null && idseq_.length() > 0)
+        {
+            try
+            {
+                URL rps = new URL(url);
+                HttpURLConnection http = (HttpURLConnection) rps.openConnection();
+                http.setUseCaches(false);
+                switch (http.getResponseCode())
+                {
+                    case HttpURLConnection.HTTP_NOT_IMPLEMENTED: rc = DSRAlert.RC_INCOMPATIBLE; break;
+                    case HttpURLConnection.HTTP_OK: rc = DSRAlert.RC_OK; break;
+                    case HttpURLConnection.HTTP_FORBIDDEN: rc = DSRAlert.RC_UNAUTHORIZED; break;
+                    default:
+                        rc = DSRAlert.RC_FAILED;
+                        _logger.error(http.getResponseMessage());
+                        break;
+                }
+                
+                // Get the Alert Name returned from the create service.
+                if (rc >= 0)
+                {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream()));
+                    html = "";
+                    String temp;
+                    while ((temp =  in.readLine()) != null)
+                    {
+                        html += temp;
+                    }
+                }
+                http.disconnect();
+            }
+            catch(MalformedURLException ex)
+            {
+                _logger.error("[" + url + "] " + ex.toString());
+            }
+            catch(IOException ex)
+            {
+                _logger.error("[" + url + "] " + ex.toString());
+            }
+        }
+
+        _rc = rc;
+        return html;
+    }
+    
+    /**
+     * Get the result code from the most recent method executed.
+     * 
+     * @return One of the "RC_" static final values defined in this interface.
+     */
+    public int getResultCode()
+    {
+        return _rc;
+    }
     
     private String _url;
     
     private String _alertName;
+    
+    private int _rc;
+    
+    private static final Logger _logger = Logger.getLogger(DSRAlertV1.class.getName());
     
     private static final String _version = "1";
 }

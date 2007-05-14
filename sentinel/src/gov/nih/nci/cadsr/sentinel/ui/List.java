@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/List.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/List.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -19,6 +19,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
+import org.apache.struts.Globals;
 
 /**
  * Manage the alert list.
@@ -74,7 +75,7 @@ public class List extends Action
             if (dlist.size() > 0)
             {
                 DBAlert db = DBAlertUtil.factory();
-                db.open(request_, ub.getUser(), ub.getPswd());
+                db.open(request_, ub.getUser());
                 db.deleteAlerts(dlist);
                 db.close();
             }
@@ -102,7 +103,7 @@ public class List extends Action
                         || form.getNextScreen().equals(Constants._ACTRUN))
                     {
                         DBAlert db = DBAlertUtil.factory();
-                        db.open(request_, ub.getUser(), ub.getPswd());
+                        db.open(request_, ub.getUser());
                         ub.setWorking(db.selectAlert(idseq));
                         db.close();
                     }
@@ -112,7 +113,7 @@ public class List extends Action
                     else if (form.getNextScreen().equals(Constants._ACTNEWFROM))
                     {
                         DBAlert db = DBAlertUtil.factory();
-                        db.open(request_, ub.getUser(), ub.getPswd());
+                        db.open(request_, ub.getUser());
                         AlertRec temp = db.selectAlert(idseq);
                         db.close();
 
@@ -123,7 +124,7 @@ public class List extends Action
                         // Fix the name and creator of this new alert.
                         MessageResources msgs = (MessageResources) request_
                             .getSession().getServletContext().getAttribute(
-                                Constants._RESOURCES);
+                                Globals.MESSAGES_KEY);
                         temp.setCreator(ub.getUser());
                         temp.setCreatorName(ub.getUserName());
                         temp.setName(msgs.getMessage("all.createusing") + " "

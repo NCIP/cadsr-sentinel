@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/CDEBrowserAPI.java,v 1.11 2006-09-25 17:44:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/CDEBrowserAPI.java,v 1.12 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -62,7 +62,7 @@ public class CDEBrowserAPI
             int errorCode = ex.getErrorCode();
             String errorMsg = errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(errorMsg);
+            _logger.error(errorMsg);
         }
     }
     

@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -16,6 +16,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.util.MessageResources;
+import org.apache.struts.Globals;
 
 /**
  * The form bean for the logon.jsp.
@@ -102,6 +103,13 @@ public class LogonForm extends ActionForm
 
         if (_userid.length() > 0)
         {
+            if (_pswd == null)
+            {
+                // Do not allow a blank password.
+                errors.add("logon", new ActionMessage("error.logon.blankuser"));
+                return errors;
+            }
+
             // Verify the guest account is not being used.
             int msgnum = initialize(_userid, request_, null);
             if (msgnum == -1)
@@ -128,7 +136,11 @@ public class LogonForm extends ActionForm
                 if (msgnum == 0)
                 {
                     // Test database dependencies.
-                    String msg = db.testSentinelOptions(); 
+                    String cp = request_.getContextPath();
+                    String reqURL = null;
+                    if (cp != null && cp.length() > 0)
+                        reqURL = request_.getRequestURL().toString();
+                    String msg = db.testSentinelOptions(reqURL); 
                     if (msg != null)
                     {
                         am = new ActionMessage("error.logon.baddb", msg);
@@ -200,7 +212,7 @@ public class LogonForm extends ActionForm
             }
             else
             {
-                MessageResources msgs = (MessageResources) sc.getAttribute(Constants._RESOURCES);
+                MessageResources msgs = (MessageResources) sc.getAttribute(Globals.MESSAGES_KEY);
                 dsurl = msgs.getMessage(Constants._DSURL);
                 username = msgs.getMessage(Constants._DSUSER);
                 password = msgs.getMessage(Constants._DSPSWD);

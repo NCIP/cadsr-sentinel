@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AlertOutput.java,v 1.1 2006-09-08 22:32:54 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AlertOutput.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -143,16 +143,18 @@ public class AlertOutput
                 temp = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n"
                     + "<html><head>\n"
                     + "<meta http-equiv=Content-Type content=\"text/html; charset=windows-1252\">\n"
-                    + "<title>Sentinel Alert " + _name + " Report</title>"
+                    + "<title>Sentinel Alert " + _name + " Report</title>\n"
                     + "<style>\n"
                     + "\tBODY { font-family: Arial; font-size: 10pt }\n"
-                    + "\tP { margin-top: 0in; margin-bottom: 0in }\n"
-                    + "\tP.ALERT { font-weight: bold; margin-top: 0.1in; margin-bottom: 0.1in }\n"
-                    + "\tP.DETAIL0 { MARGIN-LEFT: 0.0in; margin-top: 0.1in; margin-bottom: 0.1in }\n"
+                    + "\tP { margin: 0.1in 0.1in 0.0in 0.1in }\n"
+                    + "\tP.ALERT { font-weight: bold }\n"
+                    + "\tP.DETAIL0 { MARGIN-LEFT: 0.0in }\n"
                     + "\tP.DETAIL1 { margin-left: 0.5in }\n"
                     + "\tP.DETAIL2 { margin-left: 1.0in }\n"
                     + "\tTABLE { font-family: Arial; font-size: 10pt }\n"
-                    + "\tTABLE.MATRIX { margin-left: 1.0in; margin-bottom: 0.1in; border-spacing: 0in; border-collapse: collapse }\n"
+                    + "\tTABLE.MATRIX { margin: 0.1in 0.1in 0.0in 1.0in; border-spacing: 0in; border-collapse: collapse }\n"
+                    + "\tDIV.REPORT { margin: 0.1in 0.1in 0.0in 1.0in; font-weight: bold }\n"
+                    + "\tSPAN.ACTION { cursor: default }\n"
                     + "</style>\n"
                     + "</head>\n"
                     + "<body>\n"
@@ -173,11 +175,11 @@ public class AlertOutput
         catch (FileNotFoundException ex)
         {
             _log = null;
-            _logger.fatal(ex.toString());
+            _logger.error(ex.toString());
         }
         catch (IOException ex)
         {
-            _logger.fatal(ex.toString());
+            _logger.error(ex.toString());
         }
     }
 
@@ -234,11 +236,13 @@ public class AlertOutput
     /**
      * Format a matrix into a table tag.
      * 
+     * @param prefix_ table prefix
      * @param msg_ The TR and TD content tags of the table.
      * @param cols_ The number of columns in a single row.
      * @param right_ true if the last column should be right justified.
+     * @param suffix_ table suffix
      */
-    public void writeMatrix(String msg_, int cols_, boolean right_)
+    public void writeMatrix(String prefix_, String msg_, int cols_, boolean right_, String suffix_)
     {
         String extra = "";
         for (int i = 1; i < cols_; ++i)
@@ -253,10 +257,10 @@ public class AlertOutput
         {
             extra = extra + "<col />";
         }
-        writeText("<table class=\"matrix\"><colgroup>"
+        writeText(prefix_ + "<table class=\"matrix\"><colgroup>"
             + extra
             + "</colgroup><tbody />\n"
-            + msg_ + "\n</table>\n");
+            + msg_ + "\n</table>\n" + suffix_);
     }
 
     /**
@@ -295,7 +299,7 @@ public class AlertOutput
        }
        catch (IOException ex)
        {
-           _logger.fatal(ex.toString());
+           _logger.error(ex.toString());
        }
    }
     

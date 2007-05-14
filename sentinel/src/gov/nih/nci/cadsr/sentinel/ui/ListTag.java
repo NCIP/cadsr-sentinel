@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.1 2006-09-08 22:32:55 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -16,6 +16,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.struts.util.MessageResources;
+import org.apache.struts.Globals;
 
 /**
  * The List tags used on list.jsp.
@@ -113,7 +114,7 @@ public class ListTag extends TagSupport
     {
         String temp;
         MessageResources msgs = (MessageResources) pageContext
-            .findAttribute(Constants._RESOURCES);
+            .findAttribute(Globals.MESSAGES_KEY);
         temp = (_ub.isListShowPrivate()) ? msgs.getMessage("list.showall")
             : msgs.getMessage("list.showprivate");
         temp = "<button type=button class=\"but1a\" onclick=\"cmdList();\">"
@@ -194,8 +195,7 @@ public class ListTag extends TagSupport
         int count = 0;
 
         DBAlert db = DBAlertUtil.factory();
-        if (db.open(pageContext.getServletContext(), _ub.getUser(), _ub
-            .getPswd()) == 0)
+        if (db.open(pageContext.getServletContext(), _ub.getUser()) == 0)
         {
             if (_ub.isListShowPrivate())
                 database = db.selectAlerts(_ub.getUser());
@@ -226,7 +226,7 @@ public class ListTag extends TagSupport
             "alertList");
 
         MessageResources msgs = (MessageResources) pageContext
-            .findAttribute(Constants._RESOURCES);
+            .findAttribute(Globals.MESSAGES_KEY);
         if (list != null && list.length > 4)
             temp = temp + "<div style=\"height: 7.5in; border: solid black 1px; overflow: auto\">\n";
         temp = temp

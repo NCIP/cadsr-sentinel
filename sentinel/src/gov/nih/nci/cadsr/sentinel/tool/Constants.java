@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/Constants.java,v 1.11 2006-09-08 22:32:54 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/Constants.java,v 1.12 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -67,11 +67,6 @@ public class Constants
      * The property name for the application version number.
      */
     public static final String _APLVERS           = "Appl.version";
-
-    /**
-     * The Struts session id for the message resource.
-     */
-    public static final String _RESOURCES         = "org.apache.struts.action.MESSAGE";
 
     /**
      * The literal string used in lists to represent the entire contents, ie

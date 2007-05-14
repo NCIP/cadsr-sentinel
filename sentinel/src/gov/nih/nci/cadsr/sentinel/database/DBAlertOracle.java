@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.7 2007-01-25 20:19:24 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.8 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -57,6 +57,350 @@ import org.apache.log4j.Logger;
  */
 public class DBAlertOracle implements DBAlert
 {
+    // Class data 
+    private String              _namesList[];
+
+    private String              _namesVals[];
+
+    private String              _namesExempt;
+
+    private String              _contextList[];
+
+    private String              _contextVals[];
+
+    private String              _schemeList[];
+
+    private String              _schemeVals[];
+
+    private String              _schemeContext[];
+
+    private String              _protoList[];
+
+    private String              _protoVals[];
+
+    private String              _protoContext[];
+
+    private String              _schemeItemList[];
+
+    private String              _schemeItemVals[];
+
+    private String              _schemeItemSchemes[];
+
+    private Connection          _conn;
+    
+    private String              _user;
+
+    private ServletContext      _sc;
+
+    private boolean             _needCommit;
+
+    private String              _groupsList[];
+
+    private String              _groupsVals[];
+
+    private String              _formsList[];
+
+    private String              _formsVals[];
+
+    private String              _formsContext[];
+
+    private String              _workflowList[];
+
+    private String              _workflowVals[];
+
+    private String              _cworkflowList[];
+
+    private String              _cworkflowVals[];
+
+    private String              _regStatusList[];
+
+    private String              _regStatusVals[];
+
+    private String              _regCStatusList[];
+
+    private String              _regCStatusVals[];
+
+    private String              _nameID[];
+
+    private String              _nameText[];
+
+    private int                 _errorCode;
+
+    private String              _errorMsg;
+    
+    private String              _actypesList[];
+    
+    private String              _actypesVals[];
+
+    /**
+     * The internal code for Version.
+     */
+    public static final String  _VERSION      = "VERSION";
+
+    /**
+     * The internal code for Workflow Status.
+     */
+    public static final String  _WFS          = "ASL_NAME";
+
+    /**
+     * The internal code for Registration Status.
+     */
+    public static final String  _RS           = "REGISTRATION_STATUS";
+
+    /**
+     * The internal code for User ID.
+     */
+    public static final String  _UNAME        = "UA_NAME";
+
+    /**
+     * Version Any Change value.
+     */
+    public static final char    _VERANYCHG    = 'C';
+
+    /**
+     * Version Major (whole) number change value.
+     */
+    public static final char    _VERMAJCHG    = 'M';
+
+    /**
+     * Version Ignore change value.
+     */
+    public static final char    _VERIGNCHG    = 'I';
+
+    /**
+     * Version Specific Value change value.
+     */
+    public static final char    _VERSPECHG    = 'S';
+
+    /**
+     * Maximum length of the Alert Definition Name.
+     */
+    public static final int     _MAXNAMELEN   = 30;
+
+    /**
+     * Maximum length of the Inaction Reason description.
+     */
+    public static final int     _MAXREASONLEN = 2000;
+
+    /**
+     * Maximum length of the Report Introduction description.
+     */
+    public static final int     _MAXINTROLEN  = 2000;
+
+    /**
+     * Maximum length of a freeform email address.
+     */
+    public static final int     _MAXEMAILLEN  = 255;
+    
+    /**
+     * The Date comparison Created Only value.
+     */
+    public static final int     _DATECONLY = 0;
+    
+    /**
+     * The Date comparison Modified Only value.
+     */
+    public static final int     _DATEMONLY = 1;
+    
+    /**
+     * The Date comparison Created and Modified value.
+     */
+    public static final int     _DATECM = 2;
+
+    private static boolean _poolWarning = true;
+    
+    private static final String _DATECHARS[][] = {
+        {"<", ">", ">=", "<"},
+        {">=", "<", "<", ">"},
+        {">=", "<", ">=", "<"}
+    };
+
+    private static final String _CONTEXT      = "CONTEXT";
+
+    private static final String _FORM         = "FORM";
+    
+    private static final String _PROTOCOL     = "PROTOCOL";
+
+    private static final String _SCHEME       = "CS";
+
+    private static final String _SCHEMEITEM   = "CSI";
+
+    private static final String _CREATOR      = "CREATOR";
+
+    private static final String _MODIFIER     = "MODIFIER";
+
+    private static final String _REGISTER     = "REG_STATUS";
+
+    private static final String _STATUS       = "AC_STATUS";
+
+    private static final String _ACTYPE       = "ACTYPE";
+
+    private static final String _DATEFILTER   = "DATEFILTER";
+
+    private static final char   _CRITERIA     = 'C';
+
+    private static final char   _MONITORS     = 'M';
+    
+    private static final String _orderbyACH = 
+        "order by id asc, "
+//        + "cid asc, "
+//        + "zz.date_modified asc, "
+        + "ach.change_datetimestamp asc, "
+        + "ach.changed_table asc, "
+        + "ach.changed_table_idseq asc, "
+        + "ach.changed_column asc";
+
+    private static final DBAlertOracleMap1[] _DBMAP1 =
+    {
+        new DBAlertOracleMap1("ASL_NAME", "Workflow Status"), 
+        new DBAlertOracleMap1("BEGIN_DATE", "Begin Date"),
+        new DBAlertOracleMap1("CDE_ID", "Public ID"),
+        new DBAlertOracleMap1("CDR_IDSEQ", "Complex DE association"),
+        new DBAlertOracleMap1("CD_IDSEQ", "Conceptual Domain association"),
+        new DBAlertOracleMap1("CHANGE_NOTE", "Change Note"),
+        new DBAlertOracleMap1("CONDR_IDSEQ", "Concept Class association"),
+        new DBAlertOracleMap1("CON_IDSEQ", "Concept Class association"),
+        new DBAlertOracleMap1("CREATED_BY", "Created By"),
+        new DBAlertOracleMap1("CSTL_NAME", "Category"),
+        new DBAlertOracleMap1("CS_ID", "Public ID"),
+        new DBAlertOracleMap1("C_DEC_IDSEQ", "Child DEC association"),
+        new DBAlertOracleMap1("C_DE_IDSEQ", "Child DE association"),
+        new DBAlertOracleMap1("C_VD_IDSEQ", "Child VD association"),
+        new DBAlertOracleMap1("DATE_CREATED", "Created Date"),
+        new DBAlertOracleMap1("DATE_MODIFIED", "Modified Date"),
+        new DBAlertOracleMap1("DECIMAL_PLACE", "Number of Decimal Places"),
+        new DBAlertOracleMap1("DEC_ID", "Public ID"),
+        new DBAlertOracleMap1("DEC_IDSEQ", "Data Element Concept association"),
+        new DBAlertOracleMap1("DEC_REC_IDSEQ", "DEC_REC_IDSEQ"),
+        new DBAlertOracleMap1("DEFINITION_SOURCE", "Definition Source"),
+        new DBAlertOracleMap1("DELETED_IND", "Deleted Indicator"),
+        new DBAlertOracleMap1("DESCRIPTION", "Description"),
+        new DBAlertOracleMap1("DESIG_IDSEQ", "Designation association"),
+        new DBAlertOracleMap1("DE_IDSEQ", "Data Element association"),
+        new DBAlertOracleMap1("DE_REC_IDSEQ", "DE_REC_IDSEQ"),
+        new DBAlertOracleMap1("DISPLAY_ORDER", "Display Order"),
+        new DBAlertOracleMap1("DTL_NAME", "Data Type"),
+        new DBAlertOracleMap1("END_DATE", "End Date"),
+        new DBAlertOracleMap1("FORML_NAME", "Data Format"),
+        new DBAlertOracleMap1("HIGH_VALUE_NUM", "Maximum Value"),
+        new DBAlertOracleMap1("LABEL_TYPE_FLAG", "Label Type"),
+        new DBAlertOracleMap1("LATEST_VERSION_IND", "Latest Version Indicator"),
+        new DBAlertOracleMap1("LONG_NAME", "Long Name"),
+        new DBAlertOracleMap1("LOW_VALUE_NUM", "Minimum Value"),
+        new DBAlertOracleMap1("MAX_LENGTH_NUM", "Maximum Length"),
+        new DBAlertOracleMap1("METHODS", "Methods"),
+        new DBAlertOracleMap1("MIN_LENGTH_NUM", "Minimum Length"),
+        new DBAlertOracleMap1("MODIFIED_BY", "Modified By"),
+        new DBAlertOracleMap1("OBJ_CLASS_QUALIFIER", "Object Class Qualifier"),
+        new DBAlertOracleMap1("OCL_NAME", "Object Class Name"),
+        new DBAlertOracleMap1("OC_ID", "Public ID"),
+        new DBAlertOracleMap1("OC_IDSEQ", "Object Class association"),
+        new DBAlertOracleMap1("ORIGIN", "Origin"),
+        new DBAlertOracleMap1("PREFERRED_DEFINITION", "Preferred Definition"),
+        new DBAlertOracleMap1("PREFERRED_NAME", "Preferred Name"),
+        new DBAlertOracleMap1("PROPERTY_QUALIFIER", "Property Qualifier"),
+        new DBAlertOracleMap1("PROPL_NAME", "Property Name"),
+        new DBAlertOracleMap1("PROP_ID", "Public ID"),
+        new DBAlertOracleMap1("PROP_IDSEQ", "Property"),
+        new DBAlertOracleMap1("PV_IDSEQ", "Permissible Value"),
+        new DBAlertOracleMap1("P_DEC_IDSEQ", "Parent DEC association"),
+        new DBAlertOracleMap1("P_DE_IDSEQ", "Parent DE association"),
+        new DBAlertOracleMap1("P_VD_IDSEQ", "Parent VD association"),
+        new DBAlertOracleMap1("QUALIFIER_NAME", "Qualifier"),
+        new DBAlertOracleMap1("QUESTION", "Question"),
+        new DBAlertOracleMap1("RD_IDSEQ", "Reference Document association"),
+        new DBAlertOracleMap1("REP_IDSEQ", "Representation association"),
+        new DBAlertOracleMap1("RL_NAME", "Relationship Name"),
+        new DBAlertOracleMap1("RULE", "Rule"),
+        new DBAlertOracleMap1("SHORT_MEANING", "Meaning"),
+        new DBAlertOracleMap1("UOML_NAME", "Unit Of Measure"),
+        new DBAlertOracleMap1("URL", "URL"),
+        new DBAlertOracleMap1("VALUE", "Value"),
+        new DBAlertOracleMap1("VD_ID", "Public ID"),
+        new DBAlertOracleMap1("VD_IDSEQ", "Value Domain association"),
+        new DBAlertOracleMap1("VD_REC_IDSEQ", "VD_REC_IDSEQ"),
+        new DBAlertOracleMap1("VD_TYPE_FLAG", "Enumerated/Non-enumerated"),
+        new DBAlertOracleMap1("VERSION", "Version")
+    };
+    
+    private static final DBAlertOracleMap1[] _DBMAP1OTHER =
+    {
+        new DBAlertOracleMap1("CONTE_IDSEQ", "Owned By Context"),
+        new DBAlertOracleMap1("LAE_NAME", "Language"),
+        new DBAlertOracleMap1("NAME", "Name")
+    };
+
+    private static final DBAlertOracleMap1[] _DBMAP1DESIG =
+    {
+        new DBAlertOracleMap1("CONTE_IDSEQ", "Designation Context"),
+        new DBAlertOracleMap1("DETL_NAME", "Designation Type"),
+        new DBAlertOracleMap1("LAE_NAME", "Designation Language")
+    };
+    
+    private static final DBAlertOracleMap1[] _DBMAP1CSI =
+    {
+        new DBAlertOracleMap1("CS_CSI_IDSEQ", "Classification Scheme Item association")
+    };
+    
+    private static final DBAlertOracleMap1[] _DBMAP1RD =
+    {
+        new DBAlertOracleMap1("DCTL_NAME","Document Type"),
+        new DBAlertOracleMap1("DISPLAY_ORDER", "Document Display Order"),
+        new DBAlertOracleMap1("DOC_TEXT", "Document Text"),
+        new DBAlertOracleMap1("RDTL_NAME", "Document Text Type"),
+        new DBAlertOracleMap1("URL", "Document URL")
+    };
+    
+    private static final DBAlertOracleMap1[] _DBMAP1COMPLEX =
+    {
+        new DBAlertOracleMap1("CONCAT_CHAR", "Concatenation Character"),
+        new DBAlertOracleMap1("CRTL_NAME", "Complex Type")
+    };
+    
+    private static final DBAlertOracleMap2[] _DBMAP2 =
+    {
+        new DBAlertOracleMap2("CD_IDSEQ", "sbr.conceptual_domains_view", "cd_idseq", "", "long_name || ' (' || cd_id || 'v' || version || ')' as label"),
+        new DBAlertOracleMap2("CONDR_IDSEQ", "sbrext.component_concepts_view_ext ccv, sbrext.concepts_view_ext cv", "ccv.condr_idseq", " and cv.con_idseq = ccv.con_idseq order by ccv.display_order desc",
+                        "cv.long_name || ' (' || cv.con_id || 'v' || cv.version || ') (' || cv.origin || ':' || cv.preferred_name || ')' as label"),
+        new DBAlertOracleMap2("CONTE_IDSEQ", "sbr.contexts_view", "conte_idseq", "", "name || ' (v' || version || ')' as label"),
+        new DBAlertOracleMap2("CON_IDSEQ", "sbrext.concepts_view_ext", "con_idseq", "", "long_name || ' (' || con_id || 'v' || version || ') (' || origin || ':' || preferred_name || ')' as label"),
+        new DBAlertOracleMap2("CREATED_BY", "sbr.user_accounts_view", "ua_name", "", "name as label"),
+        new DBAlertOracleMap2("CS_CSI_IDSEQ", "sbr.cs_csi_view cci, sbr.class_scheme_items_view csi", "cci.cs_csi_idseq", " and csi.csi_idseq = cci.csi_idseq","csi.csi_name as label"),
+        new DBAlertOracleMap2("DEC_IDSEQ", "sbr.data_element_concepts_view", "dec_idseq", "", "long_name || ' (' || dec_id || 'v' || version || ')' as label"),
+        new DBAlertOracleMap2("DE_IDSEQ", "sbr.data_elements_view", "de_idseq", "", "long_name || ' (' || cde_id || 'v' || version || ')' as label"),
+        new DBAlertOracleMap2("MODIFIED_BY", "sbr.user_accounts_view", "ua_name", "", "name as label"),
+        new DBAlertOracleMap2("OC_IDSEQ", "sbrext.object_classes_view_ext", "oc_idseq", "", "long_name || ' (' || oc_id || 'v' || version || ')' as label"),
+        new DBAlertOracleMap2("PROP_IDSEQ", "sbrext.properties_view_ext", "prop_idseq", "", "long_name || ' (' || prop_id || 'v' || version || ')' as label"),
+        new DBAlertOracleMap2("PV_IDSEQ", "sbr.permissible_values_view", "pv_idseq", "", "value || ' (' || short_meaning || ')' as label"),
+        new DBAlertOracleMap2("RD_IDSEQ", "sbr.reference_documents_view", "rd_idseq", "", "name || ' (' || nvl(doc_text, url) || ')' as label"),
+        new DBAlertOracleMap2("REP_IDSEQ", "sbrext.representations_view_ext", "rep_idseq", "", "long_name || ' (' || rep_id || 'v' || version || ')' as label"),
+        new DBAlertOracleMap2("UA_NAME", "sbr.user_accounts_view", "ua_name", "", "name as label"),
+        new DBAlertOracleMap2("VD_IDSEQ", "sbr.value_domains_view", "vd_idseq", "", "long_name || ' (' || vd_id || 'v' || version || ')' as label")
+    };
+
+    private static final DBAlertOracleMap3[] _DBMAP3 =
+    {
+        new DBAlertOracleMap3("cd", "Conceptual Domain", "sbr.conceptual_domains_view", null),
+        new DBAlertOracleMap3("con", "Concept", "sbrext.concepts_view_ext", null),
+        new DBAlertOracleMap3("conte", "Context", "sbr.contexts_view", null),
+        new DBAlertOracleMap3("cs", "Classification Scheme", "sbr.classification_schemes_view", "CLASSIFICATION_SCHEMES"),
+        new DBAlertOracleMap3("csi", "Classification Scheme Item", "sbr.class_scheme_items_view", null),
+        new DBAlertOracleMap3("de", "Data Element", "sbr.data_elements_view", "DATA_ELEMENTS"),
+        new DBAlertOracleMap3("dec", "Data Element Concept", "sbr.data_element_concepts_view", "DATA_ELEMENT_CONCEPTS"),
+        new DBAlertOracleMap3("oc", "Object Class", "sbrext.object_classes_view_ext", "OBJECT_CLASSES_EXT"),
+        new DBAlertOracleMap3("prop", "Property", "sbrext.properties_view_ext", "PROPERTIES_EXT"),
+        new DBAlertOracleMap3("proto", "Protocol", "sbrext.protocols_view_ext", null),
+        new DBAlertOracleMap3("pv", "Permissible Value", "sbr.permissible_values_view", "PERMISSIBLE_VALUES"),
+        new DBAlertOracleMap3("qc", "Form/Template", "sbrext.quest_contents_view_ext",  null),
+        new DBAlertOracleMap3("qcm", "Module", null, null),
+        new DBAlertOracleMap3("qcq", "Question", null, null),
+        new DBAlertOracleMap3("qcv", "Valid Value", null, null),
+        new DBAlertOracleMap3("vd", "Value Domain", "sbr.value_domains_view", "VALUE_DOMAINS"),
+        new DBAlertOracleMap3("vm", "Value Meaning", "sbr.value_meanings_view", null)
+    };
+    
+    private static final Logger _logger = Logger.getLogger(DBAlert.class.getName());
+
     /**
      * Constructor.
      */
@@ -120,7 +464,9 @@ public class DBAlertOracle implements DBAlert
         if (ocpds != null)
         {
             // Remember the pool in the Servlet Context.
-            sc.setAttribute(_DBPOOL, ocpds);
+            sc.setAttribute(_DBPOOL + ".ds", ocpds);
+            sc.setAttribute(_DBPOOL + ".user", username_);
+            sc.setAttribute(_DBPOOL + ".pswd", password_);
             return 0;
         }
         return -1;
@@ -234,9 +580,33 @@ public class DBAlertOracle implements DBAlert
             // Send a user friendly message to the Logon window and the more
             // detailed
             // message to the console.
-            _logger.fatal(rcTxt);
+            _logger.error(rcTxt);
         }
         return ocpds;
+    }
+
+    /**
+     * Create a connection from the pool. This is not part of the constructor to
+     * allow the method to have return codes that can be interrogated by the
+     * caller. If Exception are desired, appropriate wrapper methods can be
+     * created to provide both features and give the caller the flexibility to
+     * use either without additional coding.
+     * <p>
+     * Be sure to call DBAlert.close() to complete the request before returning
+     * to the client or loosing the object focus in the caller to "new
+     * DBAlert()".
+     * 
+     * @param sc_
+     *        The servlet context which holds the data source pool reference
+     *        created by the DBAlert.setupPool() method.
+     * @param user_
+     *        The database user logon id.
+     * @return 0 if successful, otherwise the Oracle error code.
+     * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#close close()
+     */
+    public int open(ServletContext sc_, String user_)
+    {
+        return open(sc_, user_, null);
     }
 
     /**
@@ -272,6 +642,7 @@ public class DBAlertOracle implements DBAlert
             // the catch is
             // run.
             _sc = sc_;
+            _user = user_;
             AlertPlugIn var = (AlertPlugIn)_sc.getAttribute(DBAlert._DATASOURCE);
             if (var == null)
             {
@@ -284,8 +655,10 @@ public class DBAlertOracle implements DBAlert
                     _logger.warn("============ Could not find JBoss datasource using internal connection pool.");
                 }
             }
+            else if (pswd_ == null)
+                _conn = var.getDataSource().getConnection();
             else
-                _conn = var.getDataSource().getConnection(user_, pswd_);
+                _conn = var.getAuthenticate().getConnection(user_, pswd_);
 
             // We handle the commit once in the close.
             _conn.setAutoCommit(false);
@@ -298,7 +671,7 @@ public class DBAlertOracle implements DBAlert
             // There seems to be a problem.
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             _sc = null;
             _conn = null;
             return _errorCode;
@@ -320,22 +693,21 @@ public class DBAlertOracle implements DBAlert
      *        The datasource for database connections.
      * @param user_
      *        The database user logon id.
-     * @param pswd_
-     *        The password to match the user.
      * @return 0 if successful, otherwise the error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#close close()
      */
-    public int open(DataSource ds_, String user_, String pswd_)
+    public int open(DataSource ds_, String user_)
     {
         try
         {
-            _conn = ds_.getConnection(user_, pswd_);
+            _user = user_;
+            _conn = ds_.getConnection();
             _conn.setAutoCommit(false);
             _needCommit = false;
         }
         catch (SQLException ex)
         {
-            _logger.fatal(ex.toString(), ex);
+            _logger.error(ex.toString(), ex);
             return ex.getErrorCode();
         }
         return 0;
@@ -374,6 +746,7 @@ public class DBAlertOracle implements DBAlert
                 ods.setDriverType("oci8");
                 ods.setTNSEntryName(dsurl_);
             }
+            _user = user_;
             _conn = ods.getConnection(user_, pswd_);
             _conn.setAutoCommit(false);
             _needCommit = false;
@@ -383,7 +756,7 @@ public class DBAlertOracle implements DBAlert
         {
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg =  _errorCode + ": " + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -411,6 +784,29 @@ public class DBAlertOracle implements DBAlert
     public int open(HttpServletRequest request_, String user_, String pswd_)
     {
         return open(request_.getSession().getServletContext(), user_, pswd_);
+    }
+
+    /**
+     * Create a connection from the pool. This is not part of the constructor to
+     * allow the method to have return codes that can be interrogated by the
+     * caller. If Exception are desired, appropriate wrapper methods can be
+     * created to provide both features and give the caller the flexibility to
+     * use either without additional coding.
+     * <p>
+     * Be sure to call DBAlert.close() to complete the request before returning
+     * to the client or loosing the object focus in the caller to "new
+     * DBAlert()".
+     * 
+     * @param request_
+     *        The servlet request object.
+     * @param user_
+     *        The database user logon id.
+     * @return 0 if successful, otherwise the Oracle error code.
+     * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#close close()
+     */
+    public int open(HttpServletRequest request_, String user_)
+    {
+        return open(request_.getSession().getServletContext(), user_, null);
     }
 
     /**
@@ -454,7 +850,7 @@ public class DBAlertOracle implements DBAlert
                 _errorCode = DBAlertUtil.getSQLErrorCode(ex);
                 _errorMsg = _errorCode + ": "
                     + ex.toString();
-                _logger.fatal(_errorMsg);
+                _logger.error(_errorMsg);
             }
             try
             {
@@ -469,7 +865,7 @@ public class DBAlertOracle implements DBAlert
                 _errorCode = DBAlertUtil.getSQLErrorCode(ex);
                 _errorMsg = _errorCode + ": "
                     + ex.toString();
-                _logger.fatal(_errorMsg);
+                _logger.error(_errorMsg);
                 _conn = null;
                 _sc = null;
                 return _errorCode;
@@ -559,7 +955,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
 
@@ -649,7 +1045,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -699,7 +1095,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -771,7 +1167,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -823,7 +1219,8 @@ public class DBAlertOracle implements DBAlert
         // modifier.
         String update = "update sbrext.sn_alert_view_ext set " + "name = ?, "
             + "auto_freq_unit = ?, " + "al_status = ?, " + "begin_date = ?, "
-            + "end_date = ?, " + "status_reason = ?, " + "auto_freq_value = ? "
+            + "end_date = ?, " + "status_reason = ?, " + "auto_freq_value = ?, "
+            + "modified_by = ? "
             + "where al_idseq = ?";
 
         cleanRec(rec_);
@@ -839,7 +1236,8 @@ public class DBAlertOracle implements DBAlert
             pstmt.setTimestamp(5, rec_.getEnd());
             pstmt.setString(6, rec_.getInactiveReason(false));
             pstmt.setInt(7, rec_.getDay());
-            pstmt.setString(8, rec_.getAlertRecNum());
+            pstmt.setString(8, _user);
+            pstmt.setString(9, rec_.getAlertRecNum());
 
             // Send it to the database. And remember to flag a commit for later.
             pstmt.executeUpdate();
@@ -854,7 +1252,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -872,7 +1270,8 @@ public class DBAlertOracle implements DBAlert
     {
         // Update the related Report definition.
         String update = "update sbrext.sn_report_view_ext set "
-            + "comments = ?, include_property_ind = ?, style = ?, send = ?, acknowledge_ind = ?, assoc_lvl_num = ? "
+            + "comments = ?, include_property_ind = ?, style = ?, send = ?, acknowledge_ind = ?, assoc_lvl_num = ?, "
+            + "modified_by = ? "
             + "where rep_idseq = ?";
         try
         {
@@ -884,8 +1283,9 @@ public class DBAlertOracle implements DBAlert
             pstmt.setString(4, rec_.getReportEmptyString());
             pstmt.setString(5, rec_.getReportAckString());
             pstmt.setInt(6, rec_.getIAssocLvl());
+            pstmt.setString(7, _user);
 
-            pstmt.setString(7, rec_.getReportRecNum());
+            pstmt.setString(8, rec_.getReportRecNum());
 
             pstmt.executeUpdate();
             pstmt.close();
@@ -899,7 +1299,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -936,7 +1336,7 @@ public class DBAlertOracle implements DBAlert
         {
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -1038,7 +1438,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + delete
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -1071,11 +1471,11 @@ public class DBAlertOracle implements DBAlert
         // We do not try to keep up with individual changes to the list. We
         // simply
         // wipe out the existing list and replace it with the new one.
-        String update = "delete " + "from sn_recipient_view_ext "
+        String delete = "delete " + "from sn_recipient_view_ext "
             + "where rep_idseq = ?";
         try
         {
-            PreparedStatement pstmt = _conn.prepareStatement(update);
+            PreparedStatement pstmt = _conn.prepareStatement(delete);
             pstmt.setString(1, rec_.getReportRecNum());
 
             pstmt.executeUpdate();
@@ -1088,9 +1488,9 @@ public class DBAlertOracle implements DBAlert
             // Ooops...
             _conn.rollback();
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
-            _errorMsg = _errorCode + ": " + update
+            _errorMsg = _errorCode + ": " + delete
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -1121,13 +1521,13 @@ public class DBAlertOracle implements DBAlert
                 if (temp.charAt(0) == '/')
                 {
                     // It must be a Context name.
-                    insert = insert + "(rep_idseq, conte_idseq)";
+                    insert = insert + "(rep_idseq, conte_idseq, created_by)";
                     temp = temp.substring(1);
                 }
                 else if (temp.indexOf('@') > -1)
                 {
                     // It must be an email address.
-                    insert = insert + "(rep_idseq, email)";
+                    insert = insert + "(rep_idseq, email, created_by)";
                     if (temp.length() > DBAlert._MAXEMAILLEN)
                     {
                         temp = temp.substring(0, DBAlert._MAXEMAILLEN);
@@ -1137,14 +1537,15 @@ public class DBAlertOracle implements DBAlert
                 else
                 {
                     // It's a user name.
-                    insert = insert + "(rep_idseq, ua_name)";
+                    insert = insert + "(rep_idseq, ua_name, created_by)";
                 }
-                insert = insert + " values (?, ?)";
+                insert = insert + " values (?, ?, ?)";
 
                 // Update
                 PreparedStatement pstmt = _conn.prepareStatement(insert);
                 pstmt.setString(1, rec_.getReportRecNum());
                 pstmt.setString(2, temp);
+                pstmt.setString(3, _user);
                 pstmt.executeUpdate();
                 pstmt.close();
             }
@@ -1163,7 +1564,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + insert
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -1216,15 +1617,15 @@ public class DBAlertOracle implements DBAlert
 
         // As one "?" is already in the select we only add more if the array
         // length is greater than 1.
-        String temp = select_.substring(0, pos + 1);
+        String tSelect = select_.substring(0, pos + 1);
         for (int ndx = 1; ndx < values_.length; ++ndx)
-            temp = temp + ",?";
-        temp = temp + select_.substring(pos + 1);
+            tSelect = tSelect + ",?";
+        tSelect = tSelect + select_.substring(pos + 1);
 
         try
         {
             // Now bind each value in the array to the expanded "?" list.
-            PreparedStatement pstmt = _conn.prepareStatement(temp);
+            PreparedStatement pstmt = _conn.prepareStatement(tSelect);
             for (int ndx = 0; ndx < values_.length; ++ndx)
             {
                 pstmt.setString(ndx + 1, values_[ndx]);
@@ -1232,35 +1633,35 @@ public class DBAlertOracle implements DBAlert
             ResultSet rs = pstmt.executeQuery();
 
             // Concatenate the results into a single comma separated string.
-            temp = "";
+            tSelect = "";
             String sep = (flag_ == 0) ? ", " : "\" OR \"";
             while (rs.next())
             {
-                temp = temp + sep + rs.getString(1).replaceAll("[\\r\\n]", " ");
+                tSelect = tSelect + sep + rs.getString(1).replaceAll("[\\r\\n]", " ");
             }
             rs.close();
             pstmt.close();
 
             // We always start the string with a comma so be sure to remove it
             // before returning.
-            if (temp.length() > 0)
+            if (tSelect.length() > 0)
             {
-                temp = temp.substring(sep.length());
+                tSelect = tSelect.substring(sep.length());
                 if (flag_ == 1)
-                    temp = "\"" + temp + "\"";
+                    tSelect = "\"" + tSelect + "\"";
             }
             else
-                temp = "\"(unknown)\"";
+                tSelect = "\"(unknown)\"";
         }
         catch (SQLException ex)
         {
-            temp = ex.toString();
+            tSelect = ex.toString();
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
-                + "\n\n" + temp;
-            _logger.fatal(_errorMsg);
+                + "\n\n" + tSelect;
+            _logger.error(_errorMsg);
         }
-        return temp;
+        return tSelect;
     }
 
     /**
@@ -1579,12 +1980,13 @@ public class DBAlertOracle implements DBAlert
         rec_.setDependancies();
 
         // Update creator in database.
-        String update = "update sbrext.sn_alert_view_ext set created_by = ? where al_idseq = ?";
+        String update = "update sbrext.sn_alert_view_ext set created_by = ?, modified_by = ? where al_idseq = ?";
         try
         {
             PreparedStatement pstmt = _conn.prepareStatement(update);
             pstmt.setString(1, rec_.getCreator());
-            pstmt.setString(2, rec_.getAlertRecNum());
+            pstmt.setString(2, _user);
+            pstmt.setString(3, rec_.getAlertRecNum());
             pstmt.executeUpdate();
             pstmt.close();
         }
@@ -1594,7 +1996,7 @@ public class DBAlertOracle implements DBAlert
             int errorCode = ex.getErrorCode();
             String errorMsg = errorCode + ": " + update
                 + "\n\n" + ex.toString();
-            _logger.fatal(errorMsg);
+            _logger.error(errorMsg);
         }
     }
 
@@ -1645,7 +2047,7 @@ public class DBAlertOracle implements DBAlert
             int errorCode = ex.getErrorCode();
             String errorMsg = errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(errorMsg);
+            _logger.error(errorMsg);
         }
         return out;
     }
@@ -1682,7 +2084,7 @@ public class DBAlertOracle implements DBAlert
             int errorCode = ex.getErrorCode();
             String errorMsg = errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(errorMsg);
+            _logger.error(errorMsg);
         }
 
         return rc;
@@ -1733,7 +2135,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
         }
 
         return rc;
@@ -1766,7 +2168,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
         }
 
         return rc;
@@ -2023,7 +2425,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -2042,11 +2444,11 @@ public class DBAlertOracle implements DBAlert
         // First we delete the existing Query details as it's easier to wipe out
         // the old and add
         // the new than trying to track individual changes.
-        String update = "delete " + "from sbrext.sn_query_view_ext "
+        String delete = "delete " + "from sbrext.sn_query_view_ext "
             + "where al_idseq = ?";
         try
         {
-            PreparedStatement pstmt = _conn.prepareStatement(update);
+            PreparedStatement pstmt = _conn.prepareStatement(delete);
             pstmt.setString(1, rec_.getAlertRecNum());
             pstmt.executeUpdate();
             pstmt.close();
@@ -2058,9 +2460,9 @@ public class DBAlertOracle implements DBAlert
             // Ooops...
             _conn.rollback();
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
-            _errorMsg = _errorCode + ": " + update
+            _errorMsg = _errorCode + ": " + delete
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -2076,8 +2478,8 @@ public class DBAlertOracle implements DBAlert
      */
     private int insertQuery(AlertRec rec_) throws SQLException
     {
-        String insert = "insert into sbrext.sn_query_view_ext (al_idseq, record_type, data_type, property, value) "
-            + "values (?, ?, ?, ?, ?)";
+        String insert = "insert into sbrext.sn_query_view_ext (al_idseq, record_type, data_type, property, value, created_by) "
+            + "values (?, ?, ?, ?, ?, ?)";
 
         int marker = 0;
         try
@@ -2085,6 +2487,7 @@ public class DBAlertOracle implements DBAlert
             PreparedStatement pstmt = _conn.prepareStatement(insert);
             pstmt.setString(1, rec_.getAlertRecNum());
             pstmt.setString(2, "C");
+            pstmt.setString(6, _user);
 
             // We only want to record those items selected by the user that
             // require special processing. For
@@ -2285,7 +2688,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = "(" + marker + "): " + _errorCode + ": "
                 + insert + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -2378,8 +2781,8 @@ public class DBAlertOracle implements DBAlert
         // date_modified is still set by the insert
         // trigger.
         String insert = "begin insert into sbrext.sn_alert_view_ext "
-            + "(name, auto_freq_unit, al_status, begin_date, end_date, status_reason, auto_freq_value) "
-            + "values (?, ?, ?, ?, ?, ?, ?) return al_idseq into ?; end;";
+            + "(name, auto_freq_unit, al_status, begin_date, end_date, status_reason, auto_freq_value, created_by) "
+            + "values (?, ?, ?, ?, ?, ?, ?, ?) return al_idseq into ?; end;";
 
         CallableStatement pstmt = null;
         cleanRec(rec_);
@@ -2394,14 +2797,15 @@ public class DBAlertOracle implements DBAlert
             pstmt.setTimestamp(5, rec_.getEnd());
             pstmt.setString(6, rec_.getInactiveReason(false));
             pstmt.setInt(7, rec_.getDay());
-            pstmt.registerOutParameter(8, Types.CHAR);
+            pstmt.setString(8, _user);
+            pstmt.registerOutParameter(9, Types.CHAR);
 
             // Insert the new record and flag a commit for later.
             pstmt.executeUpdate();
 
             // We need the record id to populate the foreign keys for other
             // tables.
-            rec_.setAlertRecNum(pstmt.getString(8));
+            rec_.setAlertRecNum(pstmt.getString(9));
             pstmt.close();
             return 0;
         }
@@ -2413,7 +2817,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + insert
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -2432,8 +2836,8 @@ public class DBAlertOracle implements DBAlert
     {
         // Add the Report record.
         String insert = "begin insert into sbrext.sn_report_view_ext "
-            + "(al_idseq, comments, include_property_ind, style, send, acknowledge_ind, assoc_lvl_num) "
-            + "values (?, ?, ?, ?, ?, ?, ?) return rep_idseq into ?; end;";
+            + "(al_idseq, comments, include_property_ind, style, send, acknowledge_ind, assoc_lvl_num, created_by) "
+            + "values (?, ?, ?, ?, ?, ?, ?, ?) return rep_idseq into ?; end;";
 
         CallableStatement pstmt = null;
         try
@@ -2446,12 +2850,13 @@ public class DBAlertOracle implements DBAlert
             pstmt.setString(5, rec_.getReportEmptyString());
             pstmt.setString(6, rec_.getReportAckString());
             pstmt.setInt(7, rec_.getIAssocLvl());
-            pstmt.registerOutParameter(8, Types.CHAR);
+            pstmt.setString(8, _user);
+            pstmt.registerOutParameter(9, Types.CHAR);
             pstmt.executeUpdate();
 
             // We need the record id to populate the foreign keys for other
             // tables.
-            rec_.setReportRecNum(pstmt.getString(8));
+            rec_.setReportRecNum(pstmt.getString(9));
             pstmt.close();
             return 0;
         }
@@ -2463,7 +2868,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + insert
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -2498,7 +2903,7 @@ public class DBAlertOracle implements DBAlert
             // Ooops...
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -2555,7 +2960,7 @@ public class DBAlertOracle implements DBAlert
             rec_.setAlertRecNum(null);
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -2605,7 +3010,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             result = null;
         }
         return result;
@@ -2682,7 +3087,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -2765,7 +3170,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             data._rc = _errorCode;
         }
         return data;
@@ -2810,7 +3215,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -3093,12 +3498,16 @@ public class DBAlertOracle implements DBAlert
     public String[] reportUnusedConcepts(String[] ids_)
     {
         String cs1 = AuditReport._ColSeparator;
-        String cs2 = "'" + cs1 + "'";
+        String cs2 = " || '" + cs1 + "' || ";
         String select =
-            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Date Accessed" + cs1 + "Workflow Status" + cs1 + "EVS Source" + cs1 + "Concept Code' as title, ' ' as lname from dual UNION ALL "
-            + "SELECT con.long_name || " + cs2 + " || con.con_id || " + cs2 + " || con.version || " + cs2 + " || nvl(date_modified, date_created) || " + cs2 + " || con.asl_name || " + cs2 + " || nvl(con.evs_source, ' ') || " + cs2 + " || nvl(con.preferred_name, ' ') as title, upper(con.long_name) as lname "
+            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1
+            + "Date Accessed" + cs1 + "Workflow Status" + cs1 + "EVS Source" + cs1
+            + "Concept Code' as title, ' ' as lname from dual UNION ALL "
+            + "SELECT con.long_name" + cs2 + "con.con_id" + cs2 + "con.version" + cs2
+            + "nvl(date_modified, date_created)" + cs2 + "con.asl_name" + cs2 + "nvl(con.evs_source, ' ')" + cs2
+            + "nvl(con.preferred_name, ' ') as title, upper(con.long_name) as lname "
             + "FROM sbrext.concepts_view_ext con "
-            + "WHERE con.con_idseq in (";
+            + "WHERE con.asl_name NOT LIKE 'RETIRED%' and con.con_idseq in (";
         
         String temp = "";
         for (int i = 0; i < ids_.length && i < 1000; ++i)
@@ -3119,17 +3528,24 @@ public class DBAlertOracle implements DBAlert
     public String[] reportUnusedProperties()
     {
         String cs1 = AuditReport._ColSeparator;
-        String cs2 = "'" + cs1 + "'";
+        String cs2 = " || '" + cs1 + "' || ";
         String select =
-            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Workflow Status" + cs1 + "Context' as title, ' ' as lname from dual UNION ALL "
-            + "SELECT prop.long_name || " + cs2 + " || prop.prop_id || " + cs2 + " || prop.version || " + cs2 + " || prop.asl_name || " + cs2 + " || c.name as title, upper(prop.long_name) as lname "
-            + "FROM sbrext.properties_view_ext prop, sbr.contexts_view c "
-            + "WHERE prop.prop_idseq NOT IN "
+            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Date Created" + cs1 + "Workflow Status" + cs1 + "Context" + cs1
+            + "Display" + cs1 + "Concept" + cs1 + "Concept Code" + cs1 + "Origin" + cs1 + "Public ID" + cs1 + "Date Created" + cs1 + "Workflow Status' "
+            + "as title, ' ' as lname, 0 as pid, ' ' as pidseq, 0 as dorder from dual UNION ALL "
+            + "SELECT prop.long_name" + cs2 + "prop.prop_id || 'v' || prop.version" + cs2 + "prop.date_created" + cs2 + "prop.asl_name" + cs2 + "c.name " + cs2
+            + "ccv.display_order" + cs2 + "con.long_name" + cs2 + "con.preferred_name" + cs2 + " con.origin" + cs2 + "con.con_id || 'v' || con.version" + cs2 + "con.date_created" + cs2 + "con.asl_name "
+            + "as title, upper(prop.long_name) as lname, prop.prop_id as pid, prop.prop_idseq as pidseq, ccv.display_order as dorder "
+            + "FROM sbrext.properties_view_ext prop, sbr.contexts_view c, "
+            + "sbrext.component_concepts_view_ext ccv, sbrext.concepts_view_ext con "
+            + "WHERE prop.asl_name NOT LIKE 'RETIRED%' and prop.prop_idseq NOT IN "
             + "(SELECT decv.prop_idseq "
             + "FROM sbr.data_element_concepts_view decv "
             + "WHERE decv.prop_idseq = prop.prop_idseq) "
-            + "and c.conte_idseq = prop.conte_idseq "
-            + "order by lname asc";
+            + "AND c.conte_idseq = prop.conte_idseq "
+            + "AND ccv.condr_idseq = prop.condr_idseq "
+            + "AND con.con_idseq = ccv.con_idseq "
+            + "order by lname asc, pid ASC, pidseq ASC, dorder DESC";
 
         return getBasicData0(select);
     }
@@ -3142,11 +3558,13 @@ public class DBAlertOracle implements DBAlert
     public String[] reportMissingPublicID()
     {
         String cs1 = AuditReport._ColSeparator;
-        String cs2 = "'" + cs1 + "'";
+        String cs2 = " || '" + cs1 + "' || ";
         String select = 
             "SELECT 'AC Type" + cs1 + "Name" + cs1 + "ID" + cs1 + "Context' as title, ' ' as tname, ' ' as lname from dual UNION ALL "
-            + "select ac.actl_name || " + cs2 + " || ac.long_name || " + cs2 + " || ac.ac_idseq || " + cs2 + " || c.name as title, upper(ac.actl_name) as tname, upper(ac.long_name) as lname "
-            + "from sbr.admin_components_view ac, sbr.contexts_view c where ac.public_id is null and c.conte_idseq = ac.conte_idseq "
+            + "select ac.actl_name" + cs2 + "ac.long_name" + cs2 + "ac.ac_idseq" + cs2 + "c.name as title, upper(ac.actl_name) as tname, upper(ac.long_name) as lname "
+            + "from sbr.admin_components_view ac, sbr.contexts_view c where ac.public_id is null "
+            + "and ac.asl_name NOT LIKE 'RETIRED%' "
+            + "and c.conte_idseq = ac.conte_idseq "
             + "order by tname asc";
 
         return getBasicData0(select);
@@ -3160,12 +3578,12 @@ public class DBAlertOracle implements DBAlert
     public String[] reportUnusedDEC()
     {
         String cs1 = AuditReport._ColSeparator;
-        String cs2 = "'" + cs1 + "'";
+        String cs2 = " || '" + cs1 + "' || ";
         String select =
             "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Workflow Status" + cs1 + "Context' as title, ' ' as lname from dual UNION ALL "
-            + "SELECT dec.long_name || " + cs2 + " || dec.dec_id || " + cs2 + " || dec.version || " + cs2 + " || dec.asl_name || " + cs2 + " || c.name as title, upper(dec.long_name) as lname "
+            + "SELECT dec.long_name" + cs2 + "dec.dec_id" + cs2 + "dec.version" + cs2 + "dec.asl_name" + cs2 + "c.name as title, upper(dec.long_name) as lname "
             + "FROM sbr.data_element_concepts_view dec, sbr.contexts_view c "
-            + "WHERE dec.dec_idseq NOT IN "
+            + "WHERE dec.asl_name NOT LIKE 'RETIRED%' and dec.dec_idseq NOT IN "
             + "(SELECT de.dec_idseq FROM sbr.data_elements_view de WHERE de.dec_idseq = dec.dec_idseq) "
             + "and c.conte_idseq = dec.conte_idseq "
             + "order by lname asc";
@@ -3181,17 +3599,24 @@ public class DBAlertOracle implements DBAlert
     public String[] reportUnusedObjectClasses()
     {
         String cs1 = AuditReport._ColSeparator;
-        String cs2 = "'" + cs1 + "'";
+        String cs2 = " || '" + cs1 + "' || ";
         String select =
-            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Workflow Status" + cs1 + "Context' as title, ' ' as lname from dual UNION ALL "
-            + "SELECT oc.long_name || " + cs2 + " || oc.oc_id || " + cs2 + " || oc.version || " + cs2 + " || oc.asl_name || " + cs2 + " || c.name as title, upper(oc.long_name) as lname "
-            + "FROM sbrext.object_classes_view_ext oc, sbr.contexts_view c "
-            + "WHERE oc.oc_idseq NOT IN " 
+            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Date Created" + cs1 + "Workflow Status" + cs1 + "Context" + cs1
+            + "Display" + cs1 + "Concept" + cs1 + "Concept Code" + cs1 + "Origin" + cs1 + "Public ID" + cs1 + "Date Created" + cs1 + "Workflow Status' "
+            + "as title, ' ' as lname, 0 as ocid, ' ' as ocidseq, 0 as dorder from dual UNION ALL "
+            + "SELECT oc.long_name" + cs2 + "oc.oc_id || 'v' || oc.version" + cs2 + "oc.date_created" + cs2 + "oc.asl_name" + cs2 + "c.name" + cs2
+            + "ccv.display_order" + cs2 + "con.long_name" + cs2 + "con.preferred_name" + cs2 + " con.origin" + cs2 + "con.con_id || 'v' || con.version" + cs2 + "con.date_created" + cs2 + "con.asl_name "
+            + "as title, upper(oc.long_name) as lname, oc.oc_id as ocid, oc.oc_idseq as ocidseq, ccv.display_order as dorder "
+            + "FROM sbrext.object_classes_view_ext oc, sbr.contexts_view c, "
+            + "sbrext.component_concepts_view_ext ccv, sbrext.concepts_view_ext con "
+            + "WHERE oc.asl_name NOT LIKE 'RETIRED%' and oc.oc_idseq NOT IN " 
             +    "(SELECT decv.oc_idseq " 
             +    "FROM sbr.data_element_concepts_view decv " 
             +    "WHERE decv.OC_IDSEQ = oc.oc_idseq) "
-            + "and c.conte_idseq = oc.conte_idseq "
-            + "order by lname asc";
+            + "AND c.conte_idseq = oc.conte_idseq "
+            + "AND ccv.condr_idseq = oc.condr_idseq "
+            + "AND con.con_idseq = ccv.con_idseq "
+            + "order by lname asc, ocid ASC, ocidseq ASC, dorder DESC";
 
         return getBasicData0(select);
     }
@@ -3204,12 +3629,13 @@ public class DBAlertOracle implements DBAlert
     public String[] reportMissingQuestionText()
     {
         String cs1 = AuditReport._ColSeparator;
-        String cs2 = "'" + cs1 + "'";
+        String cs2 = " || '" + cs1 + "' || ";
         String select =
             "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Workflow Status" + cs1 + "Context' as title, ' ' as lname from dual UNION ALL "
-            + "select de.long_name || " + cs2 + " || de.cde_id || " + cs2 + " || de.version || " + cs2 + " || de.asl_name || " + cs2 + " || c.name as title, upper(de.long_name) as lname "
+            + "select de.long_name" + cs2 + "de.cde_id" + cs2 + "de.version" + cs2 + "de.asl_name" + cs2 + "c.name as title, upper(de.long_name) as lname "
             + "from sbr.data_elements_view de, sbr.contexts_view c "
-            + "where de.de_idseq in (select qc.de_idseq from sbrext.quest_contents_view_ext qc where qc.de_idseq = de.de_idseq) "
+            + "where de.asl_name NOT LIKE 'RETIRED%' "
+            + "and de.de_idseq in (select qc.de_idseq from sbrext.quest_contents_view_ext qc where qc.de_idseq = de.de_idseq) "
             + "and de.de_idseq not in (select rd.ac_idseq from sbr.reference_documents_view rd where rd.ac_idseq = de.de_idseq and dctl_name in ('Alternate Question Text','Preferred Question Text')) "
             + "and c.conte_idseq = de.conte_idseq "
             + "order by lname asc";
@@ -3284,8 +3710,9 @@ public class DBAlertOracle implements DBAlert
     public Vector<ConceptItem> selectConcepts()
     {
         // Get the context names and id's.
-        String select = "select con_idseq, con_id, version, evs_source, preferred_name, long_name, definition_source, preferred_definition from sbrext.concepts_view_ext "
-            + "order by upper(long_name) ASC";
+        String select = "SELECT con_idseq, con_id, version, evs_source, preferred_name, long_name, definition_source, preferred_definition "
+            + "FROM sbrext.concepts_view_ext WHERE asl_name NOT LIKE 'RETIRED%' "
+            + "ORDER BY upper(long_name) ASC";
 
         Statement stmt = null;
         Vector<ConceptItem> list = new Vector<ConceptItem>();
@@ -3318,7 +3745,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
         return list;
@@ -4113,7 +4540,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             data._rc = _errorCode;
         }
         return data;
@@ -4235,7 +4662,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             data._rc = _errorCode;
         }
         return data;
@@ -4569,7 +4996,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -4771,7 +5198,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -4869,7 +5296,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -4957,7 +5384,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -4978,7 +5405,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -5019,7 +5446,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
         }
         return itype;
     }
@@ -6067,7 +6494,7 @@ public class DBAlertOracle implements DBAlert
         else
         {
             // Only needed during development.
-            _logger.fatal("DEVELOPMENT ERROR 1: ==>\n" + select_
+            _logger.error("DEVELOPMENT ERROR 1: ==>\n" + select_
                 + "\n<== unexpected SQL form.");
             return null;
         }
@@ -6102,7 +6529,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -6921,7 +7348,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             name = "(*error*)";
         }
         return (name == null) ? id_ : name;
@@ -6965,16 +7392,17 @@ public class DBAlertOracle implements DBAlert
         boolean setInactive_)
     {
         String update = "update sbrext.sn_alert_view_ext set "
-            + ((run_) ? "last_auto_run" : "last_manual_run") + " = ?"
-            + ((setInactive_) ? ", al_status = 'I' " : " ")
-            + "where al_idseq = ?";
+            + ((run_) ? "last_auto_run" : "last_manual_run") + " = ?,"
+            + ((setInactive_) ? " al_status = 'I', " : "")
+            + "modified_by = ? where al_idseq = ?";
         try
         {
             PreparedStatement pstmt = null;
             // Set all the SQL arguments.
             pstmt = _conn.prepareStatement(update);
             pstmt.setTimestamp(1, stamp_);
-            pstmt.setString(2, id_);
+            pstmt.setString(2, _user);
+            pstmt.setString(3, id_);
             pstmt.executeUpdate();
             pstmt.close();
             _needCommit = true;
@@ -6985,7 +7413,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return _errorCode;
         }
     }
@@ -7064,7 +7492,7 @@ public class DBAlertOracle implements DBAlert
                 _errorCode = DBAlertUtil.getSQLErrorCode(ex);
                 _errorMsg = _errorCode + ": " + select
                     + "\n\n" + ex.toString();
-                _logger.fatal(_errorMsg);
+                _logger.error(_errorMsg);
                 return null;
             }
         }
@@ -7116,7 +7544,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -7152,7 +7580,7 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
-            _logger.fatal(_errorMsg);
+            _logger.error(_errorMsg);
             return null;
         }
     }
@@ -7183,6 +7611,35 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = select_ + "\n" + ex.toString();
             return -1;
+        }
+    }
+
+    /**
+     * Run a specific SELECT for the testDBdependancies() method.
+     * 
+     * @param select_
+     *        The select statement.
+     * @return the first row found
+     */
+    private String testDB2(String select_)
+    {
+        try
+        {
+            PreparedStatement pstmt = _conn.prepareStatement(select_);
+            ResultSet rs = pstmt.executeQuery();
+            String result = null;
+            int rows;
+            for (rows = 0; rs.next(); ++rows)
+                result = rs.getString(1);
+            rs.close();
+            pstmt.close();
+            return result;
+        }
+        catch (SQLException ex)
+        {
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
+            _errorMsg = select_ + "\n" + ex.toString();
+            return null;
         }
     }
 
@@ -7247,11 +7704,14 @@ public class DBAlertOracle implements DBAlert
     /**
      * Test the content of the tool options table.
      * 
+     * @param url_ the URL used to access the Sentinel from a browser. If not null it is compared to the caDSR
+     *          tool options entry to ensure they match.
      * @return null if no errors, otherwise the error message.
      */
-    public String testSentinelOptions()
+    public String testSentinelOptions(String url_)
     {
         String results = "";
+        int rows;
 
         AutoProcessData apd = new AutoProcessData();
         apd.getOptions(this);
@@ -7281,11 +7741,25 @@ public class DBAlertOracle implements DBAlert
         if (apd._work == null || apd._work.length() == 0)
             results += "Missing the Sentinel Tool working folder prefix.\n\n";
         
-        String select = "select tool_idseq from sbrext.tool_options_view_ext "
+        String select = "select value from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' and property = 'URL' and value is not null";
-        int rows = testDB(select);
-        if (rows != 1)
+        select = testDB2(select);
+        if (select == null)
             results += "Missing the Sentinel Tool URL setting.\n\n";
+        else if (url_ != null)
+        {
+            int pos = url_.indexOf('/', 8);
+            if (pos > 0)
+                url_ = url_.substring(0, pos);
+            if (url_.startsWith("http://localhost"))
+                ;
+            else if (url_.startsWith("https://localhost"))
+                ;
+            else if (select.startsWith(url_, 0))
+                ;
+            else
+                results += "Sentinel Tool URL \"" + url_ + "\"does not match configuration value \"" + select + "\".\n\n";
+        }
         
         select = "select tool_idseq from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' AND property LIKE 'ADMIN.%' and value like '%0%'";
@@ -7606,6 +8080,25 @@ public class DBAlertOracle implements DBAlert
     }
     
     /**
+     * Format the integer to include comma thousand separators.
+     * 
+     * @param val_ The number in string format.
+     * @return the number in string format with separators.
+     */
+    private String formatInt(String val_)
+    {
+        int loop = val_.length() / 3;
+        int start = val_.length() % 3;
+        String text = val_.substring(0, start);
+        for (int i = 0; i < loop; ++i)
+        {
+            text = text + "," + val_.substring(start, start + 3);
+            start += 3;
+        }
+        return (text.charAt(0) == ',') ? text.substring(1) : text;
+    }
+    
+    /**
      * Retrieve the row counts for all the tables used by the Alert Report.
      * The values may be indexed using the _ACTYPE_* variables and an index
      * of _ACTYPE_LENGTH is the count of the change history table.  
@@ -7614,18 +8107,23 @@ public class DBAlertOracle implements DBAlert
      */
     public String[] reportRowCounts()
     {
-        String counts[] = new String[_ACTYPE_LENGTH + 1];
+        String[] extraTables = {"sbrext.ac_change_history_ext", "sbrext.gs_tokens", "sbrext.gs_composite" };
+        String[] extraNames = {"History Table", "Freestyle Token Index", "Freestyle Concatenation Index" };
+        int total = _DBMAP3.length + extraTables.length;
+        String counts[] = new String[total];
         
         String select = "select count(*) from ";
         String table;
         String name;
         
+        int extraNdx = 0;
         for (int ndx = 0; ndx < counts.length; ++ndx)
         {
-            if (ndx == _ACTYPE_LENGTH)
+            if (ndx >= _DBMAP3.length)
             {
-                table = "sbrext.ac_change_history_ext";
-                name = "History Table";
+                table = extraTables[extraNdx];
+                name = extraNames[extraNdx];
+                ++extraNdx;
             }
             else if (_DBMAP3[ndx]._table == null)
             {
@@ -7645,7 +8143,7 @@ public class DBAlertOracle implements DBAlert
                 ResultSet rs = pstmt.executeQuery();
                 if (rs.next())
                 {
-                    counts[ndx] = name + AuditReport._ColSeparator + rs.getString(1);
+                    counts[ndx] = name + AuditReport._ColSeparator + formatInt(rs.getString(1));
                 }
                 rs.close();
                 pstmt.close();
@@ -7734,345 +8232,48 @@ public class DBAlertOracle implements DBAlert
         return tableCode_.equals(_DBMAP3[type_]._key);
     }
     
-    // Class data elements.
-    private String              _namesList[];
-
-    private String              _namesVals[];
-
-    private String              _namesExempt;
-
-    private String              _contextList[];
-
-    private String              _contextVals[];
-
-    private String              _schemeList[];
-
-    private String              _schemeVals[];
-
-    private String              _schemeContext[];
-
-    private String              _protoList[];
-
-    private String              _protoVals[];
-
-    private String              _protoContext[];
-
-    private String              _schemeItemList[];
-
-    private String              _schemeItemVals[];
-
-    private String              _schemeItemSchemes[];
-
-    private Connection          _conn;
-
-    private ServletContext      _sc;
-
-    private boolean             _needCommit;
-
-    private String              _groupsList[];
-
-    private String              _groupsVals[];
-
-    private String              _formsList[];
-
-    private String              _formsVals[];
-
-    private String              _formsContext[];
-
-    private String              _workflowList[];
-
-    private String              _workflowVals[];
-
-    private String              _cworkflowList[];
-
-    private String              _cworkflowVals[];
-
-    private String              _regStatusList[];
-
-    private String              _regStatusVals[];
-
-    private String              _regCStatusList[];
-
-    private String              _regCStatusVals[];
-
-    private String              _nameID[];
-
-    private String              _nameText[];
-
-    private int                 _errorCode;
-
-    private String              _errorMsg;
-    
-    private String              _actypesList[];
-    
-    private String              _actypesVals[];
-
     /**
-     * The internal code for Version.
+     * Get the used (referenced) RELEASED object classes not owned by caBIG
+     * 
+     * @return the list of object classes
      */
-    public static final String  _VERSION      = "VERSION";
-
-    /**
-     * The internal code for Workflow Status.
-     */
-    public static final String  _WFS          = "ASL_NAME";
-
-    /**
-     * The internal code for Registration Status.
-     */
-    public static final String  _RS           = "REGISTRATION_STATUS";
-
-    /**
-     * The internal code for User ID.
-     */
-    public static final String  _UNAME        = "UA_NAME";
-
-    /**
-     * Version Any Change value.
-     */
-    public static final char    _VERANYCHG    = 'C';
-
-    /**
-     * Version Major (whole) number change value.
-     */
-    public static final char    _VERMAJCHG    = 'M';
-
-    /**
-     * Version Ignore change value.
-     */
-    public static final char    _VERIGNCHG    = 'I';
-
-    /**
-     * Version Specific Value change value.
-     */
-    public static final char    _VERSPECHG    = 'S';
-
-    /**
-     * Maximum length of the Alert Definition Name.
-     */
-    public static final int     _MAXNAMELEN   = 30;
-
-    /**
-     * Maximum length of the Inaction Reason description.
-     */
-    public static final int     _MAXREASONLEN = 2000;
-
-    /**
-     * Maximum length of the Report Introduction description.
-     */
-    public static final int     _MAXINTROLEN  = 2000;
-
-    /**
-     * Maximum length of a freeform email address.
-     */
-    public static final int     _MAXEMAILLEN  = 255;
-    
-    /**
-     * The Date comparison Created Only value.
-     */
-    public static final int     _DATECONLY = 0;
-    
-    /**
-     * The Date comparison Modified Only value.
-     */
-    public static final int     _DATEMONLY = 1;
-    
-    /**
-     * The Date comparison Created and Modified value.
-     */
-    public static final int     _DATECM = 2;
-
-    private static boolean _poolWarning = true;
-    
-    private static final String _DATECHARS[][] = {
-        {"<", ">", ">=", "<"},
-        {">=", "<", "<", ">"},
-        {">=", "<", ">=", "<"}
-    };
-
-    private static final String _CONTEXT      = "CONTEXT";
-
-    private static final String _FORM         = "FORM";
-    
-    private static final String _PROTOCOL     = "PROTOCOL";
-
-    private static final String _SCHEME       = "CS";
-
-    private static final String _SCHEMEITEM   = "CSI";
-
-    private static final String _CREATOR      = "CREATOR";
-
-    private static final String _MODIFIER     = "MODIFIER";
-
-    private static final String _REGISTER     = "REG_STATUS";
-
-    private static final String _STATUS       = "AC_STATUS";
-
-    private static final String _ACTYPE       = "ACTYPE";
-
-    private static final String _DATEFILTER   = "DATEFILTER";
-
-    private static final char   _CRITERIA     = 'C';
-
-    private static final char   _MONITORS     = 'M';
-    
-    private static final String _orderbyACH = 
-        "order by id asc, "
-//        + "cid asc, "
-//        + "zz.date_modified asc, "
-        + "ach.change_datetimestamp asc, "
-        + "ach.changed_table asc, "
-        + "ach.changed_table_idseq asc, "
-        + "ach.changed_column asc";
-
-    private static final DBAlertOracleMap1[] _DBMAP1 =
+    public String[] reportUsedObjectClasses()
     {
-        new DBAlertOracleMap1("ASL_NAME", "Workflow Status"), 
-        new DBAlertOracleMap1("BEGIN_DATE", "Begin Date"),
-        new DBAlertOracleMap1("CDE_ID", "Public ID"),
-        new DBAlertOracleMap1("CDR_IDSEQ", "Complex DE association"),
-        new DBAlertOracleMap1("CD_IDSEQ", "Conceptual Domain association"),
-        new DBAlertOracleMap1("CHANGE_NOTE", "Change Note"),
-        new DBAlertOracleMap1("CONDR_IDSEQ", "Concept Class association"),
-        new DBAlertOracleMap1("CON_IDSEQ", "Concept Class association"),
-        new DBAlertOracleMap1("CREATED_BY", "Created By"),
-        new DBAlertOracleMap1("CSTL_NAME", "Category"),
-        new DBAlertOracleMap1("CS_ID", "Public ID"),
-        new DBAlertOracleMap1("C_DEC_IDSEQ", "Child DEC association"),
-        new DBAlertOracleMap1("C_DE_IDSEQ", "Child DE association"),
-        new DBAlertOracleMap1("C_VD_IDSEQ", "Child VD association"),
-        new DBAlertOracleMap1("DATE_CREATED", "Created Date"),
-        new DBAlertOracleMap1("DATE_MODIFIED", "Modified Date"),
-        new DBAlertOracleMap1("DECIMAL_PLACE", "Number of Decimal Places"),
-        new DBAlertOracleMap1("DEC_ID", "Public ID"),
-        new DBAlertOracleMap1("DEC_IDSEQ", "Data Element Concept association"),
-        new DBAlertOracleMap1("DEC_REC_IDSEQ", "DEC_REC_IDSEQ"),
-        new DBAlertOracleMap1("DEFINITION_SOURCE", "Definition Source"),
-        new DBAlertOracleMap1("DELETED_IND", "Deleted Indicator"),
-        new DBAlertOracleMap1("DESCRIPTION", "Description"),
-        new DBAlertOracleMap1("DESIG_IDSEQ", "Designation association"),
-        new DBAlertOracleMap1("DE_IDSEQ", "Data Element association"),
-        new DBAlertOracleMap1("DE_REC_IDSEQ", "DE_REC_IDSEQ"),
-        new DBAlertOracleMap1("DISPLAY_ORDER", "Display Order"),
-        new DBAlertOracleMap1("DTL_NAME", "Data Type"),
-        new DBAlertOracleMap1("END_DATE", "End Date"),
-        new DBAlertOracleMap1("FORML_NAME", "Data Format"),
-        new DBAlertOracleMap1("HIGH_VALUE_NUM", "Maximum Value"),
-        new DBAlertOracleMap1("LABEL_TYPE_FLAG", "Label Type"),
-        new DBAlertOracleMap1("LATEST_VERSION_IND", "Latest Version Indicator"),
-        new DBAlertOracleMap1("LONG_NAME", "Long Name"),
-        new DBAlertOracleMap1("LOW_VALUE_NUM", "Minimum Value"),
-        new DBAlertOracleMap1("MAX_LENGTH_NUM", "Maximum Length"),
-        new DBAlertOracleMap1("METHODS", "Methods"),
-        new DBAlertOracleMap1("MIN_LENGTH_NUM", "Minimum Length"),
-        new DBAlertOracleMap1("MODIFIED_BY", "Modified By"),
-        new DBAlertOracleMap1("OBJ_CLASS_QUALIFIER", "Object Class Qualifier"),
-        new DBAlertOracleMap1("OCL_NAME", "Object Class Name"),
-        new DBAlertOracleMap1("OC_ID", "Public ID"),
-        new DBAlertOracleMap1("OC_IDSEQ", "Object Class association"),
-        new DBAlertOracleMap1("ORIGIN", "Origin"),
-        new DBAlertOracleMap1("PREFERRED_DEFINITION", "Preferred Definition"),
-        new DBAlertOracleMap1("PREFERRED_NAME", "Preferred Name"),
-        new DBAlertOracleMap1("PROPERTY_QUALIFIER", "Property Qualifier"),
-        new DBAlertOracleMap1("PROPL_NAME", "Property Name"),
-        new DBAlertOracleMap1("PROP_ID", "Public ID"),
-        new DBAlertOracleMap1("PROP_IDSEQ", "Property"),
-        new DBAlertOracleMap1("PV_IDSEQ", "Permissible Value"),
-        new DBAlertOracleMap1("P_DEC_IDSEQ", "Parent DEC association"),
-        new DBAlertOracleMap1("P_DE_IDSEQ", "Parent DE association"),
-        new DBAlertOracleMap1("P_VD_IDSEQ", "Parent VD association"),
-        new DBAlertOracleMap1("QUALIFIER_NAME", "Qualifier"),
-        new DBAlertOracleMap1("QUESTION", "Question"),
-        new DBAlertOracleMap1("RD_IDSEQ", "Reference Document association"),
-        new DBAlertOracleMap1("REP_IDSEQ", "Representation association"),
-        new DBAlertOracleMap1("RL_NAME", "Relationship Name"),
-        new DBAlertOracleMap1("RULE", "Rule"),
-        new DBAlertOracleMap1("SHORT_MEANING", "Meaning"),
-        new DBAlertOracleMap1("UOML_NAME", "Unit Of Measure"),
-        new DBAlertOracleMap1("URL", "URL"),
-        new DBAlertOracleMap1("VALUE", "Value"),
-        new DBAlertOracleMap1("VD_ID", "Public ID"),
-        new DBAlertOracleMap1("VD_IDSEQ", "Value Domain association"),
-        new DBAlertOracleMap1("VD_REC_IDSEQ", "VD_REC_IDSEQ"),
-        new DBAlertOracleMap1("VD_TYPE_FLAG", "Enumerated/Non-enumerated"),
-        new DBAlertOracleMap1("VERSION", "Version")
-    };
-    
-    private static final DBAlertOracleMap1[] _DBMAP1OTHER =
-    {
-        new DBAlertOracleMap1("CONTE_IDSEQ", "Owned By Context"),
-        new DBAlertOracleMap1("LAE_NAME", "Language"),
-        new DBAlertOracleMap1("NAME", "Name")
-    };
-
-    private static final DBAlertOracleMap1[] _DBMAP1DESIG =
-    {
-        new DBAlertOracleMap1("CONTE_IDSEQ", "Designation Context"),
-        new DBAlertOracleMap1("DETL_NAME", "Designation Type"),
-        new DBAlertOracleMap1("LAE_NAME", "Designation Language")
-    };
-    
-    private static final DBAlertOracleMap1[] _DBMAP1CSI =
-    {
-        new DBAlertOracleMap1("CS_CSI_IDSEQ", "Classification Scheme Item association")
-    };
-    
-    private static final DBAlertOracleMap1[] _DBMAP1RD =
-    {
-        new DBAlertOracleMap1("DCTL_NAME","Document Type"),
-        new DBAlertOracleMap1("DISPLAY_ORDER", "Document Display Order"),
-        new DBAlertOracleMap1("DOC_TEXT", "Document Text"),
-        new DBAlertOracleMap1("RDTL_NAME", "Document Text Type"),
-        new DBAlertOracleMap1("URL", "Document URL")
-    };
-    
-    private static final DBAlertOracleMap1[] _DBMAP1COMPLEX =
-    {
-        new DBAlertOracleMap1("CONCAT_CHAR", "Concatenation Character"),
-        new DBAlertOracleMap1("CRTL_NAME", "Complex Type")
-    };
-    
-    private static final DBAlertOracleMap2[] _DBMAP2 =
-    {
-        new DBAlertOracleMap2("CD_IDSEQ", "sbr.conceptual_domains_view", "cd_idseq", "", "long_name || ' (' || cd_id || 'v' || version || ')' as label"),
-        new DBAlertOracleMap2("CONDR_IDSEQ", "sbrext.component_concepts_view_ext ccv, sbrext.concepts_view_ext cv", "ccv.condr_idseq", " and cv.con_idseq = ccv.con_idseq order by ccv.display_order desc",
-                        "cv.long_name || ' (' || cv.con_id || 'v' || cv.version || ') (' || cv.origin || ':' || cv.preferred_name || ')' as label"),
-        new DBAlertOracleMap2("CONTE_IDSEQ", "sbr.contexts_view", "conte_idseq", "", "name || ' (v' || version || ')' as label"),
-        new DBAlertOracleMap2("CON_IDSEQ", "sbrext.concepts_view_ext", "con_idseq", "", "long_name || ' (' || con_id || 'v' || version || ') (' || origin || ':' || preferred_name || ')' as label"),
-        new DBAlertOracleMap2("CREATED_BY", "sbr.user_accounts_view", "ua_name", "", "name as label"),
-        new DBAlertOracleMap2("CS_CSI_IDSEQ", "sbr.cs_csi_view cci, sbr.class_scheme_items_view csi", "cci.cs_csi_idseq", " and csi.csi_idseq = cci.csi_idseq","csi.csi_name as label"),
-        new DBAlertOracleMap2("DEC_IDSEQ", "sbr.data_element_concepts_view", "dec_idseq", "", "long_name || ' (' || dec_id || 'v' || version || ')' as label"),
-        new DBAlertOracleMap2("DE_IDSEQ", "sbr.data_elements_view", "de_idseq", "", "long_name || ' (' || cde_id || 'v' || version || ')' as label"),
-        new DBAlertOracleMap2("MODIFIED_BY", "sbr.user_accounts_view", "ua_name", "", "name as label"),
-        new DBAlertOracleMap2("OC_IDSEQ", "sbrext.object_classes_view_ext", "oc_idseq", "", "long_name || ' (' || oc_id || 'v' || version || ')' as label"),
-        new DBAlertOracleMap2("PROP_IDSEQ", "sbrext.properties_view_ext", "prop_idseq", "", "long_name || ' (' || prop_id || 'v' || version || ')' as label"),
-        new DBAlertOracleMap2("PV_IDSEQ", "sbr.permissible_values_view", "pv_idseq", "", "value || ' (' || short_meaning || ')' as label"),
-        new DBAlertOracleMap2("RD_IDSEQ", "sbr.reference_documents_view", "rd_idseq", "", "name || ' (' || nvl(doc_text, url) || ')' as label"),
-        new DBAlertOracleMap2("REP_IDSEQ", "sbrext.representations_view_ext", "rep_idseq", "", "long_name || ' (' || rep_id || 'v' || version || ')' as label"),
-        new DBAlertOracleMap2("UA_NAME", "sbr.user_accounts_view", "ua_name", "", "name as label"),
-        new DBAlertOracleMap2("VD_IDSEQ", "sbr.value_domains_view", "vd_idseq", "", "long_name || ' (' || vd_id || 'v' || version || ')' as label")
-    };
-
-    private static final DBAlertOracleMap3[] _DBMAP3 =
-    {
-        new DBAlertOracleMap3("cd", "Conceptual Domain", "sbr.conceptual_domains_view", null),
-        new DBAlertOracleMap3("con", "Concept", "sbrext.concepts_view_ext", null),
-        new DBAlertOracleMap3("conte", "Context", "sbr.contexts_view", null),
-        new DBAlertOracleMap3("cs", "Classification Scheme", "sbr.classification_schemes_view", "CLASSIFICATION_SCHEMES"),
-        new DBAlertOracleMap3("csi", "Classification Scheme Item", "sbr.class_scheme_items_view", null),
-        new DBAlertOracleMap3("de", "Data Element", "sbr.data_elements_view", "DATA_ELEMENTS"),
-        new DBAlertOracleMap3("dec", "Data Element Concept", "sbr.data_element_concepts_view", "DATA_ELEMENT_CONCEPTS"),
-        new DBAlertOracleMap3("oc", "Object Class", "sbrext.object_classes_view_ext", "OBJECT_CLASSES_EXT"),
-        new DBAlertOracleMap3("prop", "Property", "sbrext.properties_view_ext", "PROPERTIES_EXT"),
-        new DBAlertOracleMap3("proto", "Protocol", "sbrext.protocols_view_ext", null),
-        new DBAlertOracleMap3("pv", "Permissible Value", "sbr.permissible_values_view", "PERMISSIBLE_VALUES"),
-        new DBAlertOracleMap3("qc", "Form/Template", "sbrext.quest_contents_view_ext",  null),
-        new DBAlertOracleMap3("qcm", "Module", null, null),
-        new DBAlertOracleMap3("qcq", "Question", null, null),
-        new DBAlertOracleMap3("qcv", "Valid Value", null, null),
-        new DBAlertOracleMap3("vd", "Value Domain", "sbr.value_domains_view", "VALUE_DOMAINS"),
-        new DBAlertOracleMap3("vm", "Value Meaning", "sbr.value_meanings_view", null)
-    };
-    
-    private static final Logger _logger = Logger.getLogger(DBAlert.class.getName());
+        String cs1 = AuditReport._ColSeparator;
+        String cs2 = " || '" + cs1 + "' || ";
+        String select = 
+            "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Workflow Status" + cs1
+            + "Short Name" + cs1 + "Context" + cs1 + "Created" + cs1
+            + "Modified" + cs1 + "References" + cs1 + "Order" + cs1
+            + "Concept" + cs1 + "Code" + cs1 + "Origin' as title, ' ' AS lname, 0 AS dorder, ' ' AS ocidseq "
+            + "from dual UNION ALL "
+            + "SELECT  oc.long_name" + cs2 + "oc.oc_id" + cs2 + "oc.VERSION" + cs2 + "oc.asl_name" + cs2
+            + "oc.preferred_name" + cs2 + "c.NAME" + cs2 + "oc.date_created" + cs2
+            + "oc.date_modified" + cs2 + "ocset.cnt" + cs2 + "cc.display_order" + cs2
+            + "con.long_name" + cs2 + "con.preferred_name" + cs2 + "con.origin as title, "
+            + "LOWER (oc.long_name) AS lname, cc.display_order AS dorder, oc.oc_idseq AS ocidseq "
+            + "FROM (SELECT   ocv.oc_idseq, COUNT (*) AS cnt "
+            + "FROM sbrext.object_classes_view_ext ocv, "
+            + "sbr.data_element_concepts_view DEC "
+            + "WHERE ocv.asl_name NOT LIKE 'RETIRED%' "
+            + "AND ocv.conte_idseq NOT IN ( "
+            + "SELECT VALUE "
+            + "FROM sbrext.tool_options_view_ext "
+            + "WHERE tool_name = 'caDSR' "
+            + "AND property = 'DEFAULT_CONTEXT') "
+            + "AND DEC.oc_idseq = ocv.oc_idseq "
+            + "AND DEC.asl_name NOT LIKE 'RETIRED%' "
+            + "GROUP BY ocv.oc_idseq) ocset, "
+            + "sbrext.object_classes_view_ext oc, "
+            + "sbrext.component_concepts_view_ext cc, "
+            + "sbrext.concepts_view_ext con, "
+            + "sbr.contexts_view c "
+            + "WHERE oc.oc_idseq = ocset.oc_idseq "
+            + "AND c.conte_idseq = oc.conte_idseq "
+            + "AND cc.condr_idseq = oc.condr_idseq "
+            + "AND con.con_idseq = cc.con_idseq "
+            + "ORDER BY lname ASC, ocidseq ASC, dorder DESC";
+        
+        return getBasicData0(select);
+    }
 }

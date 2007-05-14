@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.10 2007-01-25 20:19:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.11 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -136,11 +136,11 @@ public class AutoProcessAlerts
         }
         catch (Exception ex)
         {
-            _logger.fatal(ex.toString(), ex);
+            _logger.error(ex.toString(), ex);
         }
         catch (Error ex)
         {
-            _logger.fatal(ex.toString(), ex);
+            _logger.error(ex.toString(), ex);
         }
     }
 
@@ -160,15 +160,15 @@ public class AutoProcessAlerts
         
         _dsurl = prop.getProperty(Constants._DSURL);
         if (_dsurl == null)
-            _logger.fatal("Missing " + Constants._DSURL + " connection string in " + propFile_);
+            _logger.error("Missing " + Constants._DSURL + " connection string in " + propFile_);
         
         _user = prop.getProperty(Constants._DSUSER);
         if (_user == null)
-            _logger.fatal("Missing " + Constants._DSUSER + " in " + propFile_);
+            _logger.error("Missing " + Constants._DSUSER + " in " + propFile_);
         
         _pswd = prop.getProperty(Constants._DSPSWD);
         if (_pswd == null)
-            _logger.fatal("Missing " + Constants._DSPSWD + " in " + propFile_);
+            _logger.error("Missing " + Constants._DSPSWD + " in " + propFile_);
         
         int auditCnt = 0;
         while (prop.getProperty("audit." + auditCnt + ".class") != null)
@@ -1129,7 +1129,7 @@ public class AutoProcessAlerts
                 + timer.check() + "</td></tr>";
         }
         text = text + "<tr><td>Total</td><td>" + timer.reset() + "</td></tr>";
-        _logSummary.writeMatrix(text, 2, true);
+        _logSummary.writeMatrix("", text, 2, true, "");
     }
 
     /**
@@ -1157,6 +1157,7 @@ public class AutoProcessAlerts
             int colcnt;
             String text;
             int index = 0;
+            String errorPrefix = "<b>Error:</b> <i>";
 
             String splitPattern = AuditReport.getSplitPattern();
             
@@ -1168,32 +1169,39 @@ public class AutoProcessAlerts
                         ar.setDB(_db);
                         rows = ar.getReportRows();
                         colcnt = rows[0].split(splitPattern).length;
+                        String prefix = AuditReport.formatSectionTop(_auditTitles[index], index);
+                        String suffix = AuditReport.formatSectionBottom();
                         text = AuditReport.formatHeader(
                                         _auditTitles[index],
                                         (ar.okToDisplayCount()) ? rows.length : -1,
-                                        colcnt);
+                                        colcnt, index);
                         text = text + AuditReport.formatRows(rows);
-                        _logAudits.writeMatrix(text, colcnt, ar.rightJustifyLastColumn());
+                        _logAudits.writeMatrix(prefix, text, colcnt, ar.rightJustifyLastColumn(), suffix);
                 }
                 catch (InstantiationException ex)
                 {
                     _logSummary.writeError(ex.toString());
+                    _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
                 }
                 catch (IllegalAccessException ex)
                 {
                     _logSummary.writeError(ex.toString());
+                    _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
                 }
                 catch (ClassNotFoundException ex)
                 {
                     _logSummary.writeError(ex.toString());
+                    _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
                 }
                 catch (ClassCastException ex)
                 {
-                    _logSummary.writeError("Class " + _audits[index] + " does not extend class AuditReport (" + ex.toString() + ")");
+                    _logSummary.writeError("Class " + _audits[index] + " does not extend class AuditReport: " + ex.toString());
+                    _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
                 }
                 catch (Exception ex)
                 {
                     _logSummary.writeError(ex.toString());
+                    _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
                 }
             }
 
@@ -1752,7 +1760,7 @@ public class AutoProcessAlerts
             ResourceBundle prb = PropertyResourceBundle.getBundle(_RESOURCES);
             if (prb == null)
             {
-                _logger.fatal("Can not find properties resource "
+                _logger.error("Can not find properties resource "
                         + _RESOURCES);
                 return -1;
             }
@@ -1788,12 +1796,12 @@ public class AutoProcessAlerts
             {
                 DataSource ds = _api.getDataSource();
                 _dsurl = ds.getClass().getName() + " " + ds.toString();
-                rc = _db.open(ds, _api.getUser(), _api.getPswd());
+                rc = _db.open(ds, _api.getUser());
             }
             else if (_dsurl != null)
                 rc = _db.open(_dsurl, _user, _pswd);
             else
-                _logger.fatal("Missing information required to created a database connection.");
+                _logger.error("Missing information required to created a database connection.");
             if (rc != 0)
             {
                 errMsg = _db.getError();
@@ -1844,7 +1852,7 @@ public class AutoProcessAlerts
         {
             // This is bad - a log file should ALWAYS be created.
             body += "<p><b>*** Alert Run Log file was not created.</b></p>";
-            _logger.fatal(body);
+            _logger.error(body);
         }
         else
         {
@@ -1967,19 +1975,19 @@ public class AutoProcessAlerts
         {
             String temp = ex.toString();
             _logSummary.writeError(temp);
-            _logger.fatal(temp);
+            _logger.error(temp);
         }
         catch (MessagingException ex)
         {
             String temp = ex.toString();
             _logSummary.writeError(temp);
-            _logger.fatal(temp);
+            _logger.error(temp);
         }
         catch (UnsupportedEncodingException ex)
         {
             String temp = ex.toString();
             _logSummary. writeError(temp);
-            _logger.fatal(temp);
+            _logger.error(temp);
         }
     }
 

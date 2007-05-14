@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.3 2006-09-19 15:23:35 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.4 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -135,16 +135,35 @@ public interface DBAlert
      * to the client or loosing the object focus in the caller to "new
      * DBAlert()".
      * 
+     * @param sc_
+     *        The servlet context which holds the data source pool reference
+     *        created by the DBAlert.setupPool() method.
+     * @param user_
+     *        The database user logon id.
+     * @return 0 if successful, otherwise the error code.
+     * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#close close()
+     */
+    public int open(ServletContext sc_, String user_);
+
+    /**
+     * Create a connection from the pool. This is not part of the constructor to
+     * allow the method to have return codes that can be interrogated by the
+     * caller. If Exception are desired, appropriate wrapper methods can be
+     * created to provide both features and give the caller the flexibility to
+     * use either without additional coding.
+     * <p>
+     * Be sure to call DBAlert.close() to complete the request before returning
+     * to the client or loosing the object focus in the caller to "new
+     * DBAlert()".
+     * 
      * @param ds_
      *        The datasource for database connections.
      * @param user_
      *        The database user logon id.
-     * @param pswd_
-     *        The password to match the user.
      * @return 0 if successful, otherwise the error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#close close()
      */
-    public int open(DataSource ds_, String user_, String pswd_);
+    public int open(DataSource ds_, String user_);
 
     /**
      * Open a single simple connection to the database. No pooling is necessary.
@@ -180,6 +199,26 @@ public interface DBAlert
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#close close()
      */
     public int open(HttpServletRequest request_, String user_, String pswd_);
+
+    /**
+     * Create a connection from the pool. This is not part of the constructor to
+     * allow the method to have return codes that can be interrogated by the
+     * caller. If Exception are desired, appropriate wrapper methods can be
+     * created to provide both features and give the caller the flexibility to
+     * use either without additional coding.
+     * <p>
+     * Be sure to call DBAlert.close() to complete the request before returning
+     * to the client or loosing the object focus in the caller to "new
+     * DBAlert()".
+     * 
+     * @param request_
+     *        The servlet request object.
+     * @param user_
+     *        The database user logon id.
+     * @return 0 if successful, otherwise the error code.
+     * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#close close()
+     */
+    public int open(HttpServletRequest request_, String user_);
 
     /**
      * Required upon a successful return from open. When all database access is
@@ -536,6 +575,13 @@ public interface DBAlert
      * @return the list of ac type, name, and idseq.
      */
     public String[] reportMissingPublicID();
+    
+    /**
+     * Get the used (referenced) RELEASED object classes not owned by caBIG
+     * 
+     * @return the list of object classes
+     */
+    public String[] reportUsedObjectClasses();
     
     /**
      * Retrieve the Context names and id's from the database. Follows the
@@ -1666,9 +1712,10 @@ public interface DBAlert
     /**
      * Test the content of the tool options table.
      * 
+     * @param url_ the URL to compare to the tool options or null to skip the test.
      * @return null if no errors, otherwise the error message.
      */
-    public String testSentinelOptions();
+    public String testSentinelOptions(String url_);
 
     /**
      * Return the email addresses for all the administrators that should receive a log report.

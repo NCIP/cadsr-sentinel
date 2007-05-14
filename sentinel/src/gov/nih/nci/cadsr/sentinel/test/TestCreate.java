@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestCreate.java,v 1.11 2006-09-08 22:32:54 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestCreate.java,v 1.12 2007-05-14 14:30:30 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.test;
@@ -78,7 +78,7 @@ public class TestCreate extends DSRAlertTestCase
     // Verify that the alert got added to the database
     DBAlert dbAlert = DBAlertUtil.factory();
     assertEquals(dbAlert.open(getSession().getServletContext(), _alertBean
-        .getUser(), _alertBean.getPswd()), 0);
+        .getUser()), 0);
     assertNotNull(dbAlert.selectAlert(_alertBean.getWorking().getAlertRecNum()));
 
     // Delete the record (clean up)
