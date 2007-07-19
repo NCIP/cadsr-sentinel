@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'windows-1252'?>
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/conf/web.xml,v 1.1 2007-07-19 15:26:46 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/conf/template.web.xml,v 1.1 2007-07-19 21:19:05 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <web-app>

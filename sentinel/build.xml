@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.31 2007-07-19 15:26:44 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.32 2007-07-19 21:19:05 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -19,6 +19,7 @@
     <filter token="tier.upper" value="${TIER.UPPER}"/>
     <filter token="tier.name" value="${TIER.NAME}"/>
 
+    <property name="jboss_home" location="D:/jboss-4.0.2/server/default" />
     <property name="root" location="WebRoot"/>
     <property name="deploy" location="deployment-artifacts"/>
     <property name="odoc" location="${deploy}/javadoc"/>
@@ -75,38 +76,45 @@
         <delete dir="${oclasses}/org"/>
     </target>
     
-    <target name="collect" depends="compile">
+    <target name="assemble" depends="compile">
         <delete>
             <fileset file="${oprop}/DSRAlert.properties"/>
             <fileset file="${oprop}/test/DSRAlertTest.properties"/>
             <fileset file="${wweb}/web.xml"/>
         </delete>
+        <copy todir="${deploy}">
+            <fileset file="build.xml"/>
+        </copy>
         <copy tofile="${oprop}/DSRAlert.properties" filtering="true">
-            <fileset file="conf/DSRAlert.properties"/>
+            <fileset file="conf/template.DSRAlert.properties"/>
         </copy>
         <copy tofile="${oprop}/test/DSRAlertTest.properties" filtering="true">
-            <fileset file="conf/DSRAlertTest.properties"/>
+            <fileset file="conf/template.DSRAlertTest.properties"/>
         </copy>
-        <copy todir="${wweb}" filtering="true">
-            <fileset file="conf/web.xml"/>
+        <copy tofile="${wweb}/web.xml" filtering="true">
+            <fileset file="conf/template.web.xml"/>
         </copy>
-        <copy todir="${deploy}/sql" filtering="true">
-            <fileset file="conf/load_options.sql"/>
-            <fileset file="conf/update_options_url.sql"/>
+        <copy tofile="${deploy}/sql/load_options.sql" filtering="true">
+            <fileset file="conf/template.load_options.sql"/>
+        </copy>
+        <copy tofile="${deploy}/sql/update_options_url.sql" filtering="true">
+            <fileset file="conf/template.update_options_url.sql"/>
         </copy>
         <copy tofile="${deploy}/jboss/sentinel-oracle-ds.xml" filtering="true">
-            <fileset file="conf/sentinel-oracle-ds.xml"/>
+            <fileset file="conf/template.sentinel-oracle-ds.xml"/>
         </copy>
         <copy tofile="${deploy}/jboss/log4j.xml" filtering="true">
-            <fileset file="conf/log4j-jboss.xml"/>
+            <fileset file="conf/template.log4j-jboss.xml"/>
         </copy>
         <copy todir="${deploy}/bin" filtering="true">
             <fileset file="scripts/autorun.sh"/>
             <fileset file="scripts/autorun.cmd"/>
-            <fileset file="conf/cadsrsentinel.xml"/>
+        </copy>
+        <copy tofile="${deploy}/bin/cadsrsentinel.xml" filtering="true">
+            <fileset file="conf/template.cadsrsentinel.xml"/>
         </copy>
         <copy tofile="${deploy}/bin/log4j.xml" filtering="true">
-            <fileset file="conf/log4j-autorun.xml"/>
+            <fileset file="conf/template.log4j-autorun.xml"/>
         </copy>
         <copy todir="${deploy}/bin">
             <fileset file="lib/activation.jar"/>
@@ -120,9 +128,17 @@
             <fileset file="lib/ojdbc14.jar"/>
             <fileset file="lib/spring.jar"/>
         </copy>
+        <fixcrlf srcdir="${deploy}/bin"
+               eol="lf"
+               includes="**/*.sh, **/*.xml"
+          />
+        <fixcrlf srcdir="${deploy}/jboss"
+               eol="lf"
+               includes="**/*.sh, **/*.xml"
+          />
     </target>
     
-    <target name="build-jar" depends="collect">
+    <target name="build-jar" depends="assemble">
         <delete file="${deploy}/bin/cadsrsentinel.jar"/>
         <delete file="${deploy}/api/cadsrsentinelapi.jar"/>
         <cvs command="status -v" output="${oclasses}/cvsdeploy.txt"/>
@@ -180,7 +196,7 @@
     	</junit>
 	</target>
 
-    <target name="build-war" depends="collect">
+    <target name="build-war" depends="assemble">
         <delete file="${deploy}/jboss/cadsrsentinel.war"/>
         <cvs command="status -v" output="${jsp}/cvsdeploy.txt"/>
         <war destfile="${deploy}/jboss/cadsrsentinel.war" basedir="${root}" update="true" webxml="${wweb}/web.xml">
@@ -253,6 +269,20 @@
         <zip destfile="${deploy}/sentinel_doc.zip">
             <zipfileset dir="${odoc}"/>
         </zip>
+    </target>
+    
+    <target name="deploy">
+        <copy todir="/local/content/cadsrsentinel/bin">
+            <fileset dir="bin" />
+        </copy>
+        <copy tofile="${jboss_home}/deploy/cadsrsentinel.waz">
+            <fileset file="jboss/cadsrsentinel.war"/>
+        </copy>
+        <move file="${jboss_home}/deploy/cadsrsentinel.waz" tofile="${jboss_home}/deploy/cadsrsentinel.war"/>
+        <echo>Execute the sql/load_options.sql and sql/update_options_url.sql if specifically instructed by the deployment request.</echo>
+    </target>
+    
+    <target name="build-all" depends="build-product,javadoc">
     </target>
 
     <target name="init">

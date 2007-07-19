@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration PUBLIC "-//Apache//log4j//dtd" "http://logging.apache.org/log4j/docs/api/org/apache/log4j/xml/log4j.dtd">
 
-<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/log4j-jboss.xml,v 1.1 2007-07-19 15:26:46 hebell Exp $ -->
+<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.log4j-jboss.xml,v 1.1 2007-07-19 21:19:05 hebell Exp $ -->
 <!-- $Name: not supported by cvs2svn $ -->
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">

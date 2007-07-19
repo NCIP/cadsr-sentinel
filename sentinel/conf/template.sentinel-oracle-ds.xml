@@ -1,6 +1,6 @@
 <!-- Copyright 2006 ScenPro, Inc.
 
-    $Header: /share/content/gforge/sentinel/sentinel/conf/sentinel-oracle-ds.xml,v 1.1 2007-07-19 15:26:46 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/conf/template.sentinel-oracle-ds.xml,v 1.1 2007-07-19 21:19:05 hebell Exp $
     $Names$
     
     Following is an example of a datasource definition which must appear in the JBoss
