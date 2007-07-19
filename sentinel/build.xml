@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.32 2007-07-19 21:19:05 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.33 2007-07-19 22:49:39 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -51,7 +51,7 @@
         <mkdir dir="${oclasses}"/>
         <mkdir dir="${deploy}"/>
         <mkdir dir="${deploy}/bin"/>
-        <mkdir dir="${deploy}/api"/>
+        <mkdir dir="${deploy}/gforge"/>
         <mkdir dir="${deploy}/jboss"/>
         <mkdir dir="${deploy}/sql"/>
     	<mkdir dir="${test-results}"/>
@@ -140,7 +140,7 @@
     
     <target name="build-jar" depends="assemble">
         <delete file="${deploy}/bin/cadsrsentinel.jar"/>
-        <delete file="${deploy}/api/cadsrsentinelapi.jar"/>
+        <delete file="${deploy}/gforge/cadsrsentinelapi.jar"/>
         <cvs command="status -v" output="${oclasses}/cvsdeploy.txt"/>
         <jar destfile="${deploy}/bin/cadsrsentinel.jar">
             <fileset dir="${oclasses}">
@@ -152,7 +152,7 @@
                 <include name="gov/nih/nci/cadsr/sentinel/audits/*.class" />
             </fileset>
         </jar>
-        <jar destfile="${deploy}/api/cadsrsentinelapi.jar">
+        <jar destfile="${deploy}/gforge/cadsrsentinelapi.jar">
             <fileset dir="${oclasses}">
                 <include name="cvsdeploy.txt" />
                 <include name="gov/nih/nci/cadsr/sentinel/*.properties" />
@@ -235,17 +235,23 @@
         </copy>
         <mkdir dir="${ospackage}/WebRoot"/>
         <copy todir="${ospackage}/WebRoot">
-            <fileset dir="WebRoot"/>
+            <fileset dir="WebRoot">
+                <exclude name="**/classes/**"/>
+                <exclude name="**/web.xml"/>
+            </fileset>
         </copy>
-        <zip destfile="${deploy}/sentinel_ospack.zip">
+        <zip destfile="${deploy}/gforge/sentinel_ospack.zip">
             <zipfileset dir="${ospackage}"/>
         </zip>
+        <delete dir="${ospackage}"/>
     </target>
 
     <target name="javadoc">
         <mkdir dir="${temp}"/>
         <delete dir="${odoc}"/>
         <mkdir dir="${odoc}"/>
+        <mkdir dir="${deploy}"/>
+        <mkdir dir="${deploy}/gforge"/>
         <javadoc
                 destdir="${odoc}"
                 Private="false"
@@ -266,9 +272,10 @@
 			<group title="Source Package" packages="gov.nih.nci.cadsr.sentinel.tool;gov.nih.nci.cadsr.sentinel.tool.Test;gov.nih.nci.cadsr.sentinel.tool.audits;gov.nih.nci.cadsr.sentinel.tool.database;gov.nih.nci.cadsr.sentinel.tool.ui;gov.nih.nci.cadsr.sentinel.tool.util"/>
 			<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="${temp}"/>
         </javadoc>
-        <zip destfile="${deploy}/sentinel_doc.zip">
+        <zip destfile="${deploy}/gforge/sentinel_doc.zip">
             <zipfileset dir="${odoc}"/>
         </zip>
+        <delete dir="${odoc}"/>
     </target>
     
     <target name="deploy">
@@ -282,7 +289,7 @@
         <echo>Execute the sql/load_options.sql and sql/update_options_url.sql if specifically instructed by the deployment request.</echo>
     </target>
     
-    <target name="build-all" depends="build-product,javadoc">
+    <target name="build-all" depends="build-product,javadoc,package-download">
     </target>
 
     <target name="init">
