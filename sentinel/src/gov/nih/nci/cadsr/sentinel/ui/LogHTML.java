@@ -2,7 +2,7 @@
  * Copyright (c) 2006 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogHTML.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogHTML.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -76,7 +76,6 @@ public class LogHTML extends Action
 
         // Remember the admin account.
         String userid = accnt[0];
-        String pswd = accnt[1];
 
         // Set default return and message.
         int rc = HttpURLConnection.HTTP_INTERNAL_ERROR;

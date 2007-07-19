@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/FootTag.java,v 1.2 2007-05-14 14:30:30 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/FootTag.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -49,10 +49,10 @@ public class FootTag extends TagSupport
                     + "</span></td></tr>\n"
                     + "<tr>\n<td class=\"nciftrtable\">\n"
                     + "<a href=\"mailto:ncicb@pop.nci.nih.gov?subject=caDSR%20Sentinel%20Tool\"><span class=\"wdemail\" title=\"Email NCICB Help Desk\">&#42;</span></a>\n"
-                    + "<a target=\"_blank\" href=\"http://www.cancer.gov/\"><img border=\"0\" src=\"footer_nci.gif\" alt=\"National Cancer Institute Logo\" title=\"National Cancer Institute\"></a>\n"
-                    + "<a target=\"_blank\" href=\"http://www.dhhs.gov/\"><img border=\"0\" src=\"footer_hhs.gif\" alt=\"Department of Health and Human Services Logo\" title=\"Department of Health and Human Services\"></a>\n"
-                    + "<a target=\"_blank\" href=\"http://www.nih.gov/\"><img border=\"0\" src=\"footer_nih.gif\" alt=\"National Institutes of Health Logo\" title=\"National Institutes of Health\"></a>\n"
-                    + "<a target=\"_blank\" href=\"http://www.usa.gov/\"><img border=\"0\" src=\"footer_usagov.gif\" alt=\"USA.gov\" title=\"USA.gov\"></a>\n"
+                    + "<a target=\"_blank\" href=\"http://www.cancer.gov/\"><img border=\"0\" src=\"../images/footer_nci.gif\" alt=\"National Cancer Institute Logo\" title=\"National Cancer Institute\"></a>\n"
+                    + "<a target=\"_blank\" href=\"http://www.dhhs.gov/\"><img border=\"0\" src=\"../images/footer_hhs.gif\" alt=\"Department of Health and Human Services Logo\" title=\"Department of Health and Human Services\"></a>\n"
+                    + "<a target=\"_blank\" href=\"http://www.nih.gov/\"><img border=\"0\" src=\"../images/footer_nih.gif\" alt=\"National Institutes of Health Logo\" title=\"National Institutes of Health\"></a>\n"
+                    + "<a target=\"_blank\" href=\"http://www.usa.gov/\"><img border=\"0\" src=\"../images/footer_usagov.gif\" alt=\"USA.gov\" title=\"USA.gov\"></a>\n"
                     + "</td>\n</tr>\n</table>\n");
         }
         catch (IOException ex)

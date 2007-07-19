@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlert.java,v 1.10 2006-05-17 20:17:01 hardingr Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlert.java,v 1.11 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -33,7 +33,28 @@ public interface DSRAlert
      * @return The alert name if available, otherwise and empty string.
      */
     public String getAlertName();
+    
+    /**
+     * Get the complete history for the specified ID in pre-formatted HTML.
+     * 
+     * @param idseq_ The database entity ID, a 36 character value.
+     * @return If the history can be retrieved the return will not equal null, otherwise the return is equal
+     *      null and the method getResultCode() must be used to retrieve the operation RC.
+     */
+    public String getItemHistoryHTML(String idseq_);
 
+    /**
+     * Get the result code from the most recent method executed.
+     * 
+     * @return One of the "RC_" static final values defined in this interface.
+     */
+    public int getResultCode();
+    
+    /**
+     * The previous method executed without errors and returned the correct result.
+     */
+    public static final int RC_OK = 0;
+    
     /**
      * An Alert Definition already exists and it was not necessary to create a new Alert.
      */

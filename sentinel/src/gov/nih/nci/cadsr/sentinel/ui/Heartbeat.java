@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/Heartbeat.java,v 1.1 2007-05-14 22:21:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/Heartbeat.java,v 1.2 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;

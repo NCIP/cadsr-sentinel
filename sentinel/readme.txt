@@ -1,0 +1,1 @@
+This project contains the caDSR Sentinel Tool and API. Please refer to the project /doc folder for all related information.

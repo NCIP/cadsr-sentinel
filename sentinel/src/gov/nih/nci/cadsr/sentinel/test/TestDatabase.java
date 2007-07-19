@@ -1,13 +1,9 @@
 // Copyright (c) 2004 ScenPro, Inc
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestDatabase.java,v 1.12 2007-05-14 14:30:30 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/test/TestDatabase.java,v 1.13 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.test;
-
-import gov.nih.nci.cadsr.sentinel.database.DBAlert;
-import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
-import gov.nih.nci.cadsr.sentinel.ui.AlertBean;
 
 /**
  * Database verification test.
@@ -26,8 +22,6 @@ public class TestDatabase extends DSRAlertTestCase
     {
         junit.textui.TestRunner.run(TestCreate.class);
     }
-
-    private AlertBean _alertBean;
 
     /**
      * Constructor
@@ -49,7 +43,6 @@ public class TestDatabase extends DSRAlertTestCase
     {
         super.setUp();
         setUpLoginSession();
-        _alertBean = (AlertBean)getSession().getAttribute(AlertBean._SESSIONNAME);
     }
     
     /**
