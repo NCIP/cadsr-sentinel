@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.33 2007-07-19 22:49:39 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.34 2007-07-20 19:52:18 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -8,9 +8,10 @@
     </description>
     <!-- set global properties for this build -->
 
-    <filter token="DSurl" value="${DSURL}"/>
-    <filter token="DSusername" value="${DSUSER}"/>
-    <filter token="DSpassword" value="${DSPSWD}"/>
+    <property file="build.properties" />
+    <filter token="DSurl" value="${CADSR.DS.URL}"/>
+    <filter token="DSusername" value="${CADSR.DS.USER}"/>
+    <filter token="DSpassword" value="${CADSR.DS.PSWD}"/>
     <filter token="valid.userid" value="${TEST.VALID.USER}"/>
     <filter token="valid.pswd" value="${TEST.VALID.PSWD}"/>
     <filter token="invalid.userid" value="${TEST.BAD.USER}"/>
@@ -19,12 +20,13 @@
     <filter token="tier.upper" value="${TIER.UPPER}"/>
     <filter token="tier.name" value="${TIER.NAME}"/>
 
-    <property name="jboss_home" location="D:/jboss-4.0.2/server/default" />
+    <property name="jboss.deploy.dir" location="${JBOSS.DEPLOY.DIR}" />
+    <property name="tool.bin.dir" location="${TOOL.BIN.DIR}" />
     <property name="root" location="WebRoot"/>
     <property name="deploy" location="deployment-artifacts"/>
     <property name="odoc" location="${deploy}/javadoc"/>
     <property name="temp" location="tmp"/>
-    <property name="test-results" location="${deploy}/test_results"/>
+    <property name="test-results" location="${deploy}/test-results"/>
 
     <property name="ospackage" location="${deploy}/ospack"/>
     <property name="wweb" location="${root}/WEB-INF"/>
@@ -84,6 +86,7 @@
         </delete>
         <copy todir="${deploy}">
             <fileset file="build.xml"/>
+            <fileset file="build.properties"/>
         </copy>
         <copy tofile="${oprop}/DSRAlert.properties" filtering="true">
             <fileset file="conf/template.DSRAlert.properties"/>
@@ -279,13 +282,13 @@
     </target>
     
     <target name="deploy">
-        <copy todir="/local/content/cadsrsentinel/bin">
+        <copy todir="${tool.bin.dir}">
             <fileset dir="bin" />
         </copy>
-        <copy tofile="${jboss_home}/deploy/cadsrsentinel.waz">
+        <copy tofile="${jboss.deploy.dir}/cadsrsentinel.waz">
             <fileset file="jboss/cadsrsentinel.war"/>
         </copy>
-        <move file="${jboss_home}/deploy/cadsrsentinel.waz" tofile="${jboss_home}/deploy/cadsrsentinel.war"/>
+        <move file="${jboss.deploy.dir}/cadsrsentinel.waz" tofile="${jboss.deploy.dir}/cadsrsentinel.war"/>
         <echo>Execute the sql/load_options.sql and sql/update_options_url.sql if specifically instructed by the deployment request.</echo>
     </target>
     

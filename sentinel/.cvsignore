@@ -1,3 +1,9 @@
 tmp
 prototypes
 deployment-artifacts
+SANDBOX.build.properties
+build.properties
+QA.build.properties
+STAGE.build.properties
+PROD.build.properties
+DEV.build.properties
