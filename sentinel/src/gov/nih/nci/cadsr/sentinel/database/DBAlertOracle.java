@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.9 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.10 2007-07-24 21:20:08 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -8275,5 +8275,45 @@ public class DBAlertOracle implements DBAlert
             + "ORDER BY lname ASC, ocidseq ASC, dorder DESC";
         
         return getBasicData0(select);
+    }
+    
+    /**
+     * Pull the name and email address for all the recipients on a specific Alert Definition.
+     * 
+     * @param idseq_ the database id of the Alert Definition
+     */
+    public void selectAlertRecipients(String idseq_)
+    {
+        //TODO use this method to retrieve the name and emails for the distribution. It will
+        // guarantee that the pair only appears once in the list. The method signature must be
+        // changed to return the values.
+        String select = "SELECT ua.NAME, ua.electronic_mail_address "
+            + "FROM sbr.user_accounts_view ua "
+            + "WHERE ua.ua_name IN ( "
+            + "SELECT rc.ua_name "
+            + "FROM sbrext.sn_report_view_ext rep, "
+            + "sbrext.sn_recipient_view_ext rc "
+            + "WHERE rep.al_idseq = '"+ idseq_ + "' "
+            + "AND rc.rep_idseq = rep.rep_idseq "
+            + "UNION "
+            + "SELECT uc.ua_name "
+            + "FROM sbrext.user_contexts_view uc, "
+            + "sbr.contexts_view c, "
+            + "sbrext.sn_report_view_ext rep, "
+            + "sbrext.sn_recipient_view_ext rc "
+            + "WHERE rep.al_idseq = '"+ idseq_ + "' "
+            + "AND rc.rep_idseq = rep.rep_idseq "
+            + "AND c.conte_idseq = rc.conte_idseq "
+            + "AND uc.NAME = c.NAME "
+            + "AND uc.PRIVILEGE = 'W') "
+            + "AND ua.electronic_mail_address IS NOT NULL "
+            + "UNION "
+            + "SELECT rc.email, rc.email "
+            + "FROM sbrext.sn_report_view_ext rep, sbrext.sn_recipient_view_ext rc "
+            + "WHERE rep.al_idseq = '"+ idseq_ + "' "
+            + "AND rc.rep_idseq = rep.rep_idseq "
+            + "AND email IS NOT NULL";
+        
+        Results1 temp = getBasicData1(select, false);
     }
 }
