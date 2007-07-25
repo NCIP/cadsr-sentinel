@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.37 2007-07-25 14:06:35 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.38 2007-07-25 22:39:54 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -35,6 +35,10 @@
     <property name="java" location="src"/>
     <property name="lib" location="lib"/>
     <property environment="environ"/>
+    
+    <condition property="check.test">
+        <equals arg1="${TEST}" arg2="true" trim="true" />
+    </condition>
  
     <path id="libpath">
             <fileset dir="${lib}">
@@ -174,7 +178,7 @@
         <delete file="${oclasses}/cvsdeploy.txt"/>
     </target>
 
-	<target name="test" if="TEST">
+	<target name="test" if="check.test">
         <delete><fileset dir="${test-results}" includes="**/*"/></delete>
         <junit printsummary="on" haltonfailure="yes" showoutput="yes" filtertrace="off">
             <classpath refid="libpath" />
