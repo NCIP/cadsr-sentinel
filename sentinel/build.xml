@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.36 2007-07-25 13:45:13 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.37 2007-07-25 14:06:35 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -292,11 +292,13 @@
         <delete dir="${odoc}"/>
     </target>
 
-    <target name="check2" unless="JBOSS.CONF.DIR">
+    <available property="deploy.gforge" file="gforge/cadsrsentinelapi.jar" />
+
+    <target name="deploy-check" unless="JBOSS.CONF.DIR">
         <fail message="One or more required [deploy] target properties are not defined. See the template.build.properties for a complete list and description."/>
     </target>
     
-    <target name="deploy" depends="check2">
+    <target name="deploy-auto" depends="deploy-check">
         <copy todir="${TOOL.BIN.DIR}">
             <fileset dir="bin" />
         </copy>
@@ -309,8 +311,16 @@
             <fileset file="jboss/cadsrsentinel.war"/>
         </copy>
         <move file="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz" tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.war"/>
+    </target>
+    
+    <target name="deploy-gforge" if="deploy.gforge">
         <echo> </echo>
-        <echo>-------------------------------------------</echo>
+        <echo> </echo>
+        <echo>Artifacts exist in the gforge/ directory and should be published. Although this is not required for the software deployment please place these files in a location accessible by the development team.</echo>
+    </target>
+        
+    <target name="deploy" depends="deploy-auto,deploy-gforge">
+        <echo> </echo>
         <echo> </echo>
         <echo>To complete the deployment, perform the following manual steps.</echo>
         <echo>1. Merge jboss/log4j.xml with ${JBOSS.CONF.DIR}/log4j.xml</echo>
