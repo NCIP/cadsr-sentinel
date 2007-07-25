@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.35 2007-07-24 21:20:07 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.36 2007-07-25 13:45:13 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -20,8 +20,6 @@
     <filter token="tier.upper" value="${TIER.UPPER}"/>
     <filter token="tier.name" value="${TIER.NAME}"/>
 
-    <property name="jboss.deploy.dir" location="${JBOSS.DEPLOY.DIR}" />
-    <property name="tool.bin.dir" location="${TOOL.BIN.DIR}" />
     <property name="root" location="WebRoot"/>
     <property name="deploy" location="deployment-artifacts"/>
     <property name="odoc" location="${deploy}/javadoc"/>
@@ -47,10 +45,13 @@
             </fileset>
     </path>
     
-    <target name="clean">
+    <target name="check1" unless="TIER.NAME">
+        <fail message="Missing 1 or more required properties. See template.build.properties for a complete description."/>
+    </target>
+        
+    <target name="clean" depends="check1">
         <delete dir="${oclasses}"/>
         <delete dir="${deploy}"/>
-        <delete file="${jsp}/cvsdeploy.txt" />
         <delete file="${wweb}/web.xml" />
         <mkdir dir="${oclasses}"/>
         <mkdir dir="${deploy}"/>
@@ -68,16 +69,6 @@
             <compilerarg line="-Xlint:unchecked"/>
             <classpath refid="libpath" />
         </javac>
-        <jspc srcdir="${root}/jsp" destdir="${oclasses}" compiler="jasper41">
-            <classpath refid="libpath" />
-            <include name="**/*.jsp" />
-        </jspc>
-        <javac srcdir="${oclasses}/jsp" destdir="${oclasses}" encoding="Cp1252">
-            <classpath refid="libpath" />
-            <include name="**/*.java" />
-        </javac>
-        <delete dir="${oclasses}/jsp"/>
-        <delete dir="${oclasses}/org"/>
     </target>
     
     <target name="assemble" depends="compile">
@@ -107,6 +98,9 @@
         </copy>
         <copy tofile="${deploy}/jboss/sentinel-oracle-ds.xml" filtering="true">
             <fileset file="conf/template.sentinel-oracle-ds.xml"/>
+        </copy>
+        <copy tofile="${deploy}/jboss/cadsr-oracle-ds.xml" filtering="true">
+            <fileset file="conf/template.cadsr-oracle-ds.xml"/>
         </copy>
         <copy tofile="${deploy}/jboss/log4j.xml" filtering="true">
             <fileset file="conf/template.log4j-jboss.xml"/>
@@ -141,6 +135,19 @@
                eol="lf"
                includes="**/*.sh, **/*.xml"
           />
+    </target>
+
+    <target name="cjsp" depends="assemble">
+        <jspc srcdir="${root}/jsp" destdir="${oclasses}" compiler="jasper41">
+            <classpath refid="libpath" />
+            <include name="**/*.jsp" />
+        </jspc>
+        <javac srcdir="${oclasses}/jsp" destdir="${oclasses}" encoding="Cp1252">
+            <classpath refid="libpath" />
+            <include name="**/*.java" />
+        </javac>
+        <delete dir="${oclasses}/jsp"/>
+        <delete dir="${oclasses}/org"/>
     </target>
     
     <target name="build-jar" depends="assemble">
@@ -201,14 +208,16 @@
     	</junit>
 	</target>
 
-    <target name="build-war" depends="assemble">
+    <target name="build-war" depends="cjsp">
         <delete file="${deploy}/jboss/cadsrsentinel.war"/>
         <cvs command="status -v" output="${jsp}/cvsdeploy.txt"/>
         <war destfile="${deploy}/jboss/cadsrsentinel.war" basedir="${root}" update="true" webxml="${wweb}/web.xml">
         </war>
+        <delete file="${jsp}/cvsdeploy.txt"/>
     </target>
 
     <target name="build-product" depends="build-war,build-jar,test">
+        <echo message="Building for ${TIER.NAME}"/>
     </target>
 
     <target name="package-download" depends="clean">
@@ -282,23 +291,39 @@
         </zip>
         <delete dir="${odoc}"/>
     </target>
+
+    <target name="check2" unless="JBOSS.CONF.DIR">
+        <fail message="One or more required [deploy] target properties are not defined. See the template.build.properties for a complete list and description."/>
+    </target>
     
-    <target name="deploy">
-        <copy todir="${tool.bin.dir}">
+    <target name="deploy" depends="check2">
+        <copy todir="${TOOL.BIN.DIR}">
             <fileset dir="bin" />
         </copy>
-        <copy tofile="${jboss.deploy.dir}/cadsrsentinel.waz">
+        <copy todir="${JBOSS.DEPLOY.DIR}">
+            <fileset dir="jboss">
+                <include name="**/*-oracle-ds.xml"/>
+            </fileset>
+        </copy>
+        <copy tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz">
             <fileset file="jboss/cadsrsentinel.war"/>
         </copy>
-        <move file="${jboss.deploy.dir}/cadsrsentinel.waz" tofile="${jboss.deploy.dir}/cadsrsentinel.war"/>
-        <echo>Execute the sql/load_options.sql and sql/update_options_url.sql if specifically instructed by the deployment request.</echo>
+        <move file="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz" tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.war"/>
+        <echo> </echo>
+        <echo>-------------------------------------------</echo>
+        <echo> </echo>
+        <echo>To complete the deployment, perform the following manual steps.</echo>
+        <echo>1. Merge jboss/log4j.xml with ${JBOSS.CONF.DIR}/log4j.xml</echo>
+        <echo>2. Execute the sql/load_options.sql in SQL Plus or equivalent tool</echo>
+        <echo>3. Execute the sql/update_options_url.sql ONLY if specifically instructed in the deployment request.</echo>
     </target>
     
     <target name="build-all" depends="build-product,javadoc,package-download">
+        <echo message="Building for ${TIER.NAME}"/>
     </target>
 
     <target name="init">
-        <echo message="This build script must be run with the name of the desired target: build-product, javadoc, package-download."/>
+        <echo message="This build script must be run with the name of the desired target: build-product, build-all, javadoc, package-download."/>
     </target>
 
 </project>
