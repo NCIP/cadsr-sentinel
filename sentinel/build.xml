@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.39 2007-07-26 15:10:30 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.40 2007-07-26 15:44:07 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -50,7 +50,7 @@
     </path>
     
     <target name="check1" unless="TIER.NAME">
-        <fail message="Missing 1 or more required properties. See template.build.properties for a complete description."/>
+        <fail>Missing 1 or more required properties. See template.build.properties for a complete description.</fail>
     </target>
         
     <target name="clean" depends="check1">
@@ -221,7 +221,7 @@
     </target>
 
     <target name="build-product" depends="build-war,build-jar,test">
-        <echo message="Building for ${TIER.NAME}"/>
+        <echo>Building for ${TIER.NAME}</echo>
     </target>
 
     <target name="package-download" depends="clean">
@@ -299,7 +299,7 @@
     <available property="deploy.gforge" file="gforge/cadsrsentinelapi.jar" />
 
     <target name="deploy-check" unless="JBOSS.CONF.DIR">
-        <fail message="One or more required [deploy] target properties are not defined. See the template.build.properties for a complete list and description."/>
+        <fail>One or more required [deploy] target properties are not defined. See the template.build.properties for a complete list and description.</fail>
     </target>
     
     <target name="deploy-auto" depends="deploy-check">
@@ -318,26 +318,34 @@
     </target>
     
     <target name="deploy-gforge" if="deploy.gforge">
-        <echo> </echo>
-        <echo> </echo>
-        <echo>Artifacts exist in the ./gforge/ directory and should be published. Although this is not required for the software deployment please place these files in a location accessible by the development team.</echo>
+        <echo>
+
+Artifacts exist in the ${basedir}${file.separator}gforge${file.separator} directory and should be published.
+Although this is not required for the software deployment please place these files in a location accessible by the development team.
+
+        </echo>
     </target>
         
     <target name="deploy" depends="deploy-auto,deploy-gforge">
-        <echo> </echo>
-        <echo> </echo>
-        <echo>To complete the deployment, perform the following manual steps.</echo>
-        <echo>1. Merge ./jboss/log4j.xml into ${JBOSS.CONF.DIR}/log4j.xml</echo>
-        <echo>2. Execute the ./sql/load_options.sql in SQL Plus or equivalent tool, using the user "${CADSR.DS.USER}" and password "${CADSR.DS.PSWD}"</echo>
-        <echo>3. Execute the ./sql/update_options_url.sql ONLY if specifically instructed in the deployment request.</echo>
+        <echo>
+
+To complete the deployment, perform the following manual steps.
+
+1. Merge ${basedir}${file.separator}jboss${file.separator}log4j.xml into ${JBOSS.CONF.DIR}${file.separator}log4j.xml
+
+2. Execute the ${basedir}${file.separator}sql${file.separator}load_options.sql in SQL Plus or equivalent tool, using the user "${CADSR.DS.USER}" and password "${CADSR.DS.PSWD}"
+
+3. Execute the ${basedir}${file.separator}sql${file.separator}update_options_url.sql ONLY if specifically instructed in the deployment request.
+
+        </echo>
     </target>
     
     <target name="build-all" depends="build-product,javadoc,package-download">
-        <echo message="Building for ${TIER.NAME}"/>
+        <echo>Building for ${TIER.NAME}</echo>
     </target>
 
     <target name="init">
-        <echo message="This build script must be run with the name of the desired target: build-product, build-all, javadoc, package-download."/>
+        <fail>This build script must be run with the name of the desired target: build-all, build-product, javadoc, package-download.</fail>
     </target>
 
 </project>
