@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.38 2007-07-25 22:39:54 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.39 2007-07-26 15:10:30 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -320,16 +320,16 @@
     <target name="deploy-gforge" if="deploy.gforge">
         <echo> </echo>
         <echo> </echo>
-        <echo>Artifacts exist in the gforge/ directory and should be published. Although this is not required for the software deployment please place these files in a location accessible by the development team.</echo>
+        <echo>Artifacts exist in the ./gforge/ directory and should be published. Although this is not required for the software deployment please place these files in a location accessible by the development team.</echo>
     </target>
         
     <target name="deploy" depends="deploy-auto,deploy-gforge">
         <echo> </echo>
         <echo> </echo>
         <echo>To complete the deployment, perform the following manual steps.</echo>
-        <echo>1. Merge jboss/log4j.xml with ${JBOSS.CONF.DIR}/log4j.xml</echo>
-        <echo>2. Execute the sql/load_options.sql in SQL Plus or equivalent tool</echo>
-        <echo>3. Execute the sql/update_options_url.sql ONLY if specifically instructed in the deployment request.</echo>
+        <echo>1. Merge ./jboss/log4j.xml into ${JBOSS.CONF.DIR}/log4j.xml</echo>
+        <echo>2. Execute the ./sql/load_options.sql in SQL Plus or equivalent tool, using the user "${CADSR.DS.USER}" and password "${CADSR.DS.PSWD}"</echo>
+        <echo>3. Execute the ./sql/update_options_url.sql ONLY if specifically instructed in the deployment request.</echo>
     </target>
     
     <target name="build-all" depends="build-product,javadoc,package-download">
