@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.41 2007-07-26 19:27:02 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.42 2007-07-26 19:38:25 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -31,20 +31,20 @@
         WEBLOG.DIR=${WEBLOG.DIR}
     </echo>
 
-    <property name="root.dir" location="WebRoot"/>
-    <property name="deploy.dir" location="deployment-artifacts"/>
-    <property name="doc.dir" location="${deploy.dir}/javadoc"/>
-    <property name="temp.dir" location="tmp"/>
-    <property name="tr.dir" location="${deploy.dir}/test-results"/>
+    <property name="root.dir" location="${basedir}/WebRoot"/>
+    <property name="artifacts.dir" location="${basedir}/deployment-artifacts"/>
+    <property name="doc.dir" location="${artifacts.dir}/javadoc"/>
+    <property name="temp.dir" location="${basedir}/tmp"/>
+    <property name="tr.dir" location="${artifacts.dir}/test-results"/>
 
-    <property name="odi.dir" location="${deploy.dir}/ospack"/>
+    <property name="odi.dir" location="${artifacts.dir}/ospack"/>
     <property name="web.dir" location="${root.dir}/WEB-INF"/>
     <property name="classes.dir" location="${web.dir}/classes"/>
     <property name="wlib.dir" location="${web.dir}/lib"/>
     <property name="jsp.dir" location="${root.dir}/jsp"/>
     <property name="prop.dir" location="${classes.dir}/gov/nih/nci/cadsr/sentinel"/>
-    <property name="src.dir" location="src"/>
-    <property name="lib.dir" location="lib"/>
+    <property name="src.dir" location="${basedir}/src"/>
+    <property name="lib.dir" location="${basedir}/lib"/>
     
     <condition property="check.test">
         <equals arg1="${TEST}" arg2="true" trim="true" />
@@ -77,14 +77,14 @@
         
     <target name="clean" depends="check1">
         <delete dir="${classes.dir}"/>
-        <delete dir="${deploy.dir}"/>
+        <delete dir="${artifacts.dir}"/>
         <delete file="${web.dir}/web.xml" />
         <mkdir dir="${classes.dir}"/>
-        <mkdir dir="${deploy.dir}"/>
-        <mkdir dir="${deploy.dir}/bin"/>
-        <mkdir dir="${deploy.dir}/gforge"/>
-        <mkdir dir="${deploy.dir}/jboss"/>
-        <mkdir dir="${deploy.dir}/sql"/>
+        <mkdir dir="${artifacts.dir}"/>
+        <mkdir dir="${artifacts.dir}/bin"/>
+        <mkdir dir="${artifacts.dir}/gforge"/>
+        <mkdir dir="${artifacts.dir}/jboss"/>
+        <mkdir dir="${artifacts.dir}/sql"/>
     	<mkdir dir="${tr.dir}"/>
     </target>
     
@@ -103,7 +103,7 @@
             <fileset file="${prop.dir}/test/DSRAlertTest.properties"/>
             <fileset file="${web.dir}/web.xml"/>
         </delete>
-        <copy todir="${deploy.dir}">
+        <copy todir="${artifacts.dir}">
             <fileset file="build.xml"/>
             <fileset file="build.properties"/>
         </copy>
@@ -116,32 +116,32 @@
         <copy tofile="${web.dir}/web.xml" filtering="true">
             <fileset file="conf/template.web.xml"/>
         </copy>
-        <copy tofile="${deploy.dir}/sql/load_options.sql" filtering="true">
+        <copy tofile="${artifacts.dir}/sql/load_options.sql" filtering="true">
             <fileset file="conf/template.load_options.sql"/>
         </copy>
-        <copy tofile="${deploy.dir}/sql/update_options_url.sql" filtering="true">
+        <copy tofile="${artifacts.dir}/sql/update_options_url.sql" filtering="true">
             <fileset file="conf/template.update_options_url.sql"/>
         </copy>
-        <copy tofile="${deploy.dir}/jboss/sentinel-oracle-ds.xml" filtering="true">
+        <copy tofile="${artifacts.dir}/jboss/sentinel-oracle-ds.xml" filtering="true">
             <fileset file="conf/template.sentinel-oracle-ds.xml"/>
         </copy>
-        <copy tofile="${deploy.dir}/jboss/cadsr-oracle-ds.xml" filtering="true">
+        <copy tofile="${artifacts.dir}/jboss/cadsr-oracle-ds.xml" filtering="true">
             <fileset file="conf/template.cadsr-oracle-ds.xml"/>
         </copy>
-        <copy tofile="${deploy.dir}/jboss/log4j.xml" filtering="true">
+        <copy tofile="${artifacts.dir}/jboss/log4j.xml" filtering="true">
             <fileset file="conf/template.log4j-jboss.xml"/>
         </copy>
-        <copy todir="${deploy.dir}/bin" filtering="true">
+        <copy todir="${artifacts.dir}/bin" filtering="true">
             <fileset file="scripts/autorun.sh"/>
             <fileset file="scripts/autorun.cmd"/>
         </copy>
-        <copy tofile="${deploy.dir}/bin/cadsrsentinel.xml" filtering="true">
+        <copy tofile="${artifacts.dir}/bin/cadsrsentinel.xml" filtering="true">
             <fileset file="conf/template.cadsrsentinel.xml"/>
         </copy>
-        <copy tofile="${deploy.dir}/bin/log4j.xml" filtering="true">
+        <copy tofile="${artifacts.dir}/bin/log4j.xml" filtering="true">
             <fileset file="conf/template.log4j-autorun.xml"/>
         </copy>
-        <copy todir="${deploy.dir}/bin">
+        <copy todir="${artifacts.dir}/bin">
             <fileset file="lib/activation.jar"/>
             <fileset file="lib/asm.jar"/>
             <fileset file="lib/cacore32-client.jar"/>
@@ -153,11 +153,11 @@
             <fileset file="lib/ojdbc14.jar"/>
             <fileset file="lib/spring.jar"/>
         </copy>
-        <fixcrlf srcdir="${deploy.dir}/bin"
+        <fixcrlf srcdir="${artifacts.dir}/bin"
                eol="lf"
                includes="**/*.sh, **/*.xml"
           />
-        <fixcrlf srcdir="${deploy.dir}/jboss"
+        <fixcrlf srcdir="${artifacts.dir}/jboss"
                eol="lf"
                includes="**/*.sh, **/*.xml"
           />
@@ -177,10 +177,10 @@
     </target>
     
     <target name="build-jar" depends="assemble">
-        <delete file="${deploy.dir}/bin/cadsrsentinel.jar"/>
-        <delete file="${deploy.dir}/gforge/cadsrsentinelapi.jar"/>
+        <delete file="${artifacts.dir}/bin/cadsrsentinel.jar"/>
+        <delete file="${artifacts.dir}/gforge/cadsrsentinelapi.jar"/>
         <cvs command="status -v" output="${classes.dir}/cvsdeploy.txt"/>
-        <jar destfile="${deploy.dir}/bin/cadsrsentinel.jar">
+        <jar destfile="${artifacts.dir}/bin/cadsrsentinel.jar">
             <fileset dir="${classes.dir}">
                 <include name="cvsdeploy.txt" />
                 <include name="gov/nih/nci/cadsr/sentinel/*.properties" />
@@ -190,7 +190,7 @@
                 <include name="gov/nih/nci/cadsr/sentinel/audits/*.class" />
             </fileset>
         </jar>
-        <jar destfile="${deploy.dir}/gforge/cadsrsentinelapi.jar">
+        <jar destfile="${artifacts.dir}/gforge/cadsrsentinelapi.jar">
             <fileset dir="${classes.dir}">
                 <include name="cvsdeploy.txt" />
                 <include name="gov/nih/nci/cadsr/sentinel/*.properties" />
@@ -209,7 +209,7 @@
                 <pathelement location="${classes.dir}"/>
             </classpath>
             <sysproperty key="test_propfile" value="${prop.dir}/test/DSRAlertTest.properties"/>
-            <sysproperty key="property_xml" value="${deploy.dir}/bin/cadsrsentinel.xml"/>
+            <sysproperty key="property_xml" value="${artifacts.dir}/bin/cadsrsentinel.xml"/>
             <formatter type="plain"/>
             <batchtest fork="yes" todir="${tr.dir}" filtertrace="off">
                 <fileset dir="${src.dir}">
@@ -224,7 +224,7 @@
   		      	<pathelement location="${classes.dir}"/>
     		</classpath>
     		<sysproperty key="test_propfile" value="${prop.dir}/test/DSRAlertTest.properties"/>
-            <sysproperty key="property_xml" value="${deploy.dir}/bin/cadsrsentinel.xml"/>
+            <sysproperty key="property_xml" value="${artifacts.dir}/bin/cadsrsentinel.xml"/>
     	  	<formatter type="plain"/>
     	  	<batchtest fork="yes" todir="${tr.dir}" filtertrace="off">
     	    	<fileset dir="${src.dir}">
@@ -235,9 +235,9 @@
 	</target>
 
     <target name="build-war" depends="cjsp">
-        <delete file="${deploy.dir}/jboss/cadsrsentinel.war"/>
+        <delete file="${artifacts.dir}/jboss/cadsrsentinel.war"/>
         <cvs command="status -v" output="${jsp.dir}/cvsdeploy.txt"/>
-        <war destfile="${deploy.dir}/jboss/cadsrsentinel.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml">
+        <war destfile="${artifacts.dir}/jboss/cadsrsentinel.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml">
         </war>
         <delete file="${jsp.dir}/cvsdeploy.txt"/>
     </target>
@@ -280,7 +280,7 @@
                 <exclude name="**/web.xml"/>
             </fileset>
         </copy>
-        <zip destfile="${deploy.dir}/gforge/sentinel_ospack.zip">
+        <zip destfile="${artifacts.dir}/gforge/sentinel_ospack.zip">
             <zipfileset dir="${odi.dir}"/>
         </zip>
         <delete dir="${odi.dir}"/>
@@ -290,8 +290,8 @@
         <mkdir dir="${temp.dir}"/>
         <delete dir="${doc.dir}"/>
         <mkdir dir="${doc.dir}"/>
-        <mkdir dir="${deploy.dir}"/>
-        <mkdir dir="${deploy.dir}/gforge"/>
+        <mkdir dir="${artifacts.dir}"/>
+        <mkdir dir="${artifacts.dir}/gforge"/>
         <javadoc
                 destdir="${doc.dir}"
                 Private="false"
@@ -312,7 +312,7 @@
 			<group title="Source Package" packages="gov.nih.nci.cadsr.sentinel.tool;gov.nih.nci.cadsr.sentinel.tool.Test;gov.nih.nci.cadsr.sentinel.tool.audits;gov.nih.nci.cadsr.sentinel.tool.database;gov.nih.nci.cadsr.sentinel.tool.ui;gov.nih.nci.cadsr.sentinel.tool.util"/>
 			<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="${temp.dir}"/>
         </javadoc>
-        <zip destfile="${deploy.dir}/gforge/sentinel_doc.zip">
+        <zip destfile="${artifacts.dir}/gforge/sentinel_doc.zip">
             <zipfileset dir="${doc.dir}"/>
         </zip>
         <delete dir="${doc.dir}"/>
