@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration PUBLIC "-//Apache//log4j//dtd" "http://logging.apache.org/log4j/docs/api/org/apache/log4j/xml/log4j.dtd">
 
-<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.log4j-jboss.xml,v 1.1 2007-07-19 21:19:05 hebell Exp $ -->
+<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.log4j-jboss.xml,v 1.2 2007-07-26 19:27:03 hebell Exp $ -->
 <!-- $Name: not supported by cvs2svn $ -->
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
@@ -11,7 +11,7 @@
 <!-- ============================ -->
 <appender name="CADSRSENTINEL_FILE" class="org.jboss.logging.appender.RollingFileAppender">
   <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
-  <param name="File" value="/local/content/cadsrsentinel/reports/cadsrsentinel_log.txt"/>
+  <param name="File" value="@WEBLOG.DIR@/cadsrsentinel_log.txt"/>
   <param name="Append" value="true"/>
   <param name="MaxFileSize" value="200KB"/>
   <param name="MaxBackupIndex" value="3"/>

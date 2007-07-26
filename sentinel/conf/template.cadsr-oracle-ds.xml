@@ -1,6 +1,6 @@
 <!-- Copyright 2006 ScenPro, Inc.
 
-    $Header: /share/content/gforge/sentinel/sentinel/conf/template.cadsr-oracle-ds.xml,v 1.1 2007-07-25 13:45:14 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/conf/template.cadsr-oracle-ds.xml,v 1.2 2007-07-26 19:27:03 hebell Exp $
     $Names$
     
     This is the datasource shard by all caDSR tools to verify login credentials.
@@ -10,7 +10,7 @@
 <datasources>
     <local-tx-datasource>
         <jndi-name>jdbc/caDSR</jndi-name>
-        <connection-url>jdbc:oracle:thin:@@DSurl@</connection-url>
+        <connection-url>jdbc:oracle:thin:@@CADSR.DS.URL@</connection-url>
         <driver-class>oracle.jdbc.driver.OracleDriver</driver-class>
         <exception-sorter-class-name>org.jboss.resource.adapter.jdbc.vendor.OracleExceptionSorter</exception-sorter-class-name>
         <check-valid-connection-sql>select 1 from dual</check-valid-connection-sql>

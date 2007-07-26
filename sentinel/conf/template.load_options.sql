@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.1 2007-07-19 21:19:05 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.2 2007-07-26 19:27:03 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -79,7 +79,7 @@ values ('SENTINEL', 'ADMIN.03', '2', 'REEVESD',
 */
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'URL', 'http://cadsrsentinel@tier@.nci.nih.gov',
+values ('SENTINEL', 'URL', 'http://cadsrsentinel@TIER@.nci.nih.gov',
 'The URL for the Sentinel Tool connected this caDSR database.');
 
 /*
@@ -112,7 +112,7 @@ values ('SENTINEL', 'EMAIL.ADDR', 'sentinel@scenpro.com',
 */
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'EMAIL.ADMIN.NAME', 'caDSR Alert @tier.upper@ Administrator',
+values ('SENTINEL', 'EMAIL.ADMIN.NAME', 'caDSR Alert @TIER.UPPER@ Administrator',
 'The Alert Report Administrators name/title.');
 
 /*
@@ -196,7 +196,7 @@ values ('SENTINEL', 'EMAIL.ERROR', 'One or more errors occurred generating the a
 */
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'LINK.HTTP', 'http://cadsrsentinel@tier@.nci.nih.gov/AlertReports/',
+values ('SENTINEL', 'LINK.HTTP', 'http://cadsrsentinel@TIER@.nci.nih.gov/AlertReports/',
 'The HTTP prefix for all links to generated output.');
 
 /*
@@ -216,7 +216,7 @@ values ('SENTINEL', 'OUTPUT.DIR', '/local/content/cadsrsentinel/reports/',
 */
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'DB.NAME', 'NCICB @tier.name@ caDSR',
+values ('SENTINEL', 'DB.NAME', 'NCICB @TIER.NAME@ caDSR',
 'The name to identify this database on report output.');
 
 /*
