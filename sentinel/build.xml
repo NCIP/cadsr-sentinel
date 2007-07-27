@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.44 2007-07-27 15:02:52 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.45 2007-07-27 15:46:43 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -8,7 +8,10 @@
     </description>
     <!-- set global properties for this build -->
 
+    <property file="${PROP.FILE}" />
+    
     <echo>
+        PROP.FILE = ${PROP.FILE}
         JDEBUG=${JDEBUG}
         CADSR.DS.URL=${CADSR.DS.URL}
         CADSR.DS.USER=${CADSR.DS.USER}
@@ -122,7 +125,7 @@
         </delete>
         <copy todir="${artifacts.dir}">
             <fileset file="build.xml"/>
-            <fileset file="build.properties"/>
+            <fileset file="${PROP.FILE}"/>
         </copy>
         <copy tofile="${prop.dir}/DSRAlert.properties" filtering="true">
             <fileset file="conf/template.DSRAlert.properties"/>
