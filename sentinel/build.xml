@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.45 2007-07-27 15:46:43 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.46 2007-07-27 15:56:08 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -220,7 +220,7 @@
         <delete file="${classes.dir}/cvsdeploy.txt"/>
     </target>
 
-	<target name="test" if="check.test,-prop-check" description="Execute auto tests on the project logic.">
+	<target name="test" if="check.test" depends="-prop-check" description="Execute auto tests on the project logic.">
         <delete><fileset dir="${tr.dir}" includes="**/*"/></delete>
         <junit printsummary="on" haltonfailure="yes" showoutput="yes" filtertrace="off">
             <classpath refid="libpath" />
@@ -337,8 +337,6 @@
         </zip>
         <delete dir="${doc.dir}"/>
     </target>
-
-    <available property="deploy.gforge" file="gforge/cadsrsentinelapi.jar" />
     
     <target name="-deploy-auto" depends="-prop-check" description="Performs the automated part of the deployment.">
         <copy todir="${TOOL.BIN.DIR}">
@@ -354,8 +352,10 @@
         </copy>
         <move file="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz" tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.war"/>
     </target>
+
+    <available property="deploy.gforge" file="gforge/cadsrsentinelapi.jar" />
     
-    <target name="-deploy-gforge" if="deploy.gforge,-prop-check" description="Disseminates the public project artifacts, e.g. API JAR files, Javadoc, etc.">
+    <target name="-deploy-gforge" if="deploy.gforge" description="Disseminates the public project artifacts, e.g. API JAR files, Javadoc, etc.">
         <echo>
 
 Artifacts exist in the ${basedir}${file.separator}gforge${file.separator} directory and should be published.
