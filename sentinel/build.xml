@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.43 2007-07-26 22:32:25 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.44 2007-07-27 15:02:52 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -8,8 +8,6 @@
     </description>
     <!-- set global properties for this build -->
 
-    <property file="build.properties" />
-    
     <echo>
         JDEBUG=${JDEBUG}
         CADSR.DS.URL=${CADSR.DS.URL}
@@ -93,12 +91,8 @@
                 <include name="**/*.jar"/>
             </fileset>
     </path>
-    
-    <target name="check1" unless="TIER.NAME">
-        <fail>Missing 1 or more required properties. See template.build.properties for a complete description.</fail>
-    </target>
         
-    <target name="clean" depends="check1,prop-check">
+    <target name="clean" depends="-prop-check" description="Deletes all project build artifacts and temporary files.">
         <delete dir="${classes.dir}"/>
         <delete dir="${artifacts.dir}"/>
         <delete file="${web.dir}/web.xml" />
@@ -111,7 +105,7 @@
     	<mkdir dir="${tr.dir}"/>
     </target>
     
-    <target name="compile" depends="clean,prop-check">
+    <target name="-compile" depends="clean,-prop-check" description="Compiles the project source.">
         <echo>Debug is ${JDEBUG}</echo>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" tempdir="${temp.dir}" debug="${JDEBUG}">
             <compilerarg line="-deprecation"/>
@@ -120,7 +114,7 @@
         </javac>
     </target>
     
-    <target name="assemble" depends="compile,prop-check">
+    <target name="-assemble" depends="-compile,-prop-check" description="Assembles the deployment parts into the artifacts folders.">
         <delete>
             <fileset file="${prop.dir}/DSRAlert.properties"/>
             <fileset file="${prop.dir}/test/DSRAlertTest.properties"/>
@@ -186,7 +180,7 @@
           />
     </target>
 
-    <target name="cjsp" depends="assemble,prop-check">
+    <target name="-cjsp" depends="-assemble,-prop-check" description="Compiles the project JSP files to verify syntax.">
         <jspc srcdir="${root.dir}/jsp" destdir="${classes.dir}" compiler="jasper41">
             <classpath refid="libpath" />
             <include name="**/*.jsp" />
@@ -199,7 +193,7 @@
         <delete dir="${classes.dir}/org"/>
     </target>
     
-    <target name="build-jar" depends="assemble,prop-check">
+    <target name="-build-jar" depends="-assemble,-prop-check" description="Build the project JAR files.">
         <delete file="${artifacts.dir}/bin/cadsrsentinel.jar"/>
         <delete file="${artifacts.dir}/gforge/cadsrsentinelapi.jar"/>
         <cvs command="status -v" output="${classes.dir}/cvsdeploy.txt"/>
@@ -223,7 +217,7 @@
         <delete file="${classes.dir}/cvsdeploy.txt"/>
     </target>
 
-	<target name="test" if="check.test,prop-check">
+	<target name="test" if="check.test,-prop-check" description="Execute auto tests on the project logic.">
         <delete><fileset dir="${tr.dir}" includes="**/*"/></delete>
         <junit printsummary="on" haltonfailure="yes" showoutput="yes" filtertrace="off">
             <classpath refid="libpath" />
@@ -257,7 +251,7 @@
     	</junit>
 	</target>
 
-    <target name="build-war" depends="cjsp,prop-check">
+    <target name="-build-war" depends="-cjsp,-prop-check" description="Builds the project WAR file.">
         <delete file="${artifacts.dir}/jboss/cadsrsentinel.war"/>
         <cvs command="status -v" output="${jsp.dir}/cvsdeploy.txt"/>
         <war destfile="${artifacts.dir}/jboss/cadsrsentinel.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml">
@@ -265,11 +259,11 @@
         <delete file="${jsp.dir}/cvsdeploy.txt"/>
     </target>
 
-    <target name="build-product" depends="build-war,build-jar,test,prop-check">
+    <target name="build-product" depends="-build-war,-build-jar,test,-prop-check" description="Builds all project binaries.">
         <echo>Building for ${TIER.NAME}</echo>
     </target>
 
-    <target name="package-download" depends="clean,prop-check">
+    <target name="package-download" depends="clean,-prop-check" description="Packages the project for public distribution and access.">
         <delete dir="${odi.dir}"/>
         <mkdir dir="${odi.dir}"/>
         <copy todir="${odi.dir}">
@@ -309,7 +303,7 @@
         <delete dir="${odi.dir}"/>
     </target>
 
-    <target name="javadoc" depends="prop-check">
+    <target name="javadoc" depends="-prop-check" description="Build the project Javadoc.">
         <mkdir dir="${temp.dir}"/>
         <delete dir="${doc.dir}"/>
         <mkdir dir="${doc.dir}"/>
@@ -342,12 +336,8 @@
     </target>
 
     <available property="deploy.gforge" file="gforge/cadsrsentinelapi.jar" />
-
-    <target name="deploy-check" unless="JBOSS.CONF.DIR">
-        <fail>One or more required [deploy] target properties are not defined. See the template.build.properties for a complete list and description.</fail>
-    </target>
     
-    <target name="deploy-auto" depends="deploy-check,prop-check">
+    <target name="-deploy-auto" depends="-prop-check" description="Performs the automated part of the deployment.">
         <copy todir="${TOOL.BIN.DIR}">
             <fileset dir="bin" />
         </copy>
@@ -362,7 +352,7 @@
         <move file="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz" tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.war"/>
     </target>
     
-    <target name="deploy-gforge" if="deploy.gforge,prop-check">
+    <target name="-deploy-gforge" if="deploy.gforge,-prop-check" description="Disseminates the public project artifacts, e.g. API JAR files, Javadoc, etc.">
         <echo>
 
 Artifacts exist in the ${basedir}${file.separator}gforge${file.separator} directory and should be published.
@@ -371,7 +361,7 @@ Although this is not required for the software deployment please place these fil
         </echo>
     </target>
         
-    <target name="deploy" depends="deploy-auto,deploy-gforge,prop-check">
+    <target name="deploy" depends="-deploy-auto,-deploy-gforge,-prop-check" description="Deploys the project artifacts.">
         <echo>
 
 To complete the deployment, perform the following manual steps.
@@ -385,19 +375,19 @@ To complete the deployment, perform the following manual steps.
         </echo>
     </target>
     
-    <target name="build-all" depends="build-product,javadoc,package-download,prop-check">
+    <target name="build-all" depends="build-product,javadoc,package-download,-prop-check" description="Builds all project deliverables.">
         <echo>Building for ${TIER.NAME}</echo>
     </target>
 
-    <target name="prop-check" unless="check.props">
+    <target name="-prop-check" unless="check.props" description="Verifies the presence of all required properties.">
         <fail>Missing one or more properties, see template.build.properties for a complete list.</fail>
     </target>
 
-    <target name="init-check" if="check.props">
+    <target name="-init-check" if="check.props" description="Notify the user that all properties are present.">
         <echo>All properties are present.</echo>
     </target>
     
-    <target name="init" depends="prop-check,init-check">
+    <target name="init" depends="-prop-check,-init-check" description="The default target which only validates the presence of the script properties.">
         <fail>This build script must be run with the name of the desired target: build-all, build-product, javadoc, package-download.</fail>
     </target>
 
