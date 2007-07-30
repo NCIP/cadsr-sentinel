@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.1 2007-07-19 15:26:46 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.2 2007-07-30 20:10:09 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ taglib uri="/tags/struts-bean" prefix="bean" %>
@@ -24,7 +24,7 @@
         }
         function cmdHelp()
         {
-            window.open("html/help.html", "_blank");
+            window.open("../html/help.html", "_blank");
         }
     </script>
 

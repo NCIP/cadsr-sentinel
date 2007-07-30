@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.47 2007-07-27 17:58:00 cvsuser Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.48 2007-07-30 20:10:09 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -8,7 +8,6 @@
     </description>
     <!-- set global properties for this build -->
 
-	<property name="PROP.FILE" location="build.properties"/>
     <property file="${PROP.FILE}" />
     
     <echo>
@@ -163,24 +162,20 @@
             <fileset file="conf/template.log4j-autorun.xml"/>
         </copy>
         <copy todir="${artifacts.dir}/bin">
-            <fileset file="lib/activation.jar"/>
-            <fileset file="lib/asm.jar"/>
-            <fileset file="lib/cacore32-client.jar"/>
-            <fileset file="lib/cglib-2.1.3.jar"/>
-            <fileset file="${root.dir}/WEB-INF/lib/commons-logging-1.1.jar"/>
-            <fileset file="lib/hibernate3.jar"/>
-            <fileset file="lib/log4j-1.2.13.jar"/>
-            <fileset file="lib/mail.jar"/>
-            <fileset file="lib/ojdbc14.jar"/>
-            <fileset file="lib/spring.jar"/>
+            <fileset file="${lib.dir}/activation.jar"/>
+            <fileset file="${lib.dir}/asm.jar"/>
+            <fileset file="${lib.dir}/cacore32-client.jar"/>
+            <fileset file="${lib.dir}/cglib-2.1.3.jar"/>
+            <fileset file="${wlib.dir}/commons-logging-1.1.jar"/>
+            <fileset file="${lib.dir}/hibernate3.jar"/>
+            <fileset file="${lib.dir}/log4j-1.2.13.jar"/>
+            <fileset file="${lib.dir}/mail.jar"/>
+            <fileset file="${lib.dir}/ojdbc14.jar"/>
+            <fileset file="${lib.dir}/spring.jar"/>
         </copy>
-        <fixcrlf srcdir="${artifacts.dir}/bin"
+        <fixcrlf srcdir="${artifacts.dir}"
                eol="lf"
-               includes="**/*.sh, **/*.xml"
-          />
-        <fixcrlf srcdir="${artifacts.dir}/jboss"
-               eol="lf"
-               includes="**/*.sh, **/*.xml"
+               includes="**/*.sh, **/*.xml, **/*.properties"
           />
     </target>
 
@@ -392,7 +387,7 @@ To complete the deployment, perform the following manual steps.
     </target>
     
     <target name="init" depends="-prop-check,-init-check" description="The default target which only validates the presence of the script properties.">
-        <fail>This build script must be run with the name of the desired target: build-all, build-product, javadoc, package-download.</fail>
+        <fail>This build script must be run with the name of the desired target: build-all, build-product, clean, deploy, javadoc, package-download, test.</fail>
     </target>
 
 </project>
