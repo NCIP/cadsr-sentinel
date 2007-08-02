@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.48 2007-07-30 20:10:09 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.49 2007-08-02 18:18:42 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -333,8 +333,16 @@
         </zip>
         <delete dir="${doc.dir}"/>
     </target>
-    
-    <target name="-deploy-auto" depends="-prop-check" description="Performs the automated part of the deployment.">
+
+    <condition property="unix.os">
+        <os family="unix"/>
+    </condition>
+
+    <target name="-deploy-auto" if="unix.os" depends="-deploy-binaries" description="Sets the file permissions after the binaries are deployed.">
+        <chmod file="${TOOL.BIN.DIR}/autorun.sh" perm="ugo+rx"/>
+    </target>
+
+    <target name="-deploy-binaries" depends="-prop-check" description="Deploys the executable product binaries.">
         <copy todir="${TOOL.BIN.DIR}">
             <fileset dir="bin" />
         </copy>
