@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.66 2007-08-08 16:38:45 cvsuser Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.67 2007-08-08 16:43:21 cvsuser Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -363,7 +363,7 @@
         </copy>
         <move file="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz" tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.war"/>
 		-->
-				<scp remoteToDir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}" verbose="true">
+				<scp remoteToDir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}" passphrase="" verbose="true">
 						<fileset file="deployment-artifacts/jboss/cadsrsentinel.war"/>
 				</scp>
     </target>
