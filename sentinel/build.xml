@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.52 2007-08-08 12:52:05 cvsuser Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.53 2007-08-08 13:45:37 cvsuser Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -348,7 +348,8 @@
     </target>
 
     <target name="-deploy-binaries" depends="-prop-check" description="Deploys the executable product binaries.">
-        <copy todir="${TOOL.BIN.DIR}">
+		<!--
+				<copy todir="${TOOL.BIN.DIR}">
             <fileset dir="bin" />
         </copy>
         <copy todir="${JBOSS.DEPLOY.DIR}">
@@ -360,6 +361,10 @@
             <fileset file="jboss/cadsrsentinel.war"/>
         </copy>
         <move file="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz" tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.war"/>
+		-->
+				<scp remoteToDir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}" verbose="true">
+						<fileset file="jboss/cadsrsentinel.war"/>
+				</scp>
     </target>
 
     <available property="deploy.gforge" file="gforge/cadsrsentinelapi.jar" />
