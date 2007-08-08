@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.53 2007-08-08 13:45:37 cvsuser Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.54 2007-08-08 15:48:00 cvsuser Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -34,6 +34,7 @@
 				SCP.USER=${SCP.USER}
 				SCP.HOST=${SCP.HOST}
 				SCP.PATH=${SCP.PATH}
+				user.home=${user.home}
     </echo>
 
     <condition property="check.props">
