@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.51 2007-08-07 14:54:59 cvsuser Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.52 2007-08-08 12:52:05 cvsuser Exp $
      $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -10,7 +10,7 @@
 
 	<property name="PROP.FILE" location="build.properties"/>
     <property file="${PROP.FILE}" />
-    
+
     <echo>
         PROP.FILE = ${PROP.FILE}
         JDEBUG=${JDEBUG}
@@ -31,8 +31,11 @@
         TEST.BAD.USER=${TEST.BAD.USER}
         TEST.BAD.PSWD=${TEST.BAD.PSWD}
         WEBLOG.DIR=${WEBLOG.DIR}
+				SCP.USER=${SCP.USER}
+				SCP.HOST=${SCP.HOST}
+				SCP.PATH=${SCP.PATH}
     </echo>
-    
+
     <condition property="check.props">
             <and>
                 <isset property="JDEBUG"/>
@@ -70,7 +73,7 @@
     <property name="prop.dir" location="${classes.dir}/gov/nih/nci/cadsr/sentinel"/>
     <property name="src.dir" location="${basedir}/src"/>
     <property name="lib.dir" location="${basedir}/lib"/>
-    
+
     <condition property="check.test">
         <equals arg1="${TEST}" arg2="true" trim="true" />
     </condition>
@@ -86,7 +89,7 @@
     <filter token="TIER.UPPER" value="${TIER.UPPER}"/>
     <filter token="TIER.NAME" value="${TIER.NAME}"/>
     <filter token="WEBLOG.DIR" value="${WEBLOG.DIR}"/>
-    
+
     <path id="libpath">
             <fileset dir="${lib.dir}">
                 <include name="**/*.jar"/>
@@ -95,7 +98,7 @@
                 <include name="**/*.jar"/>
             </fileset>
     </path>
-        
+
     <target name="clean" depends="-prop-check" description="Deletes all project build artifacts and temporary files.">
         <delete dir="${classes.dir}"/>
         <delete dir="${artifacts.dir}"/>
@@ -108,7 +111,7 @@
         <mkdir dir="${artifacts.dir}/sql"/>
     	<mkdir dir="${tr.dir}"/>
     </target>
-    
+
     <target name="-compile" depends="clean,-prop-check" description="Compiles the project source.">
         <echo>Debug is ${JDEBUG}</echo>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" tempdir="${temp.dir}" debug="${JDEBUG}">
@@ -117,7 +120,7 @@
             <classpath refid="libpath" />
         </javac>
     </target>
-    
+
     <target name="-assemble" depends="-compile,-prop-check" description="Assembles the deployment parts into the artifacts folders.">
         <delete>
             <fileset file="${prop.dir}/DSRAlert.properties"/>
@@ -192,7 +195,7 @@
         <delete dir="${classes.dir}/jsp"/>
         <delete dir="${classes.dir}/org"/>
     </target>
-    
+
     <target name="-build-jar" depends="-assemble,-prop-check" description="Build the project JAR files.">
         <delete file="${artifacts.dir}/bin/cadsrsentinel.jar"/>
         <delete file="${artifacts.dir}/gforge/cadsrsentinelapi.jar"/>
@@ -316,13 +319,13 @@
                 version="true"
                 use="true"
                 windowtitle="caDSR Sentinel Tool API">
-			
+
             <classpath refid="libpath" />
-			
+
             <packageset dir="${src.dir}" defaultexcludes="yes">
                 <include name="gov/nih/nci/cadsr/sentinel/**" />
             </packageset>
-			
+
             <doctitle><![CDATA[<h1>caDSR Sentinel Tool</h1>]]></doctitle>
 			<bottom><![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]></bottom>
 			<tag name="todo" scope="all" description="To do:" />
@@ -360,7 +363,7 @@
     </target>
 
     <available property="deploy.gforge" file="gforge/cadsrsentinelapi.jar" />
-    
+
     <target name="-deploy-gforge" if="deploy.gforge" description="Disseminates the public project artifacts, e.g. API JAR files, Javadoc, etc.">
         <echo>
 
@@ -369,7 +372,7 @@ Although this is not required for the software deployment please place these fil
 
         </echo>
     </target>
-        
+
     <target name="deploy" depends="-deploy-auto,-deploy-gforge,-prop-check" description="Deploys the project artifacts.">
         <echo>
 
@@ -383,7 +386,7 @@ To complete the deployment, perform the following manual steps.
 
         </echo>
     </target>
-    
+
     <target name="build-all" depends="build-product,javadoc,package-download,-prop-check" description="Builds all project deliverables.">
         <echo>Building for ${TIER.NAME}</echo>
     </target>
@@ -395,7 +398,7 @@ To complete the deployment, perform the following manual steps.
     <target name="-init-check" if="check.props" description="Notify the user that all properties are present.">
         <echo>All properties are present.</echo>
     </target>
-    
+
     <target name="init" depends="-prop-check,-init-check" description="The default target which only validates the presence of the script properties.">
         <fail>This build script must be run with the name of the desired target: build-all, build-product, clean, deploy, javadoc, package-download, test.</fail>
     </target>
