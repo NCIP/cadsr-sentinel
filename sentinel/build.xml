@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-		 $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.87 2007-08-09 19:13:54 cvsuser Exp $
+		 $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.88 2007-08-09 19:16:25 cvsuser Exp $
 		 $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -405,7 +405,7 @@ Although this is not required for the software deployment please place these fil
 				</echo>
 		</target>
 
-		<target name="-deploy-db" description="execute database update scripts"/>
+		<target name="-deploy-db" description="execute database update scripts">
 			<exec dir="." executable="sqlplus" failonerror="true">
   				<arg line="${CADSR.DS.USER}/${CADSR.DS.PASWD}@${CADSR.DS.TNS.ENTRY} @ deployment_artifacts/sql/load_options.sql"/>
 			</exec>
