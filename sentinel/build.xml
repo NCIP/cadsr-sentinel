@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-		 $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.86 2007-08-09 19:08:15 cvsuser Exp $
+		 $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.87 2007-08-09 19:13:54 cvsuser Exp $
 		 $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -45,6 +45,7 @@
 								<isset property="CADSR.DS.URL"/>
 								<isset property="CADSR.DS.USER"/>
 								<isset property="CADSR.DS.PSWD"/>
+								<isset property="CADSR.DS.TNS.ENTRY"/>
 								<isset property="TIER"/>
 								<isset property="TIER.UPPER"/>
 								<isset property="TIER.NAME"/>
@@ -404,7 +405,21 @@ Although this is not required for the software deployment please place these fil
 				</echo>
 		</target>
 
-		<target name="deploy" depends="-deploy-auto,-deploy-gforge,-prop-check" description="Deploys the project artifacts.">
+		<target name="-deploy-db" description="execute database update scripts"/>
+			<exec dir="." executable="sqlplus" failonerror="true">
+  				<arg line="${CADSR.DS.USER}/${CADSR.DS.PASWD}@${CADSR.DS.TNS.ENTRY} @ deployment_artifacts/sql/load_options.sql"/>
+			</exec>
+
+
+			<!-- execute this only if a particular property is set?
+			<exec dir="." executable="sqlplus" failonerror="true">
+			  <arg line="${CADSR.DS.USER}/${CADSR.DS.PASWD}@${CADSR.DS.TNS.ENTRY} @ deployment_artifacts/sql/update_options_url.sql"/>
+			</exec>
+			-->
+
+		</target>
+
+		<target name="deploy" depends="-deploy-auto,-deploy-gforge,-deploy-db,-prop-check" description="Deploys the project artifacts.">
 				<echo>
 
 To complete the deployment, perform the following manual steps.
