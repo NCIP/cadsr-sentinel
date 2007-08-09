@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.2 2007-07-26 19:27:03 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.3 2007-08-09 19:23:14 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -242,3 +242,5 @@ values ('SENTINEL', 'BROADCAST.EXCLUDE.CONTEXT.00.CONTE_IDSEQ', '29A8FB18-0AB1-1
 */
 
 commit;
+
+exit
