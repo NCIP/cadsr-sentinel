@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.95 2007-08-09 19:50:11 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.96 2007-08-09 21:54:01 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -168,8 +168,11 @@
         <copy tofile="${artifacts.dir}/jboss/cadsr-oracle-ds.xml" filtering="true">
             <fileset file="conf/template.cadsr-oracle-ds.xml"/>
         </copy>
-        <copy tofile="${artifacts.dir}/jboss/log4j.xml" filtering="true">
-            <fileset file="conf/template.log4j-jboss.xml"/>
+        <copy tofile="${artifacts.dir}/jboss/cadsrsentinel-log4j-appender.xml" filtering="true">
+            <fileset file="conf/template.cadsrsentinel-log4j-appender.xml"/>
+        </copy>
+        <copy tofile="${artifacts.dir}/jboss/cadsrsentinel-log4j-category.xml" filtering="true">
+            <fileset file="conf/template.cadsrsentinel-log4j-category.xml"/>
         </copy>
         <copy todir="${artifacts.dir}/bin" filtering="true">
             <fileset file="scripts/autorun.sh"/>
@@ -381,6 +384,25 @@
                 <include name="**/*-oracle-ds.xml"/>
             </fileset>
         </copy>
+        <copy todir="${JBOSS.CONF.DIR}/log4j">
+            <fileset dir="jboss">
+                <include name="**/cadsrsentinel-log4j-*.xml"/>
+            </fileset>
+        </copy>
+        <concat destfile="log4j.xml" append="no">
+            <filelist dir="${JBOSS.CONF.DIR}/log4j" files="log4j-header.xml"/>
+        </concat>
+        <concat destfile="log4j.xml" append="yes">
+            <fileset dir="${JBOSS.CONF.DIR}/log4j" includes="*-log4j-appender.xml"/>
+        </concat>
+        <concat destfile="log4j.xml" append="yes">
+            <fileset dir="${JBOSS.CONF.DIR}/log4j" includes="*-log4j-category.xml"/>
+        </concat>
+        <concat destfile="log4j.xml" append="yes">
+            <filelist dir="${JBOSS.CONF.DIR}/log4j" files="log4j-footer.xml"/>
+        </concat>
+        <fixcrlf srcdir="." includes="log4j.xml" eol="lf" />
+        <move file="log4j.xml" tofile="${JBOSS.CONF.DIR}/log4j.xml"/>
         <sleep seconds="15"/>
         <copy tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz">
             <fileset file="jboss/cadsrsentinel.war"/>
