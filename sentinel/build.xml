@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.91 2007-08-09 19:24:17 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.92 2007-08-09 19:40:07 cvsuser Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -420,7 +420,24 @@ Although this is not required for the software deployment please place these fil
         </echo>
     </target>
 
-    <target name="deploy" depends="-deploy-auto,-deploy-gforge,-prop-check" description="Deploys the project artifacts.">
+	 </target>
+
+	<target name="-deploy-db" description="execute database update scripts" unless="SKIP.DB">
+		<exec dir="." executable="/app/oracle/product/10gClient/bin/sqlplus" failonerror="true">
+  			<arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ deployment_artifacts/sql/load_options.sql"/>
+		</exec>
+
+
+		<!-- execute this only if a particular property is set?
+		<exec dir="." executable="/app/oracle/product/10gClient/bin/sqlplus" failonerror="true">
+		  <arg line="${CADSR.DS.USER}/${CADSR.DS.PASWD}@${CADSR.DS.TNS.ENTRY} @ deployment_artifacts/sql/update_options_url.sql"/>
+		</exec>
+		-->
+
+	</target>
+
+
+    <target name="deploy" depends="-deploy-auto,-deploy-gforge,-deploy-db,-prop-check" description="Deploys the project artifacts.">
         <echo>
 
 To complete the deployment, perform the following manual steps.
