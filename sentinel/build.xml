@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-		 $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.85 2007-08-09 12:51:05 cvsuser Exp $
+		 $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.86 2007-08-09 19:08:15 cvsuser Exp $
 		 $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -17,6 +17,7 @@
 				CADSR.DS.URL=${CADSR.DS.URL}
 				CADSR.DS.USER=${CADSR.DS.USER}
 				CADSR.DS.PSWD=${CADSR.DS.PSWD}
+				CADSR.DS.TNS.ENTRY=${CADSR.DS.TNS.ENTRY}
 				TIER=${TIER}
 				TIER.UPPER=${TIER.UPPER}
 				TIER.NAME=${TIER.NAME}
