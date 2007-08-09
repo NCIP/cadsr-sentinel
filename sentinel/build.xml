@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-		 $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.81 2007-08-09 11:35:08 cvsuser Exp $
+		 $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.82 2007-08-09 11:42:34 cvsuser Exp $
 		 $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -374,7 +374,7 @@
 				<echo>
 todir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}"
 				 </echo>
-
+<!--
 				<scp todir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}"
 				     port="${SCP.PORT}"
                      passphrase="${SCP.PASSPHRASE}"
@@ -384,11 +384,10 @@ todir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}"
 
                 	<fileset file="deployment-artifacts/jboss/cadsrsentinel.war"/>
 				</scp>
-		<!--
+-->
 				<exec dir="." executable="scp">
-					<arg line="-P 32 deployment-artifacts/jboss/cadsrsentinel.war ${SCP.USER}@${SCP.HOST}:${SCP.PATH}"/>
+					<arg line="-v -P 32 deployment-artifacts/jboss/cadsrsentinel.war ${SCP.USER}@${SCP.HOST}:${SCP.PATH}"/>
 				</exec>
-		-->
 		</target>
 
 		<available property="deploy.gforge" file="gforge/cadsrsentinelapi.jar" />
