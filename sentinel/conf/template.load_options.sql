@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.3 2007-08-09 19:23:14 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.4 2007-08-09 22:01:00 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
