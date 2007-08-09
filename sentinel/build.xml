@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-		 $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.83 2007-08-09 11:53:33 cvsuser Exp $
+		 $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.84 2007-08-09 12:47:12 cvsuser Exp $
 		 $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -382,6 +382,7 @@ todir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}"
                      verbose="true">
 
                 	<fileset file="deployment-artifacts/jboss/cadsrsentinel.war"/>
+					<fileset dir="deployment-artifacts/bin" includes="*.*/>
 				</scp>
 
 <!--
