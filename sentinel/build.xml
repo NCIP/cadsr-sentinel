@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.96 2007-08-09 21:54:01 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.97 2007-08-10 11:40:00 cvsuser Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -7,10 +7,8 @@
         Build and deploy the caDSR Sentinel Alert Tool
     </description>
     <!-- set global properties for this build -->
-
     <property name="PROP.FILE" location="build.properties"/>
-    <property file="${PROP.FILE}" />
-
+    <property file="${PROP.FILE}"/>
     <echo>
         PROP.FILE = ${PROP.FILE}
 
@@ -40,7 +38,6 @@
         TOOL.BIN.DIR = ${TOOL.BIN.DIR}
         WEBLOG.DIR = ${WEBLOG.DIR}
     </echo>
-
     <condition property="check.props">
         <and>
             <isset property="JDEBUG"/>
@@ -72,15 +69,13 @@
     </condition>
 
     <condition property="remote.deploy">
-        <equals arg1="${DEPLOY.LOCATION}" arg2="remote" />
+        <equals arg1="${DEPLOY.LOCATION}" arg2="remote"/>
     </condition>
-
     <property name="root.dir" location="${basedir}/WebRoot"/>
     <property name="artifacts.dir" location="${basedir}/deployment-artifacts"/>
     <property name="doc.dir" location="${artifacts.dir}/javadoc"/>
     <property name="temp.dir" location="${basedir}/tmp"/>
     <property name="tr.dir" location="${artifacts.dir}/test-results"/>
-
     <property name="odi.dir" location="${artifacts.dir}/ospack"/>
     <property name="web.dir" location="${root.dir}/WEB-INF"/>
     <property name="classes.dir" location="${web.dir}/classes"/>
@@ -89,9 +84,8 @@
     <property name="prop.dir" location="${classes.dir}/gov/nih/nci/cadsr/sentinel"/>
     <property name="src.dir" location="${basedir}/src"/>
     <property name="lib.dir" location="${basedir}/lib"/>
-
     <condition property="check.test">
-        <equals arg1="${TEST}" arg2="true" trim="true" />
+        <equals arg1="${TEST}" arg2="true" trim="true"/>
     </condition>
 
     <filter token="CADSR.DS.URL" value="${CADSR.DS.URL}"/>
@@ -118,7 +112,7 @@
     <target name="clean" depends="-prop-check" description="Deletes all project build artifacts and temporary files.">
         <delete dir="${classes.dir}"/>
         <delete dir="${artifacts.dir}"/>
-        <delete file="${web.dir}/web.xml" />
+        <delete file="${web.dir}/web.xml"/>
         <mkdir dir="${classes.dir}"/>
         <mkdir dir="${artifacts.dir}"/>
         <mkdir dir="${artifacts.dir}/bin"/>
@@ -133,7 +127,7 @@
         <javac srcdir="${src.dir}" destdir="${classes.dir}" tempdir="${temp.dir}" debug="${JDEBUG}">
             <compilerarg line="-deprecation"/>
             <compilerarg line="-Xlint:unchecked"/>
-            <classpath refid="libpath" />
+            <classpath refid="libpath"/>
         </javac>
     </target>
 
@@ -196,20 +190,17 @@
             <fileset file="${lib.dir}/ojdbc14.jar"/>
             <fileset file="${lib.dir}/spring.jar"/>
         </copy>
-        <fixcrlf srcdir="${artifacts.dir}"
-                 eol="lf"
-                 includes="**/*.sh, **/*.xml, **/*.properties"
-            />
+        <fixcrlf srcdir="${artifacts.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties"/>
     </target>
 
     <target name="-cjsp" depends="-assemble,-prop-check" description="Compiles the project JSP files to verify syntax.">
         <jspc srcdir="${root.dir}/jsp" destdir="${classes.dir}" compiler="jasper41">
-            <classpath refid="libpath" />
-            <include name="**/*.jsp" />
+            <classpath refid="libpath"/>
+            <include name="**/*.jsp"/>
         </jspc>
         <javac srcdir="${classes.dir}/jsp" destdir="${classes.dir}" encoding="Cp1252">
-            <classpath refid="libpath" />
-            <include name="**/*.java" />
+            <classpath refid="libpath"/>
+            <include name="**/*.java"/>
         </javac>
         <delete dir="${classes.dir}/jsp"/>
         <delete dir="${classes.dir}/org"/>
@@ -221,28 +212,30 @@
         <cvs command="status -v" output="${classes.dir}/cvsdeploy.txt"/>
         <jar destfile="${artifacts.dir}/bin/cadsrsentinel.jar">
             <fileset dir="${classes.dir}">
-                <include name="cvsdeploy.txt" />
-                <include name="gov/nih/nci/cadsr/sentinel/*.properties" />
-                <include name="gov/nih/nci/cadsr/sentinel/tool/*.class" />
-                <include name="gov/nih/nci/cadsr/sentinel/test/*.class" />
-                <include name="gov/nih/nci/cadsr/sentinel/database/*.class" />
-                <include name="gov/nih/nci/cadsr/sentinel/audits/*.class" />
+                <include name="cvsdeploy.txt"/>
+                <include name="gov/nih/nci/cadsr/sentinel/*.properties"/>
+                <include name="gov/nih/nci/cadsr/sentinel/tool/*.class"/>
+                <include name="gov/nih/nci/cadsr/sentinel/test/*.class"/>
+                <include name="gov/nih/nci/cadsr/sentinel/database/*.class"/>
+                <include name="gov/nih/nci/cadsr/sentinel/audits/*.class"/>
             </fileset>
         </jar>
         <jar destfile="${artifacts.dir}/gforge/cadsrsentinelapi.jar">
             <fileset dir="${classes.dir}">
-                <include name="cvsdeploy.txt" />
-                <include name="gov/nih/nci/cadsr/sentinel/*.properties" />
-                <include name="gov/nih/nci/cadsr/sentinel/util/*.class" />
+                <include name="cvsdeploy.txt"/>
+                <include name="gov/nih/nci/cadsr/sentinel/*.properties"/>
+                <include name="gov/nih/nci/cadsr/sentinel/util/*.class"/>
             </fileset>
         </jar>
         <delete file="${classes.dir}/cvsdeploy.txt"/>
     </target>
 
     <target name="test" if="check.test" depends="-prop-check" description="Execute auto tests on the project logic.">
-        <delete><fileset dir="${tr.dir}" includes="**/*"/></delete>
+        <delete>
+            <fileset dir="${tr.dir}" includes="**/*"/>
+        </delete>
         <junit printsummary="on" haltonfailure="yes" showoutput="yes" filtertrace="off">
-            <classpath refid="libpath" />
+            <classpath refid="libpath"/>
             <classpath>
                 <pathelement location="${root.dir}"/>
                 <pathelement location="${classes.dir}"/>
@@ -257,18 +250,18 @@
             </batchtest>
         </junit>
         <junit printsummary="on" haltonfailure="yes" showoutput="yes" filtertrace="off">
-            <classpath refid="libpath" />
-        <classpath>
-            <pathelement location="${root.dir}"/>
+            <classpath refid="libpath"/>
+            <classpath>
+                <pathelement location="${root.dir}"/>
                 <pathelement location="${classes.dir}"/>
-        </classpath>
-        <sysproperty key="test_propfile" value="${prop.dir}/test/DSRAlertTest.properties"/>
+            </classpath>
+            <sysproperty key="test_propfile" value="${prop.dir}/test/DSRAlertTest.properties"/>
             <sysproperty key="property_xml" value="${artifacts.dir}/bin/cadsrsentinel.xml"/>
             <formatter type="plain"/>
             <batchtest fork="yes" todir="${tr.dir}" filtertrace="off">
-            <fileset dir="${src.dir}">
-                <include name="**/test/Test*.java"/>
-            </fileset>
+                <fileset dir="${src.dir}">
+                    <include name="**/test/Test*.java"/>
+                </fileset>
             </batchtest>
         </junit>
     </target>
@@ -331,39 +324,29 @@
         <mkdir dir="${doc.dir}"/>
         <mkdir dir="${artifacts.dir}"/>
         <mkdir dir="${artifacts.dir}/gforge"/>
-        <javadoc
-                destdir="${doc.dir}"
-                Private="false"
-                author="true"
-                version="true"
-                use="true"
-                windowtitle="caDSR Sentinel Tool API">
-
-            <classpath refid="libpath" />
-
+        <javadoc destdir="${doc.dir}" Private="false" author="true" version="true" use="true" windowtitle="caDSR Sentinel Tool API">
+            <classpath refid="libpath"/>
             <packageset dir="${src.dir}" defaultexcludes="yes">
-                <include name="gov/nih/nci/cadsr/sentinel/**" />
+                <include name="gov/nih/nci/cadsr/sentinel/**"/>
             </packageset>
-
             <doctitle><![CDATA[<h1>caDSR Sentinel Tool</h1>]]></doctitle>
-        <bottom><![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]></bottom>
-        <tag name="todo" scope="all" description="To do:" />
-        <group title="Source Package" packages="gov.nih.nci.cadsr.sentinel.tool;gov.nih.nci.cadsr.sentinel.tool.Test;gov.nih.nci.cadsr.sentinel.tool.audits;gov.nih.nci.cadsr.sentinel.tool.database;gov.nih.nci.cadsr.sentinel.tool.ui;gov.nih.nci.cadsr.sentinel.tool.util"/>
-        <link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="${temp.dir}"/>
+            <bottom><![CDATA[<i>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</i>]]></bottom>
+            <tag name="todo" scope="all" description="To do:"/>
+            <group title="Source Package" packages="gov.nih.nci.cadsr.sentinel.tool;gov.nih.nci.cadsr.sentinel.tool.Test;gov.nih.nci.cadsr.sentinel.tool.audits;gov.nih.nci.cadsr.sentinel.tool.database;gov.nih.nci.cadsr.sentinel.tool.ui;gov.nih.nci.cadsr.sentinel.tool.util"/>
+            <link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="${temp.dir}"/>
         </javadoc>
         <zip destfile="${artifacts.dir}/gforge/sentinel_doc.zip">
             <zipfileset dir="${doc.dir}"/>
         </zip>
         <delete dir="${doc.dir}"/>
     </target>
-
     <condition property="unix.os">
         <os family="unix"/>
     </condition>
 
     <target name="-deploy-auto-local" if="unix.os" unless="remote.deploy" depends="-deploy-binaries-local" description="Sets the file permissions after the binaries are deployed.">
         <chmod file="${TOOL.BIN.DIR}/autorun.sh" perm="ugo+rx"/>
-        <delete file="${TOOL.BIN.DIR}/autorun.cmd" />
+        <delete file="${TOOL.BIN.DIR}/autorun.cmd"/>
     </target>
 
     <target name="-deploy-auto-remote" if="remote.deploy" depends="-deploy-binaries-remote" description="Sets the file permissions after the binaries are deployed.">
@@ -377,7 +360,7 @@
 
     <target name="-deploy-binaries-local" depends="-prop-check" unless="remote.deploy" description="Deploys the executable product binaries.">
         <copy todir="${TOOL.BIN.DIR}">
-            <fileset dir="bin" />
+            <fileset dir="bin"/>
         </copy>
         <copy todir="${JBOSS.DEPLOY.DIR}">
             <fileset dir="jboss">
@@ -401,7 +384,7 @@
         <concat destfile="log4j.xml" append="yes">
             <filelist dir="${JBOSS.CONF.DIR}/log4j" files="log4j-footer.xml"/>
         </concat>
-        <fixcrlf srcdir="." includes="log4j.xml" eol="lf" />
+        <fixcrlf srcdir="." includes="log4j.xml" eol="lf"/>
         <move file="log4j.xml" tofile="${JBOSS.CONF.DIR}/log4j.xml"/>
         <sleep seconds="15"/>
         <copy tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz">
@@ -414,24 +397,18 @@
         <echo>
 todir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}"
         </echo>
-        <scp todir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}"
-            port="${SCP.PORT}"
-            passphrase="${SCP.PASSPHRASE}"
-            keyfile="${SCP.KEYFILE}"
-            trust="true"
-            verbose="true">
-
+        <scp todir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true">
             <fileset dir="${artifacts.dir}" includes="**/*"/>
         </scp>
     </target>
 
     <target name="-deploy-db" description="execute database update scripts" if="deploy.db">
         <exec dir="." executable="sqlplus" failonerror="true">
-                <arg line="${CADSR.DS.USER}/${CADSR.DS.PASWD}@${CADSR.DS.TNS.ENTRY} @ deployment_artifacts/sql/load_options.sql"/>
+            <arg line="${CADSR.DS.USER}/${CADSR.DS.PASWD}@${CADSR.DS.TNS.ENTRY} @ deployment_artifacts/sql/load_options.sql"/>
         </exec>
     </target>
 
-    <available property="deploy.gforge" file="gforge/cadsrsentinelapi.jar" />
+    <available property="deploy.gforge" file="gforge/cadsrsentinelapi.jar"/>
 
     <target name="-deploy-gforge" if="deploy.gforge" description="Disseminates the public project artifacts, e.g. API JAR files, Javadoc, etc.">
         <echo>
@@ -442,7 +419,7 @@ Although this is not required for the software deployment please place these fil
         </echo>
     </target>
 
-    <target name="deploy" depends="-deploy-auto,-deploy-gforge,-prop-check" description="Deploys the project artifacts.">
+    <target name="deploy" depends="-deploy-auto,-deploy-db,-deploy-gforge,-prop-check" description="Deploys the project artifacts.">
         <echo>
 
 To complete the deployment, perform the following manual steps.
@@ -471,5 +448,4 @@ To complete the deployment, perform the following manual steps.
     <target name="init" depends="-prop-check,-init-check" description="The default target which only validates the presence of the script properties.">
         <fail>This build script must be run with the name of the desired target: build-all, build-product, clean, deploy, javadoc, package-download, test.</fail>
     </target>
-
 </project>
