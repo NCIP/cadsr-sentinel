@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.98 2007-08-10 11:46:02 cvsuser Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.99 2007-08-10 12:12:19 cvsuser Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -15,6 +15,7 @@
         CADSR.DS.URL = ${CADSR.DS.URL}
         CADSR.DS.USER = ${CADSR.DS.USER}
         CADSR.DS.PSWD = ${CADSR.DS.PSWD}
+        CADSR.DS.TNS.ENTRY=${CADSR.DS.TNS.ENTRY}
         DEPLOY.LOCATION = ${DEPLOY.LOCATION}
         JBOSS.HOME.DIR = ${JBOSS.HOME.DIR}
         JBOSS.SERVER.DIR = ${JBOSS.SERVER.DIR}
@@ -44,6 +45,7 @@
             <isset property="CADSR.DS.URL"/>
             <isset property="CADSR.DS.USER"/>
             <isset property="CADSR.DS.PSWD"/>
+            <isset property="CADSR.DS.TNS.ENTRY"/>
             <isset property="TIER"/>
             <isset property="TIER.UPPER"/>
             <isset property="TIER.NAME"/>
@@ -403,6 +405,9 @@ todir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}"
     </target>
 
     <target name="-deploy-db" description="execute database update scripts" if="deploy.db">
+        <echo>
+Executing command: sqlplus ${CADSR.DS.USER}/${CADSR.DS.PASWD}@${CADSR.DS.TNS.ENTRY} @ deployment_artifacts/sql/load_options.sql
+        </echo>
         <exec dir="." executable="/app/oracle/product/10gClient/bin/sqlplus" failonerror="true">
             <arg line="${CADSR.DS.USER}/${CADSR.DS.PASWD}@${CADSR.DS.TNS.ENTRY} @ deployment_artifacts/sql/load_options.sql"/>
         </exec>
