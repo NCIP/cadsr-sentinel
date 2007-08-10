@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.97 2007-08-10 11:40:00 cvsuser Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.98 2007-08-10 11:46:02 cvsuser Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -403,7 +403,7 @@ todir="${SCP.USER}@${SCP.HOST}:${SCP.PATH}"
     </target>
 
     <target name="-deploy-db" description="execute database update scripts" if="deploy.db">
-        <exec dir="." executable="sqlplus" failonerror="true">
+        <exec dir="." executable="/app/oracle/product/10gClient/bin/sqlplus" failonerror="true">
             <arg line="${CADSR.DS.USER}/${CADSR.DS.PASWD}@${CADSR.DS.TNS.ENTRY} @ deployment_artifacts/sql/load_options.sql"/>
         </exec>
     </target>
