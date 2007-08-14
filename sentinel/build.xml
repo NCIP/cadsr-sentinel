@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.108 2007-08-13 18:52:05 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.109 2007-08-14 15:24:47 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -28,6 +28,7 @@
         SCP.KEYFILE = ${SCP.KEYFILE}
         SCP.PASSPHRASE = ${SCP.PASSPHRASE}
         SCP.PORT = ${SCP.PORT}
+        SQL.EXE = ${SQL.EXE}
         TEST = ${TEST}
         TEST.VALID.USER = ${TEST.VALID.USER}
         TEST.VALID.PSWD = ${TEST.VALID.PSWD}
@@ -67,6 +68,7 @@
             <isset property="SCP.PORT" />
             <isset property="SCP.PASSPHRASE" />
             <isset property="DEPLOY.LOCATION" />
+            <isset property="SQL.EXE" />
         </and>
     </condition>
 
@@ -419,6 +421,9 @@
         <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
             command="cp ${SCP.PATH}/bin/* ${TOOL.BIN.DIR}/."/>
         <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
+            command="chmod +rx ${TOOL.BIN.DIR}/autorun.sh"/>
+
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
             command="cp ${SCP.PATH}/jboss/*-oracle-ds.xml ${JBOSS.DEPLOY.DIR}/."/>
         <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
             command="cp ${SCP.PATH}/jboss/cadsrsentinel-log4j-*.xml ${JBOSS.CONF.DIR}/log4j/."/>
@@ -433,12 +438,13 @@
             command="cp ${SCP.PATH}/jboss/cadsrsentinel.war ${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz"/>
         <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
             command="mv ${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz ${JBOSS.DEPLOY.DIR}/cadsrsentinel.war"/>
+
     </target>
 
     <target name="-deploy-db" description="execute database update scripts">
         <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql
                 </echo>
-        <exec dir="." executable="/app/oracle/product/10gClient/bin/sqlplus" failonerror="true">
+        <exec dir="." executable="${SQL.EXE}" failonerror="true">
             <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql" />
         </exec>
     </target>
