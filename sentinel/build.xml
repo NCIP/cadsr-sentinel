@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.109 2007-08-14 15:24:47 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.110 2007-08-14 18:12:03 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -449,15 +449,17 @@
         </exec>
     </target>
 
-    <condition property="deploy.gforge">
-        <or>
-            <available file="${basedir}/gforge/cadsrsentinelapi.jar" />
-            <available file="${artifacts.dir}/gforge/cadsrsentinelapi.jar" />
-            <available file="gforge/cadsrsentinelapi.jar" />
-        </or>
-    </condition>
+    <target name="-deploy-gforge-check" description="Check for published files.">
+        <condition property="deploy.gforge">
+            <or>
+                <available file="${basedir}/gforge/cadsrsentinelapi.jar" />
+                <available file="${artifacts.dir}/gforge/cadsrsentinelapi.jar" />
+                <available file="gforge/cadsrsentinelapi.jar" />
+            </or>
+        </condition>
+    </target>
 
-    <target name="-deploy-gforge" if="deploy.gforge" description="Disseminates the public project artifacts, e.g. API JAR files, Javadoc, etc.">
+    <target name="-deploy-gforge" if="deploy.gforge" depends="-deploy-gforge-check" description="Disseminates the public project artifacts, e.g. API JAR files, Javadoc, etc.">
         <echo>
         
 Artifacts exist in the ${artifacts.dir}/gforge directory and should be published.
