@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//Apache//log4j//dtd" "http://logging.apache.org/log4j/docs/api/org/apache/log4j/xml/log4j.dtd">
+
+<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/log4j-jboss.xml,v 1.1 2007-07-19 15:26:46 hebell Exp $ -->
+<!-- $Name: not supported by cvs2svn $ -->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+<!-- ============================ -->
+<!-- Setup the sentinel  Appender -->
+<!-- ============================ -->
+<appender name="CADSRSENTINEL_FILE" class="org.jboss.logging.appender.RollingFileAppender">
+  <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+  <param name="File" value="/local/content/cadsrsentinel/reports/cadsrsentinel_log.txt"/>
+  <param name="Append" value="true"/>
+  <param name="MaxFileSize" value="200KB"/>
+  <param name="MaxBackupIndex" value="3"/>
+  <layout class="org.apache.log4j.PatternLayout">
+    <param name="ConversionPattern" value="%d %-5p [%c : %L] %m%n"/>
+  </layout>
+</appender>
+  
+<!-- ============================ -->
+<!-- Setup the sentinel category debug-->
+<!-- ============================ -->
+<category name="gov.nih.nci.cadsr.sentinel" additivity="false">
+  <priority value="DEBUG" /> 
+  <appender-ref ref="CADSRSENTINEL_FILE "/>
+</category>  
+
+<root>
+  <priority value="INFO"/> 
+  <appender-ref ref="CADSRSENTINEL_FILE"/>
+</root>
+
+</log4j:configuration>
