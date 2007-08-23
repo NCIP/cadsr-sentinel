@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.112 2007-08-16 16:05:15 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.113 2007-08-23 13:32:43 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -293,9 +293,11 @@
         <delete dir="${odi.dir}" />
         <mkdir dir="${odi.dir}" />
         <copy todir="${odi.dir}">
-            <fileset file="build.xml" />
+            <fileset dir="${basedir}">
+                <include name="build.xml" />
+                <include name="template.build.properties" />
+            </fileset>
         </copy>
-        <mkdir dir="${odi.dir}/conf" />
         <mkdir dir="${odi.dir}/conf" />
         <copy todir="${odi.dir}/conf">
             <fileset dir="conf" />
@@ -419,33 +421,25 @@
         </scp>
 
         <echo>cp ${SCP.PATH}/bin/* ${TOOL.BIN.DIR}/.</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
-            command="cp ${SCP.PATH}/bin/* ${TOOL.BIN.DIR}/."/>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${SCP.PATH}/bin/* ${TOOL.BIN.DIR}/." />
         <echo>chmod +rx ${TOOL.BIN.DIR}/autorun.sh</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
-            command="chmod +rx ${TOOL.BIN.DIR}/autorun.sh"/>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="chmod +rx ${TOOL.BIN.DIR}/autorun.sh" />
 
         <echo>cp ${SCP.PATH}/jboss/*-oracle-ds.xml ${JBOSS.DEPLOY.DIR}/.</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
-            command="cp ${SCP.PATH}/jboss/*-oracle-ds.xml ${JBOSS.DEPLOY.DIR}/."/>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${SCP.PATH}/jboss/*-oracle-ds.xml ${JBOSS.DEPLOY.DIR}/." />
         <echo>cp ${SCP.PATH}/jboss/cadsrsentinel-log4j-*.xml ${JBOSS.CONF.DIR}/log4j/.</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
-            command="cp ${SCP.PATH}/jboss/cadsrsentinel-log4j-*.xml ${JBOSS.CONF.DIR}/log4j/."/>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${SCP.PATH}/jboss/cadsrsentinel-log4j-*.xml ${JBOSS.CONF.DIR}/log4j/." />
         <echo>cat ${JBOSS.CONF.DIR}/log4j/log4j-header.xml ${JBOSS.CONF.DIR}/log4j/*-log4j-appender.xml ${JBOSS.CONF.DIR}/log4j/*-log4j-category.xml ${JBOSS.CONF.DIR}/log4j/log4j-footer.xml &gt; ${JBOSS.CONF.DIR}/log4j/log4j.xml</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
-            command="cat ${JBOSS.CONF.DIR}/log4j/log4j-header.xml ${JBOSS.CONF.DIR}/log4j/*-log4j-appender.xml ${JBOSS.CONF.DIR}/log4j/*-log4j-category.xml ${JBOSS.CONF.DIR}/log4j/log4j-footer.xml > ${JBOSS.CONF.DIR}/log4j/log4j.xml"/>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cat ${JBOSS.CONF.DIR}/log4j/log4j-header.xml ${JBOSS.CONF.DIR}/log4j/*-log4j-appender.xml ${JBOSS.CONF.DIR}/log4j/*-log4j-category.xml ${JBOSS.CONF.DIR}/log4j/log4j-footer.xml > ${JBOSS.CONF.DIR}/log4j/log4j.xml" />
         <echo>mv ${JBOSS.CONF.DIR}/log4j/log4j.xml ${JBOSS.CONF.DIR}/log4j.xml</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
-            command="mv ${JBOSS.CONF.DIR}/log4j/log4j.xml ${JBOSS.CONF.DIR}/log4j.xml"/>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="mv ${JBOSS.CONF.DIR}/log4j/log4j.xml ${JBOSS.CONF.DIR}/log4j.xml" />
 
         <sleep seconds="15" />
 
         <echo>cp ${SCP.PATH}/jboss/cadsrsentinel.war ${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
-            command="cp ${SCP.PATH}/jboss/cadsrsentinel.war ${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz"/>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${SCP.PATH}/jboss/cadsrsentinel.war ${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz" />
         <echo>mv ${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz ${JBOSS.DEPLOY.DIR}/cadsrsentinel.war</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true"
-            command="mv ${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz ${JBOSS.DEPLOY.DIR}/cadsrsentinel.war"/>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="mv ${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz ${JBOSS.DEPLOY.DIR}/cadsrsentinel.war" />
 
     </target>
 
