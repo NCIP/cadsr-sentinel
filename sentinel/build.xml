@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.113 2007-08-23 13:32:43 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.114 2007-08-31 16:55:32 cvsuser Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -14,7 +14,7 @@
 
         CADSR.DS.URL = ${CADSR.DS.URL}
         CADSR.DS.USER = ${CADSR.DS.USER}
-        CADSR.DS.PSWD = ${CADSR.DS.PSWD}
+        CADSR.DS.PSWD = xxxxxxxx
         CADSR.DS.TNS.ENTRY=${CADSR.DS.TNS.ENTRY}
         DEPLOY.LOCATION = ${DEPLOY.LOCATION}
         JBOSS.HOME.DIR = ${JBOSS.HOME.DIR}
@@ -26,7 +26,7 @@
         SCP.HOST = ${SCP.HOST}
         SCP.PATH = ${SCP.PATH}
         SCP.KEYFILE = ${SCP.KEYFILE}
-        SCP.PASSPHRASE = ${SCP.PASSPHRASE}
+        SCP.PASSPHRASE = xxxxxxxx
         SCP.PORT = ${SCP.PORT}
         SQL.EXE = ${SQL.EXE}
         TEST = ${TEST}
@@ -463,18 +463,18 @@
 
     <target name="-deploy-gforge" if="deploy.gforge" depends="-deploy-gforge-check" description="Disseminates the public project artifacts, e.g. API JAR files, Javadoc, etc.">
         <echo>
-        
+
 Artifacts exist in the ${artifacts.dir}/gforge directory and should be published.
 Although this is not required for the software deployment please place these files in a location accessible by the development team.
-    
+
         </echo>
     </target>
 
     <target name="deploy" depends="-deploy-auto,-deploy-db,-deploy-gforge,-prop-check" description="Deploys the project artifacts.">
         <echo>
-    
+
 Deployment is complete. Check the formal request for any special post deployment instructions.
-    
+
         </echo>
     </target>
 
