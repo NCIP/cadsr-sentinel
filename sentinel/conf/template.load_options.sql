@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.4 2007-08-09 22:01:00 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.5 2007-09-05 21:46:29 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -18,6 +18,7 @@
     WHEN DEPLOYING AT NCI ON THE DEV TIER THE sentinel/db-sql/fix_dev_idseq.sql MUST BE
     RUN AFTER THIS SCRIPT!!!
 */
+whenever sqlerror exit sql.sqlcode rollback;
 
 delete from sbrext.tool_options_view_ext where tool_name = 'SENTINEL';
 
@@ -31,7 +32,7 @@ delete from sbrext.tool_options_view_ext where tool_name = 'SENTINEL';
   Components which an Alert can monitor.
 */
 
-insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
+insert into sbrext.Xtool_options_view_ext (tool_name, property, value, description)
 values ('SENTINEL', 'RSVD.CS.LONG_NAME', 'RESERVED FOR SENTINEL MONITOR',
 'The reserved classification scheme long name which must match the CS IDSEQ to pass validation.');
 
