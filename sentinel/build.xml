@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.115 2007-09-10 14:38:18 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.116 2007-09-13 19:08:56 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -14,7 +14,7 @@
 
         CADSR.DS.URL = ${CADSR.DS.URL}
         CADSR.DS.USER = ${CADSR.DS.USER}
-        CADSR.DS.PSWD = xxxxxxxx
+        CADSR.DS.PSWD = ${CADSR.DS.PSWD}
         CADSR.DS.TNS.ENTRY=${CADSR.DS.TNS.ENTRY}
         DEPLOY.LOCATION = ${DEPLOY.LOCATION}
         JBOSS.HOME.DIR = ${JBOSS.HOME.DIR}
@@ -26,7 +26,7 @@
         SCP.HOST = ${SCP.HOST}
         SCP.PATH = ${SCP.PATH}
         SCP.KEYFILE = ${SCP.KEYFILE}
-        SCP.PASSPHRASE = xxxxxxxx
+        SCP.PASSPHRASE = ${SCP.PASSPHRASE}
         SCP.PORT = ${SCP.PORT}
         SQL.EXE = ${SQL.EXE}
         TEST = ${TEST}
@@ -446,12 +446,34 @@
 
     </target>
 
-    <target name="-deploy-db" description="execute database update scripts">
-        <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql
-                </echo>
+    <target name="-check-sql-files">
+        <available file="${artifacts.dir}/sql/load_options.sql" property="found.load_options.sql" />
+        <available file="${artifacts.dir}/sql/deactive.sql" property="found.deactive.sql" />
+        <available file="${artifacts.dir}/sql/update_options_url.sql" property="found.update_options_url.sql" />
+    </target>
+
+    <target name="-do-load-options" if="found.load_options.sql" depends="-check-sql-files">
+        <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql</echo>
         <exec dir="." executable="${SQL.EXE}" failonerror="true">
             <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql" />
         </exec>
+    </target>
+
+    <target name="-do-update-options" if="found.update_options_url.sql" depends="-check-sql-files">
+        <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/update_options_url.sql</echo>
+        <exec dir="." executable="${SQL.EXE}" failonerror="true">
+            <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/update_options_url.sql" />
+        </exec>
+    </target>
+
+    <target name="-do-deactive-options" if="found.deactive.sql" depends="-check-sql-files">
+        <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactive.sql</echo>
+        <exec dir="." executable="${SQL.EXE}" failonerror="true">
+            <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactive.sql" />
+        </exec>
+    </target>
+    
+    <target name="-deploy-db" depends="-do-load-options,-do-update-options,-do-deactive-options" description="execute database update scripts">
     </target>
 
     <target name="-deploy-gforge-check" description="Check for published files.">
@@ -466,18 +488,18 @@
 
     <target name="-deploy-gforge" if="deploy.gforge" depends="-deploy-gforge-check" description="Disseminates the public project artifacts, e.g. API JAR files, Javadoc, etc.">
         <echo>
-
+        
 Artifacts exist in the ${artifacts.dir}/gforge directory and should be published.
 Although this is not required for the software deployment please place these files in a location accessible by the development team.
-
+    
         </echo>
     </target>
 
     <target name="deploy" depends="-deploy-auto,-deploy-db,-deploy-gforge,-prop-check" description="Deploys the project artifacts.">
         <echo>
-
+    
 Deployment is complete. Check the formal request for any special post deployment instructions.
-
+    
         </echo>
     </target>
 
@@ -496,4 +518,24 @@ Deployment is complete. Check the formal request for any special post deployment
     <target name="init" depends="-prop-check,-init-check" description="The default target which only validates the presence of the script properties.">
         <fail>This build script must be run with the name of the desired target: build-all, build-product, clean, deploy, javadoc, package-download, test.</fail>
     </target>
+    
+    <target name="-assemble-sql" depends="-prop-check" description="create the tier specific scripts">
+        <delete>
+            <fileset dir="${artifacts.dir}/sql"><include name="**/*" /></fileset>
+        </delete>
+        <copy tofile="${artifacts.dir}/sql/load_options.sql" filtering="true">
+            <fileset file="conf/template.load_options.sql" />
+        </copy>
+        <copy tofile="${artifacts.dir}/sql/update_options_url.sql" filtering="true">
+            <fileset file="conf/template.update_options_url.sql" />
+        </copy>
+        <copy todir="${artifacts.dir}/sql/.">
+            <fileset file="db-sql/deactivate.sql" />
+        </copy>
+    </target>
+    
+    <target name="refresh-tier" depends="-assemble-sql,-deploy-db" description="refresh the caDSR database on a specific tier">
+    </target>
+
+
 </project>
