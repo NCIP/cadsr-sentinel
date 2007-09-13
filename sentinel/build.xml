@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.116 2007-09-13 19:08:56 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.117 2007-09-13 19:16:01 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -158,9 +158,6 @@
         </copy>
         <copy tofile="${artifacts.dir}/sql/load_options.sql" filtering="true">
             <fileset file="conf/template.load_options.sql" />
-        </copy>
-        <copy tofile="${artifacts.dir}/sql/update_options_url.sql" filtering="true">
-            <fileset file="conf/template.update_options_url.sql" />
         </copy>
         <copy tofile="${artifacts.dir}/jboss/sentinel-oracle-ds.xml" filtering="true">
             <fileset file="conf/template.sentinel-oracle-ds.xml" />
