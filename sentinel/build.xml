@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.118 2007-09-13 20:05:47 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.119 2007-09-13 21:26:00 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -445,7 +445,7 @@
 
     <target name="-check-sql-files">
         <available file="${artifacts.dir}/sql/load_options.sql" property="found.load_options.sql" />
-        <available file="${artifacts.dir}/sql/deactive.sql" property="found.deactive.sql" />
+        <available file="${artifacts.dir}/sql/deactivate.sql" property="found.deactivate.sql" />
         <available file="${artifacts.dir}/sql/update_options_url.sql" property="found.update_options_url.sql" />
     </target>
 
@@ -463,14 +463,14 @@
         </exec>
     </target>
 
-    <target name="-do-deactive-options" if="found.deactive.sql" depends="-check-sql-files">
-        <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactive.sql</echo>
+    <target name="-do-deactivate-options" if="found.deactivate.sql" depends="-check-sql-files">
+        <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactivate.sql</echo>
         <exec dir="." executable="${SQL.EXE}" failonerror="true">
-            <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactive.sql" />
+            <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactivate.sql" />
         </exec>
     </target>
     
-    <target name="-deploy-db" depends="-do-load-options,-do-update-options,-do-deactive-options" description="execute database update scripts">
+    <target name="-deploy-db" depends="-do-load-options,-do-update-options,-do-deactivate-options" description="execute database update scripts">
     </target>
 
     <target name="-deploy-gforge-check" description="Check for published files.">
