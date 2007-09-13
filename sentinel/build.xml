@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.117 2007-09-13 19:16:01 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.118 2007-09-13 20:05:47 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -516,10 +516,7 @@ Deployment is complete. Check the formal request for any special post deployment
         <fail>This build script must be run with the name of the desired target: build-all, build-product, clean, deploy, javadoc, package-download, test.</fail>
     </target>
     
-    <target name="-assemble-sql" depends="-prop-check" description="create the tier specific scripts">
-        <delete>
-            <fileset dir="${artifacts.dir}/sql"><include name="**/*" /></fileset>
-        </delete>
+    <target name="-assemble-sql" depends="clean" description="create the tier specific scripts">
         <copy tofile="${artifacts.dir}/sql/load_options.sql" filtering="true">
             <fileset file="conf/template.load_options.sql" />
         </copy>
