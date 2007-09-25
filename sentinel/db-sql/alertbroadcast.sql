@@ -1,11 +1,13 @@
 /* Copyright 2005, ScenPro, Inc.
 
-   $Header: /share/content/gforge/sentinel/sentinel/db-sql/alertbroadcast.sql,v 1.1 2007-07-19 15:26:46 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/db-sql/alertbroadcast.sql,v 1.2 2007-09-25 14:26:46 hebell Exp $
    $Name: not supported by cvs2svn $
 
    This is the current official list of all User Accounts that should be
    set to not receive broadcasts via the Alert Report Distribution.
 */
+whenever sqlerror exit sql.sqlcode rollback;
+
 update sbr.user_accounts_view set alert_ind = 'Yes';
 update sbr.user_accounts_view set alert_ind = 'No'
 where ua_name in (

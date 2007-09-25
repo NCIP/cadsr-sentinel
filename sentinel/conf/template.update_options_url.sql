@@ -1,11 +1,11 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.2 2007-07-26 19:27:03 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.3 2007-09-25 14:26:46 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
 
-   This script updates the Tool Options table with URL's for the Sandbox tier.
+   This script updates the Tool Options table with URL's for the @TIER.NAME@ tier.
 */
 set scan off;
 

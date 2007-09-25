@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertUtil.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertUtil.java,v 1.4 2007-09-25 14:26:46 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -172,7 +172,7 @@ public class DBAlertUtil
             return -9999;
 
         pos += 4;
-        String[] temp = msg.substring(pos).split("[:]");
+        String[] temp = msg.substring(pos).split("[:, ]");
         if (temp.length < 2)
             return -9998;
 

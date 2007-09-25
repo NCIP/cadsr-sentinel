@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/error.jsp,v 1.1 2007-07-19 15:26:46 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/error.jsp,v 1.2 2007-09-25 14:26:46 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ page contentType="text/html;charset=windows-1252"%>
@@ -10,10 +10,10 @@
     String title = (String)request.getAttribute("errorTitle");
 %>
     <title><%=title%></title>
-        <LINK href="../css/sentinel.css" rel="stylesheet" type="text/css">
+        <LINK href="/cadsrsentinel/css/sentinel.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <form name="theForm" method="get" action="../do/logon">
+    <form name="theForm" method="get" action="/cadsrsentinel/do/logon">
     <table cellspacing="0" cellpadding="0" width="100%" align="center"><tr><td align="center">
 <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#A90101">
 <tr bgcolor="#A90101">

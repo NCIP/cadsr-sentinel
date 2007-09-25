@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/list.jsp,v 1.1 2007-07-19 15:26:46 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/list.jsp,v 1.2 2007-09-25 14:26:46 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ page contentType="text/html;charset=WINDOWS-1252"%>
@@ -13,13 +13,13 @@
         <html:base />
         <meta http-equiv="Content-Language" content="en-us">
         <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
-        <LINK href="../css/sentinel.css" rel="stylesheet" type="text/css">
+        <LINK href="/cadsrsentinel/css/sentinel.css" rel="stylesheet" type="text/css">
     </head>
 
 <body onload="loaded();">
     <dtags:list section="init" />
 
-    <script language="javascript" src="../js/list.js"></script>
+    <script language="javascript" src="/cadsrsentinel/js/list.js"></script>
     <script language="javascript">
         <dtags:list section="script" />
     </script>

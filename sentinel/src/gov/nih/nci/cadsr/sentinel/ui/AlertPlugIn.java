@@ -1,10 +1,11 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.4 2007-09-25 14:26:46 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
 
+import java.util.Enumeration;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
@@ -16,9 +17,11 @@ import javax.servlet.ServletException;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
+import org.apache.struts.Globals;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.PlugIn;
 import org.apache.struts.config.ModuleConfig;
+import org.apache.struts.util.MessageResources;
 
 /**
  * This class allows the interrogation of application intialization parameters. Specifically
@@ -43,18 +46,35 @@ public class AlertPlugIn implements PlugIn
     public void destroy()
     {
         _logger.info(" ");
-        _logger.info("Sentinel Tool stopped ..................................................................");
+        _logger.info("Stopped " + this.getClass().getName());
+        _logger.info(" ");
     }
 
     public void init(ActionServlet servlet_, ModuleConfig module_) throws ServletException
     {
-        ResourceBundle props = PropertyResourceBundle.getBundle("gov.nih.nci.cadsr.sentinel.DSRAlert");
-        String temp = (props != null) ? props.getString("Appl.version") : "Error loading Property file.";
-        props = null;
+        if (false)
+        {
+        Enumeration attrs = servlet_.getServletContext().getAttributeNames();
+        while (attrs.hasMoreElements())
+        {
+            String name = (String) attrs.nextElement();
+            Object obj = servlet_.getServletContext().getAttribute(name);
+            _logger.debug(name + " = " + obj.toString());
+            if (obj instanceof MessageResources)
+            {
+                MessageResources msgs = (MessageResources) obj;
+                _logger.debug(name + " = logon.logon = " + msgs.getMessage("logon.logon"));
+            }
+        }
+        }
+
+        MessageResources msgs = (MessageResources) servlet_.getServletContext().getAttribute(Globals.MESSAGES_KEY);
+        String temp = msgs.getMessage("Appl.version");
         temp = temp.replace("&nbsp;", " ").trim();
 
         _logger.info(" ");
-        _logger.info("Sentinel Tool " + temp + " started ..................................................................");
+        _logger.info("Started " + this.getClass().getName() + " " + temp);
+        _logger.info(" ");
         
         // Get the init parameters and remember them.
         temp = servlet_.getInitParameter("jbossDataSource");

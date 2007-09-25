@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.2 2007-07-30 20:10:09 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.3 2007-09-25 14:26:46 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ taglib uri="/tags/struts-bean" prefix="bean" %>
@@ -12,7 +12,7 @@
         <html:base />
         <meta http-equiv="Content-Language" content="en-us">
         <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
-        <LINK href="../css/sentinel.css" rel="stylesheet" type="text/css">
+        <LINK href="/cadsrsentinel/css/sentinel.css" rel="stylesheet" type="text/css">
     </head>
 
 <body>
@@ -24,7 +24,7 @@
         }
         function cmdHelp()
         {
-            window.open("../html/help.html", "_blank");
+            window.open("/cadsrsentinel/html/help.html", "_blank");
         }
     </script>
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/HeadTag.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/HeadTag.java,v 1.4 2007-09-25 14:26:46 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -54,12 +54,12 @@ public class HeadTag extends TagSupport
               "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#A90101\">\n"
               + "<tr bgcolor=\"#A90101\">\n"
               + "<td valign=\"center\" align=\"left\"><a href=\"http://www.cancer.gov\" target=\"_blank\" alt=\"NCI Logo\">\n"
-              + "<img src=\"../images/brandtype.gif\" border=\"0\"></a></td>\n"
+              + "<img src=\"/cadsrsentinel/images/brandtype.gif\" border=\"0\"></a></td>\n"
               + "<td valign=\"center\" align=\"right\"><a href=\"http://www.cancer.gov\" target=\"_blank\" alt=\"NCI Logo\">\n"
-              + "<img src=\"../images/tagline_nologo.gif\" border=\"0\"></a></td></tr>\n"
+              + "<img src=\"/cadsrsentinel/images/tagline_nologo.gif\" border=\"0\"></a></td></tr>\n"
               + "</table>\n"
               + "<table class=\"secttable\"><colgroup><col /></colgroup><tbody class=\"secttbody\" />\n"
-              + "<tr><td><a target=\"_blank\" href=\"http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr\"><img style=\"border: 0px solid black\" title=\"NCICB caDSR\" src=\"../images/sentinel_banner.gif\"></a></td></tr>\n"
+              + "<tr><td><a target=\"_blank\" href=\"http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr\"><img style=\"border: 0px solid black\" title=\"NCICB caDSR\" src=\"/cadsrsentinel/images/sentinel_banner.gif\"></a></td></tr>\n"
               + "<tr><td align=\"center\"><p class=\"ttl18\">" + msgs.getMessage(_key) + "</p></td></tr>\n"
               + "</table>\n"
               );

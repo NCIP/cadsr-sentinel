@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/run.js,v 1.1 2007-07-19 15:26:46 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/run.js,v 1.2 2007-09-25 14:26:46 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -11,12 +11,12 @@
 
     function cmdHelp()
     {
-        window.open("../html/help.html", "_blank");
+        window.open("/cadsrsentinel/html/help.html", "_blank");
     }
     
     function cmdLogout()
     {
-        runForm.action = "../do/logout";
+        runForm.action = "/cadsrsentinel/do/logout";
         runForm.submit();
     }
 
