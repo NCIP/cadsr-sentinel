@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.10 2007-07-24 21:20:08 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.11 2007-12-06 20:52:09 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -21,9 +21,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Vector;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -48,7 +53,7 @@ import org.apache.log4j.Logger;
  * <p>
  * Also, just a reminder, all JDBC set...() and get...() methods use 1 (one)
  * based indexing unlike the Java language which uses 0 (zero) based.
- * 
+ *
  * @author Larry Hebel
  * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#open(HttpServletRequest, String, String) open() with HTTP request
  * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#open(ServletContext, String, String) open() with Servlet Context
@@ -57,7 +62,7 @@ import org.apache.log4j.Logger;
  */
 public class DBAlertOracle implements DBAlert
 {
-    // Class data 
+    // Class data
     private String              _namesList[];
 
     private String              _namesVals[];
@@ -87,7 +92,7 @@ public class DBAlertOracle implements DBAlert
     private String              _schemeItemSchemes[];
 
     private Connection          _conn;
-    
+
     private String              _user;
 
     private ServletContext      _sc;
@@ -127,9 +132,9 @@ public class DBAlertOracle implements DBAlert
     private int                 _errorCode;
 
     private String              _errorMsg;
-    
+
     private String              _actypesList[];
-    
+
     private String              _actypesVals[];
 
     /**
@@ -191,24 +196,24 @@ public class DBAlertOracle implements DBAlert
      * Maximum length of a freeform email address.
      */
     public static final int     _MAXEMAILLEN  = 255;
-    
+
     /**
      * The Date comparison Created Only value.
      */
     public static final int     _DATECONLY = 0;
-    
+
     /**
      * The Date comparison Modified Only value.
      */
     public static final int     _DATEMONLY = 1;
-    
+
     /**
      * The Date comparison Created and Modified value.
      */
     public static final int     _DATECM = 2;
 
     private static boolean _poolWarning = true;
-    
+
     private static final String _DATECHARS[][] = {
         {"<", ">", ">=", "<"},
         {">=", "<", "<", ">"},
@@ -218,7 +223,7 @@ public class DBAlertOracle implements DBAlert
     private static final String _CONTEXT      = "CONTEXT";
 
     private static final String _FORM         = "FORM";
-    
+
     private static final String _PROTOCOL     = "PROTOCOL";
 
     private static final String _SCHEME       = "CS";
@@ -240,8 +245,8 @@ public class DBAlertOracle implements DBAlert
     private static final char   _CRITERIA     = 'C';
 
     private static final char   _MONITORS     = 'M';
-    
-    private static final String _orderbyACH = 
+
+    private static final String _orderbyACH =
         "order by id asc, "
 //        + "cid asc, "
 //        + "zz.date_modified asc, "
@@ -252,7 +257,7 @@ public class DBAlertOracle implements DBAlert
 
     private static final DBAlertOracleMap1[] _DBMAP1 =
     {
-        new DBAlertOracleMap1("ASL_NAME", "Workflow Status"), 
+        new DBAlertOracleMap1("ASL_NAME", "Workflow Status"),
         new DBAlertOracleMap1("BEGIN_DATE", "Begin Date"),
         new DBAlertOracleMap1("CDE_ID", "Public ID"),
         new DBAlertOracleMap1("CDR_IDSEQ", "Complex DE association"),
@@ -322,7 +327,7 @@ public class DBAlertOracle implements DBAlert
         new DBAlertOracleMap1("VD_TYPE_FLAG", "Enumerated/Non-enumerated"),
         new DBAlertOracleMap1("VERSION", "Version")
     };
-    
+
     private static final DBAlertOracleMap1[] _DBMAP1OTHER =
     {
         new DBAlertOracleMap1("CONTE_IDSEQ", "Owned By Context"),
@@ -336,12 +341,12 @@ public class DBAlertOracle implements DBAlert
         new DBAlertOracleMap1("DETL_NAME", "Designation Type"),
         new DBAlertOracleMap1("LAE_NAME", "Designation Language")
     };
-    
+
     private static final DBAlertOracleMap1[] _DBMAP1CSI =
     {
         new DBAlertOracleMap1("CS_CSI_IDSEQ", "Classification Scheme Item association")
     };
-    
+
     private static final DBAlertOracleMap1[] _DBMAP1RD =
     {
         new DBAlertOracleMap1("DCTL_NAME","Document Type"),
@@ -350,13 +355,13 @@ public class DBAlertOracle implements DBAlert
         new DBAlertOracleMap1("RDTL_NAME", "Document Text Type"),
         new DBAlertOracleMap1("URL", "Document URL")
     };
-    
+
     private static final DBAlertOracleMap1[] _DBMAP1COMPLEX =
     {
         new DBAlertOracleMap1("CONCAT_CHAR", "Concatenation Character"),
         new DBAlertOracleMap1("CRTL_NAME", "Complex Type")
     };
-    
+
     private static final DBAlertOracleMap2[] _DBMAP2 =
     {
         new DBAlertOracleMap2("CD_IDSEQ", "sbr.conceptual_domains_view", "cd_idseq", "", "long_name || ' (' || cd_id || 'v' || version || ')' as label"),
@@ -398,8 +403,19 @@ public class DBAlertOracle implements DBAlert
         new DBAlertOracleMap3("vd", "Value Domain", "sbr.value_domains_view", "VALUE_DOMAINS"),
         new DBAlertOracleMap3("vm", "Value Meaning", "sbr.value_meanings_view", null)
     };
-    
+
     private static final Logger _logger = Logger.getLogger(DBAlert.class.getName());
+
+    /**
+     * Entry for development testing of the class
+     *
+     * @param args program arguments
+     */
+    public static void main(String args[])
+    {
+        DBAlertOracle var = new DBAlertOracle();
+        var.concat(_DBMAP1, _DBMAP1DESIG,_DBMAP1RD, _DBMAP1CSI , _DBMAP1COMPLEX , _DBMAP1OTHER);
+    }
 
     /**
      * Constructor.
@@ -430,7 +446,7 @@ public class DBAlertOracle implements DBAlert
      * <p>
      * To use this from non-browser servlet logic use the method which requires
      * the driver as the first argument.
-     * 
+     *
      * @param session_
      *        The session object.
      * @param dsurl_
@@ -487,7 +503,7 @@ public class DBAlertOracle implements DBAlert
      * <p>
      * To use this from non-browser servlet logic use the method which requires
      * the driver as the first argument.
-     * 
+     *
      * @param request_
      *        The servlet request object.
      * @param dsurl_
@@ -521,7 +537,7 @@ public class DBAlertOracle implements DBAlert
      * <p>
      * To use this from a browser servlet, use the method which requires an
      * HttpServletRequest as the first argument to the method.
-     * 
+     *
      * @param dsurl_
      *        The URL entry for the desired database.
      * @param username_
@@ -595,7 +611,7 @@ public class DBAlertOracle implements DBAlert
      * Be sure to call DBAlert.close() to complete the request before returning
      * to the client or loosing the object focus in the caller to "new
      * DBAlert()".
-     * 
+     *
      * @param sc_
      *        The servlet context which holds the data source pool reference
      *        created by the DBAlert.setupPool() method.
@@ -619,7 +635,7 @@ public class DBAlertOracle implements DBAlert
      * Be sure to call DBAlert.close() to complete the request before returning
      * to the client or loosing the object focus in the caller to "new
      * DBAlert()".
-     * 
+     *
      * @param sc_
      *        The servlet context which holds the data source pool reference
      *        created by the DBAlert.setupPool() method.
@@ -688,7 +704,7 @@ public class DBAlertOracle implements DBAlert
      * Be sure to call DBAlert.close() to complete the request before returning
      * to the client or loosing the object focus in the caller to "new
      * DBAlert()".
-     * 
+     *
      * @param ds_
      *        The datasource for database connections.
      * @param user_
@@ -715,7 +731,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Open a single simple connection to the database. No pooling is necessary.
-     * 
+     *
      * @param dsurl_
      *        The Oracle TNSNAME entry describing the database location.
      * @param user_
@@ -771,7 +787,7 @@ public class DBAlertOracle implements DBAlert
      * Be sure to call DBAlert.close() to complete the request before returning
      * to the client or loosing the object focus in the caller to "new
      * DBAlert()".
-     * 
+     *
      * @param request_
      *        The servlet request object.
      * @param user_
@@ -796,7 +812,7 @@ public class DBAlertOracle implements DBAlert
      * Be sure to call DBAlert.close() to complete the request before returning
      * to the client or loosing the object focus in the caller to "new
      * DBAlert()".
-     * 
+     *
      * @param request_
      *        The servlet request object.
      * @param user_
@@ -815,7 +831,7 @@ public class DBAlertOracle implements DBAlert
      * methods which perform actions that require a commmit only set a flag. It
      * is in the close() method the flag is interrogated and the commit actually
      * occurs.
-     * 
+     *
      * @return 0 if successful, otherwise the Oracle error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#open(HttpServletRequest, String, String) open() with HTTP request
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#open(ServletContext, String, String) open() with Servlet Context
@@ -873,10 +889,10 @@ public class DBAlertOracle implements DBAlert
         }
         return 0;
     }
-    
+
     /**
      * Get the database connection opened for this object.
-     * 
+     *
      * @return java.sql.Connection opened by this object.
      */
     public Connection getConnection()
@@ -889,7 +905,7 @@ public class DBAlertOracle implements DBAlert
      * returned are not fully populated with all the details of each alert. Only
      * basic information such as the database id, name, creator and a few other
      * basic properties are guaranteed.
-     * 
+     *
      * @param user_
      *        The user id with which to qualify the results. This must be as it
      *        appears in the "created_by" column of the Alert tables. If null is
@@ -977,7 +993,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull the list of recipients for a specific alert.
-     * 
+     *
      * @param rec_
      *        The alert for the desired recipients. The alertRecNum must be set
      *        prior to this method.
@@ -1052,7 +1068,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull the report information for a specific alert definition.
-     * 
+     *
      * @param rec_
      *        The alert for the desired report. The alertRecNum must be set
      *        prior to this method.
@@ -1102,7 +1118,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull the properties for a specific alert definition.
-     * 
+     *
      * @param rec_
      *        The alert for the desired property values. The alertRecNum must be
      *        set prior to this method.
@@ -1175,7 +1191,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Retrieve a full single Alert definition. All data elements of the
      * AlertRec will be populated to reflect the database content.
-     * 
+     *
      * @param id_
      *        The database id (al_idseq) of the Alert definitions.
      * @return A complete definition record if successful or null if an error
@@ -1204,7 +1220,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Update the database with the Alert properties stored in a memory record.
-     * 
+     *
      * @param rec_
      *        The Alert definition to be stored.
      * @return 0 if successful, otherwise the database error code.
@@ -1259,7 +1275,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Update the Report information for an Alert within the database.
-     * 
+     *
      * @param rec_
      *        The Alert definition to be written to the database.
      * @return 0 if successful, otherwise the database error code.
@@ -1307,7 +1323,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Perform an update on the complete record. No attempt is made to isolate
      * the specific changes so many times values will not actually be changed.
-     * 
+     *
      * @param rec_
      *        The record containing the updated information. All data elements
      *        must be populated and correct.
@@ -1317,7 +1333,7 @@ public class DBAlertOracle implements DBAlert
     {
         // Ensure data is clean.
         rec_.setDependancies();
-        
+
         // Update database.
         try
         {
@@ -1344,7 +1360,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Delete the Alert Definitions specified by the caller. The values must be
      * existing al_idseq values within the Alert table.
-     * 
+     *
      * @param list_
      *        The al_idseq values which identify the definitions to delete.
      *        Other dependant tables in the database will automatically be
@@ -1370,7 +1386,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Delete the Alert Definitions specified by the caller. The values must be
      * existing al_idseq values within the Alert table.
-     * 
+     *
      * @param id_
      *        The al_idseq value which identifies the definition to delete.
      *        Other dependant tables in the database will automatically be
@@ -1390,7 +1406,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Delete the Alert Definitions specified by the caller. The values must be
      * existing al_idseq values within the Alert table.
-     * 
+     *
      * @param list_
      *        The al_idseq values which identify the definitions to delete.
      *        Other dependant tables in the database will automatically be
@@ -1446,7 +1462,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Add the Report display attributes to the sn_rep_contents_view_ext table.
      * One (1) row per attribute.
-     * 
+     *
      * @param rec_
      *        The Alert definition to store in the database.
      * @return 0 if successful, otherwise the Oracle error code.
@@ -1459,7 +1475,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Update the recipients list for the Alert report.
-     * 
+     *
      * @param rec_
      *        The Alert definition to be saved to the database.
      * @return 0 if successful, otherwise the database error code.
@@ -1498,7 +1514,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Add the Report recipients to the sn_report_view_ext table. One (1) row
      * per recipient.
-     * 
+     *
      * @param rec_
      *        The Alert definition to store in the database.
      * @return 0 if successful, otherwise the Oracle error code.
@@ -1527,6 +1543,20 @@ public class DBAlertOracle implements DBAlert
                 else if (temp.indexOf('@') > -1)
                 {
                     // It must be an email address.
+                    insert = insert + "(rep_idseq, email, created_by)";
+                    if (temp.length() > DBAlert._MAXEMAILLEN)
+                    {
+                        temp = temp.substring(0, DBAlert._MAXEMAILLEN);
+                        rec_.setRecipients(ndx, temp);
+                    }
+                }
+                else if (temp.startsWith("http://") || temp.startsWith("https://"))
+                {
+                    // It is an process URL remove the slash at the end of URL if it exists
+                    if (temp.endsWith("/"))
+                    {
+                        temp = temp.substring(0, temp.lastIndexOf("/"));
+                    }
                     insert = insert + "(rep_idseq, email, created_by)";
                     if (temp.length() > DBAlert._MAXEMAILLEN)
                     {
@@ -1573,7 +1603,7 @@ public class DBAlertOracle implements DBAlert
      * A utility function that will modify the "in" clause on a SQL select to
      * contain the correct number of argument replacements to match the value
      * array provided.
-     * 
+     *
      * @param select_
      *        The SQL select that must contain a single "?" replacement within
      *        an "in" clause as this is the placeholder for expansion to the
@@ -1594,7 +1624,7 @@ public class DBAlertOracle implements DBAlert
      * A utility function that will modify the "in" clause on a SQL select to
      * contain the correct number of argument replacements to match the value
      * array provided.
-     * 
+     *
      * @param select_
      *        The SQL select that must contain a single "?" replacement within
      *        an "in" clause as this is the placeholder for expansion to the
@@ -1666,7 +1696,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Build the summary text from the content of the alert definition.
-     * 
+     *
      * @param rec_
      *        The alert definition.
      * @return The Alert Definition summary.
@@ -1817,7 +1847,7 @@ public class DBAlertOracle implements DBAlert
                     + "from sbr.reg_status_lov_view "
                     + "where registration_status in (?) "
                     + "order by upper(registration_status) ASC";
-                String txt = selectText(select, rec_.getCRegStatus(), 1); 
+                String txt = selectText(select, rec_.getCRegStatus(), 1);
                 criteria = criteria + "Registration Status must be ";
                 if (rec_.isCRSnone())
                 {
@@ -1971,7 +2001,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Set the owner of the Alert Definition.
-     * 
+     *
      * @param rec_ The Alert Definition with the new creator already set.
      */
     public void setOwner(AlertRec rec_)
@@ -2051,11 +2081,11 @@ public class DBAlertOracle implements DBAlert
         }
         return out;
     }
-    
+
     /**
      * Look for an Alert owned by the user with a Query which
      * references the id specified.
-     * 
+     *
      * @param id_ The Context, Form, CS, etc ID_SEQ value.
      * @param user_ The user who should own the Alert if it exists.
      * @return true if the user already watches the id, otherwise false.
@@ -2089,10 +2119,10 @@ public class DBAlertOracle implements DBAlert
 
         return rc;
     }
-    
+
     /**
      * Check the specified user id for Sentinel Tool Administration privileges.
-     * 
+     *
      * @param user_ The user id as used during Sentinel Tool Login.
      * @return true if the user has administration privileges, otherwise false.
      */
@@ -2110,14 +2140,14 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Retrieve the CDE Browser URL if available.
-     * 
+     *
      * @return The URL string.
      */
     public String selectBrowserURL()
     {
         String select = "select value from sbrext.tool_options_view_ext "
             + "where tool_name = 'CDEBrowser' and property = 'URL'";
-        
+
         String rc = null;
 
         try
@@ -2143,14 +2173,14 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Retrieve the Report Threshold
-     * 
+     *
      * @return The number of rows to allow in a report.
      */
     public int selectReportThreshold()
     {
         String select = "select value from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' and property = 'REPORT.THRESHOLD.LIMIT'";
-        
+
         int rc = 100;
 
         try
@@ -2173,11 +2203,11 @@ public class DBAlertOracle implements DBAlert
 
         return rc;
     }
-    
+
     /**
      * Read the Query clause from the database for the Alert definition
      * specified.
-     * 
+     *
      * @param rec_
      *        The Alert record to contain the Query clause.
      * @return 0 if successful, otherwise the database error code.
@@ -2341,7 +2371,7 @@ public class DBAlertOracle implements DBAlert
                     list[ndx] = (String) schemeitem.get(ndx);
                 rec_.setSchemeItems(list);
             }
-            
+
             if (cregis.size() == 0)
             {
                 rec_.setCRegStatus(null);
@@ -2353,7 +2383,7 @@ public class DBAlertOracle implements DBAlert
                     list[ndx] = (String) cregis.get(ndx);
                 rec_.setCRegStatus(list);
             }
-            
+
             if (cwork.size() == 0)
             {
                 rec_.setCWorkflow(null);
@@ -2432,7 +2462,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Update the Query details for the Alert.
-     * 
+     *
      * @param rec_
      *        The Alert definition to be updated.
      * @return 0 if successful, otherwise the database error code.
@@ -2469,7 +2499,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Add the Query details to the Alert in the database.
-     * 
+     *
      * @param rec_
      *        The Alert definition to be added to the database.
      * @return 0 if successful, otherwise the database error code.
@@ -2610,7 +2640,7 @@ public class DBAlertOracle implements DBAlert
                 pstmt.setString(5, Integer.toString(rec_.getDateFilter()));
                 pstmt.executeUpdate();
             }
-            
+
             ++marker;
             if (!rec_.isCRSall())
             {
@@ -2623,7 +2653,7 @@ public class DBAlertOracle implements DBAlert
                     pstmt.executeUpdate();
                 }
             }
-            
+
             ++marker;
             if (!rec_.isCWFSall())
             {
@@ -2695,7 +2725,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Clean the name of any illegal characters and truncate if needed.
-     * 
+     *
      * @param name_
      *        The name of the Alert.
      * @return The corrected name.
@@ -2714,7 +2744,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Clean the inactive reason and truncate if needed.
-     * 
+     *
      * @param reason_
      *        The reason message.
      * @return The corrected message.
@@ -2731,7 +2761,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Clean the Alert Report introduction and truncate if needed.
-     * 
+     *
      * @param intro_
      *        The introduction.
      * @return The cleaned introduction.
@@ -2749,7 +2779,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Clean all the user enterable parts of an Alert and truncate to the
      * database allowed length.
-     * 
+     *
      * @param rec_
      *        The Alert to be cleaned.
      */
@@ -2766,7 +2796,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Insert the properties for the Alert definition and retrieve the new
      * database generated ID for this Alert.
-     * 
+     *
      * @param rec_
      *        The Alert to be stored in the database.
      * @return 0 if successful, otherwise the database error code.
@@ -2825,7 +2855,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Insert the Report details for the Alert definition into the database and
      * retrieve the new report id.
-     * 
+     *
      * @param rec_
      *        The Alert definition to be stored in the database.
      * @return 0 if successful, otherwise the database error code.
@@ -2875,7 +2905,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Insert a DE, DEC or VD into the user reserved CSI to be monitored.
-     * 
+     *
      * @param idseq_ the database id of the AC to be monitored.
      * @param user_ the user id for the reserved CSI
      * @return the id of the CSI if successful, null if a problem.
@@ -2883,7 +2913,7 @@ public class DBAlertOracle implements DBAlert
     public String insertAC(String idseq_, String user_)
     {
         String user = user_.toUpperCase();
-        
+
         try
         {
             CallableStatement stmt;
@@ -2912,7 +2942,7 @@ public class DBAlertOracle implements DBAlert
      * Perform an insert of a new record. The record number element of the class
      * is not used AND it is not returned by this method. All other elements
      * must be complete and correct.
-     * 
+     *
      * @param rec_
      *        The Alert definition to insert into the database table.
      * @return 0 if successful, otherwise the Oracle error code.
@@ -2921,7 +2951,7 @@ public class DBAlertOracle implements DBAlert
     {
         // Ensure required data dependancies.
         rec_.setDependancies();
-        
+
         // Update the database.
         try
         {
@@ -2967,7 +2997,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Retrieve a more user friendly version of the user id.
-     * 
+     *
      * @param id_
      *        The id as would be entered at logon.
      * @return null if the user id was not found in the sbr.user_accounts table,
@@ -3031,7 +3061,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Used for method return values.
-     * 
+     *
      */
     private class Results1
     {
@@ -3045,10 +3075,10 @@ public class DBAlertOracle implements DBAlert
          */
         public ResultsData1[] _data;
     }
-    
+
     /**
      * Do a basic search with a single column result.
-     * 
+     *
      * @param select_ the SQL select
      * @return the array of results
      */
@@ -3069,16 +3099,16 @@ public class DBAlertOracle implements DBAlert
             {
                 data.add(rs.getString(1));
             }
-            
+
             String[] list = new String[data.size()];
             for (int i = 0; i < list.length; ++i)
             {
                 list[i] = data.get(i);
             }
-            
+
             rs.close();
             pstmt.close();
-            
+
             return (list.length > 0) ? list : null;
         }
         catch (SQLException ex)
@@ -3094,7 +3124,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Execute the specified SQL select query and return a label/value pair.
-     * 
+     *
      * @param select_
      *        The SQL select statement.
      * @param flag_
@@ -3179,7 +3209,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Retrieve all the context id's for which a specific user has write
      * permission.
-     * 
+     *
      * @param user_
      *        The user id as stored in user_accounts_view.ua_name.
      * @return The array of context id values.
@@ -3222,7 +3252,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Retrieve the list of contexts for which a user has write permission.
-     * 
+     *
      * @param user_
      *        The user id as stored in user_accounts_view.ua_name.
      * @return The concatenated comma separated string listing the context
@@ -3256,7 +3286,7 @@ public class DBAlertOracle implements DBAlert
      * getUserVals() should be called only once after each invocation of
      * getUsers() as additional calls will always result in a null return. See
      * the comments for these other methods for more details.
-     * 
+     *
      * @return 0 if successful, otherwise the database error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUserList getUserList()
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUserVals getUserVals()
@@ -3352,7 +3382,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the valid user list. The method getUsers() must be called first.
      * Once this method is used the internal copy is deleted to reclaim the
      * memory space.
-     * 
+     *
      * @return An array of strings from the sbr.user_accounts.name column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      */
@@ -3367,7 +3397,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the list of users exempt from Context Curator broadcasts. The
      * method getUsers() must be called first. Once this method is used the
      * internal copy is deleted to reclaim the memory space.
-     * 
+     *
      * @return A comma separated list of names.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      */
@@ -3382,7 +3412,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the valid user list. The method getUsers() must be called first.
      * Once this method is used the internal copy is deleted to reclaim the
      * memory space.
-     * 
+     *
      * @return An array of strings from the sbr.user_accounts.ua_name column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      */
@@ -3396,7 +3426,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Retrieve the Context names and id's from the database. This follows the
      * pattern documented with getUsers().
-     * 
+     *
      * @return 0 if successful, otherwise the database error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getGroupList getGroupList()
@@ -3417,7 +3447,7 @@ public class DBAlertOracle implements DBAlert
             + "where tov.tool_name = 'SENTINEL' and "
             + "tov.property like 'BROADCAST.EXCLUDE.CONTEXT.%.CONTE_IDSEQ') "
             + "order by upper(ucv.name) ASC, upper(uav.name) ASC";
-        
+
         Results3 rec = getBasicData3(select, false);
         if (rec._rc == 0)
         {
@@ -3432,11 +3462,11 @@ public class DBAlertOracle implements DBAlert
                     ++cnt;
                 }
             }
-            
+
             // Allocate space for the lists.
             _groupsList = new String[cnt + rec._data.length];
             _groupsVals = new String[_groupsList.length];
-            
+
             // Copy the data.
             temp = "";
             cnt = 0;
@@ -3462,7 +3492,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the valid context list. The method getGroups() must be called
      * first. Once this method is used the internal copy is deleted to reclaim
      * the memory space.
-     * 
+     *
      * @return An array of strings from the sbr.contexts_view.name column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getGroups getGroups()
      */
@@ -3477,7 +3507,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the valid context id list. The method getGroups() must be called
      * first. Once this method is used the internal copy is deleted to reclaim
      * the memory space.
-     * 
+     *
      * @return An array of strings from the sbr.contexts_view.conte_idseq column
      *         and prefixed with a '/' character.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getGroups getGroups()
@@ -3491,7 +3521,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Get the list of unused concepts
-     * 
+     *
      * @param ids_ the list of unused concept ids
      * @return the list of name, public id and version
      */
@@ -3508,13 +3538,13 @@ public class DBAlertOracle implements DBAlert
             + "nvl(con.preferred_name, ' ') as title, upper(con.long_name) as lname "
             + "FROM sbrext.concepts_view_ext con "
             + "WHERE con.asl_name NOT LIKE 'RETIRED%' and con.con_idseq in (";
-        
+
         String temp = "";
         for (int i = 0; i < ids_.length && i < 1000; ++i)
         {
             temp += ",'" + ids_[i] + "'";
         }
-        
+
         select += temp.substring(1) + ") order by lname asc";
 
         return getBasicData0(select);
@@ -3522,7 +3552,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Get the list of unused property records.
-     * 
+     *
      * @return The list of name, public id and version
      */
     public String[] reportUnusedProperties()
@@ -3549,17 +3579,17 @@ public class DBAlertOracle implements DBAlert
 
         return getBasicData0(select);
     }
-    
+
     /**
      * Get the list of Administered Component which do not have a public id.
-     * 
+     *
      * @return the list of ac type, name, and idseq.
      */
     public String[] reportMissingPublicID()
     {
         String cs1 = AuditReport._ColSeparator;
         String cs2 = " || '" + cs1 + "' || ";
-        String select = 
+        String select =
             "SELECT 'AC Type" + cs1 + "Name" + cs1 + "ID" + cs1 + "Context' as title, ' ' as tname, ' ' as lname from dual UNION ALL "
             + "select ac.actl_name" + cs2 + "ac.long_name" + cs2 + "ac.ac_idseq" + cs2 + "c.name as title, upper(ac.actl_name) as tname, upper(ac.long_name) as lname "
             + "from sbr.admin_components_view ac, sbr.contexts_view c where ac.public_id is null "
@@ -3572,7 +3602,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Get the list of unused data element concept records.
-     * 
+     *
      * @return The list of name, public id and version
      */
     public String[] reportUnusedDEC()
@@ -3593,7 +3623,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Get the list of unused object class records.
-     * 
+     *
      * @return The list of name, public id and version
      */
     public String[] reportUnusedObjectClasses()
@@ -3609,9 +3639,9 @@ public class DBAlertOracle implements DBAlert
             + "as title, upper(oc.long_name) as lname, oc.oc_id as ocid, oc.oc_idseq as ocidseq, ccv.display_order as dorder "
             + "FROM sbrext.object_classes_view_ext oc, sbr.contexts_view c, "
             + "sbrext.component_concepts_view_ext ccv, sbrext.concepts_view_ext con "
-            + "WHERE oc.asl_name NOT LIKE 'RETIRED%' and oc.oc_idseq NOT IN " 
-            +    "(SELECT decv.oc_idseq " 
-            +    "FROM sbr.data_element_concepts_view decv " 
+            + "WHERE oc.asl_name NOT LIKE 'RETIRED%' and oc.oc_idseq NOT IN "
+            +    "(SELECT decv.oc_idseq "
+            +    "FROM sbr.data_element_concepts_view decv "
             +    "WHERE decv.OC_IDSEQ = oc.oc_idseq) "
             + "AND c.conte_idseq = oc.conte_idseq "
             + "AND ccv.condr_idseq = oc.condr_idseq "
@@ -3620,10 +3650,10 @@ public class DBAlertOracle implements DBAlert
 
         return getBasicData0(select);
     }
-    
+
     /**
      * Get the list of Data Elements which do not have question text and are referenced by a Form.
-     * 
+     *
      * @return the list of name, public id and version.
      */
     public String[] reportMissingQuestionText()
@@ -3642,11 +3672,11 @@ public class DBAlertOracle implements DBAlert
 
         return getBasicData0(select);
     }
-    
+
     /**
      * Retrieve the Context names and id's from the database. Follows the
      * pattern documented in getUsers().
-     * 
+     *
      * @return 0 if successful, otherwise the database error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getContextList getContextList()
@@ -3671,10 +3701,10 @@ public class DBAlertOracle implements DBAlert
         }
         return rec._rc;
     }
-    
+
     /**
      * Retrieve the EVS properties in the tool options table
-     * 
+     *
      * @return the array of properties.
      */
     public DBProperty[] selectEVSVocabs()
@@ -3688,7 +3718,7 @@ public class DBAlertOracle implements DBAlert
             + ") order by opt.property";
 
         Results1 rs = getBasicData1(select, false);
-        
+
         if (rs._rc == 0 && rs._data.length > 0)
         {
             DBProperty[] props = new DBProperty[rs._data.length];
@@ -3698,13 +3728,13 @@ public class DBAlertOracle implements DBAlert
             }
             return props;
         }
-             
+
         return null;
     }
 
     /**
      * Select all the caDSR Concepts
-     * 
+     *
      * @return the Concepts
      */
     public Vector<ConceptItem> selectConcepts()
@@ -3755,7 +3785,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the valid context list. The method getGroups() must be called
      * first. Once this method is used the internal copy is deleted to reclaim
      * the memory space.
-     * 
+     *
      * @return An array of strings from the sbr.contexts_view.name column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getContexts getContexts()
      */
@@ -3770,7 +3800,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the valid context id list. The method getGroups() must be called
      * first. Once this method is used the internal copy is deleted to reclaim
      * the memory space.
-     * 
+     *
      * @return An array of strings from the sbr.contexts_view.conte_idseq
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getContexts getContexts()
@@ -3785,7 +3815,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Get the complete Workflow Status value list from the database. Follows
      * the pattern documented in getUsers().
-     * 
+     *
      * @return 0 if successful, otherwise the database error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getWorkflowList getWorkflowList()
@@ -3838,7 +3868,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the valid workflow list. The method getWorkflow() must be called
      * first. Once this method is used the internal copy is deleted to reclaim
      * the memory space.
-     * 
+     *
      * @return An array of strings from the sbr.ac_status_lov_view.asl_name
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getWorkflow getWorkflow()
@@ -3854,7 +3884,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the valid workflow values. The method getWorkflow() must be
      * called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the sbr.ac_status_lov_view.asl_name
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getWorkflow getWorkflow()
@@ -3870,7 +3900,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the valid workflow list. The method getWorkflow() must be called
      * first. Once this method is used the internal copy is deleted to reclaim
      * the memory space.
-     * 
+     *
      * @return An array of strings from the sbr.ac_status_lov_view.asl_name
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getWorkflow getWorkflow()
@@ -3886,7 +3916,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the valid workflow values. The method getWorkflow() must be
      * called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the sbr.ac_status_lov_view.asl_name
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getWorkflow getWorkflow()
@@ -3901,7 +3931,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Retrieve the valid registration statuses. Follows the pattern documented
      * in getUsers().
-     * 
+     *
      * @return 0 if successful, otherwise the database error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getRegStatusList getRegStatusList()
@@ -3957,7 +3987,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the registration status list. The method getRegistrations() must
      * be called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbr.reg_status_lov_view.registration_status column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getRegistrations getRegistrations()
@@ -3973,7 +4003,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the registration status values list. The method
      * getRegistrations() must be called first. Once this method is used the
      * internal copy is deleted to reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbr.reg_status_lov_view.registration_status column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getRegistrations getRegistrations()
@@ -3989,7 +4019,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the registration status list. The method getRegistrations() must
      * be called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbr.reg_status_lov_view.registration_status column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getRegistrations getRegistrations()
@@ -4005,7 +4035,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the registration status values list. The method
      * getRegistrations() must be called first. Once this method is used the
      * internal copy is deleted to reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbr.reg_status_lov_view.registration_status column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getRegistrations getRegistrations()
@@ -4020,7 +4050,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Retrieve the Protocols from the database. Follows the
      * pattern documented in getUsers().
-     * 
+     *
      * @return 0 if successful, otherwise the database error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getProtoList getProtoList()
@@ -4053,7 +4083,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the protocol list. The method getProtos() must be
      * called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbrext.protocols_view_ext.long_name, version and context
      *         columns.
@@ -4070,7 +4100,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the protocol list. The method getProtos() must be
      * called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbrext.protocols_view_ext.proto_idseq column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getProtos getProtos()
@@ -4086,7 +4116,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the protocol list. The method getProtos() must be
      * called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbrext.protocols_view_ext.conte_idseq column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getProtos getProtos()
@@ -4101,7 +4131,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Retrieve the Classification Schemes from the database. Follows the
      * pattern documented in getUsers().
-     * 
+     *
      * @return 0 if successful, otherwise the database error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeList getSchemeList()
@@ -4134,7 +4164,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the classification scheme list. The method getSchemes() must be
      * called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbr.classification_schemes_view.long_name, version and context
      *         columns.
@@ -4151,7 +4181,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the classification scheme id's. The method getSchemes() must be
      * called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbr.classification_schemes_view.cs_idseq column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemes getSchemes()
@@ -4167,7 +4197,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the context id's associated with the classification scheme id's
      * retrieved above. The method getSchemes() must be called first. Once this
      * method is used the internal copy is deleted to reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbr.classification_schemes_view.conte_idseq column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemes getSchemes()
@@ -4183,7 +4213,7 @@ public class DBAlertOracle implements DBAlert
     {
         /**
          * Constructor.
-         * 
+         *
          * @param name_ The composite name for sorting.
          * @param ndx_ The index of the scheme item in the original list.
          */
@@ -4206,7 +4236,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Build the concatenated strings for the Class Scheme Items display.
-     * 
+     *
      * @param rec_
      *        The data returned from Oracle.
      * @return An array of the full concatenated names for sorting later.
@@ -4291,7 +4321,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Retrieve the Classification Scheme Items from the database. Follows the
      * pattern documented in getUsers().
-     * 
+     *
      * @return 0 if successful, otherwise the database error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeItemList getSchemeItemList()
@@ -4328,7 +4358,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Sort the scheme items lists and make everything right on the display.
-     * 
+     *
      * @param tree_
      *        The concatenated name tree list.
      */
@@ -4400,7 +4430,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the classification scheme item list. The method getSchemeItems()
      * must be called first. Once this method is used the internal copy is
      * deleted to reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the sbr.class_scheme_items_view.csi_name
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeItems getSchemeItems()
@@ -4416,7 +4446,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the classification scheme item id's. The method getSchemeItems()
      * must be called first. Once this method is used the internal copy is
      * deleted to reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbr.class_scheme_items_view.csi_idseq column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeItems getSchemeItems()
@@ -4433,7 +4463,7 @@ public class DBAlertOracle implements DBAlert
      * item id's retrieved above. The method getSchemeItems() must be called
      * first. Once this method is used the internal copy is deleted to reclaim
      * the memory space.
-     * 
+     *
      * @return An array of strings from the sbr.class_scheme_items_view.cs_idseq
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeItems getSchemeItems()
@@ -4482,7 +4512,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Perform the database access for a simple query which results in a 3
      * column value per returned row.
-     * 
+     *
      * @param select_
      *        The SQL select to run.
      * @return 0 if successful, otherwise the database error code.
@@ -4531,7 +4561,7 @@ public class DBAlertOracle implements DBAlert
                 data._data[ndx]._id1 = rec._id1;
                 data._data[ndx]._id2 = rec._id2;
             }
-            
+
             data._rc = 0;
         }
         catch (SQLException ex)
@@ -4545,31 +4575,31 @@ public class DBAlertOracle implements DBAlert
         }
         return data;
     }
-    
+
     class ResultsData3
     {
         /**
-         * 
+         *
          */
         public String _id1;
 
         /**
-         * 
+         *
          */
         public String _id2;
 
         /**
-         * 
+         *
          */
         public int    _id3;
 
         /**
-         * 
+         *
          */
         public String _label1;
 
         /**
-         * 
+         *
          */
         public String _label2;
     }
@@ -4584,7 +4614,7 @@ public class DBAlertOracle implements DBAlert
          * The database return code.
          */
         public int    _rc;
-        
+
         /**
          * The data
          */
@@ -4594,7 +4624,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Perform the database access for a simple query which results in a 4
      * column value per returned row.
-     * 
+     *
      * @param select_
      *        The SQL select to run.
      * @param flag_ true if the list should be prefixed with "All".
@@ -4671,7 +4701,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Retrieve the list of record types.  As this is coded in a constant
      * array, no database access is required.
-     * 
+     *
      * @return 0 if successful.
      */
     public int getACTypes()
@@ -4723,12 +4753,12 @@ public class DBAlertOracle implements DBAlert
                 System.arraycopy(list, pos, list, pos + 1, ndx - pos + 1);
                 System.arraycopy(vals, pos, vals, pos + 1, ndx - pos + 1);
             }
-            
+
             // Insert new item in list.
             list[pos] = _DBMAP3[ndx]._val;
             vals[pos] = _DBMAP3[ndx]._key;
         }
-        
+
         // Keep the results.
         _actypesList = list;
         _actypesVals = vals;
@@ -4737,7 +4767,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Return the descriptive names for the record types.
-     * 
+     *
      * @return The list of display values.
      */
     public String[] getACTypesList()
@@ -4746,10 +4776,10 @@ public class DBAlertOracle implements DBAlert
         _actypesList = null;
         return temp;
     }
-    
+
     /**
      * Return the internal values used to identify the record types.
-     * 
+     *
      * @return The list of internal record types.
      */
     public String[] getACTypesVals()
@@ -4758,11 +4788,11 @@ public class DBAlertOracle implements DBAlert
         _actypesVals = null;
         return temp;
     }
-    
+
     /**
      * Retrieve the list of forms and templates from the database. Follows the
      * pattern documented in getUsers().
-     * 
+     *
      * @return 0 if successful, otherwise the database error code.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getUsers getUsers()
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getFormsList getFormsList()
@@ -4772,7 +4802,7 @@ public class DBAlertOracle implements DBAlert
     public int getForms()
     {
         // Build a composite descriptive string for this form.
-        String select = 
+        String select =
             "select qcv.conte_idseq, qcv.qc_idseq, qcv.long_name || "
             + "' (v' || qcv.version || ' / ' || qcv.qtl_name || ' / ' || nvl(proto.long_name, '(' || cv.name || ')') || ')' as lname "
             + "from sbrext.quest_contents_view_ext qcv, sbr.contexts_view cv, "
@@ -4809,7 +4839,7 @@ public class DBAlertOracle implements DBAlert
      * Return the forms/templates composite names. The method getForms() must be
      * called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbrext.quest_contents_view_ext.long_name, ... columns.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getForms getForms()
@@ -4825,7 +4855,7 @@ public class DBAlertOracle implements DBAlert
      * Return the forms/templates id values. The method getForms() must be
      * called first. Once this method is used the internal copy is deleted to
      * reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbrext.quest_contents_view_ext.qc_idseq columns.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getForms getForms()
@@ -4841,7 +4871,7 @@ public class DBAlertOracle implements DBAlert
      * Return the context id's associated with the forms/templates. The method
      * getForms() must be called first. Once this method is used the internal
      * copy is deleted to reclaim the memory space.
-     * 
+     *
      * @return An array of strings from the
      *         sbrext.quest_contents_view_ext.conte_idseq columns.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getForms getForms()
@@ -4856,7 +4886,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Return the last recorded database error message. If the current error
      * code is zero (0) an empty string is returned.
-     * 
+     *
      * @return The last database error message or an empty string.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getErrorCode getErrorCode()
      */
@@ -4868,7 +4898,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Return the last recorded database error message. If the current error
      * code is zero (0) an empty string is returned.
-     * 
+     *
      * @param flag_
      *        True if the new lines ('\n') should be expanded to text for use in
      *        script. False to return the message unaltered.
@@ -4884,7 +4914,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Return the last recorded database error code and then reset it to zero
      * (0).
-     * 
+     *
      * @return The database error code.
      */
     public int getErrorCode()
@@ -4897,7 +4927,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Return any error message and reset the error code to zero for the next
      * possible error.
-     * 
+     *
      * @return The database error message.
      */
     public String getError()
@@ -4910,7 +4940,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Get the Alerts which are active for the target date provided.
-     * 
+     *
      * @param target_
      *        The target date, typically the date an Auto Run process is
      *        started.
@@ -4984,7 +5014,7 @@ public class DBAlertOracle implements DBAlert
             // null"
             if (keep == ndx)
                 return recs;
- 
+
             // Only process the ones that are Active.
             AlertRec trecs[] = new AlertRec[keep];
             for (ndx = 0; ndx < keep; ++ndx)
@@ -5003,7 +5033,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Convert a Vector of Strings to an array.
-     * 
+     *
      * @param list_
      *        The vector.
      * @return The string array.
@@ -5015,10 +5045,10 @@ public class DBAlertOracle implements DBAlert
             temp[ndx] = list_.get(ndx);
         return temp;
     }
-    
+
     /**
      * Convert a Vector of Timestamps to an array.
-     * 
+     *
      * @param list_ The vector.
      * @return The Timestamp array.
      */
@@ -5032,7 +5062,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Copy the result set to an ACData array.
-     * 
+     *
      * @param rs_
      *        The query result set.
      * @return The ACData array if successful, otherwise null.
@@ -5164,7 +5194,7 @@ public class DBAlertOracle implements DBAlert
      * from/to pair which in total may appear 1 or 2 times.</li>
      * </ul>
      * </p>
-     * 
+     *
      * @param select_
      *        The SQL select for the specific data and table.
      * @param start_
@@ -5206,7 +5236,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Generate a string of comma separated SQL arguments for us in an "in"
      * clause.
-     * 
+     *
      * @param cnt_
      *        The number of place holders needed.
      * @return String The comma separated string without parentheses.
@@ -5237,7 +5267,7 @@ public class DBAlertOracle implements DBAlert
      * from/to pair which in total may appear 1 or 2 times.</li>
      * </ul>
      * </p>
-     * 
+     *
      * @param select_
      *        The SQL select for the specific data and table.
      * @param start_
@@ -5317,7 +5347,7 @@ public class DBAlertOracle implements DBAlert
      * handled by this method argument list.</li>
      * </ul>
      * </p>
-     * 
+     *
      * @param select_
      *        The SQL select for the specific data and table.
      * @param start_
@@ -5409,7 +5439,7 @@ public class DBAlertOracle implements DBAlert
             return null;
         }
     }
-    
+
     private int selectChangedTableType(String idseq_)
     {
         String select = "select changed_table from sbrext.ac_change_history_ext "
@@ -5424,7 +5454,7 @@ public class DBAlertOracle implements DBAlert
             if (rs.next())
             {
                 String stype = rs.getString(1);
-                
+
                 if (stype.equals("CLASSIFICATION_SCHEMES"))
                     itype = _ACTYPE_CS;
                 else if (stype.equals("DATA_ELEMENTS"))
@@ -5450,13 +5480,13 @@ public class DBAlertOracle implements DBAlert
         }
         return itype;
     }
-    
+
     /**
      * Build a complex SQL from individual phrases. The calling method provides
      * an array of strings for the SQL SELECT with each representing a specific
      * part of the combined statement. Using the presence or absence of other
      * argument values, a composite statement is formed and executed.
-     * 
+     *
      * @param select_
      *        The array of component parts of the SQL SELECT.
      * @param start_
@@ -5514,7 +5544,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Permissible Values changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5532,10 +5562,10 @@ public class DBAlertOracle implements DBAlert
     {
         // There's always one that doesn't fit the pattern. Any changes to
         // selectBuild() must also be checked here for consistency.
-        
+
         String start = "to_date('" + start_.toString().substring(0, 10) + "', 'yyyy/mm/dd')";
         String end = "to_date('" + end_.toString().substring(0, 10) + "', 'yyyy/mm/dd')";
-        
+
         String select =
             "select 'p', 1, 'pv', zz.pv_idseq as id, '', -1, zz.value, '', "
             + "zz.date_modified, zz.date_created, zz.modified_by, zz.created_by, '', "
@@ -5545,11 +5575,11 @@ public class DBAlertOracle implements DBAlert
         select = select + "where ach.change_datetimestamp >= " + start + " and ach.change_datetimestamp < " + end + " ";
         if (modifiers_ != null && modifiers_.length > 0 && modifiers_[0].charAt(0) != '(')
             select = select + "AND ach.changed_by in " + selectIN(modifiers_);
-        select = select + whereACH(_ACTYPE_PV) 
+        select = select + whereACH(_ACTYPE_PV)
             + "AND zz.pv_idseq = ach.ac_idseq ";
         if (creators_ != null && creators_.length > 0 && creators_[0].charAt(0) != '(')
             select = select + "AND zz.created_by in " + selectIN(creators_);
-        
+
         if (dates_ == _DATECONLY)
             select = select + "AND zz.date_created >= " + start + " and zz.date_created < " + end + " ";
         else if (dates_ == _DATEMONLY)
@@ -5562,7 +5592,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Value Meanings changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5573,7 +5603,7 @@ public class DBAlertOracle implements DBAlert
      *        The list of desired creator user ids.
      * @param modifiers_
      *        The list of desired modifier user ids.
-     * @param wstatus_ 
+     * @param wstatus_
      *        The list of desired Workflow Statuses.
      * @return 0 if successful, otherwise the database error code.
      */
@@ -5609,7 +5639,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Concepts changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5656,7 +5686,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Value Domains changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5681,7 +5711,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Conceptual Domain changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5731,7 +5761,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Classification Schemes changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5757,7 +5787,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Pull all Property changes in the date range
      * specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5783,7 +5813,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Pull all Object Class changes in the date range
      * specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5809,7 +5839,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Pull all Forms/Templates Value Values changed in the date range
      * specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5857,7 +5887,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Forms/Templates Questions changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5905,7 +5935,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Forms/Templates Modules changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -5953,7 +5983,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Protocols changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -6001,7 +6031,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Forms/Templates changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -6049,7 +6079,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Pull all Classification Scheme Items changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -6082,7 +6112,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Expand the list to an IN clause.
-     * 
+     *
      * @param regs_ The list of DE registration statuses.
      * @return The expanded IN clause.
      */
@@ -6098,7 +6128,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Construct the standard change history table where clause.
-     * 
+     *
      * @param table_ The primary changed_table value, one of _ACTYPE_...
      * @return The where clause.
      */
@@ -6115,10 +6145,10 @@ public class DBAlertOracle implements DBAlert
         + "(ach.changed_table = 'VD_PVS' and ach.changed_column = 'PV_IDSEQ')) ";
         return temp;
     }
-    
+
     /**
      * Pull all Data Elements changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -6142,10 +6172,10 @@ public class DBAlertOracle implements DBAlert
             selectBuild(null, _ACTYPE_DE,
                 dates_, start_, end_, creators_, modifiers_, wstatus_, rstatus_));
     }
-    
+
     /**
      * Return the CON_IDSEQ for referenced (used) concepts.
-     * 
+     *
      * @return the con_idseq list
      */
     public String[] selectUsedConcepts()
@@ -6172,10 +6202,10 @@ public class DBAlertOracle implements DBAlert
 
         return getBasicData0(select);
     }
-    
+
     /**
      * Return the CON_IDSEQ for all concepts.
-     * 
+     *
      * @return the con_idseq list
      */
     public String[] selectAllConcepts()
@@ -6184,12 +6214,12 @@ public class DBAlertOracle implements DBAlert
 
         return getBasicData0(select);
     }
-    
+
     /**
      * Pull the change history log for a single record.
-     * 
+     *
      * @param idseq_ The idseq of the record.
-     * 
+     *
      * @return The data if any (array length of zero if none found).
      */
     public ACData[] selectWithIDSEQ(String idseq_)
@@ -6202,10 +6232,10 @@ public class DBAlertOracle implements DBAlert
         return selectAC(
                         selectBuild(idseq_, itype, _DATECM, null, null, null, null, null, null));
     }
-    
+
     /**
      * Pull all Contexts changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -6238,7 +6268,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Build the SQL select to retrieve changes for an Administered Component.
-     * 
+     *
      * @param idseq_ The idseq of a speciifc record of interest.
      * @param type_ The AC type, one of _ACTYPE_...
      * @param dates_ The flag for how dates are compared, _DATECM, _DATECONLY, _DATEMONLY
@@ -6267,15 +6297,15 @@ public class DBAlertOracle implements DBAlert
             wstatus_ = null;
             rstatus_ = null;
         }
-        
+
         // Due to the very conditional nature of this logic, the SQL SELECT is built
         // without the use of substitution arguments ('?').
         String prefix = _DBMAP3[type_]._key;
-        
+
         // The 'de' type is the only one that doesn't use the same prefix for the public id
         // database column - ugh.
         String prefix2 = (type_ == _ACTYPE_DE) ? "cde" : prefix;
-        
+
         // Build the basic select and from.
         String select =
             "select 'p', 1, '" + prefix
@@ -6319,34 +6349,34 @@ public class DBAlertOracle implements DBAlert
         // Building the 'where' clause should be done to keep all qualifications together, e.g.
         // first qualify all for ACH then join to the primary table (ZZ) complete the qualifications
         // then join to the context table.
-        
+
         // Build the start and end dates.
         String start = "to_date('" + start_.toString().substring(0, 10) + "', 'yyyy/mm/dd')";
         String end = "to_date('" + end_.toString().substring(0, 10) + "', 'yyyy/mm/dd')";
-        
+
         // Always checking the date range first.
         if (idseq_ == null || idseq_.length() == 0)
             select = select + "where ach.change_datetimestamp >= " + start + " and ach.change_datetimestamp < " + end + " ";
         else
             select = select + "where ach.ac_idseq = '" + idseq_ + "' ";
-        
+
         // If modifiers are provided be sure to get everything.
         if (modifiers_ != null && modifiers_.length > 0 && modifiers_[0].charAt(0) != '(')
             select = select + "AND ach.changed_by in " + selectIN(modifiers_);
-        
+
         // Now qualify by the record type of interest and join to the primary table.
-        select = select + whereACH(type_) 
+        select = select + whereACH(type_)
             + "AND zz." + prefix + "_idseq = ach.ac_idseq ";
-        
+
         // If creators are provided they must be qualified by the primary table not the change table.
         if (creators_ != null && creators_.length > 0 && creators_[0].charAt(0) != '(')
             select = select + "AND zz.created_by in " + selectIN(creators_);
-        
+
         // When looking for both create and modified dates no extra clause is needed. For create
         // date only qualify against the primary table.
         if (dates_ == _DATECONLY)
             select = select + "AND zz.date_created >= " + start + " and zz.date_created < " + end + " ";
-        
+
         // For modify date only qualify the primary table. The actual date is not important because we
         // qualified the records from the history table by date already.
         else if (dates_ == _DATEMONLY)
@@ -6355,10 +6385,10 @@ public class DBAlertOracle implements DBAlert
         // Put everything together including the join to the context table and the sort order clause.
         return select + wfs_clause + reg_clause + "AND c.conte_idseq = zz.conte_idseq " + _orderbyACH;
     }
-    
+
     /**
      * Pull all Data Element Concepts changed in the date range specified.
-     * 
+     *
      * @param dates_
      *        The date comparison index.
      * @param start_
@@ -6387,7 +6417,7 @@ public class DBAlertOracle implements DBAlert
      * up into pieces. The result is that should an order by clause also appear,
      * the end result may not be correct as the SQL had to be performed in
      * multiple pieces.
-     * 
+     *
      * @param select_
      *        The SQL select.
      * @param ids_
@@ -6417,7 +6447,7 @@ public class DBAlertOracle implements DBAlert
             ACData rset[] = selectAC2(select_, tset);
             tset = results;
             results = new ACData[tset.length + rset.length];
-            
+
             // Now that we have a place to store the composite
             // list perform a simple merge as both are already
             // sorted.
@@ -6442,12 +6472,12 @@ public class DBAlertOracle implements DBAlert
                     }
                 }
             }
-            
+
             // We've exhausted the 'temp' list so copy the rest of the
             // 'rc' list.
             if (tndx == tset.length)
                 System.arraycopy(rset, rndx, results, ndx, rset.length - rndx);
-            
+
             // We've exhausted the 'rc' list so copy the rest of the
             // 'temp' list.
             else
@@ -6457,7 +6487,7 @@ public class DBAlertOracle implements DBAlert
             tndx = ids_.length - indx;
             if (group > tndx)
                 group = tndx;
-            
+
             // Force conservation of memory.
             tset = null;
             rset = null;
@@ -6469,7 +6499,7 @@ public class DBAlertOracle implements DBAlert
      * Select the dependant data. This method does not test the length of the
      * array (ids_) and therefore should only be called when 1000 ids or less
      * are needed.
-     * 
+     *
      * @param select_
      *        The SQL containing the "in" clause.
      * @param ids_
@@ -6537,7 +6567,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Find the Value Domains that are affected by changes to the Permissible
      * Values.
-     * 
+     *
      * @param pv_
      *        The list of permissible values identified as changed or created.
      * @return The array of value domains.
@@ -6564,7 +6594,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Find the Permissible Values that are affected by changes to the Value Meanings.
-     * 
+     *
      * @param vm_
      *        The list of value meanings identified as changed or created.
      * @return The array of value domains.
@@ -6582,7 +6612,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Find the Conceptual Domains affected by changes to the Value Domains
      * provided.
-     * 
+     *
      * @param vd_
      *        The list of value domains.
      * @return The array of conceptual domains.
@@ -6608,7 +6638,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Find the Conceptual Domains affected by changes to the Data Element Concepts
      * provided.
-     * 
+     *
      * @param dec_
      *        The list of data element concepts.
      * @return The array of conceptual domains.
@@ -6633,7 +6663,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Data Elements affected by the Value Domains provided.
-     * 
+     *
      * @param vd_
      *        The value domain list.
      * @return The array of related data elements.
@@ -6658,7 +6688,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Data Element Concepts affected by the Properties provided.
-     * 
+     *
      * @param prop_
      *        The property list.
      * @return The array of related data element concepts.
@@ -6683,7 +6713,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Properties affected by the Concepts provided.
-     * 
+     *
      * @param con_
      *        The concept list.
      * @return The array of related properties.
@@ -6701,7 +6731,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Object Classes affected by the Concepts provided.
-     * 
+     *
      * @param con_
      *        The concept list.
      * @return The array of related object classes.
@@ -6719,7 +6749,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Data Element Concepts affected by the Object Classes provided.
-     * 
+     *
      * @param oc_
      *        The object class list.
      * @return The array of related data element concepts.
@@ -6744,7 +6774,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Data Elements affected by the Data Element Concepts provided.
-     * 
+     *
      * @param dec_
      *        The data element concepts list.
      * @return The array of related data elements.
@@ -6770,7 +6800,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Select the Classification Scheme Item affected by the Data Elements
      * provided.
-     * 
+     *
      * @param de_
      *        The data element list.
      * @return The array of related classification scheme items.
@@ -6791,7 +6821,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Select the Classification Scheme Item affected by the Data Element Concepts
      * provided.
-     * 
+     *
      * @param dec_
      *        The data element concept list.
      * @return The array of related classification scheme items.
@@ -6812,7 +6842,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Select the Classification Scheme Item affected by the Value Domains
      * provided.
-     * 
+     *
      * @param vd_
      *        The value domain list.
      * @return The array of related classification scheme items.
@@ -6832,7 +6862,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Forms/Templates affected by the Data Elements provided.
-     * 
+     *
      * @param de_
      *        The data element list.
      * @return The array of related forms/templates.
@@ -6850,7 +6880,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
-     * 
+     *
      * @param vd_
      *        The value domain list.
      * @return The array of related forms/templates.
@@ -6868,7 +6898,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
-     * 
+     *
      * @param vd_
      *        The data element list.
      * @return The array of related forms/templates.
@@ -6887,7 +6917,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
-     * 
+     *
      * @param qcv_
      *        The data element list.
      * @return The array of related forms/templates.
@@ -6905,7 +6935,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
-     * 
+     *
      * @param qcq_
      *        The data element list.
      * @return The array of related forms/templates.
@@ -6923,7 +6953,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
-     * 
+     *
      * @param qcm_
      *        The data element list.
      * @return The array of related forms/templates.
@@ -6941,7 +6971,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Forms/Templates affected by the Value Domains provided.
-     * 
+     *
      * @param qcq_
      *        The data element list.
      * @return The array of related forms/templates.
@@ -6961,7 +6991,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Select the Classification Schemes affected by the Classification Scheme
      * Items provided.
-     * 
+     *
      * @param csi_
      *        The classification scheme items list.
      * @return The array of related classification schemes.
@@ -6989,7 +7019,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Contexts affected by the Classification Schemes provided.
-     * 
+     *
      * @param cs_
      *        The classification schemes list.
      * @return The array of related contexts.
@@ -7007,7 +7037,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Contexts affected by the Conceptual Domains provided.
-     * 
+     *
      * @param cd_
      *        The conceptual domains list.
      * @return The array of related contexts.
@@ -7025,7 +7055,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Contexts affected by the Value Domains provided.
-     * 
+     *
      * @param vd_
      *        The value domains list.
      * @return The array of related contexts.
@@ -7043,7 +7073,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Contexts affected by the Data Elements provided.
-     * 
+     *
      * @param de_
      *        The data elements list.
      * @return The array of related contexts.
@@ -7061,7 +7091,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Contexts affected by the Properties provided.
-     * 
+     *
      * @param prop_
      *        The properties list.
      * @return The array of related contexts.
@@ -7079,7 +7109,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Contexts affected by the Object Classes provided.
-     * 
+     *
      * @param oc_
      *        The object class list.
      * @return The array of related contexts.
@@ -7097,7 +7127,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Contexts affected by the Concepts provided.
-     * 
+     *
      * @param con_
      *        The object class list.
      * @return The array of related concepts.
@@ -7115,7 +7145,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Contexts affected by the Protocols provided.
-     * 
+     *
      * @param proto_
      *        The protocols list.
      * @return The array of related contexts.
@@ -7133,7 +7163,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Protocols affected by the Forms/Templates provided.
-     * 
+     *
      * @param qc_
      *        The forms/templates list.
      * @return The array of related contexts.
@@ -7154,7 +7184,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Contexts affected by the Forms/Templates provided.
-     * 
+     *
      * @param qc_
      *        The forms/templates list.
      * @return The array of related contexts.
@@ -7172,7 +7202,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Select the Contexts affected by the Data Element Concepts provided.
-     * 
+     *
      * @param dec_
      *        The data element concepts list.
      * @return The array of related contexts.
@@ -7193,7 +7223,7 @@ public class DBAlertOracle implements DBAlert
      * cache is created to avoid hitting the database with too many individual
      * requests. This cache is good for the life of this DBAlert object and will
      * be rebuilt as needed with each new DBAlert.
-     * 
+     *
      * @param id_
      *        The name id to look up in the database.
      * @return When > 0, the position of the name in the cache. When < 0, the
@@ -7234,7 +7264,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Cache names internally as they are encountered. If the findName() method
      * can not locate a name in the cache it will be added by this method.
-     * 
+     *
      * @param pos_
      *        The insert position returned from findName().
      * @param id_
@@ -7276,7 +7306,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Retrieve a string name representation for the "object" id provided.
-     * 
+     *
      * @param table_
      *        The known database table name or null if the method should use a
      *        default based on the col_ value.
@@ -7358,7 +7388,7 @@ public class DBAlertOracle implements DBAlert
      * Retrieve the "names" for a list of columns and ids. WARNING this is a
      * destructive method. It changes the content of ids_ by replacing the
      * original value with the retrieved name.
-     * 
+     *
      * @param cols_
      *        The names of the columns corresponding to the ids.
      * @param ids_
@@ -7375,7 +7405,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Update the Auto Run or Manual Run timestamp.
-     * 
+     *
      * @param id_
      *        The alert id to update.
      * @param stamp_
@@ -7424,7 +7454,7 @@ public class DBAlertOracle implements DBAlert
      * Those who have elected not to receive broadcasts from a context group are
      * not included. All freeform email addresses are listed after the names
      * retrieved from the account table.
-     * 
+     *
      * @param recipients_ The Alert recipient list.
      * @return A single comma separate list of names and email addresses with
      *      the broadcast context groups expanded.
@@ -7448,14 +7478,14 @@ public class DBAlertOracle implements DBAlert
             else
                 emails = emails + ", " +  recipients_[ndx];
         }
-        
+
         // Build the select for user names
         String select = "";
         if (users.length() > 0)
             select += "select ua.name as lname from sbr.user_accounts_view ua where ua.ua_name in ("
                 + users.substring(2)
                 + ") and ua.electronic_mail_address is not null ";
-        
+
         // Build the select for a Context group
         if (contexts.length() > 0)
         {
@@ -7472,13 +7502,13 @@ public class DBAlertOracle implements DBAlert
         {
             // Sort the results.
             select = "select lname from (" + select + ") order by upper(lname) asc";
-        
+
             try
             {
                 // Retrieve the user names from the database.
                 PreparedStatement pstmt = _conn.prepareStatement(select);
                 ResultSet rs = pstmt.executeQuery();
-                
+
                 // Make this a comma separated list.
                 while (rs.next())
                 {
@@ -7496,17 +7526,17 @@ public class DBAlertOracle implements DBAlert
                 return null;
             }
         }
-        
+
         // Append the freeform email addresses.
         if (emails.length() > 0)
             names += emails;
         return (names.length() > 0) ? names.substring(2) : "(none)";
     }
-    
+
     /**
      * Given the idseq of a Context, retrieve all the users with write access to
      * that context.
-     * 
+     *
      * @param conte_
      *        The context idseq.
      * @return The array of user ids with write access.
@@ -7551,7 +7581,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Given the id for a user, retrieve the email address.
-     * 
+     *
      * @param user_
      *        The user id.
      * @return The array of user ids with write access.
@@ -7587,7 +7617,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Run a specific SELECT for the testDBdependancies() method.
-     * 
+     *
      * @param select_
      *        The select statement.
      * @return >0 if successful with the number of rows returned, otherwise
@@ -7616,7 +7646,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Run a specific SELECT for the testDBdependancies() method.
-     * 
+     *
      * @param select_
      *        The select statement.
      * @return the first row found
@@ -7646,7 +7676,7 @@ public class DBAlertOracle implements DBAlert
     /**
      * Test the database dependencies within this class. This method will check
      * the existence of tables, columns and required values.
-     * 
+     *
      * @return null if all dependencies are present, otherwise a string
      *         detailing those that failed.
      */
@@ -7695,7 +7725,7 @@ public class DBAlertOracle implements DBAlert
         rows = testDB(select);
         if (rows < 0)
             results += _errorMsg + "\n\n";
-        
+
         _errorCode = 0;
         _errorMsg = "";
         return (results.length() == 0) ? null : results;
@@ -7703,7 +7733,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Test the content of the tool options table.
-     * 
+     *
      * @param url_ the URL used to access the Sentinel from a browser. If not null it is compared to the caDSR
      *          tool options entry to ensure they match.
      * @return null if no errors, otherwise the error message.
@@ -7740,7 +7770,7 @@ public class DBAlertOracle implements DBAlert
             results += "Missing the Sentinel Tool email subject.\n\n";
         if (apd._work == null || apd._work.length() == 0)
             results += "Missing the Sentinel Tool working folder prefix.\n\n";
-        
+
         String select = "select value from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' and property = 'URL' and value is not null";
         select = testDB2(select);
@@ -7760,28 +7790,28 @@ public class DBAlertOracle implements DBAlert
             else
                 results += "Sentinel Tool URL \"" + url_ + "\"does not match configuration value \"" + select + "\".\n\n";
         }
-        
+
         select = "select tool_idseq from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' AND property LIKE 'ADMIN.%' and value like '%0%'";
         rows = testDB(select);
         if (rows < 1)
             results += "Missing the Sentinel Tool Alert Administrator setting.\n\n";
-        
+
         select = "select tool_idseq from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' AND property LIKE 'ADMIN.%' and value like '%1%'";
         rows = testDB(select);
         if (rows < 1)
             results += "Missing the Sentinel Tool Report Administrator setting.\n\n";
-        
+
         select = "select tool_idseq from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' AND property = 'ALERT.NAME.FORMAT' and value is not null";
         rows = testDB(select);
         if (rows != 1)
             results += "Missing the Sentinel Tool ALERT.NAME.FORMAT setting.\n\n";
-        
+
         if (selectAlertReportAdminEmails() == null)
             results += "Missing email addresses for the specified Alert Report Administrator(s) setting.\n\n";
-        
+
         select = "select tool_idseq from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' AND property LIKE 'BROADCAST.EXCLUDE.CONTEXT.%.NAME'";
         rows = testDB(select);
@@ -7800,7 +7830,7 @@ public class DBAlertOracle implements DBAlert
             if (rows != optcnt)
                 results += "Missing or invalid BROADCAST.EXCLUDE.CONTEXT settings.\n\n";
         }
-        
+
         select = "select tool_idseq from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' AND property like 'RSVD.CS.%'";
         rows = testDB(select);
@@ -7825,7 +7855,7 @@ public class DBAlertOracle implements DBAlert
             else
                 results += "Missing or invalid RSVD.CS settings.\n\n";
         }
-        
+
         _errorCode = 0;
         _errorMsg = "";
         return (results.length() == 0) ? null : results;
@@ -7833,7 +7863,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Return the email addresses for all the administrators that should receive a log report.
-     * 
+     *
      * @return The list of email addresses.
      */
     public String[] selectAlertReportAdminEmails()
@@ -7849,7 +7879,7 @@ public class DBAlertOracle implements DBAlert
         String[] list = getBasicData0(select);
         if (list != null)
             return list;
-        
+
         // Fall back to the default.
         select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'EMAIL.ADDR'";
 
@@ -7858,7 +7888,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Return the Alert Report email reply to address
-     * 
+     *
      * @return The reply to address.
      */
     public String selectAlertReportEmailAddr()
@@ -7872,7 +7902,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Return the email introduction for the Alert Report
-     * 
+     *
      * @return The introduction.
      */
     public String selectAlertReportEmailIntro()
@@ -7886,7 +7916,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Return the email error introduction for the Alert Report
-     * 
+     *
      * @return The error introduction.
      */
     public String selectAlertReportEmailError()
@@ -7900,7 +7930,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Return the email admin title which appears in the "From:" field.
-     * 
+     *
      * @return The admin title.
      */
     public String selectAlertReportAdminTitle()
@@ -7908,13 +7938,13 @@ public class DBAlertOracle implements DBAlert
         String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'EMAIL.ADMIN.NAME'";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : "";
     }
 
     /**
      * Return the email SMTP host.
-     * 
+     *
      * @return The email SMTP host.
      */
     public String selectAlertReportEmailHost()
@@ -7922,13 +7952,13 @@ public class DBAlertOracle implements DBAlert
         String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'EMAIL.HOST'";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : "";
     }
 
     /**
      * Return the email SMTP host user account.
-     * 
+     *
      * @return The email SMTP host user account.
      */
     public String selectAlertReportEmailHostUser()
@@ -7936,13 +7966,13 @@ public class DBAlertOracle implements DBAlert
         String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'EMAIL.HOST.USER'";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : "";
     }
 
     /**
      * Return the email SMTP host user account password.
-     * 
+     *
      * @return The email SMTP host user account password.
      */
     public String selectAlertReportEmailHostPswd()
@@ -7950,13 +7980,13 @@ public class DBAlertOracle implements DBAlert
         String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'EMAIL.HOST.PSWD'";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : "";
     }
 
     /**
      * Return the email subject.
-     * 
+     *
      * @return The email subject.
      */
     public String selectAlertReportEmailSubject()
@@ -7964,13 +7994,13 @@ public class DBAlertOracle implements DBAlert
         String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'EMAIL.SUBJECT'";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : "";
     }
 
     /**
      * Return the HTTP link prefix for all report output references.
-     * 
+     *
      * @return The HTTP link prefix
      */
     public String selectAlertReportHTTP()
@@ -7978,13 +8008,13 @@ public class DBAlertOracle implements DBAlert
         String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'LINK.HTTP'";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : "";
     }
 
     /**
      * Return the output directory for all generated files.
-     * 
+     *
      * @return The output directory prefix
      */
     public String selectAlertReportOutputDir()
@@ -7992,13 +8022,13 @@ public class DBAlertOracle implements DBAlert
         String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'OUTPUT.DIR'";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : "";
     }
 
     /**
      * Return the database name as it should appear on reports.
-     * 
+     *
      * @return The database name
      */
     public String selectAlertReportDBName()
@@ -8006,13 +8036,13 @@ public class DBAlertOracle implements DBAlert
         String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'DB.NAME'";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : "";
     }
 
     /**
      * Return the email addresses for all the recipients of the statistic report.
-     * 
+     *
      * @return The list of email addresses.
      */
     public String[] selectStatReportEmails()
@@ -8029,8 +8059,8 @@ public class DBAlertOracle implements DBAlert
     }
 
     /**
-     * Return the EVS URL from the tool options. 
-     * 
+     * Return the EVS URL from the tool options.
+     *
      * @return The EVS URL.
      */
     public String selectEvsUrl()
@@ -8038,13 +8068,13 @@ public class DBAlertOracle implements DBAlert
         String select = "select value from sbrext.tool_options_view_ext where tool_name = 'EVS' and property = 'URL'";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : null;
     }
 
     /**
-     * Return the Alert Definition name format string. 
-     * 
+     * Return the Alert Definition name format string.
+     *
      * @return The list of email addresses.
      */
     public String selectAlertNameFormat()
@@ -8055,15 +8085,15 @@ public class DBAlertOracle implements DBAlert
             + "opt.property = 'ALERT.NAME.FORMAT' ";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : null;
     }
 
     /**
      * Return the reserved CS id if the reserved CSI is passed to the method.
-     * 
+     *
      * @param idseq_ The CSI id to check.
-     * 
+     *
      * @return The reserved CS id or null if the CSI is not reserved.
      */
     public String selectCSfromReservedCSI(String idseq_)
@@ -8075,13 +8105,13 @@ public class DBAlertOracle implements DBAlert
             + "opt.tool_name = 'SENTINEL' and opt.property = 'RSVD.CS.CS_IDSEQ'";
 
         String[] list = getBasicData0(select);
-        
+
         return (list != null) ? list[0] : null;
     }
-    
+
     /**
      * Format the integer to include comma thousand separators.
-     * 
+     *
      * @param val_ The number in string format.
      * @return the number in string format with separators.
      */
@@ -8097,12 +8127,12 @@ public class DBAlertOracle implements DBAlert
         }
         return (text.charAt(0) == ',') ? text.substring(1) : text;
     }
-    
+
     /**
      * Retrieve the row counts for all the tables used by the Alert Report.
      * The values may be indexed using the _ACTYPE_* variables and an index
-     * of _ACTYPE_LENGTH is the count of the change history table.  
-     * 
+     * of _ACTYPE_LENGTH is the count of the change history table.
+     *
      * @return The numbers for each table.
      */
     public String[] reportRowCounts()
@@ -8111,11 +8141,11 @@ public class DBAlertOracle implements DBAlert
         String[] extraNames = {"History Table", "Freestyle Token Index", "Freestyle Concatenation Index" };
         int total = _DBMAP3.length + extraTables.length;
         String counts[] = new String[total];
-        
+
         String select = "select count(*) from ";
         String table;
         String name;
-        
+
         int extraNdx = 0;
         for (int ndx = 0; ndx < counts.length; ++ndx)
         {
@@ -8155,14 +8185,14 @@ public class DBAlertOracle implements DBAlert
                 counts[ndx] = name + ": " + _errorMsg;
             }
         }
-        
+
         return counts;
     }
 
     /**
      * Translate the internal column names to something the user can easily
      * read.
-     * 
+     *
      * @param namespace_
      *        The scope of the namespace to lookup the val_.
      * @param val_
@@ -8197,7 +8227,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Translate the table names for the user.
-     * 
+     *
      * @param val_
      *        The internal table name.
      * @return The user readable name.
@@ -8208,10 +8238,10 @@ public class DBAlertOracle implements DBAlert
             return "<null>";
         return DBAlertUtil.binarySearchS(_DBMAP3, val_);
     }
-    
+
     /**
      * Look for the selection of a specific record type.
-     * 
+     *
      * @param val_ The AC type code.
      * @return false if the record type is not found.
      */
@@ -8222,7 +8252,7 @@ public class DBAlertOracle implements DBAlert
 
     /**
      * Test if the string table code represents the record type of interest.
-     * 
+     *
      * @param type_ One of the DBAlert._ACTYPE* constants.
      * @param tableCode_ The string type to test.
      * @return true if the type and string are equivalent.
@@ -8231,17 +8261,17 @@ public class DBAlertOracle implements DBAlert
     {
         return tableCode_.equals(_DBMAP3[type_]._key);
     }
-    
+
     /**
      * Get the used (referenced) RELEASED object classes not owned by caBIG
-     * 
+     *
      * @return the list of object classes
      */
     public String[] reportUsedObjectClasses()
     {
         String cs1 = AuditReport._ColSeparator;
         String cs2 = " || '" + cs1 + "' || ";
-        String select = 
+        String select =
             "SELECT 'Name" + cs1 + "Public ID" + cs1 + "Version" + cs1 + "Workflow Status" + cs1
             + "Short Name" + cs1 + "Context" + cs1 + "Created" + cs1
             + "Modified" + cs1 + "References" + cs1 + "Order" + cs1
@@ -8273,13 +8303,13 @@ public class DBAlertOracle implements DBAlert
             + "AND cc.condr_idseq = oc.condr_idseq "
             + "AND con.con_idseq = cc.con_idseq "
             + "ORDER BY lname ASC, ocidseq ASC, dorder DESC";
-        
+
         return getBasicData0(select);
     }
-    
+
     /**
      * Pull the name and email address for all the recipients on a specific Alert Definition.
-     * 
+     *
      * @param idseq_ the database id of the Alert Definition
      */
     public void selectAlertRecipients(String idseq_)
@@ -8313,7 +8343,73 @@ public class DBAlertOracle implements DBAlert
             + "WHERE rep.al_idseq = '"+ idseq_ + "' "
             + "AND rc.rep_idseq = rep.rep_idseq "
             + "AND email IS NOT NULL";
-        
+
         Results1 temp = getBasicData1(select, false);
+    }
+
+    /**
+     * Retrieve the database Registration Authority Identifier (RAI)
+     *
+     * @return the server value
+     */
+    public String getDatabaseRAI()
+    {
+        String[] list = getBasicData0("select value from sbrext.tool_options_view_ext where tool_name = 'caDSR' and property = 'RAI'");
+        return (list != null) ? list[0] : null;
+    }
+
+    /**
+     * Convert all meaning full names back to the internal codes for the XML generation
+     *
+     * @param changes -
+     *        array of names for changes
+     * @return - array of the corresponding key values
+     */
+    @SuppressWarnings("unchecked")
+    public String[] getKeyNames(String[] changes)
+    {
+        // Convert to list
+        List<DBAlertOracleMap1> list = new ArrayList<DBAlertOracleMap1>(Arrays.asList(concat(_DBMAP1, _DBMAP1DESIG, _DBMAP1RD, _DBMAP1CSI, _DBMAP1COMPLEX,
+            _DBMAP1OTHER)));
+
+        // Ensure list sorted
+        Collections.sort(list);
+
+        // Convert it back to array as this is how the binary search is implemented
+        DBAlertOracleMap1[] tempMap = list.toArray(new DBAlertOracleMap1[list.size()]);
+
+        // Store the values into the new array and return the array
+        String[] temp = new String[changes.length];
+        for (int i = 0; i < changes.length; i++)
+        {
+            int rowID = DBAlertUtil.binarySearchValues(tempMap, changes[i]);
+            temp[i] = tempMap[rowID]._key;
+        }
+        return temp; // To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /**
+     * Concatenate all map arrays
+     *
+     * @param maps the list of maps to concatenate
+     * @return a single map
+     */
+    private DBAlertOracleMap1[] concat(DBAlertOracleMap1[] ... maps)
+    {
+        int total = 0;
+        for (DBAlertOracleMap1[] map : maps)
+        {
+            total += map.length;
+        }
+
+        DBAlertOracleMap1[] concatMap = new DBAlertOracleMap1[total];
+
+        total = 0;
+        for (DBAlertOracleMap1[] map : maps)
+        {
+            System.arraycopy(map, 0, concatMap, total, map.length);
+            total += map.length;
+        }
+        return concatMap;
     }
 }

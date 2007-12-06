@@ -1,11 +1,11 @@
 /* Copyright ScenPro, Inc, 2007
 
-   $Header: /share/content/gforge/sentinel/sentinel/db-sql/fix_dev_idseq.sql,v 1.2 2007-09-25 14:26:46 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/db-sql/fix_dev_idseq.sql,v 1.3 2007-12-06 20:52:07 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
 
-   This script fixes the CS_IDSEQ for the DEV tier because it is different than all the others.
+   This script fixes the CS_IDSEQ for the DEV tier because it is different than all the others. This is not necessary once DEV is refreshed with Production data.
 
 */
 whenever sqlerror exit sql.sqlcode rollback;

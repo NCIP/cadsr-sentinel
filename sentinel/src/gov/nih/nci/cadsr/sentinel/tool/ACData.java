@@ -1,22 +1,23 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACData.java,v 1.12 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACData.java,v 1.13 2007-12-06 20:52:09 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
 
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Stack;
+import java.util.Vector;
 
 /**
  * This is the working class for the collection, assimilation and processing of
  * caDSR data by the Sentinel Alert Auto Process server. This a collaborative
  * class with DBAlert as there is specialized SQL for an Alert.
- * 
+ *
  * @author Larry Hebel
  * @version 1.0
  */
@@ -35,7 +36,7 @@ public class ACData
     /**
      * Compare two records for logical equality. Ignore the category and context
      * name.
-     * 
+     *
      * @param rec_
      *        The other record.
      * @return true the record are essentially the same.
@@ -91,7 +92,7 @@ public class ACData
 
     /**
      * Return the byte representation for the level code.
-     * 
+     *
      * @param val_
      *        A 'p' or 's'.
      * @return The bytes for output.
@@ -107,7 +108,7 @@ public class ACData
     /**
      * Return the string representation for a String with special values for
      * 'null' and 'empty'.
-     * 
+     *
      * @param val_
      *        A string.
      * @return The String for output.
@@ -125,7 +126,7 @@ public class ACData
     /**
      * Return the byte representation for a String. Use special values for
      * 'null' and 'empty' and replace all blanks with "&amp;nbsp;".
-     * 
+     *
      * @param val_
      *        A string.
      * @return The bytes for output.
@@ -143,7 +144,7 @@ public class ACData
     /**
      * Return the byte representation for a String with special values for
      * 'null' and 'empty'.
-     * 
+     *
      * @param val_
      *        An array of strings to concatenate into a single String.
      * @return The bytes for output.
@@ -171,7 +172,7 @@ public class ACData
     /**
      * Return the byte representation for a String with null and empty as
      * "&nbsp;".
-     * 
+     *
      * @param val_
      *        A string.
      * @return The byte representation.
@@ -189,7 +190,7 @@ public class ACData
     /**
      * Return the byte representation for a String with null and empty as
      * "&nbsp;"
-     * 
+     *
      * @param val_
      *        A string.
      * @param prefix_
@@ -209,7 +210,7 @@ public class ACData
 
     /**
      * Return the byte representation for an int with 0 as "&nbsp;".
-     * 
+     *
      * @param val_
      *        An integer value.
      * @return The byte representation.
@@ -224,10 +225,10 @@ public class ACData
 
     /**
      * Trim the report stack to contain only rows of interest.
-     * 
+     *
      * @param save_ The original full report content.
-     * @param sectLimit_ 
-     * 
+     * @param sectLimit_
+     *
      * @return The trimmed report stack.
      */
     static public Stack<RepRows> dumpTrim(Stack<RepRows> save_, int sectLimit_)
@@ -238,7 +239,7 @@ public class ACData
             return save_;
 
         Stack<RepRows> report = new Stack<RepRows>();
-        
+
         // Don't waste time with an empty list.
         if (save_ == null || save_.empty())
             return report;
@@ -256,20 +257,20 @@ public class ACData
 
         return report;
     }
-    
+
     /**
      * Test for a primary record type.
-     * 
+     *
      * @return true if a primary record.
      */
     public boolean isPrimary()
     {
         return (_level == 'p');
     }
-    
+
     /**
      * Write the report introduction when multiple part report files are created.
-     * 
+     *
      * @param name_ The Alert Report name.
      * @param namePattern_ The name pattern of the part files.
      * @param threshold_ The configuration threshold.
@@ -308,7 +309,7 @@ public class ACData
 
     /**
      * Be sure the Version number has a decimal point.
-     * 
+     *
      * @param ver_ The version from the database.
      * @return The version is ".0" appended if needed.
      */
@@ -318,11 +319,11 @@ public class ACData
             return ver_;
         return ver_ + ".0";
     }
-    
+
     /**
      * Dump the results in HTML format to an output stream. The form is in a
      * complex spreadsheet with sub-tables and merged columns.
-     * 
+     *
      * @param db_
      *        A database object for an open connection to a caDSR.
      * @param save_
@@ -340,7 +341,7 @@ public class ACData
      * @see gov.nih.nci.cadsr.sentinel.tool.ACData#dumpFooter2 dumpFooter2()
      */
     static public int dumpDetail2(DBAlert db_, Stack<RepRows> save_, int rows_,
-        FileOutputStream fout_) throws IOException
+                                  FileOutputStream fout_) throws IOException
     {
         // Don't waste time with an empty list.
         if (save_ == null || save_.empty())
@@ -373,7 +374,7 @@ public class ACData
 
             // Output the section header
             fout_.write(formatSection(browser, ++rows_, val._rec._level, val._indent, sections, val._rec._tableCode, val._rec._idseq, val._rec._table, val._rec._name).getBytes());
-            
+
             // Output basic record information.
             fout_.write("\t\t<tr><td colspan=\"2\">&nbsp;</td>".getBytes());
             fout_.write(formatBasicProperties(val._rec._publicID, val._rec._version, val._rec._modifier, val._rec._modified, val._rec._creator, val._rec._created).getBytes());
@@ -386,7 +387,7 @@ public class ACData
                     + dumpConvertString2(val._rec._note)
                     + "</td></tr>\n").getBytes());
             }
-            
+
             // Output change details if this is the primary record and not an "associated" record.
             if (val._rec._level == 'p')
             {
@@ -398,20 +399,20 @@ public class ACData
 
         return count;
     }
-    
+
     /**
      * Format the ACData record into HTML output for display to the user. The resulting HTML uses
      * embedded styles to control the visual display and not classes. This ensures a consistent display
      * with the Alert Report output.
-     * 
-     * @param db_ The database connection for alerts. 
-     * 
+     *
+     * @param db_ The database connection for alerts.
+     *
      * @return the HTML string.
      */
     public String formatACHistoryHTML(DBAlert db_)
     {
         resolveNames(db_);
-        
+
         String html = "";
         html = html + "<p>" + _table + ":&nbsp;" + _name + "</p>\n";
         html = html
@@ -434,7 +435,7 @@ public class ACData
     {
         String display = (level_ == 'p') ? "pstripe" : "stripe";
         String sectrow = "\t\t<tr class=\"" + display + "\">";
-        
+
         sectrow = sectrow
             + "<td class=\""
             + display
@@ -491,15 +492,15 @@ public class ACData
             sectrow = sectrow + detailsURL;
         }
         sectrow = sectrow + "</td></tr>\n";
-        
+
         return sectrow;
     }
-    
+
     /**
      * Format the history information into an HTML string to be used in a &lt;table&gt; element. The
      * arrays must all be equal length and should be sorted ascending or descending on the "dates_"
      * and then the "changes_" to provide consistency to the output.
-     * 
+     *
      * @param changes_ The list of attribute names
      * @param modified_ The modified date from the record
      * @param dates_ The dates of each change
@@ -579,13 +580,13 @@ public class ACData
             + "</td><td>Created&nbsp;Date<br>"
             + AlertRec.dateToString(cdate_, true, true)
             + "</td>";
-        
+
         return html;
     }
-    
+
     /**
      * Output the activity marker separator in the Attribute/Old/New table.
-     * 
+     *
      * @param dchg_
      *            The date to display on the marker.
      * @param chgby_
@@ -604,7 +605,7 @@ public class ACData
     /**
      * Dump the results in HTML format to an output stream. The form is in a
      * simple spreadsheet row and column list.
-     * 
+     *
      * @param db_
      *        A database object for an open connection to a caDSR.
      * @param save_
@@ -622,7 +623,7 @@ public class ACData
      * @see gov.nih.nci.cadsr.sentinel.tool.ACData#dumpFooter1 dumpFooter1()
      */
     static public int dumpDetail1(DBAlert db_, Stack save_, int rows_,
-        FileOutputStream fout_) throws IOException
+                                  FileOutputStream fout_) throws IOException
     {
         // Don't waste time with an empty list.
         if (save_ == null || save_.empty())
@@ -777,7 +778,7 @@ public class ACData
 
     /**
      * Write the footer for the dump file.
-     * 
+     *
      * @param empty_
      *        The report is empty.
      * @param msg_
@@ -799,7 +800,7 @@ public class ACData
 
     /**
      * Write the footer for the dump file.
-     * 
+     *
      * @param empty_
      *        The report is empty.
      * @param msg_
@@ -839,7 +840,7 @@ public class ACData
 
     /**
      * Dump the common header shared by all output formats
-     * 
+     *
      * @param db_
      *        The name of the source database used for the report.
      * @param style_
@@ -866,12 +867,11 @@ public class ACData
      *         When there is a problem with the output file.
      */
     static private void dumpCommonHeader(String db_, String style_,
-        String cemail_, String recips_, AlertRec rec_,
-        Timestamp start_, Timestamp end_, int part_, boolean next_, String filePattern_,
-        FileOutputStream fout_) throws IOException
+                                         String cemail_, String recips_, AlertRec rec_,
+                                         Timestamp start_, Timestamp end_, int part_, boolean next_, String filePattern_,
+                                         FileOutputStream fout_) throws IOException
     {
-        Date today = new Date();
-        Timestamp now = new Timestamp(today.getTime());
+        Timestamp now = new Timestamp(System.currentTimeMillis());
 
         fout_.write("<html>\n\t<head>\n\t\t<title>".getBytes());
         fout_.write("Sentinel Report for ".getBytes());
@@ -982,7 +982,7 @@ public class ACData
 
     /**
      * Output a header to describe the dump file content.
-     * 
+     *
      * @param db_
      *        The name of the source database used for the report.
      * @param style_
@@ -1011,7 +1011,7 @@ public class ACData
      * @see gov.nih.nci.cadsr.sentinel.tool.ACData#dumpFooter2 dumpFooter2()
      */
     static public void dumpHeader2(String db_, String style_, String cemail_, String recips_,
-        AlertRec rec_, Timestamp start_, Timestamp end_, int part_, boolean next_, String filePattern_, FileOutputStream fout_)
+                                   AlertRec rec_, Timestamp start_, Timestamp end_, int part_, boolean next_, String filePattern_, FileOutputStream fout_)
         throws IOException
     {
         dumpCommonHeader(db_, style_, cemail_, recips_, rec_, start_, end_, part_, next_, filePattern_, fout_);
@@ -1035,7 +1035,7 @@ public class ACData
 
     /**
      * Output a header to describe the dump file content.
-     * 
+     *
      * @param db_
      *        The name of the source database used for the report.
      * @param style_
@@ -1058,7 +1058,7 @@ public class ACData
      * @see gov.nih.nci.cadsr.sentinel.tool.ACData#dumpFooter1 dumpFooter1()
      */
     static public void dumpHeader1(String db_, String style_, String cemail_, String recips_,
-        AlertRec rec_, Timestamp start_, Timestamp end_, FileOutputStream fout_)
+                                   AlertRec rec_, Timestamp start_, Timestamp end_, FileOutputStream fout_)
         throws IOException
     {
         dumpCommonHeader(db_, style_, cemail_, recips_, rec_, start_, end_, 0, false, null, fout_);
@@ -1125,7 +1125,7 @@ public class ACData
      * Merge 2 lists into one. When "duplicate" records are found always use the
      * entry from list1_. For the purposes of this merge a duplicate record is
      * when the category and sequence match.
-     * 
+     *
      * @param list1_
      *        The dominant list.
      * @param list2_
@@ -1188,7 +1188,7 @@ public class ACData
      * Clean the list of data rows by removing anything that does not appear in
      * the id list provided. This logic requires the data rows are pre-sorted by
      * the idseq value.
-     * 
+     *
      * @param ids_
      *        The list of id values to compare to the _idseq of each row.
      * @param rows_
@@ -1279,7 +1279,7 @@ public class ACData
 
     /**
      * Sort the provided list by the _relatedID data element.
-     * 
+     *
      * @param list_
      *        The list to be sorted.
      */
@@ -1353,7 +1353,7 @@ public class ACData
      * Find the records with a matching ID in the Related ID data element. The
      * records list must be sorted ascending as this method performs a binary
      * search.
-     * 
+     *
      * @param id_
      *        The record id of interest.
      * @param list_
@@ -1400,7 +1400,7 @@ public class ACData
 
     /**
      * Save the given records on the results stack.
-     * 
+     *
      * @param results_
      *        The results stack.
      * @param p_
@@ -1416,7 +1416,7 @@ public class ACData
 
     /**
      * Set the data elements for this occurrence.
-     * 
+     *
      * @param level_
      * @param category_
      * @param table_
@@ -1434,9 +1434,9 @@ public class ACData
      * @param relatedID_
      */
     public void set(char level_, int category_, String table_, String idseq_,
-        String version_, int publicID_, String name_, String contextID_,
-        Timestamp modified_, Timestamp created_, String modifier_,
-        String creator_, String note_, String context_, String relatedID_)
+                    String version_, int publicID_, String name_, String contextID_,
+                    Timestamp modified_, Timestamp created_, String modifier_,
+                    String creator_, String note_, String context_, String relatedID_)
     {
         _level = level_;
         _category = category_;
@@ -1462,7 +1462,7 @@ public class ACData
 
     /**
      * Set the change, old and new value lists for this caDSR record.
-     * 
+     *
      * @param changes_
      *        The change code list.
      * @param old_
@@ -1480,16 +1480,21 @@ public class ACData
     public void setChanges(String changes_[], String old_[], String new_[], Timestamp dates_[], String chgtable_[], String chgby_[])
     {
         _changes = changes_;
+        _changesKeyNames = changes_;
         _old = old_;
         _new = new_;
         _dates = dates_;
         _chgtable = chgtable_;
         _chgby = chgby_;
+        _uChgby = chgby_;
     }
+
+
+
 
     /**
      * Get the primary database identifier for this occurrence.
-     * 
+     *
      * @return The value for *_idseq.
      */
     public String getIDseq()
@@ -1500,7 +1505,7 @@ public class ACData
     /**
      * Translate the internal codes used to track changes and resolve the id's
      * into readable names for the old and new values.
-     * 
+     *
      * @param db_
      *        The database connection.
      * @param list_
@@ -1527,7 +1532,7 @@ public class ACData
     /**
      * Resolve the id's into readable names for the Created By and Modified By
      * columns.
-     * 
+     *
      * @param db_
      *        The database connection.
      */
@@ -1535,6 +1540,9 @@ public class ACData
     {
         if (_resolveNames)
         {
+           //copy the names into local variables before they are resolved
+            _uName = _modifier;
+            _uCreator = _creator;
             _creator = dumpConvertBlanks(db_.selectName(null,
                 DBAlert._UNAME, _creator));
             _modifier = db_.selectName(null, DBAlert._UNAME,
@@ -1549,7 +1557,7 @@ public class ACData
 
     /**
      * Keep only the records which have a specific change and value combination.
-     * 
+     *
      * @param list_
      *        The database change records.
      * @param col_
@@ -1565,7 +1573,7 @@ public class ACData
      * @return The number of records to keep.
      */
     static private int filterSpecific(ACData list_[], String col_,
-        boolean any_, String vals_[], boolean flags_[])
+                                      boolean any_, String vals_[], boolean flags_[])
     {
         // If any change appears with the desire column change then keep the
         // whole record.
@@ -1610,7 +1618,7 @@ public class ACData
     /**
      * Filter the records which do not have a Major Release change to the
      * Version Number.
-     * 
+     *
      * @param list_
      *        The list of records from the caDSR search.
      * @param flags_
@@ -1648,7 +1656,7 @@ public class ACData
     /**
      * Filter the records which do not have a specific change to the Version
      * Number.
-     * 
+     *
      * @param list_
      *        The list of records from the caDSR search.
      * @param vers_
@@ -1659,7 +1667,7 @@ public class ACData
      * @return The number of records to keep.
      */
     static private int filterVersionSpecific(ACData list_[], String vers_,
-        boolean flags_[])
+                                             boolean flags_[])
     {
         int count = 0;
         for (int ndx = 0; ndx < list_.length; ++ndx)
@@ -1680,7 +1688,7 @@ public class ACData
 
     /**
      * Filter the list for the monitors being watched.
-     * 
+     *
      * @param list_
      *        The data to filter.
      * @param rec_
@@ -1743,7 +1751,7 @@ public class ACData
      * Compare two ACData instances using the record ID and context ID.  Record
      * ID takes precedence and when equal, determine the result from the context
      * ID.
-     * 
+     *
      * @param rec_ The other ACData being compared.
      * @return -1 when this < rec_, 0 when this == rec_ and 1 when this > rec_.
      */
@@ -1767,6 +1775,131 @@ public class ACData
         return rc;
     }
 
+    /**
+     * Convert a null string to an empty string.
+     *
+     * @param value the string to test
+     * @return the empty string as appropriate
+     */
+    public static final String convertNullString(String value)
+    {
+        return (value == null) ? "" : value;
+    }
+
+    /**
+     * Collect the change content converting the vectors to arrays for more efficient processing downstream.
+     *
+     * @param dchg_
+     * @param chgby_
+     * @param attrs_
+     * @param oldValue_
+     * @param newValue_
+     * @return the new change record
+     */
+    private ACDataChangesXML collectData(Timestamp dchg_, String chgby_, String uchgby_, Vector<String> attrs_, Vector<String> oldValue_, Vector<String> newValue_)
+    {
+        ACDataChangesXML change = new ACDataChangesXML();
+        change._time = dchg_.toString();
+        change._modifiedByName = convertNullString(chgby_);
+        change._modifiedByUser = convertNullString(uchgby_);
+        change._attributes = new String[attrs_.size()];
+        change._oldValues = new String[change._attributes.length];
+        change._newValues = new String[change._attributes.length];
+        for (int i = 0; i < change._attributes.length; ++i)
+        {
+            change._attributes[i] = attrs_.get(i);
+            change._oldValues[i] = oldValue_.get(i);
+            change._newValues[i] = newValue_.get(i);
+        }
+        return change;
+    }
+
+    /**
+     * Return values appropriate to place in an XML document
+     *
+     * @return the XML String values.
+     */
+    public ACDataXML getXML()
+    {
+        ACDataXML xml = new ACDataXML();
+
+        //verify the DTD with this code because the public id and version are optional as is the modified* attributes.
+        // Set the basic common information
+        xml._type = convertNullString(_tableCode);
+        xml._name = convertNullString(_name);
+        xml._id = convertNullString(_idseq);
+        if (_publicID != -1)
+            xml._publicId = String.valueOf(_publicID);
+        if (_version != null)
+        xml._version = convertNullString(_version);
+        if (_uName != null)
+        xml._modifiedByUser = convertNullString(_uName);
+         if (_modifier != null)
+        xml._modifiedByName = convertNullString(_modifier);
+        if (_modified != null)
+            xml._modifiedTime = _modified.toString();
+        xml._createdByUser = convertNullString(_uCreator);
+        xml._createdByName = convertNullString(_creator);
+        xml._createdTime = _created.toString();
+        xml._changeNote = convertNullString(_note);
+        xml._relatedId = _relatedID;
+
+        // If this is a 'primary' record with changes then convert it too.
+        if (isPrimary() && _changes != null && _changes.length != 0)
+        {
+            // The grouping with the change records is by the timestamp. Have to keep the user with the timestamp because it
+            // may or may not be the same person.
+            Timestamp dchg = _dates[0];
+            String chgby = _chgby[0];
+            String uchgby = _uChgby[0];
+
+            // Use vectors to collect the information because we don't know how the counts and change groups will fall out.
+            Vector<String> attrs = new Vector<String>();
+            Vector<String> newValue = new Vector<String>();
+            Vector<String> oldValue = new Vector<String>();
+            Vector<ACDataChangesXML> changes = new Vector<ACDataChangesXML>();
+
+            // Look at every change
+            for (int chgcnt = 0; chgcnt < _changes.length; ++chgcnt)
+            {
+                // If the timestamp changes this is a new change group - not to be confused with an association group appearing on the
+                // report.
+                if (dchg.compareTo(_dates[chgcnt]) != 0)
+                {
+                    // Save what we have so far.
+                    changes.add(collectData(dchg, chgby, uchgby, attrs, oldValue, newValue));
+
+                    // Reset local values for later
+                    dchg = _dates[chgcnt];
+                    chgby = _chgby[chgcnt];
+                    uchgby = _uChgby[chgcnt];
+
+                    //empty the previous values once we have saved what we have so far
+                    attrs = new Vector<String>();
+                    newValue = new Vector<String>();
+                    oldValue = new Vector<String>();
+                }
+                // Collect the changes.
+                attrs.add(convertNullString(_changes[chgcnt]));
+                oldValue.add(convertNullString(_old[chgcnt]));
+                newValue.add(convertNullString(_new[chgcnt]));
+            }
+            // There is always a change group to write after the loop because it is remembered after counting the records.
+            changes.add(collectData(dchg, chgby, uchgby, attrs, oldValue, newValue));
+
+            // Put everything in an array for more efficient processing downstream.
+            xml._changes = new ACDataChangesXML[changes.size()];
+            for (int i = 0; i < xml._changes.length; ++i)
+            {
+                xml._changes[i] = changes.get(i);
+            }
+        }
+
+        return xml;
+    }
+
+    // -----------------------------------------------
+    
     private static boolean _debug;       // *** development purposes only
 
     private boolean        _resolveNames; // Can not resolve the names more than
@@ -1835,13 +1968,24 @@ public class ACData
     // the primary table of the database as multiple changes could have been
     // made since
     // the last Alert run.
-    
+
     private Timestamp      _dates[];     // The corresponding date of the change as
                                          // recorded in the _old and _new arrays.
 
     // The list of tables actually changed related to the old, new and dates lists
     // above.
     private String         _chgtable[];
-    
+
     private String         _chgby[];
+
+    //This is used to store the key names for the correspondint values of the keys
+    //used in generating the XML
+    //TODO this is currently used but it seems a better alternative to doing another lookup after the changed item codes are translated to readable text.
+    private String  _changesKeyNames[];
+
+    private String _uName;
+
+    private String _uCreator;
+
+    private String _uChgby[];
 }

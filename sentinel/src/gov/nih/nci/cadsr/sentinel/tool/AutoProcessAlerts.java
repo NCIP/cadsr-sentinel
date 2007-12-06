@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.12 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.13 2007-12-06 20:52:09 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -11,11 +11,16 @@ import gov.nih.nci.cadsr.sentinel.audits.AuditReport;
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.ui.AlertPlugIn;
+
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.MissingResourceException;
 import java.util.Properties;
@@ -63,7 +68,7 @@ import org.apache.log4j.xml.DOMConfigurator;
  * files. There is no browser or other user interface to report progress. Once
  * the run is finished, the designated administrator receives an email of the
  * log and the recipients receive and email of the Alert output.
- * 
+ *
  * @author Larry Hebel
  */
 
@@ -78,7 +83,7 @@ public class AutoProcessAlerts
         _logSummary = null;
         _logAudits = null;
         _updateRunDate = true;
-        
+
         // Set the default output format for the report.
         _outForm = 2;
 
@@ -108,7 +113,7 @@ public class AutoProcessAlerts
      * optimal performance this should run locally to the database server (i.e.
      * LAN proximity not WAN). The amount of database access is extremely high
      * even with the computed date ranges used in the SQL selects.
-     * 
+     *
      * @param args_
      *        None at this time.
      */
@@ -120,17 +125,17 @@ public class AutoProcessAlerts
             return;
         }
         DOMConfigurator.configure(args_[0]);
-        
+
         // All logic is contained in the object so create a new instance and
         // run.
         AutoProcessAlerts apa = new AutoProcessAlerts();
         apa._updateRunDate = args_[1].equals("true");
-        
+
         try
         {
             // Get the database connection properties.
             apa.loadProp(args_[2]);
-            
+
             // Run the Alert reports.
             apa.autoRun();
         }
@@ -146,7 +151,7 @@ public class AutoProcessAlerts
 
     /**
      * Load the properties from the XML file specified.
-     * 
+     *
      * @param propFile_ the properties file.
      */
     private void loadProp(String propFile_) throws Exception
@@ -157,37 +162,36 @@ public class AutoProcessAlerts
         FileInputStream in = new FileInputStream(propFile_);
         prop.loadFromXML(in);
         in.close();
-        
+
         _dsurl = prop.getProperty(Constants._DSURL);
         if (_dsurl == null)
             _logger.error("Missing " + Constants._DSURL + " connection string in " + propFile_);
-        
+
         _user = prop.getProperty(Constants._DSUSER);
         if (_user == null)
             _logger.error("Missing " + Constants._DSUSER + " in " + propFile_);
-        
+
         _pswd = prop.getProperty(Constants._DSPSWD);
         if (_pswd == null)
             _logger.error("Missing " + Constants._DSPSWD + " in " + propFile_);
-        
+
         int auditCnt = 0;
         while (prop.getProperty("audit." + auditCnt + ".class") != null)
         {
             ++auditCnt;
         }
-        
+
         _audits = new String[auditCnt];
         for (int i = 0; i < _audits.length; ++i)
         {
             _audits[i] = prop.getProperty("audit." + i + ".class");
         }
-        
+
         _auditTitles = new String[_audits.length];
         for (int i = 0; i < _auditTitles.length; ++i)
         {
             _auditTitles[i] = prop.getProperty("audit." + i + ".title");
         }
-        
     }
 
     /**
@@ -216,22 +220,22 @@ public class AutoProcessAlerts
         /**
          * The report file name.
          */
-        public String   _reportFile;
+        public String _reportFile;
 
         /**
          * The number of parts the report is broken into.
          */
-        public int      _parts;
+        public int _parts;
 
         /**
          * True if errors exist in the file.
          */
-        public boolean  _errors;
+        public boolean _errors;
     }
 
     /**
      * Reset the Auto Run time stamp in the Alert Definition.
-     * 
+     *
      * @param rec_
      *        The Alert definition.
      */
@@ -247,7 +251,7 @@ public class AutoProcessAlerts
 
     /**
      * Reset the Manual Run time stamp in the Alert Definitions.
-     * 
+     *
      * @param rec_
      *        The Alert definition.
      */
@@ -286,19 +290,19 @@ public class AutoProcessAlerts
         /**
          * The number of parts for the report.
          */
-        public int    _parts;
+        public int _parts;
 
         /**
          * The number of rows in the report.
          */
-        public int    _rows;
+        public int _rows;
     }
 
     /**
      * Record a new report for distribution to a specific user. This is part of
      * general logic to consolidate all reports to a recipient into a single
      * email.
-     * 
+     *
      * @param pos_
      *        The position in the recipient list (who will receive the report).
      * @param file_
@@ -340,7 +344,7 @@ public class AutoProcessAlerts
      * consolidates all reports for a single recipient into a single email. The
      * recipient list is sorted alphabetically ascending to allow for binary
      * searches.
-     * 
+     *
      * @param pos_
      *        The position in the recipient array to insert the new email
      *        address.
@@ -379,7 +383,7 @@ public class AutoProcessAlerts
 
     /**
      * Save the report with the list of recipients for later.
-     * 
+     *
      * @param rec_
      *        The process record.
      */
@@ -390,6 +394,7 @@ public class AutoProcessAlerts
         String file;
         String name = rec_._alert.getName();
         int parts = rec_._parts;
+
         int rowCnt;
         if (rec_._errors)
         {
@@ -414,73 +419,96 @@ public class AutoProcessAlerts
             // we can guarantee that should a creator place an email
             // address in one Alert and use the user id in another, only
             // 1 email will be sent to the recipient.
-            String temp[] = null;
-            if (list[item].charAt(0) == '/')
+            if (list[item].startsWith("http://") || list[item].startsWith("https://"))
             {
-                temp = _db.selectEmailsFromConte(list[item]);
-                _logSummary.writeError(_db.getError());
-            }
-            else if (list[item].indexOf('@') < 0)
-            {
-                temp = new String[1];
-                temp[0] = _db.selectEmailFromUser(list[item]);
-                _logSummary.writeError(_db.getError());
+                queueReportForProcess(list[item]);
             }
             else
             {
-                temp = new String[1];
-                temp[0] = list[item];
+                queueReportForEmail(list[item], rowCnt, file, name, parts);
             }
+        }
+    }
 
-            // Perform a binary search on the recipient email list.
-            for (int ndx = 0; ndx < temp.length; ++ndx)
+    /**
+     * Queue the report for inclusion in an email distribution.
+     *
+     * @param email_ the user, email address, etc
+     * @param rowCnt_ the report row count
+     * @param file_ the report file name
+     * @param name_ the Alert Definition name
+     * @param parts_ the number of parts for this report
+     */
+    private void queueReportForEmail(String email_, int rowCnt_, String file_, String name_, int parts_)
+    {
+        String[] temp = null;
+
+        // if it is not a process URL then add the emails to the queue
+        if (email_.charAt(0) == '/')
+        {
+            temp = _db.selectEmailsFromConte(email_);
+            _logSummary.writeError(_db.getError());
+        }
+        else if (email_.indexOf('@') < 0)
+        {
+            temp = new String[1];
+            temp[0] = _db.selectEmailFromUser(email_);
+            _logSummary.writeError(_db.getError());
+        }
+        else
+        {
+            temp = new String[1];
+            temp[0] = email_;
+        }
+
+        // Perform a binary search on the recipient email list.
+        for (int ndx = 0; ndx < temp.length; ++ndx)
+        {
+            // Yes it's possible that a user does not have an email
+            // address.
+            if (temp[ndx] == null || temp[ndx].length() == 0)
+                continue;
+
+            // Standard binary search implementation.
+            int min = 0;
+            int max = _recipients.length;
+            while (true)
             {
-                // Yes it's possible that a user does not have an email
-                // address.
-                if (temp[ndx] == null || temp[ndx].length() == 0)
-                    continue;
-
-                // Standard binary search implementation.
-                int min = 0;
-                int max = _recipients.length;
-                while (true)
+                int pos = (max + min) / 2;
+                int compare = temp[ndx].compareTo(_recipients[pos]);
+                if (compare == 0)
                 {
-                    int pos = (max + min) / 2;
-                    int compare = temp[ndx].compareTo(_recipients[pos]);
-                    if (compare == 0)
+                    // When the recipient is already in the list we need
+                    // only
+                    // add the report name.
+                    appendReport(pos, file_, name_, rowCnt_, parts_);
+                    break;
+                }
+                else if (compare > 0)
+                {
+                    if (min == pos)
                     {
-                        // When the recipient is already in the list we need
-                        // only
-                        // add the report name.
-                        appendReport(pos, file, name, rowCnt, parts);
+                        // When the recipient is not in the list be sure
+                        // to position the name alphabetically and add
+                        // the report also.
+                        insertRecipient(++pos, temp[ndx]);
+                        appendReport(pos, file_, name_, rowCnt_, parts_);
                         break;
                     }
-                    else if (compare > 0)
+                    min = pos;
+                }
+                else
+                {
+                    if (max == pos)
                     {
-                        if (min == pos)
-                        {
-                            // When the recipient is not in the list be sure
-                            // to position the name alphabetically and add
-                            // the report also.
-                            insertRecipient(++pos, temp[ndx]);
-                            appendReport(pos, file, name, rowCnt, parts);
-                            break;
-                        }
-                        min = pos;
+                        // When the recipient is not in the list be sure
+                        // to position the name alphabetically and add
+                        // the report also.
+                        insertRecipient(pos, temp[ndx]);
+                        appendReport(pos, file_, name_, rowCnt_, parts_);
+                        break;
                     }
-                    else
-                    {
-                        if (max == pos)
-                        {
-                            // When the recipient is not in the list be sure
-                            // to position the name alphabetically and add
-                            // the report also.
-                            insertRecipient(pos, temp[ndx]);
-                            appendReport(pos, file, name, rowCnt, parts);
-                            break;
-                        }
-                        max = pos;
-                    }
+                    max = pos;
                 }
             }
         }
@@ -531,8 +559,8 @@ public class AutoProcessAlerts
                 _start = setToMidnight(_start);
             }
             _logSummary.writeHeading("Processing Alert Definition: " + ndx + ": "
-                + list[ndx]._alert.getName() + " (" + _start.toString()
-                + " TO " + _end.toString() + ")");
+                            + list[ndx]._alert.getName() + " (" + _start.toString()
+                            + " TO " + _end.toString() + ")");
 
             // Pull the caDSR changes given the Alert definition and the date
             // range.
@@ -556,7 +584,7 @@ public class AutoProcessAlerts
             }
 
             // Reset the last run time in the database. Always do this
-            // update whether or not a report is created. 
+            // update whether or not a report is created.
             resetAutoRun(list[ndx]);
         }
     }
@@ -639,6 +667,10 @@ public class AutoProcessAlerts
         // We send one email to each recipient.
         for (int ndx = 1; ndx < _recipients.length; ++ndx)
         {
+            // send emails to only email recipients and ignore process recipients
+            if (_recipients[ndx].startsWith("http://") || _recipients[ndx].startsWith("https://"))
+                continue;
+
             // Form the body of the email.
             boolean hasErrors = false;
             String prefix = "";
@@ -676,16 +708,16 @@ public class AutoProcessAlerts
 
             // Complete subject and body and send to recipient.
             String subject = _subject
-                + ((_id.charAt(0) == 'A') ? " Auto Run" : " Manual Run")
-                + " for " + _today.toString().substring(0, 10)
-                + ((hasErrors) ? " has Errors" : "");
+                            + ((_id.charAt(0) == 'A') ? " Auto Run" : " Manual Run")
+                            + " for " + _today.toString().substring(0, 10)
+                            + ((hasErrors) ? " has Errors" : "");
             String message = "<html><body style=\"font-family: arial; font-size: 10pt\"><p>"
-                + _adminIntro
-                + "</p>"
-                + prefix
-                + "<table style=\"font-size: 10pt\">"
-                + body
-                + "</table></body></html>";
+                            + _adminIntro
+                            + "</p>"
+                            + prefix
+                            + "<table style=\"font-size: 10pt\">"
+                            + body
+                            + "</table></body></html>";
             sendEmail(hasErrors, _recipients[ndx], "", subject,
                 message);
             _logSummary.writeHR();
@@ -693,6 +725,7 @@ public class AutoProcessAlerts
             _logSummary.writeParagraph0("Subject: " + subject);
             _logSummary.writeTable(body);
         }
+           
         _logSummary.writeHR();
         _logSummary.writeHeading("Completed emails...\n");
     }
@@ -704,7 +737,7 @@ public class AutoProcessAlerts
     {
         /**
          * Constructor
-         * 
+         *
          * @param rec_
          *        The Alert Defition to process.
          */
@@ -733,7 +766,7 @@ public class AutoProcessAlerts
             _logSummary.writeParagraph1("Working folder prefix = " + _work);
 
             _logSummary.writeHeading("Processing Alert Definition: " + _rec.getName() + " ("
-                + _start.toString() + " TO " + _end.toString() + ")");
+                    + _start.toString() + " TO " + _end.toString() + ")");
 
             ProcessRec rec = new ProcessRec();
             rec._alert = _rec;
@@ -773,9 +806,9 @@ public class AutoProcessAlerts
     /**
      * Invoke a single alert run using the start and end dates provided. This
      * method will execute in a separate thread.
-     * 
+     *
      * @param api_
-     *        The data source (if one exists) for the database connection. 
+     *        The data source (if one exists) for the database connection.
      * @param rec_
      *        The alert definition to run. This does not have to be saved in the
      *        database.
@@ -796,7 +829,7 @@ public class AutoProcessAlerts
 
     /**
      * Generate a file name to hold the report.
-     * 
+     *
      * @param rec_
      *        The Alert definition.
      */
@@ -804,7 +837,7 @@ public class AutoProcessAlerts
     {
         String temp = rec_._alert.getName().replaceAll("\\W", "_");
         String ts = "_" + Timemarker.timeNow().toString().replaceAll("\\D", "")
-            + ".html";
+                + ".html";
         rec_._reportFile = _work + temp + ts;
         temp = _http + temp + ts;
         _logSummary.writeParagraph1("Created by " + rec_._alert.getCreator());
@@ -814,14 +847,16 @@ public class AutoProcessAlerts
     }
 
     /**
-     * Dump the report records to output.
-     * 
+     * Dump the output for use in Emails
+     *
      * @param save_
      *        The report content.
      * @param rec_
      *        The processing record for the report.
+     * @param cemail_
+     *        The creator email address
      */
-    private void dump(Stack<RepRows> save_, ProcessRec rec_)
+    private void dumpEmailRecipients(Stack<RepRows> save_, ProcessRec rec_, String cemail_)
     {
         try
         {
@@ -829,14 +864,11 @@ public class AutoProcessAlerts
             FileOutputStream fout = new FileOutputStream(rec_._reportFile,
                 false);
 
-            // Creators email address.
-            String cemail = _db.selectEmailFromUser(rec_._alert.getCreator());
-
             _outRows = 0;
             if (_outForm == 1)
             {
                 // Header first.
-                ACData.dumpHeader1(_dbname, _style, cemail, _db
+                ACData.dumpHeader1(_dbname, _style, cemail_, _db
                     .selectRecipientNames(rec_._alert.getRecipients()),
                     rec_._alert, _start, _end, fout);
 
@@ -897,7 +929,7 @@ public class AutoProcessAlerts
                         fout = new FileOutputStream(filename, false);
 
                         // Header first.
-                        ACData.dumpHeader2(_dbname, _style, cemail, _db
+                        ACData.dumpHeader2(_dbname, _style, cemail_, _db
                             .selectRecipientNames(rec_._alert.getRecipients()),
                             rec_._alert, _start, _end, parts, total > 0,
                             namePattern, fout);
@@ -920,7 +952,7 @@ public class AutoProcessAlerts
                 else
                 {
                     // Header first.
-                    ACData.dumpHeader2(_dbname, _style, cemail, _db
+                    ACData.dumpHeader2(_dbname, _style, cemail_, _db
                         .selectRecipientNames(rec_._alert.getRecipients()),
                         rec_._alert, _start, _end, 0, false, null, fout);
 
@@ -950,7 +982,7 @@ public class AutoProcessAlerts
 
     /**
      * Filter the list based on monitors in the Alert definition.
-     * 
+     *
      * @param list_
      *        The current data set.
      * @param rec_
@@ -967,7 +999,7 @@ public class AutoProcessAlerts
 
     /**
      * Find the records that have actually changed in the database.
-     * 
+     *
      * @param rec_
      *        The Alert Definition.
      * @param acdList_
@@ -1160,23 +1192,23 @@ public class AutoProcessAlerts
             String errorPrefix = "<b>Error:</b> <i>";
 
             String splitPattern = AuditReport.getSplitPattern();
-            
+
             for (index = 0; index < _audits.length; ++index)
             {
                 try
                 {
-                        AuditReport ar = (AuditReport) Class.forName(_audits[index]).newInstance();
-                        ar.setDB(_db);
-                        rows = ar.getReportRows();
-                        colcnt = rows[0].split(splitPattern).length;
-                        String prefix = AuditReport.formatSectionTop(_auditTitles[index], index);
-                        String suffix = AuditReport.formatSectionBottom();
-                        text = AuditReport.formatHeader(
-                                        _auditTitles[index],
-                                        (ar.okToDisplayCount()) ? rows.length : -1,
-                                        colcnt, index);
-                        text = text + AuditReport.formatRows(rows);
-                        _logAudits.writeMatrix(prefix, text, colcnt, ar.rightJustifyLastColumn(), suffix);
+                    AuditReport ar = (AuditReport) Class.forName(_audits[index]).newInstance();
+                    ar.setDB(_db);
+                    rows = ar.getReportRows();
+                    colcnt = rows[0].split(splitPattern).length;
+                    String prefix = AuditReport.formatSectionTop(_auditTitles[index], index);
+                    String suffix = AuditReport.formatSectionBottom();
+                    text = AuditReport.formatHeader(
+                        _auditTitles[index],
+                        (ar.okToDisplayCount()) ? rows.length : -1,
+                        colcnt, index);
+                    text = text + AuditReport.formatRows(rows);
+                    _logAudits.writeMatrix(prefix, text, colcnt, ar.rightJustifyLastColumn(), suffix);
                 }
                 catch (InstantiationException ex)
                 {
@@ -1211,7 +1243,7 @@ public class AutoProcessAlerts
 
     /**
      * Create a dataset of all changes from the caDSR.
-     * 
+     *
      * @param rec_
      *        The Alert definition.
      */
@@ -1334,7 +1366,7 @@ public class AutoProcessAlerts
             // If a CSI, CS or Form is specified, we can not get to a Context
             // directly from the Administered Components.
             if (rec_._alert.isCSIall() && rec_._alert.isCSall()
-                && rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
+                            && rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
             {
                 cdm = ACData.merge(cd, _db.selectCDfromVD(vdm));
                 _logSummary.writeError(_db.getError());
@@ -1543,7 +1575,7 @@ public class AutoProcessAlerts
                 ldec.add(chainDE);
             }
             if (rec_._alert.isCSIall() && rec_._alert.isCSall()
-                && rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
+                            && rec_._alert.isFORMSall() && rec_._alert.isPROTOall())
             {
                 chainDE.add(lconte);
                 chainDEC.add(lconte);
@@ -1676,7 +1708,7 @@ public class AutoProcessAlerts
     /**
      * Using the Auto Run frequency and an anchor date, backup the appropriate
      * number of days to calculate a working start.
-     * 
+     *
      * @param rec_
      *        The Alert definition.
      * @param anchor_
@@ -1705,7 +1737,7 @@ public class AutoProcessAlerts
 
     /**
      * Set the time portion of the date to 00:00:00.0 (midnight).
-     * 
+     *
      * @param time_
      *        The specified date and time.
      * @return The same date as provided with the time set to midnight.
@@ -1718,7 +1750,7 @@ public class AutoProcessAlerts
 
     /**
      * Get the list of Alert definitions that are active for the date specified.
-     * 
+     *
      * @return The list of alerts.
      */
     private AlertRec[] getAlertList()
@@ -1736,7 +1768,7 @@ public class AutoProcessAlerts
 
     /**
      * Search for the DSRAlert.properties file on the current drive.
-     * 
+     *
      * @param path_
      *        private void findResources(String path_) { if (new File(path_ +
      *        File.separator + _RESOURCES).exists()) { _resourcePath = path_ +
@@ -1750,7 +1782,7 @@ public class AutoProcessAlerts
 
     /**
      * Load the configuration options from the resource/property file.
-     * 
+     *
      * @return 0 if successful, otherwise !0
      */
     private int getResources()
@@ -1761,19 +1793,19 @@ public class AutoProcessAlerts
             if (prb == null)
             {
                 _logger.error("Can not find properties resource "
-                        + _RESOURCES);
+                    + _RESOURCES);
                 return -1;
             }
 
-/* These values should have been read from the XML file during the Autorun Start
- 
-        if (_dsurl == null)
-        {
-            _dsurl = prb.getString(Constants._DBTNSNAME);
-            _user = prb.getString(Constants._DBUSER);
-            _pswd = prb.getString(Constants._DBPSWD);
-        }
-*/
+            /* These values should have been read from the XML file during the Autorun Start
+
+            if (_dsurl == null)
+            {
+                _dsurl = prb.getString(Constants._DBTNSNAME);
+                _user = prb.getString(Constants._DBUSER);
+                _pswd = prb.getString(Constants._DBPSWD);
+            }
+            */
 
             _version = prb.getString(Constants._APLVERS);
             _style = prb.getString(_STYLE).replaceAll("}", "}\n");
@@ -1781,11 +1813,11 @@ public class AutoProcessAlerts
         catch (MissingResourceException ex)
         {
             _logger.error("Can not find properties resource "
-                            + _RESOURCES);
+                + _RESOURCES);
             _version = "unknown";
             _style = "";
         }
-        
+
         // Be sure we have a database connection.
         String errMsg = null;
         if (_db == null)
@@ -1844,7 +1876,7 @@ public class AutoProcessAlerts
     {
         String body = "<p>The following log was created using the Sentinel Alert Version "
             + _version + "</p>";
-        
+
         String statBody = null;
 
         boolean errors = true;
@@ -1864,7 +1896,7 @@ public class AutoProcessAlerts
             body += "<p>Please review the Summary Log from the caDSR Alert Run.</p>"
                 + "<p><a href=\"" + tempPath + "\">" + tempPath + "</a></p>"
                 + "<p><a href=\"" + tempHTTP + "\">" + tempHTTP + "</a></p>";
-    
+
             // Send link to statistics report.
             if (_logAudits != null)
             {
@@ -1880,7 +1912,7 @@ public class AutoProcessAlerts
         subject = _subject
             + ((_id.charAt(0) == 'A') ? " Auto Run" : " Manual Run") + " LOG"
             + ((errors) ? " with ERRORS" : "");
-        
+
         body = "<html><body style=\"font-family: arial; font-size: 10pt\">" + body + "</body></html>";
 
         // Send email.
@@ -1889,7 +1921,7 @@ public class AutoProcessAlerts
             sendEmail(errors, _adminEmail[ndx], _adminName, subject, body);
             _logger.info("Sent admin report to " + _adminEmail[ndx]);
         }
-        
+
         if (statBody != null && _statReportEmail != null && _statReportEmail.length > 0)
         {
             statBody = "<html><body style=\"font-family: arial; font-size: 10pt\">" + statBody + "</body></html>";
@@ -1905,7 +1937,7 @@ public class AutoProcessAlerts
 
     /**
      * Send an email through the transport.
-     * 
+     *
      * @param hasErrors_
      *        True if errors occurred.
      * @param toEmail_
@@ -1986,8 +2018,207 @@ public class AutoProcessAlerts
         catch (UnsupportedEncodingException ex)
         {
             String temp = ex.toString();
-            _logSummary. writeError(temp);
+            _logSummary.writeError(temp);
             _logger.error(temp);
+        }
+    }
+
+    /**
+     * Notify a process the report is ready.
+     *
+     * @param url_ the process URL
+     */
+    private void queueReportForProcess(String url_)
+    {
+        // recipient is a process, create new thread to process urls...
+        String xmlLink;
+        xmlLink = _http + _xmlFile.substring(_work.length());
+        xmlLink = xmlLink.replaceAll(" ", "%20");
+        String processURL = renderProcessURL(url_) + xmlLink;
+        AlertProcessThread processThread = new AlertProcessThread(processURL, url_);
+        processThread.start();
+    }
+
+    /**
+     * Add the alert report URL to the process recipient. Must allow for the possibility the URL already contains
+     * a variable list so we are appending to it OR this may be the only variable.
+     *
+     * @param processURL
+     * @return the modified URL
+     */
+    private static final String renderProcessURL(String processURL)
+    {
+        return processURL + ((processURL.indexOf("?") == -1) ? "?" : "&") + "alertreport=";
+    }
+
+    /**
+     * Create a thread wrapper around the processing of a single process Alert.
+     */
+    private class AlertProcessThread extends Thread {
+        private String processURL;
+        private String clientURL;
+
+        /**
+         * Constructor
+         *
+         * @param url
+         * @param client
+         */
+        public AlertProcessThread(String url, String client)
+        {
+            processURL = url;
+            clientURL = client;
+        }
+
+        public void run()
+        {
+            try
+            {
+                URL pURL = new URL(processURL);
+                // open the process URL
+                BufferedReader in = new BufferedReader(new InputStreamReader(pURL.openStream()));
+                _logSummary.writeText("\nNotified Process URL : " + clientURL + "\n");
+                String inputLine;
+                // read from the process URL and write the acknowledgement message to the log
+                while ((inputLine = in.readLine()) != null)
+                {
+                    _logSummary.writeText(inputLine);
+                }
+
+                in.close();
+            }
+            catch (MalformedURLException e)
+            {
+                _logSummary.writeError("Invalid URL/Error opening URL: " + processURL + "\n");
+            }
+            catch (IOException e)
+            {
+                _logSummary.writeError("Invalid URL/ File Not Found / Error opening URL: " + processURL + "\n");
+            }
+        }
+    }
+
+    /**
+     * Look for process recipients
+     *
+     * @param receipients
+     * @return true if sending to a process
+     */
+    private boolean hasProcessRecipient(String[] receipients)
+    {
+        for (int i = 0; i < receipients.length; i++)
+        {
+            if (receipients[i].startsWith("http://") || (receipients[i].startsWith("https://")))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Look for email recipients
+     *
+     * @param receipients
+     * @return true if sending an email
+     */
+    private boolean hasEmailRecipient(String[] receipients)
+    {
+        for (int i = 0; i < receipients.length; i++)
+        {
+            if (receipients[i].indexOf("@") != -1)
+                return true;
+            else
+            {
+                if (!receipients[i].startsWith("http://") && (!receipients[i].startsWith("http://")))
+                {
+                    if (_db.selectEmailFromUser(receipients[i]).indexOf("@") != -1)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Dump the output for use by Process recipients
+     *
+     * @param xmlSave_
+     *        A clone of the report content
+     * @param rec_
+     *        The processing record for the report.
+     * @param cemail_
+     *        The creator email address
+     */
+    private void dumpProcessRecipients(Stack<RepRows> xmlSave_, ProcessRec rec_, String cemail_)
+    {
+        // if we have a process then the fileneme is changed to end with xml
+        _xmlFile = rec_._reportFile.replace(".html", ".xml");
+
+        // Create an array of all the changeNames to keyNames
+
+        try
+        {
+            FileOutputStream _fout = new FileOutputStream(_xmlFile, false);
+            // Create an output factory
+
+            ACXMLData xmlWriter = new ACXMLData(_fout, rec_._alert, _db, xmlSave_, _dbname, cemail_, _version, _start, _end);
+            xmlWriter.writeXMLWithJDOM();
+
+            // Create an entry in the log file
+            _logSummary.writeParagraph1("Output XML File is");
+            // write the location of the file
+            _logSummary.writeParagraph2(_xmlFile);
+            String xmlLink = _http + _xmlFile.substring(_work.length());
+            xmlLink = xmlLink.replaceAll(" ", "%20");
+            // write the URL for the xml file
+            _logSummary.writeParagraph2("<a href=\"" + xmlLink + "\" target=\"_blank\">" + xmlLink + "</a>");
+
+        }
+        catch (FileNotFoundException e)
+        {
+            _logSummary.writeError("Error opening auto alert dump xml file: " + _xmlFile);
+        }
+    }
+
+    /**
+     * Dump the report records to output.
+     *
+     * @param save_
+     *        The report content.
+     * @param rec_
+     *        The processing record for the report.
+     */
+    private void dump(Stack<RepRows> save_, ProcessRec rec_)
+    {
+        boolean hasProcesses = hasProcessRecipient(rec_._alert.getRecipients());
+        boolean hasEmails = hasEmailRecipient(rec_._alert.getRecipients());
+
+        // Creators email address.
+        String cemail = _db.selectEmailFromUser(rec_._alert.getCreator());
+
+        Stack<RepRows> xmlSave = null;
+        if (hasProcesses)
+        {
+            // Copy the stack to another stack as it is also required for xml generation
+            xmlSave = (Stack<RepRows>) save_.clone();
+        }
+
+        // Do all these only if the alert has a receipient which is an email
+        if (hasEmails)
+        {
+            dumpEmailRecipients(save_, rec_, cemail);
+        }
+
+        /*
+         * We check if there is a process URL then an XML file is generated. ACXMLData is used to generate the XML file. JDOM is used to generate the xml in
+         * memory and then serialize to a file later.
+         */
+        if (hasProcesses)
+        {
+            dumpProcessRecipients(xmlSave, rec_, cemail);
         }
     }
 
@@ -2015,7 +2246,7 @@ public class AutoProcessAlerts
     private String              _subject;
 
     private String[]            _adminEmail;
-    
+
     private String[]           _statReportEmail;
 
     private String              _adminName;
@@ -2051,15 +2282,17 @@ public class AutoProcessAlerts
     private AlertOutput         _logSummary;
 
     private AlertOutput         _logAudits;
-    
+
     private AlertPlugIn _api;
-    
+
     private String[] _audits;
-    
+
     private String[] _auditTitles;
-    
+
     private boolean _updateRunDate;
-    
+
+    private String _xmlFile;
+
     private static final Logger _logger = Logger.getLogger(AutoProcessAlerts.class.getName());
 
     private static final String _RESOURCES       = "gov.nih.nci.cadsr.sentinel.DSRAlert";

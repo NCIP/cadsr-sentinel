@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/edit.js,v 1.2 2007-09-25 14:26:46 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/edit.js,v 1.3 2007-12-06 20:52:07 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -28,7 +28,7 @@
             editForm.propUsers.options[indx2] = new Option(gText, DBgroupsVals[indx2]);
         }
     }
-    
+
     function setEmailList()
     {
         setNameList(editForm.propUsers);
@@ -150,7 +150,7 @@
                     tVals = DBdisplayVals[index];
                     DBdisplayVals[index] = DBdisplayVals[index + 1];
                     DBdisplayVals[index + 1] = tVals;
-                    
+
                     rsel0 = editForm.repAttributes.options[index].selected;
                     rsel1 = editForm.repAttributes.options[index + 1].selected;
                     tList = editForm.repAttributes.options[index].text;
@@ -253,11 +253,14 @@
         editForm.propRecipients.options.length = 0;
         for (ndx = 0; ndx < DBrecipients.length; ++ndx)
         {
-            if (DBrecipients[ndx].indexOf("@") > -1)
+            // Allow for freeform Email and URL entries
+            if ((DBrecipients[ndx].indexOf("@") > -1) || (DBrecipients[ndx].indexOf("https://") > -1) || (DBrecipients[ndx].indexOf("http://") > -1))
             {
                 editForm.propRecipients.options[ndx3] = new Option(DBrecipients[ndx], DBrecipients[ndx]);
                 ++ndx3;
             }
+
+            // Allow for Context Curator groups
             else if (DBrecipients[ndx].charAt(0) == "/")
             {
                 for (ndx2 = 0; ndx2 < DBgroupsList.length; ++ndx2)
@@ -271,6 +274,8 @@
                     }
                 }
             }
+
+            // All others must be individual user accounts.
             else
             {
                 for (ndx2 = 0; ndx2 < DBnamesVals.length; ++ndx2)
@@ -399,9 +404,9 @@
     {
         if (editForm.propEmail.value !== null && editForm.propEmail.value !== "")
         {
-            if (editForm.propEmail.value.indexOf("@") == -1)
+            if ((editForm.propEmail.value.indexOf("@") == -1) && (editForm.propEmail.value.indexOf("https://") !== 0 && editForm.propEmail.value.indexOf("http://") !== 0))
             {
-                window.alert("The email address is not correctly formed.");
+                window.alert("The email address or URL is not correctly formed, add '@', 'https://' or 'http://' as desired. The URL prefix is case sensitive.");
                 editForm.propEmail.focus();
                 return;
             }
@@ -817,20 +822,20 @@
 //        initSearchAttrs();
 //        initDisplayAttrs();
     }
-    
+
     var MusersTab = null;
     var MmainTab = null;
-    
+
     function tabMouseOut(obj)
     {
         obj.className = (obj == MusersTab || obj == MmainTab) ? "tab0" : "tab1";
     }
-    
+
     function tabMouseOver(obj)
     {
         obj.className = (obj == MusersTab || obj == MmainTab) ? "tab0" : "tab2";
     }
-    
+
     function selectTab0(obj)
     {
         obj.className = "tab0";
@@ -847,7 +852,7 @@
             editForm.usersTab.value = "1";
         }
     }
-    
+
     function selectTab1(obj)
     {
         MmainTab.className = "tab1";
@@ -976,7 +981,7 @@
         editForm.nextScreen.value = "back";
         editForm.submit();
     }
-    
+
     function cmdLogout()
     {
         editForm.action = "/cadsrsentinel/do/logout";

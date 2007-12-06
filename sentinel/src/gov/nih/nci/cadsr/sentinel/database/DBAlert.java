@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.5 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.6 2007-12-06 20:52:09 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -1877,6 +1877,21 @@ public interface DBAlert
      * @return true if the type and string are equivalent.
      */
     public boolean isACType(int type_, String tableCode_);
+
+    /**
+     * Return the database Registration Authority Identifier (RAI)
+     *
+     * @return The database server value
+     */
+    public String getDatabaseRAI();
+
+    /**
+     * Convert all meaning full names back to the internal codes for the XML generation
+     * 
+     * @param changes  - array of names for changes
+     * @return - array of the corresponding key values
+     */
+    public String[] getKeyNames(String[] changes);
 
     // Class data elements.
 

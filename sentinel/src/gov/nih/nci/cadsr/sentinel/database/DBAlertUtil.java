@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertUtil.java,v 1.4 2007-09-25 14:26:46 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertUtil.java,v 1.5 2007-12-06 20:52:09 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -135,6 +135,43 @@ public class DBAlertUtil
         {
             int ndx = (max + min) / 2;
             int compare = key_.compareTo(list_[ndx]._key);
+            if (compare == 0)
+            {
+                return ndx;
+            }
+            else if (compare > 0)
+            {
+                if (min == ndx)
+                    return -1;
+                min = ndx;
+            }
+            else
+            {
+                if (max == ndx)
+                    return -1;
+                max = ndx;
+            }
+        }
+    }
+
+
+    /**
+     * Perform a binary search on a sorted list of values.
+     *
+     * @param list_
+     *        The key/value array to be searched.
+     * @param val_
+     *        The value to search for.
+     * @return The index into the values array.
+     */
+    static public int binarySearchValues(DBAlertOracleMap1[] list_, String val_)
+    {
+        int min = 0;
+        int max = list_.length;
+        while (true)
+        {
+            int ndx = (max + min) / 2;
+            int compare = val_.compareTo(list_[ndx]._val);
             if (compare == 0)
             {
                 return ndx;
