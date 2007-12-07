@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ExampleProcessRecipientForm.java,v 1.1 2007-12-07 21:52:53 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ExampleProcessRecipientForm.java,v 1.2 2007-12-07 22:15:51 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -23,7 +23,7 @@ public class ExampleProcessRecipientForm extends ActionForm
      * 
      */
     private static final long serialVersionUID = 6923704102939647439L;
-    private String _url;
+    private String _alertReportUrl;
 
     /**
      * Constructor
@@ -38,9 +38,9 @@ public class ExampleProcessRecipientForm extends ActionForm
      * 
      * @return the URL
      */
-    public String getUrl()
+    public String getAlertreport()
     {
-        return _url;
+        return _alertReportUrl;
     }
     
     /**
@@ -48,9 +48,9 @@ public class ExampleProcessRecipientForm extends ActionForm
      * 
      * @param value_
      */
-    public void setUrl(String value_)
+    public void setAlertreport(String value_)
     {
-        _url = value_;
+        _alertReportUrl = value_;
     }
 
     /**
