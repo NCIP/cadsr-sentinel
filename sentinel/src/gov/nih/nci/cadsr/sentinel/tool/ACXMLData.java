@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACXMLData.java,v 1.1 2007-12-06 20:52:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACXMLData.java,v 1.2 2007-12-07 21:52:53 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -257,23 +257,21 @@ public class ACXMLData
                             }
                         }
                     }
-
                 }
 
                 // A User
                 else
                 {
-
                     String temp[] = new String[1];
                     temp[0] = parts[rc];
                     recipient.setAttribute(_attrUser, parts[rc]);
                     recipient.setAttribute(_attrName, ACData.convertNullString(_db.selectRecipientNames(temp)));
                     recipient.setAttribute(_attrEmail, _db.selectEmailFromUser(parts[rc]));
                     definition.addContent(recipient);
-                    _logger.error(_db.getError());
+                    String txt = _db.getError();
+                    if (txt != null)
+                        _logger.error(txt);
                 }
-
-
             }
 
             // add summary to definition can be 0 or 1

@@ -5,7 +5,7 @@
           "http://jakarta.apache.org/struts/dtds/struts-config_1_3.dtd">
 
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/WEB-INF/struts-config.xml,v 1.1 2007-07-19 15:26:45 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/WEB-INF/struts-config.xml,v 1.2 2007-12-07 21:52:53 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 
@@ -22,6 +22,7 @@
     <form-bean name="crfForm" type="gov.nih.nci.cadsr.sentinel.ui.CRFForm"/>
     <form-bean name="loghForm" type="gov.nih.nci.cadsr.sentinel.ui.LogHTMLForm"/>
     <form-bean name="heartbeatForm" type="gov.nih.nci.cadsr.sentinel.ui.HeartbeatForm"/>
+    <form-bean name="urlForm" type="gov.nih.nci.cadsr.sentinel.ui.ExampleProcessRecipientForm"/>
 
   </form-beans>
   
@@ -104,6 +105,13 @@
     <action path="/heartbeat"
             type="gov.nih.nci.cadsr.sentinel.ui.Heartbeat"
             name="heartbeatForm"
+            scope="request"
+            input="/jsp/logon.jsp">
+    </action>
+    
+    <action path="/urltest"
+            type="gov.nih.nci.cadsr.sentinel.ui.ExampleProcessRecipient"
+            name="urlForm"
             scope="request"
             input="/jsp/logon.jsp">
     </action>
