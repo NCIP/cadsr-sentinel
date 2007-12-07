@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ExampleProcessRecipient.java,v 1.2 2007-12-07 22:15:50 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ExampleProcessRecipient.java,v 1.3 2007-12-07 22:43:23 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -22,6 +22,9 @@ import org.apache.struts.util.MessageResources;
 
 /**
  * This class provides an example of a Process Recipient. Also see the ExampleProcessRecipientForm.java class.
+ * 
+ * To verify this code enter the following into a browser address:
+ *      http://cadsrsentinel.nci.nih.gov/cadsrsentinel/do/urltest?alertreport=http://identity
  * 
  * @author lhebel
  *
@@ -65,21 +68,22 @@ public class ExampleProcessRecipient extends Action
                 version = version.replace("&nbsp;", " ").trim();
 
                 // Identify who we are.
-                String html = "<html><body>\n";
-                html += "<p>Example Process Recipient</p>\n"; 
-                html += "<p>caDSR Sentinel Tool</p>\n"; 
-                html += "<p>Version: " + version + "</p>\n"; 
-                html += "<p>Author: NCICB</p>\n"; 
-                html += "<p>Contact: Denise Warzel<br>\n";
-                html += "Associate Director, NCICB, NCI Center for Biomedical Informatics and Information Technology<br>\n";
-                html += "caCORE Product Line<br>\n";
-                html += "caDSR Product Suite<br>\n";
-                html += "<a href=\"mailto:warzeld@mail.nih.gov?subject=caDSR%20Sentinel%20Tool%20Process%20Recipients\">warzeld@mail.nih.gov</a></p>\n<br>\n";
-                html += "303-722-9446 (o)<br>\n";
-                html += "240-205-5445 (bb)<br>\n";
-                html += "303-777-1419 (f)<br>\n";
-                html += "<a href=\"http://ncicb.nci.nih.gov/infrastructure/cacore_overview\" target=\"_blank\">http://ncicb.nci.nih.gov/infrastructure/cacore_overview</a></p>\n";
-                html += "</body></html>"; 
+                String html = "<html><head><title>Example Process Recipient</title><style>\n"
+                    + "BODY { font-family: Arial; font-size: 10pt }\n"
+                    + "TABLE { font-family: Arial; font-size: 10pt }\n"
+                    + "TD { vertical-align: top }\n"
+                    + "</style></head><body>\n"
+                    + "<table><colgroup><col style=\"font-weight: bold\"/><col/></colgroup>\n"
+                    + "<tr><td>Title:</td><td>Example Process Recipient</td></tr>\n"
+                    + "<tr><td>Application:</td><td>caDSR Sentinel Tool " + version + "</td></tr>\n"
+                    + "<tr><td>Organization:</td><td>NCICB</td></tr>\n"
+                    + "<tr><td>Contact:</td><td>Denise Warzel<br>\n"
+                    + "Associate Director, NCICB, NCI Center for Biomedical Informatics and Information Technology<br>\n"
+                    + "caCORE Product Line<br>\n"
+                    + "caDSR Product Suite<br>\n"
+                    + "<a href=\"mailto:warzeld@mail.nih.gov?subject=caDSR%20Sentinel%20Tool%20Process%20Recipients\">warzeld@mail.nih.gov</a><br>\n"
+                    + "<a href=\"http://ncicb.nci.nih.gov/infrastructure/cacore_overview\" target=\"_blank\">http://ncicb.nci.nih.gov/infrastructure/cacore_overview</a></td></tr>\n"
+                    + "</table></body></html>"; 
                 out.println(html);
             }
             else
