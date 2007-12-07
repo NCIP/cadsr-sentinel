@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/html/help.html,v 1.2 2007-09-25 14:26:45 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/html/help.html,v 1.3 2007-12-07 23:03:04 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <html>
@@ -50,7 +50,7 @@
                 <p class="ttl18" style="text-align: center">
                     caDSR Sentinel Tool Documentation
                     <br />
-                    Version 3.2
+                    Version 3.2.0.3
                 </p>
                 <a name="toc"></a>
             </div>
@@ -542,7 +542,7 @@
                         <dt>Send a report from &hellip;<dd>Choose whether a report is sent with every processing of the
                             Alert Definition or sent only when there is activity. To reduce e-mail traffic, select "&hellip; only when there is acitivity &hellip;".
                         <dt>Recipients<dd>The e-mail distribution list for Automated and Manually generated reports. There are no limits on the list size or
-                            content. Add a recipient e-mail address by selecting a User Name, a Curators group or typing the address.
+                            content. Add a recipient e-mail address by selecting a User Name, a Curators group or typing the address. A Process URL may also be entered.
                             <dl>
                                 <dt>Users<dd>The user accounts defined within the caDSR. The list displays the user name, suffixed first by an asterisk when the account
                                     is missing the e-mail address and suffixed by the associated Curator group names as appropriate within parenthesis. If the e-mail address is missing
@@ -552,10 +552,12 @@
                                     is given any write permissions to the caDSR. Read only accounts are not included in any group. Selecting a Curator group as a recipient hides 
                                     changes in the organization or assigned responsibilities. Alert Report e-mails to Curator groups are sent to all members except those listed
                                     below "Additional e-mail address".
-                                <dt>Additional e-mail address<dd>A desired recipients well formed e-mail address. This is often used to specify alternate e-mail addresses
-                                    or temporary recipients. The user account profile supports a single e-mail address. Additional e-mail addresses must be entered here, e.g.
+                                <dt>Additional e-mail address and Process URL<dd>A desired recipients well formed e-mail address or software well formed URL.
+                                    This is often used to specify alternate e-mail addresses, temporary recipients and software process applications.
+                                    The user account profile supports a single e-mail address. Additional e-mail addresses must be entered here, e.g.
                                     for John Smith to recieve an Alert Report at both work and home, the user account profile may contain one and the other entered here.
-                                    Alternatively, the user account profile may not have an e-mail address and both are entered here.
+                                    Alternatively, the user account profile may not have an e-mail address and both are entered here. If entering a process URL, please contact the NCI Help Desk
+                                    for programming design requirements and instructions.
                                 <dt>The following users only receive &hellip;<dd>The users who have intentionally requested exclusion from the Recipient Curator groups. These users only
                                     receive Alert Report e-mails when included by name or by e-mail address in the Recipient list.
                             </dl>
