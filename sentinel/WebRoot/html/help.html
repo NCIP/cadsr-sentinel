@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/html/help.html,v 1.3 2007-12-07 23:03:04 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/html/help.html,v 1.4 2007-12-11 15:34:22 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <html>
@@ -118,7 +118,7 @@
                         Introduction
                     </p>
                     <p class="std12" style="border-left: solid blue 3px; padding-left: 0.1in">
-                        Important changes between the Sentinel Tool release 3.1 and 3.2 are indicated by the heavy blue line to the left of the paragraph. All window images and
+                        Important changes between the Sentinel Tool release 3.2 and 3.2.0.3 are indicated by the heavy blue line to the left of the paragraph. All window images and
                         report examples are updated for the 3.2 interface. More information concerning changes can be found in the <a>caCORE 3.2 Release Notes</a>.
                     </p>
                     <p class="std12">
@@ -169,7 +169,7 @@
                             Version
                         </li>
                     </ul>
-                    <p class="std12" style="border-left: solid blue 3px; padding-left: 0.1in">
+                    <p class="std12">
                         Additional details on the processing and interpretation of an Alert Definition can be found in the
                         <a href="https://gforge.nci.nih.gov/docman/index.php?group_id=32&selected_doc_group_id=573&language_id=1" target="_blank">Sentinel
                         Tool Installation Guide</a>, System
@@ -215,7 +215,7 @@
                         <img class="image" title="Footer Banner" alt="Footer Banner Picture" src="/cadsrsentinel/images/bannerfoot.jpg" />
                     </p>
 
-                    <p class="std12" style="border-left: solid blue 3px; padding-left: 0.1in">
+                    <p class="std12">
                         The header and footer banners appear consistently on every page in the Sentinel Tool. Moving the mouse over the images and text
                         displays a tool tip description for the link. In all cases selecting one of these links opens a new browser window and retains the
                         Sentinel Tool page display.
@@ -341,7 +341,7 @@
                         <dd>
                             The frequency is selected by the Creator on the Edit Properties page. It defines when the Alert Definition is processed by the
                             Automated Alert Report Generator.
-                        <dt style="border-left: solid blue 3px; padding-left: 0.1in"><b>Last Auto Run</b>
+                        <dt><b>Last Auto Run</b>
                         <dd>
                             The date/time is set by the Sentinel Automated Alert Report Generator when the Alert Definition is processed. This date is set whether or not a
                             report is generated. For example, the frequency of an Alert Definition is set to daily but the date/time shows a date from more than
@@ -527,7 +527,7 @@
                         <dt>Include information &hellip;<dd>Select to include an expanded header at the top of the report. The expanded header
                             contains all the information appearing on the Properties Tab in addition to the standard information which includes the
                             reporting date and the source database.
-                        <dt class="std12" style="border-left: solid blue 3px; padding-left: 0.1in">Maximum number of levels &hellip;<dd>Set the stopping
+                        <dt class="std12">Maximum number of levels &hellip;<dd>Set the stopping
                             point on reporting the "Associated To" records. Each change in the caDSR has a defined area of effect. The record containing the
                             change is referred to as level 0 (zero). Records directly associated to it are a level 1 (one). Records associated to the associated
                             records are a level 2, and so on. For example, a Value Domain is changed, it is level 0. The Data Elements referencing the Value
@@ -552,12 +552,12 @@
                                     is given any write permissions to the caDSR. Read only accounts are not included in any group. Selecting a Curator group as a recipient hides 
                                     changes in the organization or assigned responsibilities. Alert Report e-mails to Curator groups are sent to all members except those listed
                                     below "Additional e-mail address".
-                                <dt>Additional e-mail address and Process URL<dd>A desired recipients well formed e-mail address or software well formed URL.
+                                <dt style="border-left: solid blue 3px; padding-left: 0.1in">Additional e-mail address and Process URL<dd>A desired recipients well formed e-mail address or software well formed URL.
                                     This is often used to specify alternate e-mail addresses, temporary recipients and software process applications.
                                     The user account profile supports a single e-mail address. Additional e-mail addresses must be entered here, e.g.
                                     for John Smith to recieve an Alert Report at both work and home, the user account profile may contain one and the other entered here.
                                     Alternatively, the user account profile may not have an e-mail address and both are entered here. If entering a process URL, please contact the NCI Help Desk
-                                    for programming design requirements and instructions.
+                                    for programming design requirements and instructions on the target server application.
                                 <dt>The following users only receive &hellip;<dd>The users who have intentionally requested exclusion from the Recipient Curator groups. These users only
                                     receive Alert Report e-mails when included by name or by e-mail address in the Recipient list.
                             </dl>
@@ -588,7 +588,7 @@
                     <p class="image">
                         <img class="image" title="Edit Criteria Tab" alt="Edit Criteria Tab Picture" src="/cadsrsentinel/images/edit4.jpg" />
                     </p>
-                    <p class="std12" style="border-left: solid blue 3px; padding-left: 0.1in">
+                    <p class="std12">
                         The Criteria Tab contains attributes controlling the Alert Report scope. All lists on this page support multiple selections using standard
                         selection key combinations using the mouse, Ctrl and Shift.
                     </p>
@@ -622,7 +622,7 @@
                         changes. Others keep a change history with the user making the change. When history records exist the scope includes all changes made by
                         the users selected.
                     </dl>
-                    <p class="std12" style="border-left: solid blue 3px; padding-left: 0.1in">
+                    <p class="std12">
                         Selections are combined using logical "OR" conditions for an attribute and logical "AND" conditions for the criteria. For example, a selection of
                         Contexts CTEP and CCR and a selection of Created By user Bob Marley will result in a scope set of:
                     </p>
@@ -633,7 +633,7 @@
                         The summary which appears on the Properties tab has been annotated to clearly convey the interpretation of the criteria scope. The
                         parentheses in this example illustrate the logical association of expressions.
                     </p>
-                    <p class="std12" style="border-left: solid blue 3px; padding-left: 0.1in">
+                    <p class="std12">
                         <u>Note:</u> The Workflow Status and Registration Status on this tab are not related to the attributes on the Monitors tab. On the
                         Criteria tab these attributes define the current data scope. Selecting a specific value limits the scope using the current value not a
                         previous value. On the Monitor tab these attributes define a specific change to trigger an Alert Report.
@@ -905,12 +905,12 @@
                         created date. If the public id or version appears as N/A, the record can not have the attribute. If the modified by and date appear as
                         &lt;null&gt;, the record has not been changed since its original creation.
                     </p>
-                    <p class="std12" style="border-left: solid blue 3px; padding-left: 0.1in">
+                    <p class="std12">
                         For change activities for most Administered Components (including Data Element, Data Element Concept and Value Domain) another sub-block
                         appears showing the specific changes noted by attribute, old value and new value. Some change blocks state the details are unavailable.
                         This is due to incomplete auditing information and will be addressed with each new release.
                     </p>
-                    <p class="std12" style="border-left: solid blue 3px; padding-left: 0.1in">
+                    <p class="std12">
                         Reports are prevented from becoming too large for the browser via a system configuration threshold. When a report exceeds the threshold
                         it is divided into multiple parts. The rows are counted as described above and not as individual lines. This is called a multi-part
                         report. The e-mail sent to each recipient will note the number of parts created. The link provided in the e-mail is to an index of links
