@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.6 2007-09-05 21:53:06 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.7 2007-12-17 18:13:54 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -189,16 +189,6 @@ values ('SENTINEL', 'EMAIL.ERROR', 'One or more errors occurred generating the a
     'cause. You may attempt to Run the Alert Definition manually, however ' ||
     'until the cause for the error is determined this may also fail.',
     'The error report email body additional text.');
-
-/*
-    Report Generation
-
-    The HTTP prefix for all links to generated output.
-*/
-
-insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'LINK.HTTP', 'http://cadsrsentinel@TIER@.nci.nih.gov/AlertReports/',
-'The HTTP prefix for all links to generated output.');
 
 /*
     Report Generation

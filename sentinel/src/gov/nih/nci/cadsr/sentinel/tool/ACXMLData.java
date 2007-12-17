@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACXMLData.java,v 1.2 2007-12-07 21:52:53 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACXMLData.java,v 1.3 2007-12-17 18:13:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -17,8 +17,13 @@ import org.apache.log4j.Logger;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.Attribute;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * This is the working class for the collection, assimilation and processing of caDSR data by the Sentinel Alert Auto Process server and generating an XML file.
@@ -139,7 +144,7 @@ public class ACXMLData
      * @param end_
      */
     public ACXMLData(OutputStream out_, AlertRec rec_, DBAlert db_, Stack<RepRows> save_, String dbName_, String cemail_, String version_, Timestamp start_,
-        Timestamp end_)
+                     Timestamp end_)
     {
         _out = out_;
         _rec = rec_;
@@ -154,16 +159,18 @@ public class ACXMLData
 
     /**
      * Write the XML output file
+     * @param dtd_ The dtd file URL prefix
      */
-    public void writeXMLWithJDOM()
+    public void writeXMLWithJDOM(String dtd_)
     {
         ResourceBundle props = PropertyResourceBundle.getBundle("gov.nih.nci.cadsr.sentinel.DSRAlert");
-        String attrDocType = (props != null) ? props.getString("cadsr.sentinel.dtd") : "Error loading Property file.";
+        String attrDocType = (props != null) ? dtd_ + props.getString("cadsr.sentinel.dtd") : "Error loading Property file.";
         String attrSoftwareName = (props != null) ? props.getString("cadsr.softwarename") : "Error loading Property file.";
 
 
         Element root = new Element(_elementCadsr);
         // replace the dtd with the appropriate dtd URL
+        //TODO the Document Type should come from a property(?)
         DocType type = new DocType(_elementCadsr, attrDocType);
         // replace
         Document doc = new Document(root, type);
@@ -177,6 +184,7 @@ public class ACXMLData
             // create element alertreport
             // <!ELEMENT alertReport (database | definition | changedItem* | associateItem* | group*)>
             Element alertReport = new Element(_elementAlertReport);
+            //TODO get software name from a property(?)
             alertReport.setAttribute(_attrSoftwareName, attrSoftwareName);
 
             String[] parts = _version.split(";");
@@ -257,21 +265,23 @@ public class ACXMLData
                             }
                         }
                     }
+
                 }
 
                 // A User
                 else
                 {
+
                     String temp[] = new String[1];
                     temp[0] = parts[rc];
                     recipient.setAttribute(_attrUser, parts[rc]);
                     recipient.setAttribute(_attrName, ACData.convertNullString(_db.selectRecipientNames(temp)));
                     recipient.setAttribute(_attrEmail, _db.selectEmailFromUser(parts[rc]));
                     definition.addContent(recipient);
-                    String txt = _db.getError();
-                    if (txt != null)
-                        _logger.error(txt);
+                    _logger.error(_db.getError());
                 }
+
+
             }
 
             // add summary to definition can be 0 or 1
@@ -435,6 +445,327 @@ public class ACXMLData
 
     }
 
+
+     /**
+     * Write the XML output file
+     * @param dtd_ The dtd file URL prefix
+     */
+    public void writeXMLWithSTAX(String dtd_)
+    {
+        ResourceBundle props = PropertyResourceBundle.getBundle("gov.nih.nci.cadsr.sentinel.DSRAlert");
+        String attrDocType = (props != null) ? dtd_ + props.getString("cadsr.sentinel.dtd") : "Error loading Property file.";
+        String attrSoftwareName = (props != null) ? props.getString("cadsr.softwarename") : "Error loading Property file.";
+
+         XMLOutputFactory xmlof = XMLOutputFactory.newInstance();
+          // Create an XML stream writer
+        XMLStreamWriter xmlw = null;
+
+
+
+        try
+        {
+
+           xmlw = xmlof.createXMLStreamWriter(_out);
+            // Write XML prologue
+            xmlw.writeStartDocument();
+
+
+            // Set the namespace definitions to the root element
+            // Declare the DTD in the root element
+            xmlw.writeDTD("<!DOCTYPE "+_elementCadsr+" SYSTEM \""+attrDocType+"\">");
+
+            xmlw.flush();
+            // Now start with root element
+            xmlw.writeStartElement(_elementCadsr);
+
+
+         // create element alertreport
+            // <!ELEMENT alertReport (database | definition | changedItem* | associateItem* | group*)>
+
+            xmlw.writeStartElement(_elementAlertReport);
+            // Writing a few attributes
+            xmlw.writeAttribute(_attrSoftwareName, attrSoftwareName);
+
+            String[] parts = _version.split(";");
+
+            xmlw.writeAttribute(_attrSoftwareVersion, parts[parts.length - 1]);
+
+            xmlw.writeAttribute(_attrVersion, "1.0");
+            xmlw.flush();
+
+            // Add element database
+            xmlw.writeEmptyElement(_elementDatabase);
+
+            // add attributes to the database element
+
+            xmlw.writeAttribute(_attrServer, "");
+            xmlw.writeAttribute(_attrName, _dbName);
+            xmlw.writeAttribute(_attrRAI, _db.getDatabaseRAI());
+            //End element database
+
+            xmlw.flush();
+
+            // Add element definition
+            // <!ELEMENT definition (name | id | intro? | createdBy | recipient* | summary? | criteria+ |
+            // monitor+ | lastAutoRun? | frequency | status | level | start | end | createdOn)>
+
+            xmlw.writeStartElement(_elementDefinition);
+             // add elements to the definition element
+            // add name to definition
+            xmlw.writeEmptyElement(_elementName);
+            xmlw.writeAttribute(_attrValue, _rec.getName());
+            //xmlw.writeEndElement();
+
+            // add id to definition
+            xmlw.writeStartElement(_elementId);
+            xmlw.writeCharacters(_rec.getAlertRecNum());
+            xmlw.writeEndElement();
+
+            // add intro to definition
+            xmlw.writeStartElement(_elementIntro);
+            xmlw.writeCharacters(_rec.getIntro(false));
+            xmlw.writeEndElement();
+
+            // Add element createdBy to definition
+            xmlw.writeEmptyElement(_elementCreatedBy);
+            // add attributes to the _createdBy element
+            xmlw.writeAttribute(_attrUser, _rec.getCreator());
+            xmlw.writeAttribute(_attrName, _rec.getCreatorName());
+            xmlw.writeAttribute(_attrEmail, _cemail);
+            //xmlw.writeEndElement();
+            xmlw.flush();
+            // Add recipient list
+            // Add element recipient to definition, should be atleast 1 or more
+            // String recipientNames= _db.selectRecipientNames(_rec.getRecipients());
+
+            parts = _rec.getRecipients();
+            for (int rc = 0; rc < parts.length; rc++)
+            {
+                xmlw.writeEmptyElement(_elementRecipient);
+
+                // A process URL recipient
+                if (parts[rc].startsWith("http://") || (parts[rc].startsWith("https://")))
+                {
+                    xmlw.writeAttribute(_attrUrl, parts[rc]);
+                    //xmlw.writeEndElement();
+                }
+
+                // An email address recipient
+                else if (parts[rc].indexOf("@") != -1)
+                {
+                    xmlw.writeAttribute(_attrEmail, parts[rc]);
+                    //xmlw.writeEndElement();
+                }
+
+                // A Context Curator Group
+                else if (parts[rc].indexOf('/') == 0)
+                {
+                    String[] temp = _db.selectEmailsFromConte(parts[rc]);
+                    if(temp!=null && temp.length>0)
+                    {
+                        for(int cc=0; cc<temp.length;cc++){
+                            if(temp[cc]!=null){
+                                xmlw.writeEmptyElement(_elementRecipient);
+                                xmlw.writeAttribute(_attrEmail, temp[cc]);
+                                //xmlw.writeEndElement();
+                            }
+                        }
+                    }
+
+                }
+
+                // A User
+                else
+                {
+
+                    String temp[] = new String[1];
+                    temp[0] = parts[rc];
+                    xmlw.writeAttribute(_attrUser, parts[rc]);
+                    xmlw.writeAttribute(_attrName, ACData.convertNullString(_db.selectRecipientNames(temp)));
+                    xmlw.writeAttribute(_attrEmail, _db.selectEmailFromUser(parts[rc]));
+                    //xmlw.writeEndElement();
+                    _logger.error(_db.getError());
+                }
+                xmlw.flush();
+
+            }
+
+            // add summary to definition can be 0 or 1
+            if (_rec.getSummary(true) != null)
+            {
+                xmlw.writeStartElement(_elementSummary);
+                xmlw.writeCharacters(_rec.getSummary(true));
+                xmlw.writeEndElement();
+            }
+
+
+
+            // Add _lastAutoRun to definition, can be 0 or 1
+            xmlw.writeEmptyElement(_elementLastAutoRun);
+            // add attributes to _lastAutoRun
+            if (_rec.getAdate() != null)
+                xmlw.writeAttribute(_attrTime, _rec.getAdate().toString());
+            else
+                xmlw.writeAttribute(_attrTime, "");
+
+            //xmlw.writeEndElement();
+            xmlw.flush();
+            // Add frequency to definition, should be there once must be present
+
+            xmlw.writeEmptyElement(_elementFrequency);
+            // add attributes to _frequency
+            if (_rec.getFreqString().equals("D"))
+                xmlw.writeAttribute(_attrUnit, "Day");
+            else if (_rec.getFreqString().equals("W"))
+            {
+                xmlw.writeAttribute(_attrUnit, "Week");
+                xmlw.writeAttribute(_attrValue, _rec.getFreq(false));
+            }
+            else
+            {
+                xmlw.writeAttribute(_attrUnit, "Month");
+
+                // check this method for week & month
+                xmlw.writeAttribute(_attrValue, _rec.getFreq(false));
+            }
+            //xmlw.writeEndElement();
+            xmlw.flush();
+            // Add status to definition, should be there once must be present
+
+            xmlw.writeEmptyElement(_elementStatus);
+            // add attributes to _status
+            if (_rec.isActive())
+                xmlw.writeAttribute(_attrCode, "Active");
+            else if (_rec.isInactive())
+                xmlw.writeAttribute(_attrCode, "Inactive");
+            else if (_rec.isActiveOnce())
+                xmlw.writeAttribute(_attrCode, "Once");
+            else if (_rec.isActiveDates())
+            {
+                xmlw.writeAttribute(_attrCode, "Range");
+                // add beginDate and endDate only if the code is Range
+
+                xmlw.writeAttribute(_attrBeginDate, _rec.getStart().toString().substring(0, 10));
+                xmlw.writeAttribute(_attrEndDate, _rec.getEnd().toString().substring(0, 10));
+            }
+            //xmlw.writeEndElement();
+            xmlw.flush();
+            // Add level to definition, should be there once, must be present
+
+            xmlw.writeEmptyElement(_elementLevel);
+            // add attributes to _level
+            xmlw.writeAttribute(_attrDepth, new StringBuffer().append(_rec.getIAssocLvl()).toString());
+            //xmlw.writeEndElement();
+
+            // Add start to definition, should be there once, must be present
+
+            xmlw.writeEmptyElement(_elementStart);
+            // add attributes to _start
+            xmlw.writeAttribute(_attrDate, _startDate.toString().substring(0, 10));
+            //xmlw.writeEndElement();
+
+            // Add end to definition, should be there once, must be present
+
+            xmlw.writeEmptyElement(_elementEnd);
+            // add attributes to _start
+            xmlw.writeAttribute(_attrDate, _endDate.toString().substring(0, 10));
+            //xmlw.writeEndElement();
+
+            // Add createdOn to definition, should be there once, must be present
+
+            xmlw.writeEmptyElement(_elementCreatedOn);
+            // add attributes to _start
+            xmlw.writeAttribute(_attrTime, new Timestamp(System.currentTimeMillis()).toString());
+            //xmlw.writeEndElement();
+
+            // End Definition element
+            xmlw.writeEndElement();
+            xmlw.flush();
+
+            // Work on changed item now, changedItem can be 0 or more, so check for changedItem
+            // Dump the stack.
+
+            List<Element> changeList = getAssociatedAndGroupItems(_db, _save, _rec.getIAssocLvl(), xmlw);
+
+
+            if(changeList!=null  && changeList.size()>0)
+            {
+
+
+            // Add associateItem to alertReport can be 0 or more
+            Map<String, Element> associateItemMap = new HashMap<String, Element>();
+            for (int j = 0; j < changeList.size(); j++)
+            {
+
+                Element aItem = changeList.get(j);
+                if ((changeList.get(j)).getName().equalsIgnoreCase(_elementAssociateItem))
+                {
+                    // check to see if the associateItem already appears in the Jdom tree, ignore if already there
+                    associateItemMap.put(aItem.getAttributeValue("id"), aItem);
+
+                }
+            }
+
+            // All unique values are in the Map - now process the map
+            if (associateItemMap != null && associateItemMap.size() > 0)
+            {
+                Iterator<Element> it = associateItemMap.values().iterator();
+                while (it.hasNext())
+                {
+                    Element associateItem = it.next();
+                    xmlw.writeStartElement(associateItem.getName());
+                    for(int i=0; i < associateItem.getAttributes().size(); i++)
+                    {
+                       Attribute aItem =  (Attribute)associateItem.getAttributes().get(i);
+                        xmlw.writeAttribute(aItem.getName(),aItem.getValue());
+                    }
+                    xmlw.writeEndElement();
+                    xmlw.flush();
+                }
+
+            }
+
+            // Add groups to alertReport can be 0 or more
+
+            for (int j = 0; j < changeList.size(); j++)
+            {
+                if ((changeList.get(j)).getName().equalsIgnoreCase(_elementGroup))
+                {
+                    Element group = changeList.get(j);
+                    xmlw.writeStartElement(group.getName());
+                    xmlw.writeAttribute("changedItemId",group.getAttributeValue("changedItemId"));
+                    if(group.getChildren("associate")!=null)
+                    {
+                        for(int k=0; k < group.getChildren("associate").size(); k++)
+                        {
+                            Element associate = (Element)group.getChildren("associate").get(k);
+                            xmlw.writeStartElement(associate.getName());
+                            xmlw.writeAttribute("childItemId",associate.getAttributeValue("childItemId"));
+                            xmlw.writeAttribute("parentItemId",associate.getAttributeValue("parentItemId"));
+                            xmlw.writeEndElement();
+                            xmlw.flush();
+                        }
+                    }
+                    xmlw.writeEndElement();
+                    xmlw.flush();
+                }
+
+            }
+            }
+
+
+            //End Alert Report
+            xmlw.writeEndElement();
+            xmlw.writeEndDocument();
+            // Close the writer to flush the output
+            xmlw.close();
+        }
+         catch (XMLStreamException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+    }
+
     /**
      * Populate the common changedItem and associateItem attributes.
      *
@@ -462,6 +793,34 @@ public class ACXMLData
         elm_.setAttribute("createdTime", xml_._createdTime);
         elm_.setAttribute("changeNote", xml_._changeNote);
     }
+
+
+     /**
+     * Populate the common changedItem and associateItem attributes.
+     *
+     * @param xmlw_ the XMLStreamWriter Element
+     * @param xml_ the XML data
+     */
+    private void printItemHeader(ACDataXML xml_, XMLStreamWriter xmlw_) throws XMLStreamException {
+
+         xmlw_.writeAttribute("type", xml_._type);
+         xmlw_.writeAttribute("name", xml_._name);
+         xmlw_.writeAttribute("id", xml_._id);
+         if (xml_._publicId != null)
+             xmlw_.writeAttribute("publicId", xml_._publicId);
+          if (xml_._version != null)
+         xmlw_.writeAttribute("version", xml_._version);
+          if (xml_._modifiedByUser != null)
+         xmlw_.writeAttribute("modifiedByUser", xml_._modifiedByUser);
+          if (xml_._modifiedByName != null)
+         xmlw_.writeAttribute("modifiedByName", xml_._modifiedByName);
+         if (xml_._modifiedTime != null)
+             xmlw_.writeAttribute("modifiedTime", xml_._modifiedTime);
+         xmlw_.writeAttribute("createdByUser", xml_._createdByUser);
+         xmlw_.writeAttribute("createdByName", xml_._createdByName);
+         xmlw_.writeAttribute("createdTime", xml_._createdTime);
+         xmlw_.writeAttribute("changeNote", xml_._changeNote);
+     }
 
     /**
      * Dump the changed items  into the XML tree.
@@ -520,6 +879,108 @@ public class ACXMLData
                     }
                 }
                 changeList.add(changedItem);
+
+                // Add group to alertReport can be 0 or more, if there is a change then there is a group
+                // for each changedItem add a group
+                Element group = new Element("group");
+                // add attribute changedItemId to _group which is referencint the id of the changedItem
+                group.setAttribute("changedItemId", xml._id);
+
+                groupList.add(group);
+                count++;
+            }
+            else
+            {
+
+                Element associateItem = new Element("associateItem");
+                // add attributes to changedItem
+
+                itemHeader(associateItem, xml);
+
+                changeList.add(associateItem);
+                // Associate this item to the group
+
+                Element group = (Element) groupList.get(count);
+
+                Element associate = new Element("associate");
+                associate.setAttribute("childItemId", xml._id);
+                associate.setAttribute("parentItemId", xml._relatedId);
+                groupList.remove(count);
+                group.addContent(associate);
+                groupList.add(count, group);
+
+            }
+        }
+
+        // add the grouplist to changeList
+        for (int k = 0; k < groupList.size(); k++)
+        {
+            changeList.add(groupList.get(k));
+        }
+        return changeList;
+    }
+
+    /**
+     * Dump the changed items  into the XML file and return a list of associations and group.
+     *
+     * @param db_
+     *        A database object for an open connection to a caDSR.
+     * @param save_
+     *        A stack containing the report results. (Note this is a LIFO
+     *        stack.)
+     * @param depth depth of the associated items to traverse
+     * @param xmlw_ 
+     * @return  a List of changed items  (changedItem, associatedItem, group)
+     * @throws XMLStreamException 
+     */
+    public List<Element> getAssociatedAndGroupItems(DBAlert db_, Stack<RepRows> save_, int depth, XMLStreamWriter xmlw_) throws XMLStreamException {
+        List<Element> changeList = new ArrayList<Element>();
+        List<Element> groupList = new ArrayList<Element>();
+        int count = -1;
+
+        // Get only rows of interest dep
+        Stack<RepRows> report = ACData.dumpTrim(save_, depth);
+        while (!report.empty())
+        {
+            RepRows val = report.pop();
+            val._rec.resolveNames(db_);
+            ACDataXML xml = val._rec.getXML();
+            if (val._rec.isPrimary())
+            {
+                xmlw_.writeStartElement("changedItem");
+                // add attributes to changedItem
+
+                printItemHeader(xml, xmlw_);
+
+                // can have 0 or more details so add logic to see if required
+                if (xml._changes != null)
+                {
+                    for (int i = 0; i < xml._changes.length; i++)
+                    {
+                        ACDataChangesXML chg = xml._changes[i];
+                        xmlw_.writeStartElement("details");
+                        // Add attributes to _details element
+                        xmlw_.writeAttribute("modifiedByUser", chg._modifiedByUser);
+                        xmlw_.writeAttribute("modifiedByName", chg._modifiedByName);
+                        xmlw_.writeAttribute("time", chg._time);
+                        // Conver the meaningful names in the changes to internal codes for xml
+                        String[] changekeyNames = db_.getKeyNames(chg._attributes);
+                        // should have atleast one or more change elements
+                        for (int chgcnt = 0; chgcnt < changekeyNames.length; chgcnt++)
+                        {
+                            xmlw_.writeEmptyElement(_elementChange);
+                            xmlw_.writeAttribute("attribute", changekeyNames[chgcnt]);
+                            xmlw_.writeAttribute("oldValue", chg._oldValues[chgcnt]);
+                            xmlw_.writeAttribute("newValue", chg._newValues[chgcnt]);
+                            //xmlw_.writeEndElement();
+                        }
+                        xmlw_.writeEndElement();
+                        xmlw_.flush();
+                    }
+                }
+                xmlw_.writeEndElement();
+                xmlw_.flush();
+                //changeList.add(changedItem);
 
                 // Add group to alertReport can be 0 or more, if there is a change then there is a group
                 // for each changedItem add a group

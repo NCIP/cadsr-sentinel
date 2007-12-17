@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.5 2007-12-06 20:52:07 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.6 2007-12-17 18:13:54 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -33,7 +33,6 @@ insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VA
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CURATION', 'URL', 'http://cdecurate@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('EVS', 'URL', 'http://cabio@TIER@.nci.nih.gov/cacore32/http/remoteService', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('FREESTYLE', 'URL', 'http://freestyle@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('SENTINEL', 'LINK.HTTP', 'http://cadsrsentinel@TIER@.nci.nih.gov/AlertReports/', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('SENTINEL', 'URL', 'http://cadsrsentinel@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'ADMIN_TOOL_URL', 'http://cadsradmin@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'CACORE_URL', 'http://cabio@TIER@.nci.nih.gov/cacore32/http/remoteService', 'US');

@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.6 2007-12-06 20:52:09 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.7 2007-12-17 18:13:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -1892,6 +1892,13 @@ public interface DBAlert
      * @return - array of the corresponding key values
      */
     public String[] getKeyNames(String[] changes);
+
+    /**
+     * Return the HTTP link prefix for all Sentinel DTD files.
+     *
+     * @return The HTTP link prefix
+     */
+    public String selectDtdHTTP();
 
     // Class data elements.
 

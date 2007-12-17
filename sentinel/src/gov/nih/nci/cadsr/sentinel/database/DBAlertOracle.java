@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.11 2007-12-06 20:52:09 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.12 2007-12-17 18:13:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -8005,11 +8005,25 @@ public class DBAlertOracle implements DBAlert
      */
     public String selectAlertReportHTTP()
     {
-        String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'LINK.HTTP'";
+        String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'URL'";
 
         String[] list = getBasicData0(select);
 
-        return (list != null) ? list[0] : "";
+        return (list != null) ? list[0] + "/AlertReports/" : "";
+    }
+
+    /**
+     * Return the HTTP link prefix for all Sentinel DTD files.
+     *
+     * @return The HTTP link prefix
+     */
+    public String selectDtdHTTP()
+    {
+        String select = "select opt.value from sbrext.tool_options_view_ext opt where opt.tool_name = 'SENTINEL' and opt.property = 'URL'";
+
+        String[] list = getBasicData0(select);
+
+        return (list != null) ? list[0] + "/dtd/" : "";
     }
 
     /**

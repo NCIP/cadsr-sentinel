@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.13 2007-12-06 20:52:09 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.14 2007-12-17 18:13:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -1854,6 +1854,7 @@ public class AutoProcessAlerts
                 _emailUser = apd._emailUser;
                 _emailPswd = apd._emailPswd;
                 _http = apd._http;
+                _dtd = apd._dtd;
                 _subject = apd._subject;
                 _work = apd._work;
                 _dbname = apd._dbname;
@@ -2165,8 +2166,8 @@ public class AutoProcessAlerts
             // Create an output factory
 
             ACXMLData xmlWriter = new ACXMLData(_fout, rec_._alert, _db, xmlSave_, _dbname, cemail_, _version, _start, _end);
-            xmlWriter.writeXMLWithJDOM();
-
+            //xmlWriter.writeXMLWithJDOM();
+            xmlWriter.writeXMLWithSTAX(_dtd);
             // Create an entry in the log file
             _logSummary.writeParagraph1("Output XML File is");
             // write the location of the file
@@ -2264,6 +2265,8 @@ public class AutoProcessAlerts
     private String              _emailPswd;
 
     private String              _http;
+
+    private String              _dtd;
 
     private String              _style;
 

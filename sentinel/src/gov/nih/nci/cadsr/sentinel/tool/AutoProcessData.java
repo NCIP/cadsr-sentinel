@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessData.java,v 1.2 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessData.java,v 1.3 2007-12-17 18:13:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -39,6 +39,7 @@ public class AutoProcessData
         _emailUser = db_.selectAlertReportEmailHostUser();
         _emailPswd = db_.selectAlertReportEmailHostPswd();
         _http = db_.selectAlertReportHTTP();
+        _dtd = db_.selectDtdHTTP();
         _subject = db_.selectAlertReportEmailSubject();
         _work = db_.selectAlertReportOutputDir();
         _dbname = db_.selectAlertReportDBName();
@@ -98,6 +99,11 @@ public class AutoProcessData
      * The HTTP prefix for links to the reports.
      */
     public String _http;
+
+    /**
+     * The HTTP prefix for links to the dtd files.
+     */
+    public String _dtd;
 
     /**
      * The email subject for report distribution.
