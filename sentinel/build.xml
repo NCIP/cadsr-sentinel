@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.124 2007-12-17 18:13:53 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.125 2007-12-17 18:28:23 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -198,6 +198,7 @@
             <fileset file="${wlib.dir}/commons-logging-1.1.jar" />
             <fileset file="${lib.dir}/hibernate3.jar" />
             <fileset file="${wlib.dir}/jdom-1.0.jar" />
+            <fileset file="${wlib.dir}/stax-api-1.0.1.jar" />
             <fileset file="${lib.dir}/log4j-1.2.13.jar" />
             <fileset file="${lib.dir}/mail.jar" />
             <fileset file="${lib.dir}/ojdbc14.jar" />
