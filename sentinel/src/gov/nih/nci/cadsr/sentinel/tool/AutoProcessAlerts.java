@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.14 2007-12-17 18:13:54 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.15 2008-01-11 16:02:54 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -2032,6 +2032,30 @@ public class AutoProcessAlerts
     private void queueReportForProcess(String url_)
     {
         // recipient is a process, create new thread to process urls...
+        if (url_ == null || url_.length() == 0)
+        {
+            _logAudits.writeError("A process notification is requested but the Process URL is missing.");
+            return;
+        }
+        
+        if (_http == null || _http.length() == 0)
+        {
+            _logAudits.writeError("A process notification to " + url_ + " is requested but the XML URL prefix is missing.");
+            return;
+        }
+        
+        if (_work == null || _work.length() == 0)
+        {
+            _logAudits.writeError("A process notification to " + url_ + " is requested but the Work Path is missing.");
+            return;
+        }
+        
+        if (_xmlFile == null || _xmlFile.length() == 0)
+        {
+            _logAudits.writeError("A process notification to " + url_ + " is requested but the XML File Name is missing.");
+            return;
+        }
+
         String xmlLink;
         xmlLink = _http + _xmlFile.substring(_work.length());
         xmlLink = xmlLink.replaceAll(" ", "%20");
