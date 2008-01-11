@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.15 2008-01-11 16:02:54 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.16 2008-01-11 21:53:03 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -2102,13 +2102,25 @@ public class AutoProcessAlerts
                 URL pURL = new URL(processURL);
                 // open the process URL
                 BufferedReader in = new BufferedReader(new InputStreamReader(pURL.openStream()));
-                _logSummary.writeText("\nNotified Process URL : " + clientURL + "\n");
                 String inputLine;
+                String outputLine = "";
+
                 // read from the process URL and write the acknowledgement message to the log
                 while ((inputLine = in.readLine()) != null)
                 {
-                    _logSummary.writeText(inputLine);
+                    outputLine += inputLine + "\n";
                 }
+                int bodyStart = outputLine.indexOf("<body>");
+                if (bodyStart >= 0)
+                {
+                    bodyStart += "<body>".length();
+                    int bodyEnd = outputLine.indexOf("</body>", bodyStart);
+                    if (bodyEnd == -1)
+                        outputLine = outputLine.substring(bodyStart);
+                    else
+                        outputLine = outputLine.substring(bodyStart, bodyEnd);
+                }
+                _logSummary.writeParagraph0("Notified Process URL : " + clientURL + " " + outputLine);
 
                 in.close();
             }
