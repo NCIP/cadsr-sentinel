@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACXMLData.java,v 1.3 2007-12-17 18:13:54 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACXMLData.java,v 1.4 2008-01-14 15:49:46 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -151,7 +151,7 @@ public class ACXMLData
         _db = db_;
         _save = save_;
         _dbName = dbName_;
-        _cemail = cemail_;
+        _cemail = (cemail_ == null) ? "" : cemail_;
         _version = version_;
         _startDate = start_;
         _endDate = end_;
