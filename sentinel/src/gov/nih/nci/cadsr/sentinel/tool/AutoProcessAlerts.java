@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.17 2008-01-14 14:55:36 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.18 2008-01-14 15:26:25 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -2174,17 +2174,16 @@ public class AutoProcessAlerts
     {
         for (int i = 0; i < receipients.length; i++)
         {
-            if (receipients[i].indexOf("@") != -1)
+            if (receipients[i].indexOf("@") >= 0)
                 return true;
-            else
+
+            if (receipients[i].startsWith("http://") || receipients[i].startsWith("http://"))
+                continue;
+
+            String email = _db.selectEmailFromUser(receipients[i]);
+            if (email != null && email.indexOf("@") >= 0)
             {
-                if (!receipients[i].startsWith("http://") && (!receipients[i].startsWith("http://")))
-                {
-                    if (_db.selectEmailFromUser(receipients[i]).indexOf("@") != -1)
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
         }
         return false;
