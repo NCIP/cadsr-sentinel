@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.12 2007-12-17 18:13:54 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.13 2008-01-14 15:35:27 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -7797,6 +7797,11 @@ public class DBAlertOracle implements DBAlert
         if (rows < 1)
             results += "Missing the Sentinel Tool Alert Administrator setting.\n\n";
 
+        select = "select value from sbrext.tool_options_view_ext where tool_name = 'caDSR' and property = 'RAI'";
+        rows = testDB(select);
+        if (rows != 1)
+            results += "Missing the caDSR RAI (Registration Authority Identifier).\n\n";
+        
         select = "select tool_idseq from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' AND property LIKE 'ADMIN.%' and value like '%1%'";
         rows = testDB(select);
