@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.16 2008-01-11 21:53:03 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.17 2008-01-14 14:55:36 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -972,11 +972,13 @@ public class AutoProcessAlerts
         catch (FileNotFoundException ex)
         {
             _logSummary.writeError("Error opening auto alert dump file: " + rec_._reportFile);
+            _logger.error(ex.toString(), ex);
         }
         catch (IOException ex)
         {
             _logSummary.writeError("Error writing to auto alert dump file: "
                 + rec_._reportFile);
+            _logger.error(ex.toString(), ex);
         }
     }
 
@@ -1214,26 +1216,31 @@ public class AutoProcessAlerts
                 {
                     _logSummary.writeError(ex.toString());
                     _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
+                    _logger.error(ex.toString(), ex);
                 }
                 catch (IllegalAccessException ex)
                 {
                     _logSummary.writeError(ex.toString());
                     _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
+                    _logger.error(ex.toString(), ex);
                 }
                 catch (ClassNotFoundException ex)
                 {
                     _logSummary.writeError(ex.toString());
                     _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
+                    _logger.error(ex.toString(), ex);
                 }
                 catch (ClassCastException ex)
                 {
                     _logSummary.writeError("Class " + _audits[index] + " does not extend class AuditReport: " + ex.toString());
                     _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
+                    _logger.error(ex.toString(), ex);
                 }
                 catch (Exception ex)
                 {
                     _logSummary.writeError(ex.toString());
                     _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
+                    _logger.error(ex.toString(), ex);
                 }
             }
 
@@ -1698,10 +1705,12 @@ public class AutoProcessAlerts
         catch (Exception ex)
         {
             _logSummary.writeError(ex.toString());
+            _logger.error(ex.toString(), ex);
         }
         catch (OutOfMemoryError ex)
         {
             _logSummary.writeError(ex.toString());
+            _logger.error(ex.toString(), ex);
         }
     }
 
@@ -1813,7 +1822,7 @@ public class AutoProcessAlerts
         catch (MissingResourceException ex)
         {
             _logger.error("Can not find properties resource "
-                + _RESOURCES);
+                + _RESOURCES, ex);
             _version = "unknown";
             _style = "";
         }
@@ -2008,19 +2017,19 @@ public class AutoProcessAlerts
         {
             String temp = ex.toString();
             _logSummary.writeError(temp);
-            _logger.error(temp);
+            _logger.error(temp, ex);
         }
         catch (MessagingException ex)
         {
             String temp = ex.toString();
             _logSummary.writeError(temp);
-            _logger.error(temp);
+            _logger.error(temp, ex);
         }
         catch (UnsupportedEncodingException ex)
         {
             String temp = ex.toString();
             _logSummary.writeError(temp);
-            _logger.error(temp);
+            _logger.error(temp, ex);
         }
     }
 
@@ -2124,13 +2133,15 @@ public class AutoProcessAlerts
 
                 in.close();
             }
-            catch (MalformedURLException e)
+            catch (MalformedURLException ex)
             {
                 _logSummary.writeError("Invalid URL/Error opening URL: " + processURL + "\n");
+                _logger.error(ex.toString(), ex);
             }
-            catch (IOException e)
+            catch (IOException ex)
             {
                 _logSummary.writeError("Invalid URL/ File Not Found / Error opening URL: " + processURL + "\n");
+                _logger.error(ex.toString(), ex);
             }
         }
     }
@@ -2214,9 +2225,10 @@ public class AutoProcessAlerts
             _logSummary.writeParagraph2("<a href=\"" + xmlLink + "\" target=\"_blank\">" + xmlLink + "</a>");
 
         }
-        catch (FileNotFoundException e)
+        catch (FileNotFoundException ex)
         {
             _logSummary.writeError("Error opening auto alert dump xml file: " + _xmlFile);
+            _logger.error(ex.toString(), ex);
         }
     }
 
