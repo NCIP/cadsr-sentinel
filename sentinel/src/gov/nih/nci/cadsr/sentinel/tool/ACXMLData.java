@@ -1,6 +1,6 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACXMLData.java,v 1.5 2008-01-14 18:56:22 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACXMLData.java,v 1.6 2008-01-15 21:21:22 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -279,7 +279,6 @@ public class ACXMLData
                     temp[0] = _db.selectEmailFromUser(parts[rc]);
                     recipient.setAttribute(_attrEmail, (temp[0] == null) ? "" : temp[0]);
                     definition.addContent(recipient);
-                    _logger.error(_db.getError());
                 }
 
 
@@ -586,7 +585,6 @@ public class ACXMLData
                     temp[0] = _db.selectEmailFromUser(parts[rc]);
                     xmlw.writeAttribute(_attrEmail, (temp[0] == null) ? "" : temp[0]);
                     //xmlw.writeEndElement();
-                    _logger.error(_db.getError());
                 }
                 xmlw.flush();
 
