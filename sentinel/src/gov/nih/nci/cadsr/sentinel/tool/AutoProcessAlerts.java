@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.20 2008-01-16 18:52:28 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.21 2008-01-16 21:13:00 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -106,6 +106,9 @@ public class AutoProcessAlerts
 
         // Get the current date and time.
         _today = Timemarker.timeNow();
+        
+        _urlMsgsErr = new Vector<String>();
+        _urlMsgsInfo = new Vector<String>();
     }
 
     /**
@@ -2084,12 +2087,12 @@ public class AutoProcessAlerts
      * Add the alert report URL to the process recipient. Must allow for the possibility the URL already contains
      * a variable list so we are appending to it OR this may be the only variable.
      *
-     * @param _processURL
+     * @param processURL_
      * @return the modified URL
      */
-    private static final String renderProcessURL(String processURL)
+    private static final String renderProcessURL(String processURL_)
     {
-        return processURL + ((processURL.indexOf("?") == -1) ? "?" : "&") + "alertreport=";
+        return processURL_ + ((processURL_.indexOf("?") == -1) ? "?" : "&") + "alertreport=";
     }
 
     /**
@@ -2281,8 +2284,9 @@ public class AutoProcessAlerts
      * Write Process messages to log file.
      *
      */
-    void writeUrlMsgs()
+    private void writeUrlMsgs()
     {
+        // Move information messages to administrator log.
         if (_urlMsgsInfo.size() > 0)
         {
             _logSummary.writeHeading("Process URL Information Messages ...");
@@ -2290,8 +2294,10 @@ public class AutoProcessAlerts
             {
                 _logSummary.writeParagraph0(_urlMsgsInfo.get(i));
             }
+            _urlMsgsInfo = new Vector<String>();
         }
         
+        // Move error messages to administrator log.
         if (_urlMsgsErr.size() > 0)
         {
             _logSummary.writeHeading("Process URL Error Messages ...");
@@ -2299,6 +2305,7 @@ public class AutoProcessAlerts
             {
                 _logSummary.writeError(_urlMsgsErr.get(i));
             }
+            _urlMsgsErr = new Vector<String>();
         }
     }
 
