@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.18 2008-01-14 15:26:25 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.19 2008-01-16 15:37:48 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -27,6 +27,7 @@ import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Stack;
+import java.util.Vector;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Message;
@@ -618,6 +619,9 @@ public class AutoProcessAlerts
             _db.close();
         _db = null;
 
+        // Output Process URL messages in one place to make it easier to find.
+        writeUrlMsgs();
+
         // Send all emails now.
         sendEmails();
 
@@ -790,6 +794,9 @@ public class AutoProcessAlerts
                 _db.close();
             _db = null;
 
+            // Output Process URL messages in one place to make it easier to find.
+            writeUrlMsgs();
+            
             // Send to the recipients.
             sendEmails();
 
@@ -2077,7 +2084,7 @@ public class AutoProcessAlerts
      * Add the alert report URL to the process recipient. Must allow for the possibility the URL already contains
      * a variable list so we are appending to it OR this may be the only variable.
      *
-     * @param processURL
+     * @param _processURL
      * @return the modified URL
      */
     private static final String renderProcessURL(String processURL)
@@ -2089,8 +2096,8 @@ public class AutoProcessAlerts
      * Create a thread wrapper around the processing of a single process Alert.
      */
     private class AlertProcessThread extends Thread {
-        private String processURL;
-        private String clientURL;
+        private String _processURL;
+        private String _clientURL;
 
         /**
          * Constructor
@@ -2100,15 +2107,15 @@ public class AutoProcessAlerts
          */
         public AlertProcessThread(String url, String client)
         {
-            processURL = url;
-            clientURL = client;
+            _processURL = url;
+            _clientURL = client;
         }
 
         public void run()
         {
             try
             {
-                URL pURL = new URL(processURL);
+                URL pURL = new URL(_processURL);
                 // open the process URL
                 BufferedReader in = new BufferedReader(new InputStreamReader(pURL.openStream()));
                 String inputLine;
@@ -2129,18 +2136,18 @@ public class AutoProcessAlerts
                     else
                         outputLine = outputLine.substring(bodyStart, bodyEnd);
                 }
-                _logSummary.writeParagraph0("Notified Process URL : " + clientURL + " " + outputLine);
+                _urlMsgsInfo.add("Notified Process URL : " + _clientURL + " " + outputLine);
 
                 in.close();
             }
             catch (MalformedURLException ex)
             {
-                _logSummary.writeError("Invalid URL/Error opening URL: " + processURL + "\n");
+                _urlMsgsErr.add(ex.toString() + _processURL + "\n");
                 _logger.error(ex.toString(), ex);
             }
             catch (IOException ex)
             {
-                _logSummary.writeError("Invalid URL/ File Not Found / Error opening URL: " + processURL + "\n");
+                _urlMsgsErr.add(ex.toString() + _processURL + "\n");
                 _logger.error(ex.toString(), ex);
             }
         }
@@ -2270,6 +2277,31 @@ public class AutoProcessAlerts
         }
     }
 
+    /**
+     * Write Process messages to log file.
+     *
+     */
+    void writeUrlMsgs()
+    {
+        if (_urlMsgsInfo.size() > 0)
+        {
+            _logSummary.writeHeading("Process URL Information Messages ...");
+            for (int i = 0; i < _urlMsgsInfo.size(); ++i)
+            {
+                _logSummary.writeParagraph0(_urlMsgsInfo.get(i));
+            }
+        }
+        
+        if (_urlMsgsErr.size() > 0)
+        {
+            _logSummary.writeHeading("Process URL Error Messages ...");
+            for (int i = 0; i < _urlMsgsErr.size(); ++i)
+            {
+                _logSummary.writeError(_urlMsgsErr.get(i));
+            }
+        }
+    }
+
     // Class data elements.
     private String              _dsurl;
 
@@ -2332,6 +2364,10 @@ public class AutoProcessAlerts
     private AlertOutput         _logSummary;
 
     private AlertOutput         _logAudits;
+
+    private Vector<String> _urlMsgsInfo;
+
+    private Vector<String> _urlMsgsErr;
 
     private AlertPlugIn _api;
 
