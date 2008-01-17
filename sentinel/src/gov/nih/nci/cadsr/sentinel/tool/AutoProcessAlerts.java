@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.23 2008-01-17 16:09:59 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.24 2008-01-17 16:35:58 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -1838,6 +1838,8 @@ public class AutoProcessAlerts
             _version = "unknown";
             _style = "";
         }
+        
+        _logger.info("Version " + _version.replace("&nbsp;", " "));
 
         // Be sure we have a database connection.
         String errMsg = null;
@@ -1887,8 +1889,6 @@ public class AutoProcessAlerts
             _logSummary.writeError(errMsg);
         else
             createAuditReports();
-        
-        _logger.info("Version " + _version.replace("&nbsp;", " "));
 
         return 0;
     }
