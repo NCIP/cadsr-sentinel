@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.24 2008-01-17 16:35:58 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.25 2008-01-17 22:27:24 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -2116,24 +2116,14 @@ public class AutoProcessAlerts
         {
             _processURL = url;
             _clientURL = client;
-        }
-        
-        private synchronized void incCnt()
-        {
-            ++_urlRunCnt;
-        }
-        
-        private synchronized void decCnt()
-        {
-            --_urlRunCnt;
+            ++_urlRunCalls;
+            incRunCnt();
         }
 
         public void run()
         {
             try
             {
-                ++_urlRunCalls;
-                incCnt();
                 URL pURL = new URL(_processURL);
                 // open the process URL
                 BufferedReader in = new BufferedReader(new InputStreamReader(pURL.openStream()));
@@ -2176,9 +2166,24 @@ public class AutoProcessAlerts
             }
             finally
             {
-                decCnt();
+                decRunCnt();
             }
         }
+    }
+    
+    private synchronized void incRunCnt()
+    {
+        ++_urlRunCnt;
+    }
+    
+    private synchronized void decRunCnt()
+    {
+        --_urlRunCnt;
+    }
+    
+    private synchronized int getRunCnt()
+    {
+        return _urlRunCnt;
     }
 
     /**
@@ -2316,7 +2321,7 @@ public class AutoProcessAlerts
             _logSummary.writeHeading("Process URL Run invoked " + _urlRunCalls + " times.");
 
         // Must wait for all URL Process threads to finish
-        while (_urlRunCnt > 0)
+        while (getRunCnt() > 0)
         {
             try
             {
