@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.21 2008-01-16 21:13:00 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.22 2008-01-17 16:01:15 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -109,6 +109,8 @@ public class AutoProcessAlerts
         
         _urlMsgsErr = new Vector<String>();
         _urlMsgsInfo = new Vector<String>();
+        _urlRunCnt = 0;
+        _urlRunCalls = 0;
     }
 
     /**
@@ -2113,11 +2115,23 @@ public class AutoProcessAlerts
             _processURL = url;
             _clientURL = client;
         }
+        
+        private synchronized void incCnt()
+        {
+            ++_urlRunCnt;
+        }
+        
+        private synchronized void decCnt()
+        {
+            --_urlRunCnt;
+        }
 
         public void run()
         {
             try
             {
+                ++_urlRunCalls;
+                incCnt();
                 URL pURL = new URL(_processURL);
                 // open the process URL
                 BufferedReader in = new BufferedReader(new InputStreamReader(pURL.openStream()));
@@ -2152,6 +2166,15 @@ public class AutoProcessAlerts
             {
                 _urlMsgsErr.add(ex.toString() + _processURL + "\n");
                 _logger.error(ex.toString(), ex);
+            }
+            catch (Exception ex)
+            {
+                _urlMsgsErr.add("Unexpected: " + ex.toString() + _processURL + "\n");
+                _logger.error(ex.toString(), ex);
+            }
+            finally
+            {
+                decCnt();
             }
         }
     }
@@ -2286,6 +2309,24 @@ public class AutoProcessAlerts
      */
     private void writeUrlMsgs()
     {
+        // Nice to know how many times we tried.
+        if (_urlRunCalls > 0)
+            _logSummary.writeHeading("Process URL Run invoked " + _urlRunCalls + " times.");
+
+        // Must wait for all URL Process threads to finish
+        while (_urlRunCnt > 0)
+        {
+            try
+            {
+                Thread.sleep(10000);
+                _logger.info("Waiting on Process URL threads to finish.");
+            }
+            catch (InterruptedException e)
+            {
+                break;
+            }
+        }
+
         // Move information messages to administrator log.
         if (_urlMsgsInfo.size() > 0)
         {
@@ -2375,6 +2416,10 @@ public class AutoProcessAlerts
     private Vector<String> _urlMsgsInfo;
 
     private Vector<String> _urlMsgsErr;
+    
+    private int _urlRunCnt;
+    
+    private int _urlRunCalls;
 
     private AlertPlugIn _api;
 
