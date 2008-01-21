@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.25 2008-01-17 22:27:24 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.26 2008-01-21 15:03:58 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -2083,7 +2083,7 @@ public class AutoProcessAlerts
         xmlLink = _http + _xmlFile.substring(_work.length());
         xmlLink = xmlLink.replaceAll(" ", "%20");
         String processURL = renderProcessURL(url_) + xmlLink;
-        AlertProcessThread processThread = new AlertProcessThread(processURL, url_);
+        AlertProcessThread processThread = new AlertProcessThread(processURL);
         processThread.start();
     }
 
@@ -2104,18 +2104,15 @@ public class AutoProcessAlerts
      */
     private class AlertProcessThread extends Thread {
         private String _processURL;
-        private String _clientURL;
 
         /**
          * Constructor
          *
          * @param url
-         * @param client
          */
-        public AlertProcessThread(String url, String client)
+        public AlertProcessThread(String url)
         {
             _processURL = url;
-            _clientURL = client;
             ++_urlRunCalls;
             incRunCnt();
         }
@@ -2128,24 +2125,14 @@ public class AutoProcessAlerts
                 // open the process URL
                 BufferedReader in = new BufferedReader(new InputStreamReader(pURL.openStream()));
                 String inputLine;
-                String outputLine = "";
+                String outputLine = _processURL + "\n";
 
                 // read from the process URL and write the acknowledgement message to the log
                 while ((inputLine = in.readLine()) != null)
                 {
-                    outputLine += inputLine + "\n";
+                    outputLine += inputLine.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "\n";
                 }
-                int bodyStart = outputLine.indexOf("<body>");
-                if (bodyStart >= 0)
-                {
-                    bodyStart += "<body>".length();
-                    int bodyEnd = outputLine.indexOf("</body>", bodyStart);
-                    if (bodyEnd == -1)
-                        outputLine = outputLine.substring(bodyStart);
-                    else
-                        outputLine = outputLine.substring(bodyStart, bodyEnd);
-                }
-                _urlMsgsInfo.add("Notified Process URL : " + _clientURL + " " + outputLine);
+                _urlMsgsInfo.add("Notified Process URL : " + outputLine);
 
                 in.close();
             }
