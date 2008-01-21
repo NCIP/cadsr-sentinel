@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.26 2008-01-21 15:03:58 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.27 2008-01-21 15:57:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -2125,12 +2125,12 @@ public class AutoProcessAlerts
                 // open the process URL
                 BufferedReader in = new BufferedReader(new InputStreamReader(pURL.openStream()));
                 String inputLine;
-                String outputLine = _processURL + "\n";
+                String outputLine = _processURL + "<br/>\n";
 
                 // read from the process URL and write the acknowledgement message to the log
                 while ((inputLine = in.readLine()) != null)
                 {
-                    outputLine += inputLine.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "\n";
+                    outputLine += inputLine.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "<br/>\n";
                 }
                 _urlMsgsInfo.add("Notified Process URL : " + outputLine);
 
@@ -2138,17 +2138,17 @@ public class AutoProcessAlerts
             }
             catch (MalformedURLException ex)
             {
-                _urlMsgsErr.add(ex.toString() + _processURL + "\n");
+                _urlMsgsErr.add(ex.toString() + " " +  _processURL + "<br/>\n");
                 _logger.error(ex.toString(), ex);
             }
             catch (IOException ex)
             {
-                _urlMsgsErr.add(ex.toString() + _processURL + "\n");
+                _urlMsgsErr.add(ex.toString() + " " + _processURL + "<br/>\n");
                 _logger.error(ex.toString(), ex);
             }
             catch (Exception ex)
             {
-                _urlMsgsErr.add("Unexpected: " + ex.toString() + _processURL + "\n");
+                _urlMsgsErr.add("Unexpected: " + ex.toString() + " " + _processURL + "<br/>\n");
                 _logger.error(ex.toString(), ex);
             }
             finally
