@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.13 2008-01-14 15:35:27 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.14 2008-01-23 15:33:19 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -8402,9 +8402,9 @@ public class DBAlertOracle implements DBAlert
         for (int i = 0; i < changes.length; i++)
         {
             int rowID = DBAlertUtil.binarySearchValues(tempMap, changes[i]);
-            temp[i] = tempMap[rowID]._key;
+            temp[i] = (rowID == -1) ? changes[i] : tempMap[rowID]._key;
         }
-        return temp; // To change body of implemented methods use File | Settings | File Templates.
+        return temp;
     }
 
     /**
