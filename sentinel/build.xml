@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.127 2008-01-11 16:02:54 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.128 2008-01-31 22:03:14 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -21,6 +21,7 @@
         JBOSS.SERVER.DIR = ${JBOSS.SERVER.DIR}
         JBOSS.CONF.DIR = ${JBOSS.CONF.DIR}
         JBOSS.DEPLOY.DIR = ${JBOSS.DEPLOY.DIR}
+        JBOSS.LOG.DIR = ${JBOSS.LOG.DIR}
         JDEBUG = ${JDEBUG}
         SCP.USER = ${SCP.USER}
         SCP.HOST = ${SCP.HOST}
@@ -38,7 +39,7 @@
         TIER.UPPER = ${TIER.UPPER}
         TIER.NAME = ${TIER.NAME}
         TOOL.ROOT.DIR = ${TOOL.ROOT.DIR}
-        WEBLOG.DIR = ${WEBLOG.DIR}
+        TOOL.LOG.DIR = ${TOOL.LOG.DIR}
     </echo>
     <condition property="check.props">
         <and>
@@ -54,13 +55,14 @@
             <isset property="JBOSS.SERVER.DIR" />
             <isset property="JBOSS.CONF.DIR" />
             <isset property="JBOSS.DEPLOY.DIR" />
+            <isset property="JBOSS.LOG.DIR" />
+            <isset property="TOOL.LOG.DIR" />
             <isset property="TOOL.ROOT.DIR" />
             <isset property="TEST" />
             <isset property="TEST.VALID.USER" />
             <isset property="TEST.VALID.PSWD" />
             <isset property="TEST.BAD.USER" />
             <isset property="TEST.BAD.PSWD" />
-            <isset property="WEBLOG.DIR" />
             <isset property="SCP.USER" />
             <isset property="SCP.HOST" />
             <isset property="SCP.PATH" />
@@ -106,7 +108,8 @@
     <filter token="TIER" value="${TIER}" />
     <filter token="TIER.UPPER" value="${TIER.UPPER}" />
     <filter token="TIER.NAME" value="${TIER.NAME}" />
-    <filter token="WEBLOG.DIR" value="${WEBLOG.DIR}" />
+    <filter token="TOOL.LOG.DIR" value="${TOOL.LOG.DIR}" />
+    <filter token="JBOSS.LOG.DIR" value="${JBOSS.LOG.DIR}" />
 
     <path id="libpath">
         <fileset dir="${lib.dir}">
