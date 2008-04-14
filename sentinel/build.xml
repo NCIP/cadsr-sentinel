@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.129 2008-01-31 22:25:03 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.130 2008-04-14 19:54:13 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -445,6 +445,8 @@
         <echo>chmod +r ${toolDtd.dir}/*</echo>
         <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="chmod +r ${toolDtd.dir}/*" />
 
+        <echo>mkdir ${toolBin.dir}</echo>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" failonerror="false" command="mkdir -p ${toolBin.dir}" />
         <echo>cp ${scpPath.dir}/bin/* ${toolBin.dir}/.</echo>
         <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${scpPath.dir}/bin/* ${toolBin.dir}/." />
         <echo>chmod +rx ${toolBin.dir}/autorun.sh</echo>
