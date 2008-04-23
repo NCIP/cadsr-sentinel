@@ -2,7 +2,7 @@
     
                            Sentinel Tool
                           Version 3.2.0.3
-                         December 20, 2007
+                         February 19, 2008
 
        National Cancer Institute Center for Bioinformatics
 
@@ -25,7 +25,7 @@
 
     3.2.0.3
 
-    -- 20 December 2007
+    -- 19 February 2008
 
     3.2.0.2
 

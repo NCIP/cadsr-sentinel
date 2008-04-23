@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.7 2007-12-17 18:13:54 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.8 2008-04-23 18:17:00 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -65,12 +65,21 @@ values ('SENTINEL', 'ADMIN.00', '01', 'HEBELL',
 'An account given full Sentinel Administrator privileges.');
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
+values ('SENTINEL', 'ADMIN.01', '2', 'ALREDS',
+'An account to receive the caDSR Audit Report.');
+
+insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
 values ('SENTINEL', 'ADMIN.02', '2', 'DWARZEL',
-'An account to receive the caDSR Statistics Report.');
+'An account to receive the caDSR Audit Report.');
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
 values ('SENTINEL', 'ADMIN.03', '2', 'REEVESD',
-'An account to receive the caDSR Statistics Report.');
+'An account to receive the caDSR Audit Report.');
+
+insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
+values ('SENTINEL', 'ADMIN.04', '2', 'PAGGARWA',
+'An account to receive the caDSR Audit Report.');
+
 
 /*
    The URL should be retrieved and passed to the Sentinel API
