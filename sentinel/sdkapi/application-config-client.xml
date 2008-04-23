@@ -71,8 +71,8 @@
 							&lt;/bean&gt;
 					&lt;/property&gt;
 				&lt;/bean&gt;
-                &lt;alias alias="EvsApplicationService" name="applicationService"/&gt;
-                &lt;alias alias="EvsAuthenticationProvider" name="authenticationProvider"/&gt;
+                &lt;alias alias=&quot;EvsApplicationService&quot; name=&quot;applicationService&quot;/&gt;
+                &lt;alias alias=&quot;EvsAuthenticationProvider&quot; name=&quot;authenticationProvider&quot;/&gt;
 			</value>
 		</constructor-arg>
 	</bean>

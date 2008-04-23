@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.7 2008-04-23 18:17:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.8 2008-04-23 21:57:51 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -727,8 +727,10 @@ public class AuditConceptToEVS extends AuditReport
         }
         catch (Exception ex)
         {
-            msgs.add(ex.toString());
-            // ex.printStackTrace();
+            msgs.add("EVS API URL " + evsURL + " " + ex.toString());
+            StackTraceElement[] list = ex.getStackTrace();
+            for (int i = 0; i < list.length; ++i)
+                msgs.add(list[i].toString());
             return msgs;
         }
 
@@ -834,7 +836,9 @@ public class AuditConceptToEVS extends AuditReport
                 catch (Exception ex)
                 {
                     msgs.add(ex.toString());
-                    // ex.printStackTrace();
+                    StackTraceElement[] list = ex.getStackTrace();
+                    for (int i = 0; i < list.length; ++i)
+                        msgs.add(list[i].toString());
                     return msgs;
                 }
 
