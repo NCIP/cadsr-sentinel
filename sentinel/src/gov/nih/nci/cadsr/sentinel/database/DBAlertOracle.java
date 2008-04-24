@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.16 2008-04-24 22:44:14 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.17 2008-04-24 22:55:03 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -4141,7 +4141,7 @@ public class DBAlertOracle implements DBAlert
      */
     public int getSchemes()
     {
-        String select = "select csv.conte_idseq, csv.cs_idseq, csv.long_name || ' (v' || csv.version || ' / ' || cv.name || ')' as lname "
+        String select = "select csv.conte_idseq, csv.cs_idseq, csv.long_name || ' (' || csv.cs_id || 'v' || csv.version || ' / ' || cv.name || ')' as lname "
             + "from sbr.classification_schemes_view csv, sbr.contexts_view cv "
             + "where cv.conte_idseq = csv.conte_idseq order by upper(lname) ASC";
 
