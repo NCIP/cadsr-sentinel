@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACData.java,v 1.15 2008-04-23 18:17:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACData.java,v 1.14 2007-12-17 19:42:48 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -1831,11 +1831,11 @@ public class ACData
         if (_publicID != -1)
             xml._publicId = String.valueOf(_publicID);
         if (_version != null)
-            xml._version = convertNullString(_version);
+        xml._version = convertNullString(_version);
         if (_uName != null)
-            xml._modifiedByUser = convertNullString(_uName);
-        if (_modifier != null)
-             xml._modifiedByName = convertNullString(_modifier).replace("&nbsp;", " ");
+        xml._modifiedByUser = convertNullString(_uName);
+         if (_modifier != null)
+        xml._modifiedByName = convertNullString(_modifier).replace("&nbsp;", " ");
         if (_modified != null)
             xml._modifiedTime = _modified.toString();
         xml._createdByUser = convertNullString(_uCreator);
