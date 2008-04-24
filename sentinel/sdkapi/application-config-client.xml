@@ -18,7 +18,7 @@
 		</property>
 	</bean>
 	
-	<bean id="EvsAapplicationService" class="org.springframework.aop.framework.ProxyFactoryBean">
+	<bean id="EvsApplicationService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="target">
 			<bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
 				<property name="serviceUrl" value="http://evsapi.nci.nih.gov:80/evsapi41/http/applicationService"/>

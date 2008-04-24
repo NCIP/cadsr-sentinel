@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.14 2008-01-23 15:33:19 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.15 2008-04-24 16:33:35 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -376,7 +376,7 @@ public class DBAlertOracle implements DBAlert
         new DBAlertOracleMap2("MODIFIED_BY", "sbr.user_accounts_view", "ua_name", "", "name as label"),
         new DBAlertOracleMap2("OC_IDSEQ", "sbrext.object_classes_view_ext", "oc_idseq", "", "long_name || ' (' || oc_id || 'v' || version || ')' as label"),
         new DBAlertOracleMap2("PROP_IDSEQ", "sbrext.properties_view_ext", "prop_idseq", "", "long_name || ' (' || prop_id || 'v' || version || ')' as label"),
-        new DBAlertOracleMap2("PV_IDSEQ", "sbr.permissible_values_view", "pv_idseq", "", "value || ' (' || short_meaning || ')' as label"),
+        new DBAlertOracleMap2("PV_IDSEQ", "sbr.permissible_values_view pv, sbr.value_meanings_view vm", "pv.pv_idseq", " and vm.vm_idseq = pv.vm_idseq", "pv.value || ' (' || vm.long_name || ')' as label"),
         new DBAlertOracleMap2("RD_IDSEQ", "sbr.reference_documents_view", "rd_idseq", "", "name || ' (' || nvl(doc_text, url) || ')' as label"),
         new DBAlertOracleMap2("REP_IDSEQ", "sbrext.representations_view_ext", "rep_idseq", "", "long_name || ' (' || rep_id || 'v' || version || ')' as label"),
         new DBAlertOracleMap2("UA_NAME", "sbr.user_accounts_view", "ua_name", "", "name as label"),
@@ -5622,7 +5622,7 @@ public class DBAlertOracle implements DBAlert
 
         String[] select = new String[4];
         select[0] =
-            "select 'p', 1, 'vm', zz.short_meaning as id, zz.version, zz.vm_id, zz.long_name, zz.conte_idseq as cid, "
+            "select 'p', 1, 'vm', zz.vm_idseq as id, zz.version, zz.vm_id, zz.long_name, zz.conte_idseq as cid, "
             + "zz.date_modified as ctime, zz.date_created, zz.modified_by, zz.created_by, zz.comments, c.name, '' "
             + "from sbr.value_meanings_view zz, sbr.contexts_view c where ";
         select[1] = "zz.created_by in (?) and ";
@@ -6602,9 +6602,9 @@ public class DBAlertOracle implements DBAlert
     public ACData[] selectPVfromVM(ACData vm_[])
     {
         String select = "select 's', 1, 'pv', pv.pv_idseq as id, '', -1, pv.value, '', "
-        + "pv.date_modified, pv.date_created, pv.modified_by, pv.created_by, '', '', vm.short_meaning "
+        + "pv.date_modified, pv.date_created, pv.modified_by, pv.created_by, '', '', vm.vm_idseq "
         + "from sbr.permissible_values_view pv, sbr.value_meanings_view vm "
-        + "where vm.short_meaning in (?) and pv.short_meaning = vm.short_meaning ";
+        + "where vm.vm_idseq in (?) and pv.vm_idseq = vm.vm_idseq ";
 
         return selectAC(select, vm_);
     }
