@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.15 2008-04-24 16:33:35 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.16 2008-04-24 22:44:14 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -370,7 +370,7 @@ public class DBAlertOracle implements DBAlert
         new DBAlertOracleMap2("CONTE_IDSEQ", "sbr.contexts_view", "conte_idseq", "", "name || ' (v' || version || ')' as label"),
         new DBAlertOracleMap2("CON_IDSEQ", "sbrext.concepts_view_ext", "con_idseq", "", "long_name || ' (' || con_id || 'v' || version || ') (' || origin || ':' || preferred_name || ')' as label"),
         new DBAlertOracleMap2("CREATED_BY", "sbr.user_accounts_view", "ua_name", "", "name as label"),
-        new DBAlertOracleMap2("CS_CSI_IDSEQ", "sbr.cs_csi_view cci, sbr.class_scheme_items_view csi", "cci.cs_csi_idseq", " and csi.csi_idseq = cci.csi_idseq","csi.csi_name as label"),
+        new DBAlertOracleMap2("CS_CSI_IDSEQ", "sbr.cs_csi_view cci, sbr.cs_items_view csi", "cci.cs_csi_idseq", " and csi.csi_idseq = cci.csi_idseq","csi.long_name as label"),
         new DBAlertOracleMap2("DEC_IDSEQ", "sbr.data_element_concepts_view", "dec_idseq", "", "long_name || ' (' || dec_id || 'v' || version || ')' as label"),
         new DBAlertOracleMap2("DE_IDSEQ", "sbr.data_elements_view", "de_idseq", "", "long_name || ' (' || cde_id || 'v' || version || ')' as label"),
         new DBAlertOracleMap2("MODIFIED_BY", "sbr.user_accounts_view", "ua_name", "", "name as label"),
@@ -389,7 +389,7 @@ public class DBAlertOracle implements DBAlert
         new DBAlertOracleMap3("con", "Concept", "sbrext.concepts_view_ext", null),
         new DBAlertOracleMap3("conte", "Context", "sbr.contexts_view", null),
         new DBAlertOracleMap3("cs", "Classification Scheme", "sbr.classification_schemes_view", "CLASSIFICATION_SCHEMES"),
-        new DBAlertOracleMap3("csi", "Classification Scheme Item", "sbr.class_scheme_items_view", null),
+        new DBAlertOracleMap3("csi", "Classification Scheme Item", "sbr.cs_items_view", null),
         new DBAlertOracleMap3("de", "Data Element", "sbr.data_elements_view", "DATA_ELEMENTS"),
         new DBAlertOracleMap3("dec", "Data Element Concept", "sbr.data_element_concepts_view", "DATA_ELEMENT_CONCEPTS"),
         new DBAlertOracleMap3("oc", "Object Class", "sbrext.object_classes_view_ext", "OBJECT_CLASSES_EXT"),
@@ -1791,9 +1791,9 @@ public class DBAlertOracle implements DBAlert
                 + "Classification Scheme Items may be anything ";
             else
             {
-                select = "select csi_name "
-                    + "from sbr.class_scheme_items_view "
-                    + "where csi_idseq in (?) order by upper(csi_name) ASC";
+                select = "select long_name "
+                    + "from sbr.cs_items_view "
+                    + "where csi_idseq in (?) order by upper(long_name) ASC";
                 criteria = criteria + "Classification Scheme Items must be "
                     + selectText(select, rec_.getSchemeItems(), 1);
                 specific += marker;
@@ -2043,7 +2043,7 @@ public class DBAlertOracle implements DBAlert
             + "union "
             + "select 'cs', long_name from sbr.classification_schemes_view where cs_idseq = ? "
             + "union "
-            + "select 'csi', csi_name from sbr.class_scheme_items_view where csi_idseq = ? "
+            + "select 'csi', long_name from sbr.cs_items_view where csi_idseq = ? "
             + "union "
             + "select 'qc', long_name from sbrext.quest_contents_view_ext where qc_idseq = ? and qtl_name in ('TEMPLATE','CRF') "
             + "union "
@@ -3714,6 +3714,7 @@ public class DBAlertOracle implements DBAlert
             + "opt.property like 'EVS.VOCAB.%.EVSNAME' or "
             + "opt.property like 'EVS.VOCAB.%.DISPLAY' or "
             + "opt.property like 'EVS.VOCAB.%.PROPERTY.DEFINITION' or "
+            + "opt.property like 'EVS.VOCAB.%.VOCABCODETYPE' or "
             + "opt.property like 'EVS.VOCAB.%.ACCESSREQUIRED' "
             + ") order by opt.property";
 
@@ -4332,8 +4333,8 @@ public class DBAlertOracle implements DBAlert
     public int getSchemeItems()
     {
         String select = "select cv.cs_idseq, cv.csi_idseq, level as lvl, "
-            + "(select csi.csi_name from sbr.class_scheme_items_view csi where csi.csi_idseq = cv.csi_idseq), "
-            + "(select cs.long_name || ' / v' || cs.version as xname from sbr.classification_schemes_view cs where cs.cs_idseq = cv.cs_idseq) "
+            + "(select csi.long_name || ' (' || csi.csi_id || 'v' || csi.version || ')' as xname from sbr.cs_items_view csi where csi.csi_idseq = cv.csi_idseq), "
+            + "(select cs.long_name || ' (' || cs.cs_id || 'v' || cs.version || ')' as xname from sbr.classification_schemes_view cs where cs.cs_idseq = cv.cs_idseq) "
             + "from sbr.cs_csi_view cv "
             + "start with cv.p_cs_csi_idseq is null "
             + "connect by prior cv.cs_csi_idseq = cv.p_cs_csi_idseq";
@@ -4431,7 +4432,7 @@ public class DBAlertOracle implements DBAlert
      * must be called first. Once this method is used the internal copy is
      * deleted to reclaim the memory space.
      *
-     * @return An array of strings from the sbr.class_scheme_items_view.csi_name
+     * @return An array of strings from the sbr.cs_items_view.long_name
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeItems getSchemeItems()
      */
@@ -4448,7 +4449,7 @@ public class DBAlertOracle implements DBAlert
      * deleted to reclaim the memory space.
      *
      * @return An array of strings from the
-     *         sbr.class_scheme_items_view.csi_idseq column.
+     *         sbr.cs_items_view.csi_idseq column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeItems getSchemeItems()
      */
     public String[] getSchemeItemVals()
@@ -4464,7 +4465,7 @@ public class DBAlertOracle implements DBAlert
      * first. Once this method is used the internal copy is deleted to reclaim
      * the memory space.
      *
-     * @return An array of strings from the sbr.class_scheme_items_view.cs_idseq
+     * @return An array of strings from the sbr.cs_items_view.cs_idseq
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeItems getSchemeItems()
      */
@@ -6096,9 +6097,9 @@ public class DBAlertOracle implements DBAlert
         String creators_[], String modifiers_[])
     {
         String select[] = new String[4];
-        select[0] = "select 'p', 1, 'csi', csi_idseq as id, '', -1, csi_name, '', "
+        select[0] = "select 'p', 1, 'csi', csi_idseq as id, version, csi_id, long_name, '', "
             + "date_modified, date_created, modified_by, created_by, comments, '', '' "
-            + "from sbr.class_scheme_items_view " + "where ";
+            + "from sbr.cs_items_view " + "where ";
         select[1] = "created_by in (?) and ";
         select[2] = "modified_by in (?) and ";
         select[3] = "((date_modified is not null and date_modified "
@@ -6807,9 +6808,9 @@ public class DBAlertOracle implements DBAlert
      */
     public ACData[] selectCSIfromDE(ACData de_[])
     {
-        String select = "select 's', 1, 'csi', civ.csi_idseq as id, '', -1, civ.csi_name, '', "
+        String select = "select 's', 1, 'csi', civ.csi_idseq as id, civ.version, civ.csi_id, civ.long_name, '', "
             + "civ.date_modified, civ.date_created, civ.modified_by, civ.created_by, civ.comments, '', de.de_idseq "
-            + "from sbr.class_scheme_items_view civ, sbr.data_elements_view de, sbr.admin_components_view ac, "
+            + "from sbr.cs_items_view civ, sbr.data_elements_view de, sbr.admin_components_view ac, "
             + "sbr.ac_csi_view ai, sbr.cs_csi_view ci "
             + "where de.de_idseq in (?) and ac.ac_idseq = de.de_idseq and ai.ac_idseq = ac.ac_idseq and "
             + "ci.cs_csi_idseq = ai.cs_csi_idseq and civ.csi_idseq = ci.csi_idseq "
@@ -6828,9 +6829,9 @@ public class DBAlertOracle implements DBAlert
      */
     public ACData[] selectCSIfromDEC(ACData dec_[])
     {
-        String select = "select 's', 1, 'csi', civ.csi_idseq as id, '', -1, civ.csi_name, '', "
+        String select = "select 's', 1, 'csi', civ.csi_idseq as id, civ.version, civ.csi_id, civ.long_name, '', "
             + "civ.date_modified, civ.date_created, civ.modified_by, civ.created_by, civ.comments, '', dec.dec_idseq "
-            + "from sbr.class_scheme_items_view civ, sbr.data_element_concepts_view dec, sbr.admin_components_view ac, "
+            + "from sbr.cs_items_view civ, sbr.data_element_concepts_view dec, sbr.admin_components_view ac, "
             + "sbr.ac_csi_view ai, sbr.cs_csi_view ci "
             + "where dec.dec_idseq in (?) and ac.ac_idseq = dec.dec_idseq and ai.ac_idseq = ac.ac_idseq and "
             + "ci.cs_csi_idseq = ai.cs_csi_idseq and civ.csi_idseq = ci.csi_idseq "
@@ -6849,9 +6850,9 @@ public class DBAlertOracle implements DBAlert
      */
     public ACData[] selectCSIfromVD(ACData vd_[])
     {
-        String select = "select 's', 1, 'csi', civ.csi_idseq as id, '', -1, civ.csi_name, '', "
+        String select = "select 's', 1, 'csi', civ.csi_idseq as id, civ.version, civ.csi_id, civ.long_name, '', "
             + "civ.date_modified, civ.date_created, civ.modified_by, civ.created_by, civ.comments, '', vd.vd_idseq "
-            + "from sbr.class_scheme_items_view civ, sbr.value_domains_view vd, sbr.admin_components_view ac, "
+            + "from sbr.cs_items_view civ, sbr.value_domains_view vd, sbr.admin_components_view ac, "
             + "sbr.ac_csi_view ai, sbr.cs_csi_view ci "
             + "where vd.vd_idseq in (?) and ac.ac_idseq = vd.vd_idseq and ai.ac_idseq = ac.ac_idseq and "
             + "ci.cs_csi_idseq = ai.cs_csi_idseq and civ.csi_idseq = ci.csi_idseq "
@@ -7001,14 +7002,14 @@ public class DBAlertOracle implements DBAlert
         String select = "(select 's', 1, 'cs', cs.cs_idseq as id, cs.version, cs.cs_id, cs.long_name, cs.conte_idseq as cid, "
             + "cs.date_modified, cs.date_created, cs.modified_by, cs.created_by, cs.change_note, c.name, civ.csi_idseq "
             + "from sbr.classification_schemes_view cs, sbr.contexts_view c, sbr.cs_csi_view ci, "
-            + "sbr.class_scheme_items_view civ "
+            + "sbr.cs_items_view civ "
             + "where civ.csi_idseq in (?) and ci.csi_idseq = civ.csi_idseq and cs.cs_idseq = ci.cs_idseq and "
             + "c.conte_idseq = cs.conte_idseq "
             + "union "
             + "select 's', 1, 'cs', ac.ac_idseq as id, ac.version, xx.cs_id, ac.long_name, dv.conte_idseq as cid, "
             + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, civ.csi_idseq "
             + "from sbr.admin_components_view ac, sbr.classification_schemes_view xx, sbr.cs_csi_view ci, "
-            + "sbr.designations_view dv, sbr.contexts_view c, sbr.class_scheme_items_view civ "
+            + "sbr.designations_view dv, sbr.contexts_view c, sbr.cs_items_view civ "
             + "where civ.csi_idseq in (?) and ci.csi_idseq = civ.csi_idseq and xx.cs_idseq = ci.cs_idseq and "
             + "ac.ac_idseq = xx.cs_idseq and ac.actl_name = 'CLASSIFICATION' and "
             + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq) "

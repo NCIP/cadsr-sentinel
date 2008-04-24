@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.8 2008-04-23 21:57:51 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.9 2008-04-24 22:44:14 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -150,26 +150,11 @@ public class AuditConceptToEVS extends AuditReport
                     if (text[3].equals("DISPLAY"))
                         vDisplay = props_[i]._value;
                     else if (text[3].equals("EVSNAME"))
-                    {
                         vName = props_[i]._value;
-
-                        if (vName.equals("NCI_Thesaurus"))
-                            vSource = "NCI_CONCEPT_CODE";
-                        else if (vName.equals("LOINC"))
-                            vSource = "LOINC_CODE";
-                        else if (vName.equals("GO"))
-                            vSource = "GO_CODE";
-                        else if (vName.equals("MedDRA"))
-                            vSource = "MEDDRA_CODE";
-                        else if (vName.equals("SNOMED_CT"))
-                            vSource = "SNOMED_CODE";
-                        else if (vName.equals("VA_NDFRT"))
-                            vSource = "VA_NDF_CODE";
-                        else if (vName.equals("MGED_Ontology"))
-                            vSource = "NCI_MO_CODE";
-                    }
                     else if (text[3].equals("ACCESSREQUIRED"))
                         vAccess = props_[i]._value;
+                    else if (text[3].equals("VOCABCODETYPE"))
+                        vSource = props_[i]._value;
                 }
                 else if (text.length == 5)
                 {
@@ -826,11 +811,11 @@ public class AuditConceptToEVS extends AuditReport
                     // An unexpected exception occurred so record it and terminate the validation.
                     else
                     {
-                        msg += "\n" + ex.toString();
-                        msg = formatMsg(rec, vocab, msg);
-                        msgs.add(msg);
-                        _logger.error(ex.toString());
-                        return msgs;
+                        msg += formatMsg(ex.toString());
+                        // msgs.add(msg);
+                        // _logger.error(ex.toString());
+                        // return msgs;
+                        break;
                     }
                 }
                 catch (Exception ex)
@@ -911,18 +896,32 @@ public class AuditConceptToEVS extends AuditReport
     
     private String formatMsg(ConceptItem rec_, EVSVocab vocab_, String msg_)
     {
-        return rec_._longName + AuditReport._ColSeparator + rec_._publicID + AuditReport._ColSeparator + rec_._version + AuditReport._ColSeparator + ((vocab_ == null) ? "" : vocab_._display) + AuditReport._ColSeparator + rec_._preferredName + AuditReport._ColSeparator
+        return rec_._longName + AuditReport._ColSeparator
+        + rec_._publicID + AuditReport._ColSeparator 
+        + rec_._version + AuditReport._ColSeparator
+        + ((vocab_ == null) ? "" : vocab_._display) + AuditReport._ColSeparator 
+        + rec_._preferredName + AuditReport._ColSeparator
             + ((msg_.charAt(0) == '\n') ? msg_.substring(1) : msg_);
     }
     
     private String formatMaxMsg()
     {
-        return "*** Maximum Messages ***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "The Error Message maximum limit [" + _maxMsgs + "] has been reached, report truncated.";
+        return "*** Maximum Messages ***" + AuditReport._ColSeparator
+        + "***" + AuditReport._ColSeparator
+        + "***" + AuditReport._ColSeparator
+        + "***" + AuditReport._ColSeparator
+        + "***" + AuditReport._ColSeparator
+        + "The Error Message maximum limit [" + _maxMsgs + "] has been reached, report truncated.";
     }
     
     private String formatTitleMsg()
     {
-        return "Concept" + AuditReport._ColSeparator + "Public ID" + AuditReport._ColSeparator + "Version" + AuditReport._ColSeparator + "Vocabulary" + AuditReport._ColSeparator + "Concept Code" + AuditReport._ColSeparator + "Message";
+        return "Concept" + AuditReport._ColSeparator
+        + "Public ID" + AuditReport._ColSeparator
+        + "Version" + AuditReport._ColSeparator
+        + "Vocabulary" + AuditReport._ColSeparator
+        + "Concept Code" + AuditReport._ColSeparator
+        + "Message";
     }
     
     private static final String _MSG001 = "Mislabeled as a MetaThesaurus Concept.";
