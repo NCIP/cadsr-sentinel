@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.133 2008-04-23 21:57:51 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.134 2008-04-24 15:18:41 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -463,6 +463,12 @@
         <scp todir="${SCP.USER}@${SCP.HOST}:${scpPath.dir}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true">
             <fileset dir="${artifacts.dir}" includes="**/*" />
         </scp>
+
+        <echo>mkdir ${TOOL.LOG.DIR}</echo>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" failonerror="false" command="mkdir -p ${TOOL.LOG.DIR}" />
+
+        <echo>mkdir ${TOOL.ROOT.DIR}</echo>
+        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" failonerror="false" command="mkdir -p ${TOOL.ROOT.DIR}" />
 
         <echo>mkdir ${toolDtd.dir}</echo>
         <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" failonerror="false" command="mkdir -p ${toolDtd.dir}" />
