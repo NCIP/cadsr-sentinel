@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.9 2008-04-24 22:44:14 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.10 2008-04-28 22:25:22 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -381,7 +381,6 @@ public class AuditConceptToEVS extends AuditReport
                 {
                     // Need definitions.
                     MetaThesaurusConcept temp = (MetaThesaurusConcept) _cons.get(i);
-                    @SuppressWarnings("unchecked")
                     ArrayList<Definition> defs = temp.getDefinitionCollection();
                     if (defs != null && defs.size() > 0)
                     {
@@ -409,7 +408,6 @@ public class AuditConceptToEVS extends AuditReport
                 {
                     // Need definitions.
                     MetaThesaurusConcept temp = (MetaThesaurusConcept) _cons.get(i);
-                    @SuppressWarnings("unchecked")
                     ArrayList<Definition> defs = temp.getDefinitionCollection();
                     if (defs != null && defs.size() > 0)
                     {
@@ -503,7 +501,7 @@ public class AuditConceptToEVS extends AuditReport
                     _logger.error(ex);
                 }
             }
-            query_.getDescLogicConcept(_vocab._vocab, _rec._preferredName, true);
+            query_.getDescLogicConcept(_vocab._vocab, _rec._preferredName);
         }
 
         @Override
@@ -516,7 +514,6 @@ public class AuditConceptToEVS extends AuditReport
             
             String name = "no recommendations available";
             
-            @SuppressWarnings ("unchecked")
             Vector<Property> collection = obj.getPropertyCollection();
             if (collection == null || collection.size() == 0)
             {
@@ -609,7 +606,6 @@ public class AuditConceptToEVS extends AuditReport
             for (int i = 0; i < _cons.size() && srcFlag && defFlag; ++i)
             {
                 DescLogicConcept temp = (DescLogicConcept) _cons.get(i);
-                @SuppressWarnings("unchecked")
                 Vector<Property> props = temp.getPropertyCollection();
                 for (Property prop : props)
                 {

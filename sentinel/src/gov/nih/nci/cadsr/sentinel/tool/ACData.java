@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACData.java,v 1.15 2008-04-23 18:17:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACData.java,v 1.16 2008-04-28 22:25:22 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -1480,7 +1480,7 @@ public class ACData
     public void setChanges(String changes_[], String old_[], String new_[], Timestamp dates_[], String chgtable_[], String chgby_[])
     {
         _changes = changes_;
-        _changesKeyNames = changes_;
+        // _changesKeyNames = changes_;
         _old = old_;
         _new = new_;
         _dates = dates_;
@@ -1981,7 +1981,7 @@ public class ACData
     //This is used to store the key names for the correspondint values of the keys
     //used in generating the XML
     //TODO this is currently used but it seems a better alternative to doing another lookup after the changed item codes are translated to readable text.
-    private String  _changesKeyNames[];
+    // private String  _changesKeyNames[];
 
     private String _uName;
 

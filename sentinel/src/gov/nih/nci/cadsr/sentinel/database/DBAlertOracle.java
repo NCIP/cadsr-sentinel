@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.17 2008-04-24 22:55:03 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.18 2008-04-28 22:25:22 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -8331,8 +8331,9 @@ public class DBAlertOracle implements DBAlert
      * Pull the name and email address for all the recipients on a specific Alert Definition.
      *
      * @param idseq_ the database id of the Alert Definition
+     * @return the name/email list
      */
-    public void selectAlertRecipients(String idseq_)
+    public Results1 selectAlertRecipients(String idseq_)
     {
         //TODO use this method to retrieve the name and emails for the distribution. It will
         // guarantee that the pair only appears once in the list. The method signature must be
@@ -8365,6 +8366,8 @@ public class DBAlertOracle implements DBAlert
             + "AND email IS NOT NULL";
 
         Results1 temp = getBasicData1(select, false);
+        
+        return temp;
     }
 
     /**
@@ -8379,13 +8382,22 @@ public class DBAlertOracle implements DBAlert
     }
 
     /**
+     * Exists solely to avoid a compile error
+     * @param x a list
+     */
+    @SuppressWarnings("unchecked")
+    static public void sort(List<DBAlertOracleMap1> x)
+    {
+        Collections.sort(x);
+    }
+
+    /**
      * Convert all meaning full names back to the internal codes for the XML generation
      *
      * @param changes -
      *        array of names for changes
      * @return - array of the corresponding key values
      */
-    @SuppressWarnings("unchecked")
     public String[] getKeyNames(String[] changes)
     {
         // Convert to list
@@ -8393,7 +8405,7 @@ public class DBAlertOracle implements DBAlert
             _DBMAP1OTHER)));
 
         // Ensure list sorted
-        Collections.sort(list);
+        DBAlertOracle.sort(list);
 
         // Convert it back to array as this is how the binary search is implemented
         DBAlertOracleMap1[] tempMap = list.toArray(new DBAlertOracleMap1[list.size()]);

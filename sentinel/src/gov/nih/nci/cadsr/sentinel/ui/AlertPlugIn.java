@@ -1,13 +1,11 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.5 2008-04-23 18:17:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.6 2008-04-28 22:25:22 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
 
 import java.util.Enumeration;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import javax.naming.Context;

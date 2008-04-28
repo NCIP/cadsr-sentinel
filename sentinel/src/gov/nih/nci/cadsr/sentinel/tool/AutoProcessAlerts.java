@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.29 2008-04-24 22:44:14 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.30 2008-04-28 22:25:22 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -2260,6 +2260,17 @@ public class AutoProcessAlerts
     }
 
     /**
+     * Exists solely to avoid compiler warnings - Java has some issues.
+     * @param x an object
+     * @return a casted object
+     */
+    @SuppressWarnings("unchecked")
+    private static Stack<RepRows> cStack(Object x)
+    {
+        return (Stack<RepRows>)x;
+    }
+
+    /**
      * Dump the report records to output.
      *
      * @param save_
@@ -2279,7 +2290,7 @@ public class AutoProcessAlerts
         if (hasProcesses)
         {
             // Copy the stack to another stack as it is also required for xml generation
-            xmlSave = (Stack<RepRows>) save_.clone();
+            xmlSave = cStack(save_.clone());
         }
 
         // Do all these only if the alert has a receipient which is an email

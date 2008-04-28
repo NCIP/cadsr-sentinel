@@ -1,6 +1,7 @@
 
 package gov.nih.nci.cadsr.sentinel.test;
 
+import gov.nih.nci.cadsr.sentinel.database.DBAlertOracle;
 import gov.nih.nci.cadsr.sentinel.database.DBAlertOracleMap1;
 import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 
@@ -14,7 +15,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -381,7 +381,10 @@ public class TestXML extends TestCase
 
     }
 
-    private void testURL()
+    /**
+     * Test a URL
+     */
+    public void testURL()
     {
         URL pURL = null;
         BufferedReader in = null;
@@ -449,11 +452,12 @@ public class TestXML extends TestCase
     {
         // Convert to list
         // Convert to list
-        List list = new ArrayList(Arrays.asList(_DBMAP1));
+        List<DBAlertOracleMap1> list = new ArrayList<DBAlertOracleMap1>(Arrays.asList(_DBMAP1));
 
         // Ensure list sorted
-        Collections.sort(list);
-        DBAlertOracleMap1[] tempMap = (DBAlertOracleMap1[]) list.toArray(new DBAlertOracleMap1[list.size()]);
+        DBAlertOracle.sort(list);
+
+        DBAlertOracleMap1[] tempMap = list.toArray(new DBAlertOracleMap1[list.size()]);
 
         int i = DBAlertUtil.binarySearchValues(tempMap, "Concept Class association");
         assertNotNull(tempMap[i]._key);
