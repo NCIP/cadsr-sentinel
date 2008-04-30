@@ -1,11 +1,9 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/FootTag.java,v 1.5 2008-04-23 18:17:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/FootTag.java,v 1.4 2007-09-25 14:26:46 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
-
-import gov.nih.nci.cadsr.sentinel.tool.Constants;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspWriter;
@@ -46,7 +44,7 @@ public class FootTag extends TagSupport
             out
                 .print("<table class=\"table3\"><colgroup></colgroup><tbody class=\"secttbody\" />\n"
                     + "<tr><td class=\"ncifmenu\"><span style=\"color: #dddddd\">"
-                    + msgs.getMessage(Constants._APLVERS).replace(" ", "&nbsp;")
+                    + msgs.getMessage("Appl.version")
                     + "&nbsp;(" + jboss + "/" + System.getProperty("java.version") + ")"
                     + "</span></td></tr>\n"
                     + "<tr>\n<td class=\"nciftrtable\">\n"
