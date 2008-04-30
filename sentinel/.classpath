@@ -6,7 +6,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/lib1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/lib2"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/libtest"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/stax-api-1.0.1.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/antlr-2.7.6.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
