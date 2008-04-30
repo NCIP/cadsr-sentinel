@@ -1,11 +1,9 @@
 // Copyright (c) 2007 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ExampleProcessRecipient.java,v 1.4 2008-04-23 18:17:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ExampleProcessRecipient.java,v 1.3 2007-12-07 22:43:23 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
-
-import gov.nih.nci.cadsr.sentinel.tool.Constants;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -66,7 +64,8 @@ public class ExampleProcessRecipient extends Action
             if (url.equals("http://identity"))
             {
                 MessageResources msgs = (MessageResources) request_.getSession().getServletContext().getAttribute(Globals.MESSAGES_KEY);
-                String version = msgs.getMessage(Constants._APLVERS);
+                String version = msgs.getMessage("Appl.version");
+                version = version.replace("&nbsp;", " ").trim();
 
                 // Identify who we are.
                 String html = "<html><head><title>Example Process Recipient</title><style>\n"
