@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.134 2008-04-24 15:18:41 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.135 2008-04-30 15:58:21 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -202,13 +202,13 @@
             <fileset file="${lib.dir}/castor-1.0.2.jar" />
             <fileset file="${lib.dir}/cglib-2.1.3.jar" />
             <fileset file="${lib.dir}/commons-collections-3.2.jar" />
-            <fileset file="${wlib.dir}/commons-logging-1.1.jar" />
+            <fileset file="${lib.dir}/commons-logging-1.1.jar" />
             <fileset file="${lib.dir}/commons-pool-1.3.jar" />
             <fileset file="${lib.dir}/dlbadapter.jar" />
             <fileset file="${lib.dir}/evsapi41-beans.jar" />
             <fileset file="${lib.dir}/evsapi41-framework.jar" />
             <fileset file="${lib.dir}/hibernate3.jar" />
-            <fileset file="${wlib.dir}/jdom-1.0.jar" />
+            <fileset file="${lib.dir}/jdom-1.0.jar" />
             <fileset file="${lib.dir}/lbAdmin.jar" />
             <fileset file="${lib.dir}/lbImpl.jar" />
             <fileset file="${lib.dir}/lbInterfaces.jar" />
