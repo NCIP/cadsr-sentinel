@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.5 2008-04-23 18:17:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.4 2007-09-25 14:26:46 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -69,7 +69,8 @@ public class AlertPlugIn implements PlugIn
         }
 
         MessageResources msgs = (MessageResources) servlet_.getServletContext().getAttribute(Globals.MESSAGES_KEY);
-        String temp = msgs.getMessage(Constants._APLVERS);
+        String temp = msgs.getMessage("Appl.version");
+        temp = temp.replace("&nbsp;", " ").trim();
 
         _logger.info(" ");
         _logger.info("Started " + this.getClass().getName() + " " + temp);

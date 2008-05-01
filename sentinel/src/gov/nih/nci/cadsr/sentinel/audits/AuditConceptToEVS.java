@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.7 2008-04-23 18:17:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.6 2007-07-19 15:26:44 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -16,9 +16,7 @@ import gov.nih.nci.evs.query.EVSQuery;
 import gov.nih.nci.evs.query.EVSQueryImpl;
 import gov.nih.nci.evs.security.SecurityToken;
 import gov.nih.nci.system.applicationservice.ApplicationException;
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
-import gov.nih.nci.system.client.ApplicationServiceProvider;
-
+import gov.nih.nci.system.applicationservice.ApplicationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -719,18 +717,7 @@ public class AuditConceptToEVS extends AuditReport
 
         // Get the EVS URL and establish the application service.
         String evsURL = _db.selectEvsUrl();
-        
-        EVSApplicationService evsApi;
-        try
-        {
-            evsApi = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
-        }
-        catch (Exception ex)
-        {
-            msgs.add(ex.toString());
-            // ex.printStackTrace();
-            return msgs;
-        }
+        ApplicationService coreapi = ApplicationService.getRemoteInstance(evsURL);
 
         // Check each concept with EVS.
         String msg = null;
@@ -801,7 +788,7 @@ public class AuditConceptToEVS extends AuditReport
                 try
                 {
                     // Get the attributes for the concept code.
-                    ed._cons = evsApi.evsSearch(query);
+                    ed._cons = coreapi.evsSearch(query);
                 }
                 catch (ApplicationException ex)
                 {
@@ -830,12 +817,6 @@ public class AuditConceptToEVS extends AuditReport
                         _logger.error(ex.toString());
                         return msgs;
                     }
-                }
-                catch (Exception ex)
-                {
-                    msgs.add(ex.toString());
-                    // ex.printStackTrace();
-                    return msgs;
                 }
 
                 // Failed to retrieve EVS concept
