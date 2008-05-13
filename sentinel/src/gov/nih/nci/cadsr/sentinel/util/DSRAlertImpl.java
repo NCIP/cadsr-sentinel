@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertImpl.java,v 1.13 2008-05-01 20:18:17 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertImpl.java,v 1.12 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -59,31 +59,20 @@ public class DSRAlertImpl
         
         String rc = null;
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try
         {
-            pstmt = conn_.prepareStatement(select);
-            rs = pstmt.executeQuery();
+            PreparedStatement pstmt = conn_.prepareStatement(select);
+            ResultSet rs = pstmt.executeQuery();
             if (rs.next())
                 rc = rs.getString(1);
+            rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
             int errorCode = ex.getErrorCode();
             _logger.error("DSRAlertImpl: " + errorCode + ": " + select
                 + "\n\n" + ex.toString());
-        }
-        finally
-        {
-            if (rs != null)
-            {
-                try { rs.close(); } catch(Exception ex) { }
-            }
-            if (pstmt != null)
-            {
-                try { pstmt.close(); } catch(Exception ex) { }
-            }
         }
 
         return (rc == null) ? null : new DSRAlertV1(rc);

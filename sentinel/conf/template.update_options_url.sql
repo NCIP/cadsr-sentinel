@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.7 2008-04-23 21:57:51 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.6 2007-12-17 18:13:54 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -11,9 +11,7 @@ set scan off;
 
 delete from sbrext.tool_options_view_ext where value like '%http://%';
 
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('AdminTool', 'URL', 'http://cadsradmin@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('BROWSER', 'URL', 'http://cdebrowser@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CADSRAPI', 'URL', 'http://cadsrapi@TIER@.nci.nih.gov/cadsrapi40', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'ADMIN_TOOL_URL', 'http://cadsradmin@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'CURATION_TOOL_URL', 'http://cdecurate@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'GO_CODE', 'http://nciterms.nci.nih.gov:80/NCIBrowser/ConceptReport.jsp?dictionary=GO&code=', 'US');
@@ -34,9 +32,7 @@ insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VA
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate@TIER@.nci.nih.gov/filecache/', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CURATION', 'URL', 'http://cdecurate@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('EVS', 'URL', 'http://cabio@TIER@.nci.nih.gov/cacore32/http/remoteService', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('FormBuilder', 'URL', 'http://formbuilder@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('FREESTYLE', 'URL', 'http://freestyle@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('OCBrowser', 'URL', 'http://ocbrowser@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('SENTINEL', 'URL', 'http://cadsrsentinel@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'ADMIN_TOOL_URL', 'http://cadsradmin@TIER@.nci.nih.gov', 'US');
 insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'CACORE_URL', 'http://cabio@TIER@.nci.nih.gov/cacore32/http/remoteService', 'US');
