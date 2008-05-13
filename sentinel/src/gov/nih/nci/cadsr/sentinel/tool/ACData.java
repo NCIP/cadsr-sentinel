@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACData.java,v 1.16 2008-04-28 22:25:22 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/ACData.java,v 1.14 2007-12-17 19:42:48 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -1480,7 +1480,7 @@ public class ACData
     public void setChanges(String changes_[], String old_[], String new_[], Timestamp dates_[], String chgtable_[], String chgby_[])
     {
         _changes = changes_;
-        // _changesKeyNames = changes_;
+        _changesKeyNames = changes_;
         _old = old_;
         _new = new_;
         _dates = dates_;
@@ -1831,11 +1831,11 @@ public class ACData
         if (_publicID != -1)
             xml._publicId = String.valueOf(_publicID);
         if (_version != null)
-            xml._version = convertNullString(_version);
+        xml._version = convertNullString(_version);
         if (_uName != null)
-            xml._modifiedByUser = convertNullString(_uName);
-        if (_modifier != null)
-             xml._modifiedByName = convertNullString(_modifier).replace("&nbsp;", " ");
+        xml._modifiedByUser = convertNullString(_uName);
+         if (_modifier != null)
+        xml._modifiedByName = convertNullString(_modifier).replace("&nbsp;", " ");
         if (_modified != null)
             xml._modifiedTime = _modified.toString();
         xml._createdByUser = convertNullString(_uCreator);
@@ -1981,7 +1981,7 @@ public class ACData
     //This is used to store the key names for the correspondint values of the keys
     //used in generating the XML
     //TODO this is currently used but it seems a better alternative to doing another lookup after the changed item codes are translated to readable text.
-    // private String  _changesKeyNames[];
+    private String  _changesKeyNames[];
 
     private String _uName;
 
