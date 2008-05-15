@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.13 2008-05-15 17:35:48 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.14 2008-05-15 20:19:41 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -110,7 +110,7 @@ public class DSRAlertV1 implements DSRAlert
                     case HttpURLConnection.HTTP_FORBIDDEN: rc = DSRAlert.RC_UNAUTHORIZED; break;
                     default:
                         rc = DSRAlert.RC_FAILED;
-                        _logger.error(http.getResponseMessage());
+                        _logger.error(url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
                         break;
                 }
                 
