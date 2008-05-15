@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.14 2008-05-15 20:19:41 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.15 2008-05-15 20:52:59 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -98,6 +98,7 @@ public class DSRAlertV1 implements DSRAlert
             HttpURLConnection http = null;
             try
             {
+                boolean writeToLog = false;
                 URL rps = new URL(url);
                 http = (HttpURLConnection) rps.openConnection();
                 http.setUseCaches(false);
@@ -108,6 +109,12 @@ public class DSRAlertV1 implements DSRAlert
                     case HttpURLConnection.HTTP_CREATED: rc = DSRAlert.RC_CREATED; break;
                     case HttpURLConnection.HTTP_OK: rc = DSRAlert.RC_EXISTS; break;
                     case HttpURLConnection.HTTP_FORBIDDEN: rc = DSRAlert.RC_UNAUTHORIZED; break;
+                    case HttpURLConnection.HTTP_MOVED_TEMP:
+                    case HttpURLConnection.HTTP_SEE_OTHER:
+                        rc = DSRAlert.RC_CREATED;
+                        _logger.info(url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
+                        writeToLog = true;
+                        break;
                     default:
                         rc = DSRAlert.RC_FAILED;
                         _logger.error(url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
@@ -119,6 +126,8 @@ public class DSRAlertV1 implements DSRAlert
                 {
                     BufferedReader in = new BufferedReader(new InputStreamReader(iStream));
                     _alertName = in.readLine().trim();
+                    if (writeToLog)
+                        _logger.info(_alertName);
                 }
             }
             catch(MalformedURLException ex)
