@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.136 2008-05-13 16:03:05 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.137 2008-05-15 17:35:48 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -271,7 +271,6 @@
             </fileset>
             <manifest>
                 <attribute name="Built-By" value="Anthill"/>
-                <attribute name="Signature-Version" value="${appl.release}"/>
                 <attribute name="Main-Class" value="gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts"/>
                 <section name="gov/nih/nci/cadsr/sentinel/">
                     <attribute name="Specification-Title" value="caDSR Sentinel Tool" />
@@ -291,7 +290,6 @@
             </fileset>
             <manifest>
                 <attribute name="Built-By" value="Anthill"/>
-                <attribute name="Signature-Version" value="${appl.release}"/>
                 <section name="gov/nih/nci/cadsr/sentinel/">
                     <attribute name="Specification-Title" value="caDSR Sentinel Tool API" />
                     <attribute name="Specification-Version" value="${appl.release}" />
@@ -349,7 +347,6 @@
         <war destfile="${artifacts.dir}/jboss/cadsrsentinel.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml">
             <manifest>
                 <attribute name="Built-By" value="Anthill"/>
-                <attribute name="Signature-Version" value="${appl.release}"/>
                 <section name="gov/nih/nci/cadsr/sentinel/">
                     <attribute name="Specification-Title" value="caDSR Sentinel Tool" />
                     <attribute name="Specification-Version" value="${appl.release}" />

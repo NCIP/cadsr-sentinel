@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.10 2008-04-28 22:25:22 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.11 2008-05-15 17:35:48 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -132,7 +132,7 @@ public class AuditConceptToEVS extends AuditReport
                     vocab._vocab = vName;
                     vocab._access = vAccess;
                     vocab._preferredDefinitionProp = (vDefProp == null) ? defProp : vDefProp;
-                    vocab._preferredNameProp = vSearch;
+                    vocab._preferredNameProp = (vSearch == null) ? vDisplay : vSearch;
                     vocab._ed = new NonMetaTh(vocab);
                     vocab._source = vSource;
                     vocabs.add(vocab);
@@ -178,7 +178,7 @@ public class AuditConceptToEVS extends AuditReport
         vocab._vocab = vName;
         vocab._access = vAccess;
         vocab._preferredDefinitionProp = (vDefProp == null) ? defProp : vDefProp;
-        vocab._preferredNameProp = vSearch;
+        vocab._preferredNameProp = (vSearch == null) ? vDisplay : vSearch;
         vocab._ed = new NonMetaTh(vocab);
         vocab._source = vSource;
         vocabs.add(vocab);
@@ -525,7 +525,8 @@ public class AuditConceptToEVS extends AuditReport
             {
                 for (Property prop : collection)
                 {
-                    if (prop.getName().equals(_vocab._preferredNameProp))
+                    if (preferredName.equals(prop.getName()) ||
+                                    prop.getName().equals(_vocab._preferredNameProp))
                     {
                         name = prop.getValue();
                         break;
@@ -580,6 +581,13 @@ public class AuditConceptToEVS extends AuditReport
                         prop = (Property) collection.get(n);
                         if (_rec._longName.compareToIgnoreCase(prop.getValue()) == 0)
                         {
+                            // The collection.contains() test above doesn't always catch matching property names because of case.
+                            if (preferredName.equals(prop.getName()) || _vocab._preferredNameProp.compareToIgnoreCase(prop.getName()) == 0)
+                            {
+                                _flag = false;
+                                break;
+                            }
+
                             // Name matches on property {0} but expected to match on property {1}
                             _msg += formatMsg(_MSG010, prop.getName(),  ((_vocab._preferredNameProp == null) ? "(default)" : _vocab._preferredNameProp));
                             _flag = false;
@@ -919,6 +927,8 @@ public class AuditConceptToEVS extends AuditReport
         + "Concept Code" + AuditReport._ColSeparator
         + "Message";
     }
+    
+    private static final String preferredName = "Preferred_Name";
     
     private static final String _MSG001 = "Mislabeled as a MetaThesaurus Concept.";
     private static final String _MSG002 = "The caDSR definition source is missing and EVS has possible definitions.";

@@ -416,16 +416,6 @@ public class TestXML extends TestCase
     }
 
     /**
-     * Test parsing the version
-     */
-    public void testVersion()
-    {
-        String version = "&nbsp;v&nbsp;3.2.0.2.20070718";
-        assertEquals(version.substring("&nbsp;v&nbsp;".length()), "3.2.0.2.20070718");
-
-    }
-
-    /**
      * Test for the date format
      */
     public void testDateFormat()

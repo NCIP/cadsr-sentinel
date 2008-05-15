@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.12 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.13 2008-05-15 17:35:48 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -38,7 +39,7 @@ public class DSRAlertV1 implements DSRAlert
         _alertName = "";
         if (url_ == null || url_.length() == 0)
         {
-            url_ = "http://cadsrsentinel.nci.nih.gov/cadsrsentinel/do/";
+            url_ = "https://cadsrsentinel.nci.nih.gov/cadsrsentinel/do/";
             return;
         }
         
@@ -47,9 +48,23 @@ public class DSRAlertV1 implements DSRAlert
         int tndx = 0;
         
         // Must start with http:
-        _url = "http://";
-        if (tndx < tokens.length && tokens[tndx].compareToIgnoreCase("http:") == 0)
-            ++tndx;
+        _url = null;
+        if (tndx < tokens.length)
+        {
+            if (tokens[tndx].compareToIgnoreCase("http:") == 0)
+            {
+                _url = "http://";
+                ++tndx;
+            }
+            else if (tokens[tndx].compareToIgnoreCase("https:") == 0)
+            {
+                _url = "https://";
+                ++tndx;
+            }
+        }
+        if (_url == null)
+            _url = "http://";
+
         if (tndx < tokens.length && (tokens[tndx] == null || tokens[tndx].length() == 0))
             ++tndx;
         
@@ -80,11 +95,13 @@ public class DSRAlertV1 implements DSRAlert
         if (user_ != null && user_.length() > 0 &&
             idseq_ != null && idseq_.length() > 0)
         {
+            HttpURLConnection http = null;
             try
             {
                 URL rps = new URL(url);
-                HttpURLConnection http = (HttpURLConnection) rps.openConnection();
+                http = (HttpURLConnection) rps.openConnection();
                 http.setUseCaches(false);
+                InputStream iStream = http.getInputStream();
                 switch (http.getResponseCode())
                 {
                     case HttpURLConnection.HTTP_NOT_IMPLEMENTED: rc = DSRAlert.RC_INCOMPATIBLE; break;
@@ -100,10 +117,9 @@ public class DSRAlertV1 implements DSRAlert
                 // Get the Alert Name returned from the create service.
                 if (rc >= 0)
                 {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream()));
+                    BufferedReader in = new BufferedReader(new InputStreamReader(iStream));
                     _alertName = in.readLine().trim();
                 }
-                http.disconnect();
             }
             catch(MalformedURLException ex)
             {
@@ -112,6 +128,11 @@ public class DSRAlertV1 implements DSRAlert
             catch(IOException ex)
             {
                 _logger.error("[" + url + "] " + ex.toString());
+            }
+            finally
+            {
+                if (http != null)
+                    http.disconnect();
             }
         }
 
