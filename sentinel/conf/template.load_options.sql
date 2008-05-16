@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.8 2008-04-23 18:17:00 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.9 2008-05-16 15:36:44 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -89,7 +89,7 @@ values ('SENTINEL', 'ADMIN.04', '2', 'PAGGARWA',
 */
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'URL', 'http://cadsrsentinel@TIER@.nci.nih.gov',
+values ('SENTINEL', 'URL', 'https://cadsrsentinel@TIER@.nci.nih.gov',
 'The URL for the Sentinel Tool connected this caDSR database.');
 
 /*

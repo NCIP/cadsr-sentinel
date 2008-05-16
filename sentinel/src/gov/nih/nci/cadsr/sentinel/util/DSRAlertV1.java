@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.16 2008-05-16 14:48:59 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.17 2008-05-16 15:36:44 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -105,16 +105,26 @@ public class DSRAlertV1 implements DSRAlert
                 InputStream iStream = http.getInputStream();
                 switch (http.getResponseCode())
                 {
+                    case HttpURLConnection.HTTP_MOVED_TEMP:
+                    case HttpURLConnection.HTTP_SEE_OTHER:
+                        _logger.info("Original URL " + url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
+                        url = http.getHeaderField("Location");
+                        _logger.info("Redirect URL " + url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
+                        rps = new URL(url);
+                        http = (HttpURLConnection) rps.openConnection();
+                        http.setUseCaches(false);
+                        iStream = http.getInputStream();
+                        break;
+
+                    default:
+                        break;
+                }
+                switch (http.getResponseCode())
+                {
                     case HttpURLConnection.HTTP_NOT_IMPLEMENTED: rc = DSRAlert.RC_INCOMPATIBLE; break;
                     case HttpURLConnection.HTTP_CREATED: rc = DSRAlert.RC_CREATED; break;
                     case HttpURLConnection.HTTP_OK: rc = DSRAlert.RC_EXISTS; break;
                     case HttpURLConnection.HTTP_FORBIDDEN: rc = DSRAlert.RC_UNAUTHORIZED; break;
-                    case HttpURLConnection.HTTP_MOVED_TEMP:
-                    case HttpURLConnection.HTTP_SEE_OTHER:
-                        rc = DSRAlert.RC_CREATED;
-                        _logger.info(url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
-                        writeToLog = true;
-                        break;
                     default:
                         rc = DSRAlert.RC_FAILED;
                         _logger.error(url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
@@ -127,9 +137,10 @@ public class DSRAlertV1 implements DSRAlert
                     BufferedReader in = new BufferedReader(new InputStreamReader(iStream));
                     while (true)
                     {
-                        String line = in.readLine().trim();
+                        String line = in.readLine();
                         if (line == null)
                             break;
+                        line = line.trim();
                         _alertName = line;
                         if (writeToLog)
                             _logger.info(line);
