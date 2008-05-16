@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.17 2008-05-16 15:36:44 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.18 2008-05-16 18:28:25 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -103,23 +103,36 @@ public class DSRAlertV1 implements DSRAlert
                 http = (HttpURLConnection) rps.openConnection();
                 http.setUseCaches(false);
                 InputStream iStream = http.getInputStream();
-                switch (http.getResponseCode())
+                int response = http.getResponseCode();
+
+                // Test for redirection of the URL and open a connection to the real location.
+                switch (response)
                 {
                     case HttpURLConnection.HTTP_MOVED_TEMP:
                     case HttpURLConnection.HTTP_SEE_OTHER:
+                        // Log the redirect, ignore the default HTML response, we aren't a browser.
                         _logger.info("Original URL " + url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
                         url = http.getHeaderField("Location");
                         _logger.info("Redirect URL " + url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
+                        
+                        // Drop the old connection.
+                        http.disconnect();
+                        
+                        // Turn up the new one.
                         rps = new URL(url);
                         http = (HttpURLConnection) rps.openConnection();
                         http.setUseCaches(false);
                         iStream = http.getInputStream();
+                        response = http.getResponseCode();
                         break;
 
+                    // No redirect so fall through.
                     default:
                         break;
                 }
-                switch (http.getResponseCode())
+
+                // Check the results of the create request.
+                switch (response)
                 {
                     case HttpURLConnection.HTTP_NOT_IMPLEMENTED: rc = DSRAlert.RC_INCOMPATIBLE; break;
                     case HttpURLConnection.HTTP_CREATED: rc = DSRAlert.RC_CREATED; break;
@@ -157,6 +170,7 @@ public class DSRAlertV1 implements DSRAlert
             }
             finally
             {
+                // Clean up
                 if (http != null)
                     http.disconnect();
             }
