@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.15 2008-05-15 20:52:59 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.16 2008-05-16 14:48:59 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -125,9 +125,15 @@ public class DSRAlertV1 implements DSRAlert
                 if (rc >= 0)
                 {
                     BufferedReader in = new BufferedReader(new InputStreamReader(iStream));
-                    _alertName = in.readLine().trim();
-                    if (writeToLog)
-                        _logger.info(_alertName);
+                    while (true)
+                    {
+                        String line = in.readLine().trim();
+                        if (line == null)
+                            break;
+                        _alertName = line;
+                        if (writeToLog)
+                            _logger.info(line);
+                    }
                 }
             }
             catch(MalformedURLException ex)
