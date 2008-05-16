@@ -36,3 +36,4 @@ sentinel-master &sentinel &sentinel-props
 cdecurate-master &cdecurate &cdecurate-props
 freestylesearch-master &freestylesearch &freestylesearch-props
 formbuilder-master &formbuilder &formbuilder-props
+cadsrdb-master &cadsrdb &cadsrdb-props
