@@ -2,7 +2,7 @@
     <!-- ============================ -->
     <!-- Setup the sentinel  Appender -->
     <!-- ============================ -->
-
+<!-- 
     <appender name="CADSRSENTINEL_FILE" class="org.jboss.logging.appender.RollingFileAppender">
         <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler" />
         <param name="File" value="@JBOSS.LOG.DIR@/cadsrsentinel_log.txt" />
@@ -13,3 +13,4 @@
             <param name="ConversionPattern" value="%d %-5p [%c : %L] %m%n" />
         </layout>
     </appender>
+-->
