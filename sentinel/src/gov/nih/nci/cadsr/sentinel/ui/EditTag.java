@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.4 2008-05-20 21:41:20 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.5 2008-05-20 22:28:48 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -54,6 +54,8 @@ public class EditTag extends TagSupport
         // Set the class data.
         HttpSession session = pageContext.getSession();
         _ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
+        if (_ub == null)
+            return SKIP_PAGE;
 
         // Process the desired section.
         String temp = null;
