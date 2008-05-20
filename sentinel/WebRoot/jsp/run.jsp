@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/run.jsp,v 1.2 2007-09-25 14:26:46 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/run.jsp,v 1.3 2008-05-20 21:41:20 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ page contentType="text/html;charset=WINDOWS-1252" %>
@@ -26,6 +26,7 @@
 
     <html:form method="post" action="/run" focus="startDate">
     <html:hidden property="nextScreen" />
+    <dtags:run section="field"/>
 
     <table class="secttable"><colgroup></colgroup><tbody class="secttbody" />
     <tr><td align="center">

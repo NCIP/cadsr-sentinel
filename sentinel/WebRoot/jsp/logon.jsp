@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.3 2007-09-25 14:26:46 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.4 2008-05-20 21:41:20 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ taglib uri="/tags/struts-bean" prefix="bean" %>
@@ -11,7 +11,8 @@
         <title><bean:message key="logon.title" /></title>
         <html:base />
         <meta http-equiv="Content-Language" content="en-us">
-        <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
+        <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
+        <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
         <LINK href="/cadsrsentinel/css/sentinel.css" rel="stylesheet" type="text/css">
     </head>
 
@@ -54,4 +55,7 @@
     </td></tr></table>
     </html:form>
 </body>
+    <head>
+        <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    </head>
 </html>

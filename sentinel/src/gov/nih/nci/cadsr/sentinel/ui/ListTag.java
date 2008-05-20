@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.4 2008-05-20 21:41:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -98,11 +98,11 @@ public class ListTag extends TagSupport
      */
     private String getField()
     {
-        return "\n<input type=hidden name=sessionKey value=\"" + _ub.getKey()
-            + "\">\n" + "<input type=hidden name=listShow value=\""
-            + _ub.getListShow() + "\">\n"
+        return "\n<input type=\"hidden\" name=\"sessionKey\" value=\"" + _ub.resetKey()
+            + "\"/>\n" + "<input type=\"hidden\" name=\"listShow\" value=\""
+            + _ub.getListShow() + "\"/>\n"
             + "<input type=hidden name=rowCount value=\""
-            + pageContext.getRequest().getAttribute("count") + "\">";
+            + pageContext.getRequest().getAttribute("count") + "\"/>";
     }
 
     /**
@@ -136,7 +136,7 @@ public class ListTag extends TagSupport
             + "var Madmin = " + _ub.isAdmin() + ";\n"
             + "\nfunction cmdList() { "
             + "checkCount = 0; "
-            + "listForm.listShow.value = (listForm.listShow.value == \"p\") ? \"a\" : \"p\"; "
+            + "listForm.listShow.value = (listForm.listShow.value == \"" + AlertBean._SHOWPRIV + "\") ? \"" + AlertBean._SHOWALL + "\" : \"" + AlertBean._SHOWPRIV + "\"; "
             + "listForm.submit(); }";
 
         if (temp == null)

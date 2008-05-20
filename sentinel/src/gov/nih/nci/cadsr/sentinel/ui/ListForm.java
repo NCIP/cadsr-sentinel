@@ -1,17 +1,14 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListForm.java,v 1.2 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListForm.java,v 1.3 2008-05-20 21:41:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
 
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 
 /**
  * The struts form bean for list.jsp.
@@ -19,36 +16,16 @@ import org.apache.struts.action.ActionMessage;
  * @author Larry Hebel
  */
 
-public class ListForm extends ActionForm
+public class ListForm extends AlertRootForm
 {
     /**
      * Constructor.
      */
     public ListForm()
     {
+        super();
         _nextScreen = Constants._ACTLIST;
         _listShow = String.valueOf(AlertBean._SHOWPRIV);
-    }
-
-    /**
-     * Set the next action/screen to transfer control.
-     * 
-     * @param nextScreen_
-     *        The action/screen name.
-     */
-    public void setNextScreen(String nextScreen_)
-    {
-        _nextScreen = nextScreen_;
-    }
-
-    /**
-     * Get the next action/screen name.
-     * 
-     * @return The action/screen name.
-     */
-    public String getNextScreen()
-    {
-        return _nextScreen;
     }
 
     /**
@@ -71,37 +48,27 @@ public class ListForm extends ActionForm
     {
         return _listShow;
     }
-
+    
     /**
      * Validate the List form.
      * 
      * @param mapping_ The action map from struts-config.xml.
      * @param request_ The servlet request object.
+     * @param ub_ the user AlertBean
+     * @param errors_ the current errors list
      * @return ActionErrors when an error is found, otherwise null.
      */
     public ActionErrors validate(ActionMapping mapping_,
-        HttpServletRequest request_)
+        HttpServletRequest request_, AlertBean ub_, ActionErrors errors_)
     {
-        ActionErrors errors = new ActionErrors();
-
-        HttpSession session = request_.getSession();
-        AlertBean ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
-        if (ub == null)
-        {
-            errors.add("bean", new ActionMessage("error.nobean"));
-            return errors;
-        }
-
         // Show the appropriate list.
-        ub.setListShow(_listShow);
+        ub_.setListShow(_listShow);
 
-        return errors;
+        return errors_;
     }
 
     // Class data elements.
     private String _listShow;
-
-    private String _nextScreen;
 
     private static final long serialVersionUID = -7463737781075371910L;
 }

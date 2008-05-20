@@ -1,9 +1,11 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.4 2008-05-20 21:41:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
+
+import java.util.Enumeration;
 
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
@@ -11,6 +13,9 @@ import gov.nih.nci.cadsr.sentinel.test.DSproperties;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
@@ -26,6 +31,18 @@ import org.apache.struts.Globals;
 
 public class LogonForm extends ActionForm
 {
+
+    // Class data.
+    private String _userid;
+
+    private String _pswd;
+
+    private String _userName;
+
+    private static final long serialVersionUID = -6923074595312333195L;
+
+    private static final Logger _logger = Logger.getLogger(LogonForm.class);
+    
     /**
      * Constructor.
      */
@@ -99,7 +116,26 @@ public class LogonForm extends ActionForm
     public ActionErrors validate(ActionMapping mapping_,
         HttpServletRequest request_)
     {
+        /*
+        Enumeration attrs = request_.getAttributeNames();
+        _logger.info("LogonForm.validate()");
+        while (attrs.hasMoreElements())
+        {
+            String name = (String) attrs.nextElement();
+            _logger.info("Attribute: " + name);
+        }
+        */
+        
         ActionErrors errors = new ActionErrors();
+
+        // A session can not already be in progress during a logon request.
+        HttpSession session = request_.getSession();
+        AlertBean ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
+        if (ub != null)
+        {
+            errors.add("logon", new ActionMessage("error.sessionInProgress"));
+            return errors;
+        }
 
         if (_userid.length() > 0)
         {
@@ -235,13 +271,4 @@ public class LogonForm extends ActionForm
 
         return msgnum;
     }
-
-    // Class data.
-    private String _userid;
-
-    private String _pswd;
-
-    private String _userName;
-
-    private static final long serialVersionUID = -6923074595312333195L;
 }

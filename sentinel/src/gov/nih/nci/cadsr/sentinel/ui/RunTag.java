@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/RunTag.java,v 1.2 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/RunTag.java,v 1.3 2008-05-20 21:41:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -57,6 +57,10 @@ public class RunTag extends TagSupport
             {
                 temp = getScript();
             }
+            else if (_section.equals("field"))
+            {
+                temp = getField();
+            }
             if (temp != null)
                 out.print(temp);
         }
@@ -66,6 +70,13 @@ public class RunTag extends TagSupport
         return EVAL_PAGE;
     }
 
+    private String getField()
+    {
+        return "\n<input type=\"hidden\" name=\"sessionKey\" value=\""
+            + _ub.resetKey()
+            + "\"/>";
+    }
+    
     /**
      * Process the Script section.
      * 

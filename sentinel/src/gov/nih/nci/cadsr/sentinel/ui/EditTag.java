@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.4 2008-05-20 21:41:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -103,13 +103,13 @@ public class EditTag extends TagSupport
      */
     private String getField()
     {
-        String temp = "<input type=hidden name=sessionKey value=\""
-            + _ub.getKey() + "\">\n"
-            + "<input type=hidden name=creatorID value=\""
+        String temp = "<input type=\"hidden\" name=\"sessionKey\" value=\""
+            + _ub.resetKey() + "\">\n"
+            + "<input type=\"hidden\" name=\"creatorID\" value=\""
             + _ub.getWorking().getRecipients(0) + "\">\n"
-            + "<input type=hidden name=usersTab value=\""
+            + "<input type=\"hidden\" name=\"usersTab\" value=\""
             + _ub.getLastUserTab() + "\">\n"
-            + "<input type=hidden name=mainTab value=\"" + _ub.getLastMainTab()
+            + "<input type=\"hidden\" name=\"mainTab\" value=\"" + _ub.getLastMainTab()
             + "\">\n";
         return temp;
     }

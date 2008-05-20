@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertBean.java,v 1.2 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertBean.java,v 1.3 2008-05-20 21:41:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -58,9 +58,7 @@ public class AlertBean
         //        _listSortCol = 1;
 
         // Generate bean key.
-        Date today = new Date();
-        long tkey = (today.getTime() * 10000) + (long) (Math.random() * 10000);
-        _key = Long.toString(tkey);
+        resetKey();
 
         _lastUserTab = "0";
         _lastMainTab = "0";
@@ -179,7 +177,10 @@ public class AlertBean
      */
     public void setListShow(String flag_)
     {
-        setListShow(flag_.charAt(0));
+        if (flag_ == null || flag_.length() == 0)
+            setListShow(_SHOWPRIV);
+        else
+            setListShow(flag_.charAt(0));
     }
 
     /**
@@ -189,6 +190,19 @@ public class AlertBean
      */
     public String getKey()
     {
+        return _key;
+    }
+    
+    /**
+     * Set the key to a new value and return that new value
+     * 
+     * @return new key value
+     */
+    public String resetKey()
+    {
+        Date today = new Date();
+        long tkey = (today.getTime() * 10000) + (long) (Math.random() * 10000);
+        _key = Long.toString(tkey);
         return _key;
     }
 

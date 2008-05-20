@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/List.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/List.java,v 1.4 2008-05-20 21:41:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -14,6 +14,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -29,6 +30,8 @@ import org.apache.struts.Globals;
 
 public class List extends Action
 {
+    private static final Logger _logger = Logger.getLogger(List.class);
+
     /**
      * Constructor.
      */
@@ -59,7 +62,15 @@ public class List extends Action
         ub.setRunPrev(Constants._ACTLIST);
 
         // Delete all selected definitions.
-        int count = Integer.parseInt(request_.getParameter("rowCount"));
+        int count = 0;
+        try
+        {
+            count = Integer.parseInt(request_.getParameter("rowCount"));
+        }
+        catch (Exception ex)
+        {
+            _logger.error("List page rowCount has been compromised.", ex);
+        }
         if (form.getNextScreen().equals(Constants._ACTDELETE))
         {
             form.setNextScreen(Constants._ACTLIST);

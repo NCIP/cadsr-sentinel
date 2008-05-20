@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/CreateTag.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/CreateTag.java,v 1.4 2008-05-20 21:41:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -113,8 +113,8 @@ public class CreateTag extends TagSupport
      */
     private String getField()
     {
-        String temp = "<input type=hidden name=sessionKey value=\""
-            + _ub.getKey() + "\">\n";
+        String temp = "<input type=\"hidden\" name=\"sessionKey\" value=\""
+            + _ub.resetKey() + "\">\n";
         return temp;
     }
 
