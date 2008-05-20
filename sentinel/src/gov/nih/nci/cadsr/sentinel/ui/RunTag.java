@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/RunTag.java,v 1.4 2008-05-20 22:28:48 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/RunTag.java,v 1.5 2008-05-20 22:57:29 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -9,9 +9,7 @@ import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * Process the tags for run.jsp.
@@ -19,24 +17,16 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author Larry Hebel
  */
 
-public class RunTag extends TagSupport
+public class RunTag extends AlertRootTag
 {
+    private static final long serialVersionUID = -1503025373047301625L;
+
     /**
      * Constructor.
      */
     public RunTag()
     {
-    }
-
-    /**
-     * Set the section name.
-     * 
-     * @param section_
-     *        Currently only "script".
-     */
-    public void setSection(String section_)
-    {
-        _section = section_;
+        super();
     }
 
     /**
@@ -44,13 +34,8 @@ public class RunTag extends TagSupport
      * 
      * @return EVAL_PAGE to continue processing the JSP.
      */
-    public int doEndTag()
+    public int doEnd()
     {
-        HttpSession session = pageContext.getSession();
-        _ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
-        if (_ub == null)
-            return SKIP_PAGE;
-
         String temp = null;
 
         try
@@ -112,11 +97,4 @@ public class RunTag extends TagSupport
             + "\trunForm.endDate.value = \"" + snow + "\";\n" + "}\n";
         return temp;
     }
-
-    // Class data.
-    private String    _section;
-
-    private AlertBean _ub;
-
-    private static final long serialVersionUID = -1503025373047301625L;
 }

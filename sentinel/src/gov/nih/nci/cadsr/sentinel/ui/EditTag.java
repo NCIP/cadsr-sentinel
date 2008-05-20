@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.5 2008-05-20 22:28:48 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.6 2008-05-20 22:57:29 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -9,9 +9,7 @@ import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import java.io.IOException;
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.Globals;
 
@@ -21,26 +19,83 @@ import org.apache.struts.Globals;
  * @author Larry Hebel
  */
 
-public class EditTag extends TagSupport
+public class EditTag extends AlertRootTag
 {
+    // Class data elements.
+    private String         _namesList[];
+
+    private String         _namesVals[];
+
+    private String         _namesExempt;
+
+    private String         _groupsList[];
+
+    private String         _groupsVals[];
+
+    private String         _contextList[];
+
+    private String         _contextVals[];
+
+    private String         _schemeList[];
+
+    private String         _schemeVals[];
+
+    private String         _schemeContext[];
+
+    private String         _protoList[];
+
+    private String         _protoVals[];
+
+    private String         _protoContext[];
+
+    private String         _formsList[];
+
+    private String         _formsVals[];
+
+    private String         _formsContext[];
+
+    private String         _schemeItemList[];
+
+    private String         _schemeItemVals[];
+
+    private String         _schemeItemSchemes[];
+
+    private String         _workflowList[];
+
+    private String         _workflowVals[];
+
+    private String         _cworkflowList[];
+
+    private String         _cworkflowVals[];
+
+    private String         _regstatusList[];
+
+    private String         _regstatusVals[];
+
+    private String         _regcstatusList[];
+
+    private String         _regcstatusVals[];
+    
+    private String         _actypesList[];
+    
+    private String         _actypesVals[];
+    
+    private StringBuffer   _buf;
+    
+    private int            _bufLen;
+    
+    private String       _subject;
+
+    private static final long serialVersionUID = 1822843268148691725L;
+
     /**
      * Constructor
      */
     public EditTag()
     {
+        super();
         _buf = null;
         _bufLen = 0;
-    }
-
-    /**
-     * Set the section name.
-     * 
-     * @param section_
-     *        Either "init", "script" or "field".
-     */
-    public void setSection(String section_)
-    {
-        _section = section_;
     }
 
     /**
@@ -49,14 +104,8 @@ public class EditTag extends TagSupport
      * 
      * @return EVAL_PAGE to continue processing the remaining JSP.
      */
-    public int doEndTag()
+    public int doEnd()
     {
-        // Set the class data.
-        HttpSession session = pageContext.getSession();
-        _ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
-        if (_ub == null)
-            return SKIP_PAGE;
-
         // Process the desired section.
         String temp = null;
 
@@ -613,8 +662,6 @@ public class EditTag extends TagSupport
      */
     public void release()
     {
-        _section = null;
-        _ub = null;
         _namesList = null;
         _namesVals = null;
         _namesExempt = null;
@@ -646,75 +693,4 @@ public class EditTag extends TagSupport
         _bufLen = 0;
         super.release();
     }
-
-    // Class data elements.
-    private String         _section;
-
-    private AlertBean      _ub;
-
-    private String         _namesList[];
-
-    private String         _namesVals[];
-
-    private String         _namesExempt;
-
-    private String         _groupsList[];
-
-    private String         _groupsVals[];
-
-    private String         _contextList[];
-
-    private String         _contextVals[];
-
-    private String         _schemeList[];
-
-    private String         _schemeVals[];
-
-    private String         _schemeContext[];
-
-    private String         _protoList[];
-
-    private String         _protoVals[];
-
-    private String         _protoContext[];
-
-    private String         _formsList[];
-
-    private String         _formsVals[];
-
-    private String         _formsContext[];
-
-    private String         _schemeItemList[];
-
-    private String         _schemeItemVals[];
-
-    private String         _schemeItemSchemes[];
-
-    private String         _workflowList[];
-
-    private String         _workflowVals[];
-
-    private String         _cworkflowList[];
-
-    private String         _cworkflowVals[];
-
-    private String         _regstatusList[];
-
-    private String         _regstatusVals[];
-
-    private String         _regcstatusList[];
-
-    private String         _regcstatusVals[];
-    
-    private String         _actypesList[];
-    
-    private String         _actypesVals[];
-    
-    private StringBuffer   _buf;
-    
-    private int            _bufLen;
-    
-    private String       _subject;
-
-    private static final long serialVersionUID = 1822843268148691725L;
 }

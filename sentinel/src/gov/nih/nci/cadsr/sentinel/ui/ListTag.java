@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.5 2008-05-20 22:28:48 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.6 2008-05-20 22:57:29 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -11,9 +11,7 @@ import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import java.io.IOException;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.Globals;
@@ -24,24 +22,16 @@ import org.apache.struts.Globals;
  * @author Larry Hebel
  */
 
-public class ListTag extends TagSupport
+public class ListTag extends AlertRootTag
 {
+    private static final long serialVersionUID = -5247677342477707453L;
+
     /**
      * Constructor.
      */
     public ListTag()
     {
-    }
-
-    /**
-     * Set the section.
-     * 
-     * @param section_
-     *        Either "init", "table", "field", "button", "script" or "info".
-     */
-    public void setSection(String section_)
-    {
-        _section = section_;
+        super();
     }
 
     /**
@@ -49,13 +39,8 @@ public class ListTag extends TagSupport
      * 
      * @return EVAL_PAGE to continue processing the JSP.
      */
-    public int doEndTag()
+    public int doEnd()
     {
-        HttpSession session = pageContext.getSession();
-        _ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
-        if (_ub == null)
-            return SKIP_PAGE;
-
         String temp = null;
 
         try
@@ -285,21 +270,4 @@ public class ListTag extends TagSupport
 
         return temp;
     }
-
-    /**
-     * Standard release method.
-     */
-    public void release()
-    {
-        _section = null;
-        _ub = null;
-        super.release();
-    }
-
-    // Class data.
-    private String    _section;
-
-    private AlertBean _ub;
-
-    private static final long serialVersionUID = -5247677342477707453L;
 }
