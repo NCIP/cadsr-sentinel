@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertRootForm.java,v 1.1 2008-05-20 21:41:20 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertRootForm.java,v 1.2 2008-05-21 20:18:23 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -102,7 +102,13 @@ public class AlertRootForm extends ActionForm
         }
         else if (!ub.getKey().equals(_sessionKey))
         {
-            _logger.warn("Sessionkeys do not match. [" + this.getClass().getName() + "] [Page " + _sessionKey + "] [Bean " + ub.getKey() + "]");
+            _logger.error("Sessionkeys do not match. [" + ub.getUser() + "] [" + this.getClass().getName() + "] [Page " + _sessionKey + "] [Bean " + ub.getKey() + "]");
+            errors.add("bean", new ActionMessage("error.nobean"));
+            return errors;
+        }
+        else if (!ub.checkHost(request_.getRemoteHost()))
+        {
+            _logger.error("Request is made from a host other than the creator. [" + ub.getUser() + "] [" + this.getClass().getName() + "] [Creator " + ub.getRemoteHost() + "] [Requestor " + request_.getRemoteHost() + "]");
             errors.add("bean", new ActionMessage("error.nobean"));
             return errors;
         }

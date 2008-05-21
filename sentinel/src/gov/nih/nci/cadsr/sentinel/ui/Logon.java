@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/Logon.java,v 1.2 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/Logon.java,v 1.3 2008-05-21 20:18:23 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -65,6 +65,7 @@ public class Logon extends Action
     public static AlertBean createBean(HttpServletRequest request_, String user_, String name_, String pswd_)
     {
         AlertBean ub = new AlertBean(user_, name_, pswd_);
+        ub.setRemoteHost(request_.getRemoteHost());
 
         HttpSession session = request_.getSession();
         session.setAttribute(AlertBean._SESSIONNAME, ub);

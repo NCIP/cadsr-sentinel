@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertBean.java,v 1.3 2008-05-20 21:41:20 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertBean.java,v 1.4 2008-05-21 20:18:23 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -17,6 +17,53 @@ import java.util.Date;
 
 public class AlertBean
 {
+
+    /**
+     * The session name for the bean. Defined to ensure consistency and avoid
+     * spelling errors.
+     */
+    public static final String _SESSIONNAME = AlertBean.class.getName();
+
+    /*
+     * Class data.
+     */
+    private String             _proxyUser;
+    
+    private String             _user;
+
+    private String             _pswd;
+
+    private String             _userName;
+    
+    private boolean            _admin;
+
+    private char               _listShow;
+
+    //    private int _listSortCol;
+    private String             _key;
+
+    private AlertRec           _working;
+
+    private String             _editPrev;
+
+    private String             _runPrev;
+
+    private String             _lastUserTab;
+
+    private String             _lastMainTab;
+    
+    private String             _remoteHost;
+
+    /**
+     * Value to display the Show All button on the List page.
+     */
+    public static final char _SHOWALL = 'a';
+    
+    /**
+     * Value to display the Show Private button on the List page.
+     */
+    public static final char _SHOWPRIV = 'p';
+
     /**
      * Constructor.
      * 
@@ -308,48 +355,36 @@ public class AlertBean
     {
         _admin = flag_;
     }
-
-    /**
-     * The session name for the bean. Defined to ensure consistency and avoid
-     * spelling errors.
-     */
-    public static final String _SESSIONNAME = "DSRAlertBean";
-
-    /*
-     * Class data.
-     */
-    private String             _proxyUser;
-    
-    private String             _user;
-
-    private String             _pswd;
-
-    private String             _userName;
-    
-    private boolean            _admin;
-
-    private char               _listShow;
-
-    //    private int _listSortCol;
-    private String             _key;
-
-    private AlertRec           _working;
-
-    private String             _editPrev;
-
-    private String             _runPrev;
-
-    private String             _lastUserTab;
-
-    private String             _lastMainTab;
-
-    /**
-     * Value to display the Show All button on the List page.
-     */
-    public static final char _SHOWALL = 'a';
     
     /**
-     * Value to display the Show Private button on the List page.
+     * Check the host to see if it matches the remote host that created this bean.
+     * 
+     * @param host_ the current host
+     * 
+     * @return true if the bean host is null or if the bean host matches the host_, otherwise false
      */
-    public static final char _SHOWPRIV = 'p';
+    public boolean checkHost(String host_)
+    {
+        return (_remoteHost == null) ? true : _remoteHost.equals(host_);
+    }
+    
+    /**
+     * Set the remote host
+     * 
+     * @param host_ the remote host
+     */
+    public void setRemoteHost(String host_)
+    {
+        _remoteHost = host_;
+    }
+    
+    /**
+     * Get the remote host
+     * 
+     * @return the remote host
+     */
+    public String getRemoteHost()
+    {
+        return _remoteHost;
+    }
 }

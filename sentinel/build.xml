@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.139 2008-05-19 18:29:47 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.140 2008-05-21 20:18:22 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -614,8 +614,8 @@ Deployment is complete. Check the formal request for any special post deployment
         <echo>All properties are present.</echo>
     </target>
 
-    <target name="init" depends="-prop-check,-init-check" description="The default target which only validates the presence of the script properties.">
-        <fail>This build script must be run with the name of the desired target: build-all, build-product, clean, deploy, javadoc, package-download, test.</fail>
+    <target name="init" description="The default target which only validates the presence of the script properties.">
+        <echo>This script can be run with one or more of the following: build-all, build-product, clean, deploy, javadoc, package-download, test. Execute Ant with the "-p" option for a description of all targets.</echo>
     </target>
     
     <target name="-assemble-sql" depends="clean" description="create the tier specific scripts">
