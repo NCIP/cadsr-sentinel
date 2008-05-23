@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.30 2008-04-28 22:25:22 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.31 2008-05-23 15:40:29 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -2122,18 +2123,22 @@ public class AutoProcessAlerts
         {
             try
             {
-                URL pURL = new URL(_processURL);
                 // open the process URL
-                BufferedReader in = new BufferedReader(new InputStreamReader(pURL.openStream()));
+                URL pURL = new URL(_processURL);
+                HttpURLConnection http = (HttpURLConnection) pURL.openConnection();
+                BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream()));
                 String inputLine;
                 String outputLine = _processURL + "<br/>\n";
+                
+                // Only an HTTP_OK is considered successful.
+                Vector<String> msgs = (http.getResponseCode() == HttpURLConnection.HTTP_OK) ? _urlMsgsInfo : _urlMsgsErr;
 
                 // read from the process URL and write the acknowledgement message to the log
                 while ((inputLine = in.readLine()) != null)
                 {
                     outputLine += inputLine.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "<br/>\n";
                 }
-                _urlMsgsInfo.add("Notified Process URL : " + outputLine);
+                msgs.add("Notified Process URL : " + outputLine);
 
                 in.close();
             }
