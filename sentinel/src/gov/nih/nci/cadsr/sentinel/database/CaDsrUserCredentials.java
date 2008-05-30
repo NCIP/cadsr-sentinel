@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/CaDsrUserCredentials.java,v 1.1 2008-05-30 21:46:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/CaDsrUserCredentials.java,v 1.2 2008-05-30 21:47:43 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 /**
- * This class performs common login credential security checks and processing.
+ * This class performs common login credential security checks and processing for the caDSR Tool suite.
  * 
  * There are two (2) ways to use this class. The first and easiest is to copy the following code:
  * 
