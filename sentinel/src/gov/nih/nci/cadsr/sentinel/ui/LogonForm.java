@@ -1,12 +1,13 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.4 2008-05-20 21:41:20 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.5 2008-05-30 21:46:10 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
 
 import java.util.Enumeration;
 
+import gov.nih.nci.cadsr.sentinel.database.CaDsrUserCredentials;
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.test.DSproperties;
@@ -139,15 +140,17 @@ public class LogonForm extends ActionForm
 
         if (_userid.length() > 0)
         {
+            _userid = _userid.toUpperCase();
             if (_pswd == null)
             {
                 // Do not allow a blank password.
                 errors.add("logon", new ActionMessage("error.logon.blankuser"));
                 return errors;
             }
-
+            
             // Verify the guest account is not being used.
-            int msgnum = initialize(_userid, request_, null);
+            String[] credentials = new String[2];
+            int msgnum = initialize(_userid, request_, credentials);
             if (msgnum == -1)
             {
                 errors.add("logon", new ActionMessage("error.logon.guest"));
@@ -162,45 +165,57 @@ public class LogonForm extends ActionForm
                 if (am == null)
                     am = new ActionMessage("DB.prob");
                 errors.add("logon", am);
+                return errors;
             }
-            else
+
+            // Verify user credentials.
+            CaDsrUserCredentials uc = null;
+            try
             {
-                // Verify user credentials.
-                DBAlert db = DBAlertUtil.factory();
-                _userid = _userid.toUpperCase();
-                msgnum = db.open(request_, _userid, _pswd);
-                if (msgnum == 0)
+                uc = new CaDsrUserCredentials(credentials[0], credentials[1], _userid, _pswd);
+            }
+            catch (Exception ex)
+            {
+                _logger.equals("Failed credential validation, code is " + uc.getCheckCode());
+                errors.add("logon", new ActionMessage("DB.1017"));
+            }
+            if (!errors.isEmpty())
+                return errors;
+                
+            DBAlert db = DBAlertUtil.factory();
+            msgnum = db.open(request_, _userid, _pswd);
+            if (msgnum == 0)
+            {
+                // Test database dependencies.
+                String cp = request_.getContextPath();
+                String reqURL = null;
+                if (cp != null && cp.length() > 0)
+                    reqURL = request_.getRequestURL().toString();
+                String msg = db.testSentinelOptions(reqURL); 
+                if (msg != null)
                 {
-                    // Test database dependencies.
-                    String cp = request_.getContextPath();
-                    String reqURL = null;
-                    if (cp != null && cp.length() > 0)
-                        reqURL = request_.getRequestURL().toString();
-                    String msg = db.testSentinelOptions(reqURL); 
-                    if (msg != null)
-                    {
-                        am = new ActionMessage("error.logon.baddb", msg);
-                        errors.add("logon", am);
-                    }
-                    else
-                    {
-                        // It's good.
-                        _userName = db.selectUserName(_userid);
-                        if (_userName == null || _userName.length() == 0)
-                            errors.add("logon", new ActionMessage(
-                                "error.logon.blankname"));
-                    }
+                    am = new ActionMessage("error.logon.baddb", msg);
+                    errors.add("logon", am);
                 }
                 else
                 {
-                    // Credentials or something isn't right.
-                    am = new ActionMessage("DB." + msgnum);
-                    if (am == null)
-                        am = new ActionMessage("error.logon.baduser");
-                    errors.add("logon", am);
+                    // It's good.
+                    _userName = db.selectUserName(_userid);
+                    if (_userName == null || _userName.length() == 0)
+                        errors.add("logon", new ActionMessage(
+                            "error.logon.blankname"));
                 }
-                db.close();
             }
+            else
+            {
+                // Credentials or something isn't right.
+                am = new ActionMessage("DB." + msgnum);
+                if (am == null)
+                    am = new ActionMessage("error.logon.baduser");
+                errors.add("logon", am);
+            }
+            db.close();
+
         }
         else
         {
