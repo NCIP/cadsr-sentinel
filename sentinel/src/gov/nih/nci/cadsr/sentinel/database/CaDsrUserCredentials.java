@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/CaDsrUserCredentials.java,v 1.2 2008-05-30 21:47:43 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/CaDsrUserCredentials.java,v 1.3 2008-06-03 21:00:58 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -18,14 +18,20 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 /**
- * This class performs common login credential security checks and processing for the caDSR Tool suite.
+ * This class performs common login credential security checks and processing for the caDSR Tool suite deployed under JBoss. The default &lt;jndi-name&gt;
+ * is "jdbc/caDSR". It can be found in the cadsr-oracle-ds.xml file in the JBoss deploy directory. If a different jndi-name is needed use the static method
+ * setJndiName() on this class prior to any other methods.
+ * 
+ * In the following examples applicationUserid and applicationPswd are the credentials created for and used by the caDSR Tool, e.g. the Sentinel Tool
+ * application credentials. These credentials are reserved for use by the Tool and never used by a person via the Tool Login page. By contrast the loginUserid
+ * and loginPswd are the credentials entered by the user on the Tool Login page.
  * 
  * There are two (2) ways to use this class. The first and easiest is to copy the following code:
  * 
  * CaDsrUserCredentials uc = null;
  * try
  * {
- *      uc = new CaDsrUserCredentials(application_userid, application_pswd, userid, pswd);
+ *      uc = new CaDsrUserCredentials(applicationUserid, applicationPswd, loginUserid, loginPswd);
  *  }
  *  catch (Exception ex)
  *  {
@@ -41,7 +47,7 @@ import org.apache.log4j.Logger;
  * CaDsrUserCredentials uc = null;
  * try
  * {
- *      uc = new CaDsrUserCredentials(application_userid, application_pswd);
+ *      uc = new CaDsrUserCredentials(applicationUserid, applicationPswd);
  *  }
  *  catch (Exception ex)
  *  {
@@ -51,38 +57,39 @@ import org.apache.log4j.Logger;
  *  {
  *      msg = "User is locked";
  *  }
- *  else if (!validateCredentials(user, pswd))
+ *  else if (!isValidCredentials(loginUserid, loginPswd))
  *  {
- *      incLock(user);
+ *      incLock(loginUserid);
  *      msg = "User is invalid";
  *  }
  *  else
  *  {
- *      clearLock(user);
+ *      clearLock(loginUserid);
  *      msg = "User is good";
  *  }
+ *  
  *
  * @author lhebel
  */
 public class CaDsrUserCredentials
 {
     /** **/
-    public static final int OK = 0;
+    public static final int CC_OK = 0;
     
     /** **/
-    public static final int LOCKED = 1;
+    public static final int CC_LOCKED = 1;
     
     /** **/
-    public static final int INVALID = 2;
+    public static final int CC_INVALID = 2;
     
     /** **/
-    public static final int CONFIGURATION = 3;
+    public static final int CC_CONFIGURATION = 3;
     
     /** **/
-    public static final int DATABASE = 4;
+    public static final int CC_DATABASE = 4;
     
     /** **/
-    public static final int OTHER = 5;
+    public static final int CC_OTHER = 5;
     
     private Connection _conn;
     private PreparedStatement _pstmt;
@@ -93,7 +100,7 @@ public class CaDsrUserCredentials
 
     private Logger _logger = Logger.getLogger(CaDsrUserCredentials.class);
     
-    private static final String JNDI = "java:/jdbc/caDSR";
+    private static String _jndiName = "java:/jdbc/caDSR";
     
     private static final String CHECKOPTIONS = "select COUNT(*) from sbrext.tool_options_view_ext "
         + "where tool_name = 'caDSR' and property in ('LOCKOUT.TIMER', 'LOCKOUT.THRESHOLD')";
@@ -145,10 +152,7 @@ public class CaDsrUserCredentials
     {
         super();
 
-        _applUser = applUser_;
-        _applPswd = applPswd_;
-        
-        checkOptions();
+        checkOptions(applUser_, applPswd_);
 
         String msg;
         if (isLocked(localUser_))
@@ -157,7 +161,7 @@ public class CaDsrUserCredentials
             _logger.info(msg);
             throw new Exception(msg);
         }
-        else if (!validateCredentials(localUser_, localPswd_))
+        else if (!isValidCredentials(localUser_, localPswd_))
         {
             incLock(localUser_);
 
@@ -182,20 +186,19 @@ public class CaDsrUserCredentials
     public CaDsrUserCredentials(String applUser_, String applPswd_) throws Exception
     {
         super();
-
-        _applUser = applUser_;
-        _applPswd = applPswd_;
         
-        checkOptions();
+        checkOptions(applUser_, applPswd_);
     }
 
-    private void checkOptions() throws Exception
+    private void checkOptions(String applUser_, String applPswd_) throws Exception
     {
-        _checkCode = OK;
+        _applUser = applUser_;
+        _applPswd = applPswd_;
+        _checkCode = CC_OK;
         try 
         {
             Context envContext = new InitialContext();
-            DataSource ds = (DataSource)envContext.lookup(JNDI);
+            DataSource ds = (DataSource)envContext.lookup(_jndiName);
             _conn = ds.getConnection(_applUser, _applPswd);
             _pstmt = _conn.prepareStatement(CHECKOPTIONS);
             _rs = _pstmt.executeQuery();
@@ -203,7 +206,7 @@ public class CaDsrUserCredentials
             if (_rs.next())
             {
                 int count = _rs.getInt(1);
-                _checkCode = CONFIGURATION;
+                _checkCode = CC_CONFIGURATION;
                 switch (count)
                 {
                     case 0:
@@ -214,7 +217,7 @@ public class CaDsrUserCredentials
                         break;
                     case 2:
                         msg = null;
-                        _checkCode = OK;
+                        _checkCode = CC_OK;
                         break;
                     default:
                         msg = "Too many 'LOCKOUT.TIMER' and 'LOCKOUT.THRESHOLD' configuration values.";
@@ -223,8 +226,8 @@ public class CaDsrUserCredentials
             }
             else
             {
-                msg = "Problem with database connection using " + JNDI;
-                _checkCode = DATABASE;
+                msg = "Problem with database connection using " + _jndiName;
+                _checkCode = CC_DATABASE;
             }
 
             if (msg != null)
@@ -235,7 +238,7 @@ public class CaDsrUserCredentials
         }
         catch (Exception ex)
         {
-            _checkCode = OTHER;
+            _checkCode = CC_OTHER;
             throw ex;
         }
         finally
@@ -313,7 +316,7 @@ public class CaDsrUserCredentials
         {
             // Establish connection
             Context envContext = new InitialContext();
-            DataSource ds = (DataSource)envContext.lookup(JNDI);
+            DataSource ds = (DataSource)envContext.lookup(_jndiName);
             _conn = ds.getConnection(obj_.getConnectionUser(), obj_.getConnectionPswd());
             
             // Execute the SQL provided by the Work object.
@@ -321,18 +324,15 @@ public class CaDsrUserCredentials
         }
         catch (SQLException ex)
         {
-            _logger.error(obj_.getClass().getName() + ": " + exceptionMessage(ex));
-            obj_.failure();
+            exceptionMessage(obj_, ex, null);
         }
         catch (NamingException ex)
         {
-            _logger.error(obj_.getClass().getName() + ": Can not establish a connection using " + JNDI + " " + exceptionMessage(ex));
-            obj_.failure();
+            exceptionMessage(obj_, ex, "Can not establish a connection using " + _jndiName + " ");
         }
         catch (Exception ex)
         {
-            _logger.error(obj_.getClass().getName() + ": " + exceptionMessage(ex));
-            obj_.failure();
+            exceptionMessage(obj_, ex, null);
         }
         finally
         {
@@ -341,7 +341,23 @@ public class CaDsrUserCredentials
     }
 
     /**
-     * Find the line number in this class for ease of debugging. Don't need the entire hierarchy.
+     * Convenience logging method
+     * 
+     * @param obj_ the DBAction object
+     * @param ex_ the Exception
+     * @param msg_ any extra text to insert in the log message
+     */
+    private void exceptionMessage(DBAction obj_, Exception ex_, String msg_)
+    {
+        if (msg_ == null)
+            _logger.error(obj_.getClass().getName() + ": " + exceptionMessage(ex_));
+        else
+            _logger.error(obj_.getClass().getName() + ": " + msg_ + exceptionMessage(ex_));
+        obj_.failure();
+    }
+
+    /**
+     * Find the line number in this class for ease of debugging. Don't need the stack trace.
      * 
      * @param ex_ the exception
      * @return the exception message and the point in the hierarchy corresponding to this class.
@@ -421,7 +437,7 @@ public class CaDsrUserCredentials
         boolean flag = lw.getLock();
         
         if (flag)
-            _checkCode = LOCKED;
+            _checkCode = CC_LOCKED;
         
         return flag;
     }
@@ -485,14 +501,14 @@ public class CaDsrUserCredentials
      * @param pswd_ the password
      * @return true when valid, otherwise false
      */
-    public boolean validateCredentials(String user_, String pswd_)
+    public boolean isValidCredentials(String user_, String pswd_)
     {
         DBActionValidateCreds vw = new DBActionValidateCreds(user_, pswd_);
         doSQL(vw);
 
         boolean flag = vw.isValid();
         if (flag)
-            _checkCode = INVALID;
+            _checkCode = CC_INVALID;
 
         return flag;
     }
@@ -559,6 +575,7 @@ public class CaDsrUserCredentials
     public void incLock(String user_)
     {
         // Try an update first.
+        _checkCode = CC_OTHER;
         DBActionSetLock uw = new DBActionSetLock(INCLOCK, user_);
         doSQL(uw);
         if (uw.failed())
@@ -566,7 +583,11 @@ public class CaDsrUserCredentials
             // Try the insert when the update fails.
             uw.trySql(INSLOCK);
             doSQL(uw);
+            if (!uw.failed())
+                _checkCode = CC_OK;
         }
+        else
+            _checkCode = CC_OK;
     }
     
     /**
@@ -578,16 +599,34 @@ public class CaDsrUserCredentials
     {
         DBActionSetLock iw = new DBActionSetLock(CLEARLOCK, user_);
         doSQL(iw);
-        _checkCode = OK;
+        if (iw.failed())
+            _checkCode = CC_OTHER;
+        else
+            _checkCode = CC_OK;
     }
     
     /**
      * Get the check code. The code indicates the state of the last action performed.
      * 
-     * @return OK, LOCKED, INVALID, etc (see the public static final values on this class)
+     * @return CC_OK, CC_LOCKED, CC_INVALID, etc (see the public static final CC_ values on this class)
      */
     public int getCheckCode()
     {
         return _checkCode;
+    }
+    
+    /**
+     * Set the static jndi-name for all uses of this class.
+     * 
+     * @param jndi_ the jndi-name as it appears in the oracle-ds.xml, it is case sensistive
+     */
+    public static void setJndiName(String jndi_)
+    {
+        if (jndi_.indexOf(':') > -1)
+            _jndiName = jndi_;
+        else
+        {
+            _jndiName = "java:/" + jndi_;
+        }
     }
 }
