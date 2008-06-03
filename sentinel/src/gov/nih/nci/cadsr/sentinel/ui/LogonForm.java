@@ -1,11 +1,9 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.5 2008-05-30 21:46:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.6 2008-06-03 21:40:03 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
-
-import java.util.Enumeration;
 
 import gov.nih.nci.cadsr.sentinel.database.CaDsrUserCredentials;
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
@@ -169,10 +167,10 @@ public class LogonForm extends ActionForm
             }
 
             // Verify user credentials.
-            CaDsrUserCredentials uc = null;
+            CaDsrUserCredentials uc = new CaDsrUserCredentials();
             try
             {
-                uc = new CaDsrUserCredentials(credentials[0], credentials[1], _userid, _pswd);
+                uc.validateCredentials(credentials[0], credentials[1], _userid, _pswd);
             }
             catch (Exception ex)
             {

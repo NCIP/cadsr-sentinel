@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/CaDsrUserCredentials.java,v 1.3 2008-06-03 21:00:58 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/CaDsrUserCredentials.java,v 1.4 2008-06-03 21:40:03 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -28,10 +28,10 @@ import org.apache.log4j.Logger;
  * 
  * There are two (2) ways to use this class. The first and easiest is to copy the following code:
  * 
- * CaDsrUserCredentials uc = null;
+ * CaDsrUserCredentials uc = new CaDsrUserCredentials();
  * try
  * {
- *      uc = new CaDsrUserCredentials(applicationUserid, applicationPswd, loginUserid, loginPswd);
+ *      uc.validateCredentials(applicationUserid, applicationPswd, loginUserid, loginPswd);
  *  }
  *  catch (Exception ex)
  *  {
@@ -44,27 +44,27 @@ import org.apache.log4j.Logger;
  *  
  *  String msg = null;
  *  
- * CaDsrUserCredentials uc = null;
+ * CaDsrUserCredentials uc = new CaDsrUserCredentials();
  * try
  * {
- *      uc = new CaDsrUserCredentials(applicationUserid, applicationPswd);
+ *      uc.intialize(applicationUserid, applicationPswd);
  *  }
  *  catch (Exception ex)
  *  {
- *      _logger.error("Failed credential validation, code is " + uc.getCheckCode());
+ *      _logger.error("Failed initialization, code is " + uc.getCheckCode());
  *  }
- *  if (isLocked(user))
+ *  if (uc.isLocked(user))
  *  {
  *      msg = "User is locked";
  *  }
- *  else if (!isValidCredentials(loginUserid, loginPswd))
+ *  else if (!uc.isValidCredentials(loginUserid, loginPswd))
  *  {
- *      incLock(loginUserid);
+ *      uc.incLock(loginUserid);
  *      msg = "User is invalid";
  *  }
  *  else
  *  {
- *      clearLock(loginUserid);
+ *      uc.clearLock(loginUserid);
  *      msg = "User is good";
  *  }
  *  
@@ -137,9 +137,17 @@ public class CaDsrUserCredentials
         + "values "
         + "(?, 1, SYSDATE)"; 
     
-    
     /**
      * Constructor
+     *
+     */
+    public CaDsrUserCredentials()
+    {
+        super();
+    }
+    
+    /**
+     * Validate the credentials
      * 
      * @param applUser_ the application database account 
      * @param applPswd_ the application account password
@@ -148,11 +156,9 @@ public class CaDsrUserCredentials
      * @throws Exception throws when the application account credentials are in error
      * 
      */
-    public CaDsrUserCredentials(String applUser_, String applPswd_, String localUser_, String localPswd_) throws Exception
+    public void validateCredentials(String applUser_, String applPswd_, String localUser_, String localPswd_) throws Exception
     {
-        super();
-
-        checkOptions(applUser_, applPswd_);
+        initialize(applUser_, applPswd_);
 
         String msg;
         if (isLocked(localUser_))
@@ -176,21 +182,14 @@ public class CaDsrUserCredentials
     }
     
     /**
-     * Constructor
+     * Initialize the class
      * 
      * @param applUser_ the application database account 
      * @param applPswd_ the application account password
      * @throws Exception throws when the application account credentials are in error
      * 
      */
-    public CaDsrUserCredentials(String applUser_, String applPswd_) throws Exception
-    {
-        super();
-        
-        checkOptions(applUser_, applPswd_);
-    }
-
-    private void checkOptions(String applUser_, String applPswd_) throws Exception
+    public void initialize(String applUser_, String applPswd_) throws Exception
     {
         _applUser = applUser_;
         _applPswd = applPswd_;
