@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.7 2008-04-23 21:57:51 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.8 2008-06-09 18:46:04 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -9,44 +9,41 @@
 */
 set scan off;
 
-delete from sbrext.tool_options_view_ext where value like '%http://%';
+update sbrext.tool_options_view_ext
+set value = REGEXP_REPLACE(value, 'cadsradmin[^/]*\.nci\.nih\.gov', 'cadsradmin@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'cadsradmin[^/]*\.nci\.nih\.gov');
 
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('AdminTool', 'URL', 'http://cadsradmin@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('BROWSER', 'URL', 'http://cdebrowser@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CADSRAPI', 'URL', 'http://cadsrapi@TIER@.nci.nih.gov/cadsrapi40', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'ADMIN_TOOL_URL', 'http://cadsradmin@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'CURATION_TOOL_URL', 'http://cdecurate@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'GO_CODE', 'http://nciterms.nci.nih.gov:80/NCIBrowser/ConceptReport.jsp?dictionary=GO&code=', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'LOINC_CODE', 'http://nciterms.nci.nih.gov:80/NCIBrowser/ConceptReport.jsp?dictionary=LOINC&code=', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'MEDDRA_CODE', 'http://nciterms.nci.nih.gov:80/NCIBrowser/ConceptReport.jsp?dictionary=MedDRA&licensetag=true&code=', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'NCI_CONCEPT_CODE', 'http://nciterms.nci.nih.gov:80/NCIBrowser/ConceptReport.jsp?dictionary=NCI_Thesaurus&code=', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'NCI_METATHESAURUS_URL', 'http://ncimeta.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'NCI_META_CUI', 'http://ncimeta.nci.nih.gov/MetaServlet/ResultServlet?cui=', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'NCI_MO_CODE', 'http://nciterms.nci.nih.gov:80/NCIBrowser/ConceptReport.jsp?dictionary=MGED_Ontology&code=', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'NCI_TERMINOLOGY_SERVER_URL', 'http://nciterms.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'SENTINAL_API_URL', 'http://cadsrsentinel@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'SENTINEL_TOOL_URL', 'http://cadsrsentinel@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'UMLBROWSER_URL', 'http://umlmodelbrowser@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'UMLS_CUI', 'http://ncimeta.nci.nih.gov/MetaServlet/ResultServlet?cui=', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'URL', 'http://cdebrowser@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'UWD_VA_CODE', 'http://nciterms.nci.nih.gov:80/NCIBrowser/ConceptReport.jsp?dictionary=UWD_Visual_Anatomist&code=', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CDEBrowser', 'VA_NDF_CODE', 'http://nciterms.nci.nih.gov:80/NCIBrowser/ConceptReport.jsp?dictionary=VA_NDFRT&code=', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CURATION', 'REFDOC_FILEURL', 'http://cdecurate@TIER@.nci.nih.gov/filecache/', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('CURATION', 'URL', 'http://cdecurate@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('EVS', 'URL', 'http://cabio@TIER@.nci.nih.gov/cacore32/http/remoteService', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('FormBuilder', 'URL', 'http://formbuilder@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('FREESTYLE', 'URL', 'http://freestyle@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('OCBrowser', 'URL', 'http://ocbrowser@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('SENTINEL', 'URL', 'http://cadsrsentinel@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'ADMIN_TOOL_URL', 'http://cadsradmin@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'CACORE_URL', 'http://cabio@TIER@.nci.nih.gov/cacore32/http/remoteService', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'CDEBROWSER_TOOL_URL', 'http://cdebrowser@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'CDEBROWSER_URL', 'http://cdebrowser@TIER@.nci.nih.gov/CDEBrowser/', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'CURATION_TOOL_URL', 'http://cdecurate@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'NCI_METATHESAURUS_URL', 'http://ncimeta.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'NCI_TERMINOLOGY_SERVER_URL', 'http://nciterms.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'SENTINEL_TOOL_URL', 'http://cadsrsentinel@TIER@.nci.nih.gov', 'US');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, locale) VALUES ('UMLBrowser', 'URL', 'http://umlmodelbrowser@TIER@.nci.nih.gov', 'US');
+update sbrext.tool_options_view_ext
+set value = REGEXP_REPLACE(value, 'cdebrowser[^/]*\.nci\.nih\.gov', 'cdebrowser@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'cdebrowser[^/]*\.nci\.nih\.gov');
+
+update sbrext.tool_options_view_ext
+set value = REGEXP_REPLACE(value, 'cadsrapi[^/]*\.nci\.nih\.gov', 'cadsrapi@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'cadsrapi[^/]*\.nci\.nih\.gov');
+
+update sbrext.tool_options_view_ext
+set value = REGEXP_REPLACE(value, 'cadsrsentinel[^/]*\.nci\.nih\.gov', 'cadsrsentinel@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'cadsrsentinel[^/]*\.nci\.nih\.gov');
+
+update sbrext.tool_options_view_ext
+set value = REGEXP_REPLACE(value, 'cdecurate[^/]*\.nci\.nih\.gov', 'cdecurate@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'cdecurate[^/]*\.nci\.nih\.gov');
+
+update sbrext.tool_options_view_ext
+set value = REGEXP_REPLACE(value, 'formbuilder[^/]*\.nci\.nih\.gov', 'formbuilder@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'formbuilder[^/]*\.nci\.nih\.gov');
+
+update sbrext.tool_options_view_ext
+set value = REGEXP_REPLACE(value, 'freestyle[^/]*\.nci\.nih\.gov', 'freestyle@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'freestyle[^/]*\.nci\.nih\.gov');
+
+update sbrext.tool_options_view_ext
+set value = REGEXP_REPLACE(value, 'ocbrowser[^/]*\.nci\.nih\.gov', 'ocbrowser@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'ocbrowser[^/]*\.nci\.nih\.gov');
+
+update sbrext.tool_options_view_ext
+set value = REGEXP_REPLACE(value, 'umlmodelbrowser[^/]*\.nci\.nih\.gov', 'umlmodelbrowser@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'umlmodelbrowser[^/]*\.nci\.nih\.gov');
 
 /*
    Commit Settings.
