@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.8 2008-06-09 18:46:04 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.9 2008-06-09 19:39:15 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -10,40 +10,40 @@
 set scan off;
 
 update sbrext.tool_options_view_ext
-set value = REGEXP_REPLACE(value, 'cadsradmin[^/]*\.nci\.nih\.gov', 'cadsradmin@TIER@.nci.nih.gov')
-where REGEXP_LIKE(value, 'cadsradmin[^/]*\.nci\.nih\.gov');
+set value = REGEXP_REPLACE(value, 'cadsradmin[^/.]*\.nci\.nih\.gov', 'cadsradmin@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'cadsradmin[^/.]*\.nci\.nih\.gov');
 
 update sbrext.tool_options_view_ext
-set value = REGEXP_REPLACE(value, 'cdebrowser[^/]*\.nci\.nih\.gov', 'cdebrowser@TIER@.nci.nih.gov')
-where REGEXP_LIKE(value, 'cdebrowser[^/]*\.nci\.nih\.gov');
+set value = REGEXP_REPLACE(value, 'cdebrowser[^/.]*\.nci\.nih\.gov', 'cdebrowser@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'cdebrowser[^/.]*\.nci\.nih\.gov');
 
 update sbrext.tool_options_view_ext
-set value = REGEXP_REPLACE(value, 'cadsrapi[^/]*\.nci\.nih\.gov', 'cadsrapi@TIER@.nci.nih.gov')
-where REGEXP_LIKE(value, 'cadsrapi[^/]*\.nci\.nih\.gov');
+set value = REGEXP_REPLACE(value, 'cadsrapi[^/.]*\.nci\.nih\.gov', 'cadsrapi@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'cadsrapi[^/.]*\.nci\.nih\.gov');
 
 update sbrext.tool_options_view_ext
-set value = REGEXP_REPLACE(value, 'cadsrsentinel[^/]*\.nci\.nih\.gov', 'cadsrsentinel@TIER@.nci.nih.gov')
-where REGEXP_LIKE(value, 'cadsrsentinel[^/]*\.nci\.nih\.gov');
+set value = REGEXP_REPLACE(value, 'cadsrsentinel[^/.]*\.nci\.nih\.gov', 'cadsrsentinel@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'cadsrsentinel[^/.]*\.nci\.nih\.gov');
 
 update sbrext.tool_options_view_ext
-set value = REGEXP_REPLACE(value, 'cdecurate[^/]*\.nci\.nih\.gov', 'cdecurate@TIER@.nci.nih.gov')
-where REGEXP_LIKE(value, 'cdecurate[^/]*\.nci\.nih\.gov');
+set value = REGEXP_REPLACE(value, 'cdecurate[^/.]*\.nci\.nih\.gov', 'cdecurate@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'cdecurate[^/.]*\.nci\.nih\.gov');
 
 update sbrext.tool_options_view_ext
-set value = REGEXP_REPLACE(value, 'formbuilder[^/]*\.nci\.nih\.gov', 'formbuilder@TIER@.nci.nih.gov')
-where REGEXP_LIKE(value, 'formbuilder[^/]*\.nci\.nih\.gov');
+set value = REGEXP_REPLACE(value, 'formbuilder[^/.]*\.nci\.nih\.gov', 'formbuilder@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'formbuilder[^/.]*\.nci\.nih\.gov');
 
 update sbrext.tool_options_view_ext
-set value = REGEXP_REPLACE(value, 'freestyle[^/]*\.nci\.nih\.gov', 'freestyle@TIER@.nci.nih.gov')
-where REGEXP_LIKE(value, 'freestyle[^/]*\.nci\.nih\.gov');
+set value = REGEXP_REPLACE(value, 'freestyle[^/.]*\.nci\.nih\.gov', 'freestyle@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'freestyle[^/.]*\.nci\.nih\.gov');
 
 update sbrext.tool_options_view_ext
-set value = REGEXP_REPLACE(value, 'ocbrowser[^/]*\.nci\.nih\.gov', 'ocbrowser@TIER@.nci.nih.gov')
-where REGEXP_LIKE(value, 'ocbrowser[^/]*\.nci\.nih\.gov');
+set value = REGEXP_REPLACE(value, 'ocbrowser[^/.]*\.nci\.nih\.gov', 'ocbrowser@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'ocbrowser[^/.]*\.nci\.nih\.gov');
 
 update sbrext.tool_options_view_ext
-set value = REGEXP_REPLACE(value, 'umlmodelbrowser[^/]*\.nci\.nih\.gov', 'umlmodelbrowser@TIER@.nci.nih.gov')
-where REGEXP_LIKE(value, 'umlmodelbrowser[^/]*\.nci\.nih\.gov');
+set value = REGEXP_REPLACE(value, 'umlmodelbrowser[^/.]*\.nci\.nih\.gov', 'umlmodelbrowser@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'umlmodelbrowser[^/.]*\.nci\.nih\.gov');
 
 /*
    Commit Settings.
