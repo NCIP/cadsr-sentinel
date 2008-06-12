@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.6 2008-06-03 21:40:03 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.7 2008-06-12 20:18:02 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -127,23 +127,30 @@ public class LogonForm extends ActionForm
         
         ActionErrors errors = new ActionErrors();
 
-        // A session can not already be in progress during a logon request.
-        HttpSession session = request_.getSession();
-        AlertBean ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
-        if (ub != null)
+        try
         {
-            errors.add("logon", new ActionMessage("error.sessionInProgress"));
-            return errors;
-        }
+            // A session can not already be in progress during a logon request.
+            HttpSession session = request_.getSession();
+            AlertBean ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
+            if (ub != null)
+            {
+                errors.add("logon", new ActionMessage("error.sessionInProgress"));
+                throw new Exception("error.sessionInProgress");
+            }
 
-        if (_userid.length() > 0)
-        {
+            if (_userid.length() < 1)
+            {
+                // Gotta enter something, don't like blank names.
+                errors.add("logon", new ActionMessage("error.logon.blankuser"));
+                throw new Exception("error.logon.blankuser");
+            }
+
             _userid = _userid.toUpperCase();
             if (_pswd == null)
             {
                 // Do not allow a blank password.
                 errors.add("logon", new ActionMessage("error.logon.blankuser"));
-                return errors;
+                throw new Exception("error.logon.blankuser");
             }
             
             // Verify the guest account is not being used.
@@ -152,18 +159,22 @@ public class LogonForm extends ActionForm
             if (msgnum == -1)
             {
                 errors.add("logon", new ActionMessage("error.logon.guest"));
-                return errors;
+                throw new Exception("error.logon.guest");
             }
 
             ActionMessage am;
             if (msgnum != 0)
             {
                 // We had a problem.
-                am = new ActionMessage("DB." + msgnum);
+                String msgProp = "DB." + msgnum;
+                am = new ActionMessage(msgProp);
                 if (am == null)
-                    am = new ActionMessage("DB.prob");
+                {
+                    msgProp = "DB.prob";
+                    am = new ActionMessage(msgProp);
+                }
                 errors.add("logon", am);
-                return errors;
+                throw new Exception(msgProp);
             }
 
             // Verify user credentials.
@@ -176,9 +187,8 @@ public class LogonForm extends ActionForm
             {
                 _logger.equals("Failed credential validation, code is " + uc.getCheckCode());
                 errors.add("logon", new ActionMessage("DB.1017"));
+                throw new Exception("DB.1017");
             }
-            if (!errors.isEmpty())
-                return errors;
                 
             DBAlert db = DBAlertUtil.factory();
             msgnum = db.open(request_, _userid, _pswd);
@@ -213,12 +223,12 @@ public class LogonForm extends ActionForm
                 errors.add("logon", am);
             }
             db.close();
-
         }
-        else
+        catch (Exception ex)
         {
-            // Gotta enter something, don't like blank names.
-            errors.add("logon", new ActionMessage("error.logon.blankuser"));
+            // Clear the user and password.
+            _userid = null;
+            _pswd = null;
         }
 
         return errors;
