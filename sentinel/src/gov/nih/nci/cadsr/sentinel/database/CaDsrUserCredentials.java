@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/CaDsrUserCredentials.java,v 1.4 2008-06-03 21:40:03 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/CaDsrUserCredentials.java,v 1.5 2008-06-13 21:06:58 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -115,14 +115,18 @@ public class CaDsrUserCredentials
         + "where tool_name = 'caDSR' " 
         + "and property = 'LOCKOUT.TIMER'))";
     
-    private static final String CHECKLOCK = "select 'locked' "
+    private static final String CHECKLOCK = "select 'Locked' "
         + "from sbrext.users_lockout_view " 
         + "where ua_name = ? " 
         + "and LOCKOUT_COUNT >= ( " 
         + "select to_number(value) " 
         + "from sbrext.tool_options_view_ext " 
         + "where tool_name = 'caDSR' " 
-        + "and property = 'LOCKOUT.THRESHOLD')";
+        + "and property = 'LOCKOUT.THRESHOLD') "
+        + "union "
+        + "select 'Missing' "
+        + "from dual "
+        + "where ? not in (select ua_name from sbr.user_accounts_view)";
     
     private static final String INCLOCK = "update sbrext.users_lockout_view " 
         + "set LOCKOUT_COUNT = LOCKOUT_COUNT + 1, VALIDATION_TIME = SYSDATE " 
@@ -406,8 +410,11 @@ public class CaDsrUserCredentials
             // Check the lock.
             _pstmt = _conn.prepareStatement(CHECKLOCK);
             _pstmt.setString(1, _localUser);
+            _pstmt.setString(2, _localUser);
             _rs = _pstmt.executeQuery();
             _locked = _rs.next();
+            if (_locked)
+                _logger.warn(_rs.getString(1) + " " + _localUser);
         }
         
         /**
