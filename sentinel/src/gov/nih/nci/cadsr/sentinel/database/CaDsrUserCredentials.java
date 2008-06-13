@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/CaDsrUserCredentials.java,v 1.5 2008-06-13 21:06:58 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/CaDsrUserCredentials.java,v 1.6 2008-06-13 21:17:08 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -115,7 +115,7 @@ public class CaDsrUserCredentials
         + "where tool_name = 'caDSR' " 
         + "and property = 'LOCKOUT.TIMER'))";
     
-    private static final String CHECKLOCK = "select 'Locked' "
+    private static final String CHECKLOCK = "select 'User is currently Locked' "
         + "from sbrext.users_lockout_view " 
         + "where ua_name = ? " 
         + "and LOCKOUT_COUNT >= ( " 
@@ -124,7 +124,7 @@ public class CaDsrUserCredentials
         + "where tool_name = 'caDSR' " 
         + "and property = 'LOCKOUT.THRESHOLD') "
         + "union "
-        + "select 'Missing' "
+        + "select 'User does not exist in sbr.user_accounts' "
         + "from dual "
         + "where ? not in (select ua_name from sbr.user_accounts_view)";
     
