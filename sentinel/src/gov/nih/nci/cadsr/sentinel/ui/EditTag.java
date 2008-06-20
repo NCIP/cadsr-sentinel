@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.6 2008-05-20 22:57:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.7 2008-06-20 20:44:29 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -324,7 +324,11 @@ public class EditTag extends AlertRootTag
             .findAttribute(Globals.MESSAGES_KEY);
 
         int tspot = 0;
-        String temp[] = new String[106];
+        String temp[] = new String[107];
+
+        AlertPlugIn api = (AlertPlugIn) pageContext.getServletContext().getAttribute(DBAlert._DATASOURCE);
+        temp[tspot++] = "var helpUrl = \"" + api.getHelpUrl() + "\";\n";
+
         temp[tspot++] = "var MstatusReason = false;\nvar Mprev = \""
             + _ub.getEditPrev() + "\";\n";
 

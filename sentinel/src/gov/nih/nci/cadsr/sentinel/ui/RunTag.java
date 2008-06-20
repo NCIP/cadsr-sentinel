@@ -1,10 +1,11 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/RunTag.java,v 1.5 2008-05-20 22:57:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/RunTag.java,v 1.6 2008-06-20 20:44:29 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
 
+import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -92,7 +93,11 @@ public class RunTag extends AlertRootTag
             sdate = sdate.substring(0, pos);
 
         // Build the Javascript for the JSP.
-        String temp = "function loaded()\n{\n"
+        AlertPlugIn api = (AlertPlugIn) pageContext.getServletContext().getAttribute(DBAlert._DATASOURCE);
+
+        String temp =
+            "var helpUrl = \"" + api.getHelpUrl() + "\";\n\n"
+            + "function loaded()\n{\n"
             + "\trunForm.startDate.value = \"" + sdate + "\";\n"
             + "\trunForm.endDate.value = \"" + snow + "\";\n" + "}\n";
         return temp;

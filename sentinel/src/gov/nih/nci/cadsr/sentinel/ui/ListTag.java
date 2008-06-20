@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.6 2008-05-20 22:57:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.7 2008-06-20 20:44:29 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -119,8 +119,12 @@ public class ListTag extends AlertRootTag
     {
         String temp = (String) pageContext.getRequest().getAttribute(
             Constants._ACTSAVE);
+
+        AlertPlugIn api = (AlertPlugIn) pageContext.getServletContext().getAttribute(DBAlert._DATASOURCE);
+
         String script =
-            "var Muserid = \"" + _ub.getUserUpper() + "\";\n"
+            "var helpUrl = \"" + api.getHelpUrl() + "\";\n"
+            + "var Muserid = \"" + _ub.getUserUpper() + "\";\n"
             + "var Madmin = " + _ub.isAdmin() + ";\n"
             + "\nfunction cmdList() { "
             + "checkCount = 0; "

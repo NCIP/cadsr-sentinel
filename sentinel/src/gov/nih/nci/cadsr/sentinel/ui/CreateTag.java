@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/CreateTag.java,v 1.6 2008-05-20 22:57:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/CreateTag.java,v 1.7 2008-06-20 20:44:29 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -84,7 +84,11 @@ public class CreateTag extends AlertRootTag
         String option1 = "\"Criteria:\\nContext must be " + contexts
             + "\\n\\nMonitors:\\nAll Change Activities\",\n";
 
-        String temp = "var Muserid = \"" + _ub.getUserName() + "\";\n"
+        AlertPlugIn api = (AlertPlugIn) pageContext.getServletContext().getAttribute(DBAlert._DATASOURCE);
+        
+        String temp =
+            "var helpUrl = \"" + api.getHelpUrl() + "\";\n"
+            + "var Muserid = \"" + _ub.getUserName() + "\";\n"
             + "var Mdesc = [\n" + "\" \",\n" + option1 + "\" \",\n"
             + "\" \",\n" + "\" \",\n" + "\"?\",\n"
             + "\"Criteria:\\nCreated By must be " + _ub.getUserName()
