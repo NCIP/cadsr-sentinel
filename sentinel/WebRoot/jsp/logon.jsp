@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.5 2008-06-20 20:12:51 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.6 2008-06-20 20:18:54 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ taglib uri="/tags/struts-bean" prefix="bean" %>
@@ -7,6 +7,7 @@
 <%@ taglib uri="/tags/dsralert" prefix="dtags" %>
 
 <%@ page import="gov.nih.nci.cadsr.sentinel.ui.AlertPlugIn" %>
+<%@ page import="gov.nih.nci.cadsr.sentinel.database.DBAlert" %>
 
 <html>
     <head>
@@ -28,7 +29,7 @@
         function cmdHelp()
         {
         <%
-            AlertPlugIn api = pageContext.getServletContext().getAttribute(DBAlert._DATASOURCE);
+            AlertPlugIn api = (AlertPlugIn) pageContext.getServletContext().getAttribute(DBAlert._DATASOURCE);
         %>
             window.open("<%=api.getHelpUrl()%>", "_blank");
         }
