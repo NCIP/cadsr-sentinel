@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.9 2008-05-16 15:36:44 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.10 2008-06-20 20:28:25 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -218,6 +218,15 @@ values ('SENTINEL', 'OUTPUT.DIR', '/local/content/cadsrsentinel/reports/',
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
 values ('SENTINEL', 'DB.NAME', 'NCICB @TIER.NAME@ caDSR',
 'The name to identify this database on report output.');
+
+/*
+  Online Help URL
+
+   The URL hosting the Sentinel Tool online Help. This must include the full URI and file name for the first page.
+*/
+
+insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
+values ('SENTINEL', 'HELP.HOME', 'https://cadsrsentinel@TIER@.nci.nih.gov/cadsrsentinel/html/index.html', 'The Sentinel Tool online help URL');
 
 /*
   ==============================================================================
