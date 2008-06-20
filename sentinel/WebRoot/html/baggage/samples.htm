@@ -1,10 +1,8 @@
-<!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/html/samples.html,v 1.3 2008-05-15 17:35:48 hebell Exp $
-     $Name: not supported by cvs2svn $
--->
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+
 <html>
 <head>
-<link href="/cadsrsentinel/css/sentinel.css" rel="stylesheet" type="text/css"></link>
+
 <title>caDSR Sample Reports</title>
 <style type="text/css">
     BODY { FONT-SIZE: 10pt; FONT-FAMILY: Arial; BACKGROUND-COLOR: #ffffff }
@@ -47,45 +45,8 @@
     .ARIGHT { text-align: right }
 </style>
 </head>
-<body onload="loaded();">
-<script language="javascript" type="text/javascript">
-        var MlastTab = null;
-        var MlastDiv = null;
+<body                   >
 
-        function loaded()
-        {
-            MlastTab = tab1;
-            MlastDiv = examp1;
-        }
-        
-        function tabOver(obj)
-        {
-            if (obj != MlastTab)
-            {
-                obj.className = "tab2";
-            }
-        }
-        
-        function tabOut(obj)
-        {
-            if (obj != MlastTab)
-            {
-                obj.className = "tab1";
-            }
-        }
-        
-        function tabClick(obj, dobj)
-        {
-            MlastTab.className = "tab1";
-            MlastTab = obj;
-            MlastTab.className = "tab0";
-            
-            MlastDiv.style.visibility = "hidden";
-            MlastDiv = dobj;
-            MlastDiv.style.visibility = "visible";
-            MlastDiv.style.display = "block";
-        }
-    </script>
 <table class="table1">
     <colgroup></colgroup>
     <tbody />
@@ -94,9 +55,9 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#A90101">
 <tr bgcolor="#A90101">
 <td valign="center" align="left"><a href="http://www.cancer.gov" target="_blank" alt="NCI Logo" title="National Cancer Institute">
-<img src="/cadsrsentinel/images/brandtype.gif" border="0"></a></td>
+<img src="/.../images/brandtype.gif" border="0"></a></td>
 <td valign="center" align="right"><a href="http://www.cancer.gov" target="_blank" alt="NCI Logo" title="National Cancer Institute">
-<img src="/cadsrsentinel/images/tagline_nologo.gif" border="0"></a></td></tr>
+<img src="/.../images/tagline_nologo.gif" border="0"></a></td></tr>
 </table>
 <table class="secttable"><colgroup><col/></colgroup><tbody class="secttbody" />
 <tr><td><a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr"><img style="border: 0px solid black" title="NCICB caDSR" src="/cadsrsentinel/images/sentinel_banner.gif"></a></td></tr>
@@ -109,7 +70,7 @@
             Tool Sample Reports<br />
             Version 4.0</p>
             <p class="std12">The following examples are provided to
-            augment the <a href="help.html">Tool Overview and Interface</a>
+            augment the <a href="help.html" onClick="return (false);">Tool Overview and Interface</a>
             documentation.</p>
             <table class="t0prop">
                 <colgroup>
@@ -121,14 +82,10 @@
                     <tr>
                         <td style="vertical-align: bottom; width: 5px"><span
                             class="tab0" id="tab1" title="Example 1."
-                            onmouseover="tabOver(this);"
-                            onmouseout="tabOut(this);"
-                            onclick="tabClick(this, examp1);">Example&#160;1</span></td>
+                                                                                                                                                                               >Example&#160;1</span></td>
                         <td style="vertical-align: bottom; width: 5px"><span
                             class="tab1" id="tab2" title="Example 2."
-                            onmouseover="tabOver(this);"
-                            onmouseout="tabOut(this);"
-                            onclick="tabClick(this, examp2);">Example&#160;2</span></td>
+                                                                                                                                                                               >Example&#160;2</span></td>
                         <td style="vertical-align: bottom"><span
                             class="tabend">&#160;</span></td>
                     </tr>
@@ -144,9 +101,7 @@
                     <p>This is an example of an empty report. Note all
                     the header information is still included.</p>
                     <hr>
-<!--
-      Example 2 begins
--->
+
                     <table class="t1prop">
                         <colgroup>
                             <col class="c1prop">
@@ -174,7 +129,7 @@
                             <tr>
                                 <td>Summary:</td>
                                 <td>Criteria:<br>
-                                Context must be "TEST" AND<br>
+                                Context must be &quot;TEST&quot; AND<br>
                                 Forms / Templates may be anything AND<br>
                                 Classification Schemes may be anything
                                 AND<br>
@@ -222,20 +177,20 @@
                     </table>
 <P style="FONT-WEIGHT: normal; FONT-STYLE: italic">Information in the report is 
 displayed in blocks. Change blocks are indicated by a bright blue color, a whole 
-number under the Group column, and the prefix: "Changes to the ..." The change 
-details appear under the headings "Attribute Name", "Old Value" and "New Value". 
+number under the Group column, and the prefix: &quot;Changes to the ...&quot; The change 
+details appear under the headings &quot;Attribute Name&quot;, &quot;Old Value&quot; and &quot;New Value&quot;. 
 
 <UL style="FONT-WEIGHT: normal; FONT-STYLE: italic">
-  <LI>If no details are available, the text "Details not available" appears.
-  <LI>When "Old Value" is "&lt;null&gt;" the attribute was either missing or not 
-  set and the "New Value" shows the added value.
-  <LI>When "New Value" is "&lt;null&gt;" the attribute has been removed or 
+  <LI>If no details are available, the text &quot;Details not available&quot; appears.
+  <LI>When &quot;Old Value&quot; is &quot;&lt;null&gt;&quot; the attribute was either missing or not 
+  set and the &quot;New Value&quot; shows the added value.
+  <LI>When &quot;New Value&quot; is &quot;&lt;null&gt;&quot; the attribute has been removed or 
   cleared.
-  <LI>When both the old and new values are not "&lt;null&gt;" the attribute 
+  <LI>When both the old and new values are not &quot;&lt;null&gt;&quot; the attribute 
   value has been changed or replaced.</LI></UL>
 <P style="FONT-WEIGHT: normal; FONT-STYLE: italic">Associated blocks are 
 indicated by a light blue color, one or more decimal Group numbers, and the 
-prefix "Associated To ...". These blocks indicate information associated to the 
+prefix &quot;Associated To ...&quot;. These blocks indicate information associated to the 
 preceding change block. The first number of the Associated To block corresponds 
 to the related change.<BR><BR>Note all dates are month/day/year 
 (mm/dd/yyyy).</P>
@@ -272,18 +227,14 @@ to the related change.<BR><BR>Note all dates are month/day/year
                             </tr>
                         </tbody>
                     </table>
-<!--
-      Example 2 ends
--->
+
                     </div>
 
                     <div id="examp1">
                     <p>The following shows a full header and a report body with change and
                     associated blocks.</p>
                     <hr>
-<!--
-      Example 1 begins
--->
+
 <TABLE class=t1prop>
   <COLGROUP>
   <COL class=c1prop>
@@ -308,7 +259,7 @@ to the related change.<BR><BR>Note all dates are month/day/year
     <TD>Criteria:<BR>Context may be anything AND<BR>Protocols may be anything 
       AND<BR>Forms / Templates may be anything AND<BR>Classification Schemes may 
       be anything AND<BR>Classification Scheme Items may be anything 
-      AND<BR>Administered Component Types must be "Data Element" AND<BR>Workflow 
+      AND<BR>Administered Component Types must be &quot;Data Element&quot; AND<BR>Workflow 
       Status may be anything AND<BR>Registration Status may be anything 
       AND<BR>Created By may be anyone AND<BR>Modified By may be anyone 
       AND<BR>Reporting Dates are compared to Date Created and Date Modified 
@@ -336,20 +287,20 @@ to the related change.<BR><BR>Note all dates are month/day/year
     <TD>NCICB Development caDSR</TD></TR></TBODY></TABLE>
 <P style="FONT-WEIGHT: normal; FONT-STYLE: italic">Information in the report is 
 displayed in blocks. Change blocks are indicated by a bright blue color, a whole 
-number under the Group column, and the prefix: "Changes to the ..." The change 
-details appear under the headings "Attribute Name", "Old Value" and "New Value". 
+number under the Group column, and the prefix: &quot;Changes to the ...&quot; The change 
+details appear under the headings &quot;Attribute Name&quot;, &quot;Old Value&quot; and &quot;New Value&quot;. 
 
 <UL style="FONT-WEIGHT: normal; FONT-STYLE: italic">
-  <LI>If no details are available, the text "Details not available" appears.
-  <LI>When "Old Value" is "&lt;null&gt;" the attribute was either missing or not 
-  set and the "New Value" shows the added value.
-  <LI>When "New Value" is "&lt;null&gt;" the attribute has been removed or 
+  <LI>If no details are available, the text &quot;Details not available&quot; appears.
+  <LI>When &quot;Old Value&quot; is &quot;&lt;null&gt;&quot; the attribute was either missing or not 
+  set and the &quot;New Value&quot; shows the added value.
+  <LI>When &quot;New Value&quot; is &quot;&lt;null&gt;&quot; the attribute has been removed or 
   cleared.
-  <LI>When both the old and new values are not "&lt;null&gt;" the attribute 
+  <LI>When both the old and new values are not &quot;&lt;null&gt;&quot; the attribute 
   value has been changed or replaced.</LI></UL>
 <P style="FONT-WEIGHT: normal; FONT-STYLE: italic">Associated blocks are 
 indicated by a light blue color, one or more decimal Group numbers, and the 
-prefix "Associated To ...". These blocks indicate information associated to the 
+prefix &quot;Associated To ...&quot;. These blocks indicate information associated to the 
 preceding change block. The first number of the Associated To block corresponds 
 to the related change.<BR><BR>Note all dates are month/day/year 
 (mm/dd/yyyy).</P>
@@ -1515,9 +1466,7 @@ colSpan=6>Associated&nbsp;To&nbsp;Context:&nbsp;CCR</TD></TR>
     <TD style="BORDER-TOP: black 1px solid; TEXT-ALIGN: right" colSpan=6>
       <P 
 style="MARGIN-TOP: 6pt">&nbsp;v&nbsp;3.1.0.0.20051222</P></TD></TR></TBODY></TABLE>
-<!--
-      Example 1 ends
--->
+
                     </div>
                     </td>
                 </tr>

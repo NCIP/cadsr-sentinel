@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.6 2008-04-28 22:25:22 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.7 2008-06-20 20:12:50 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -13,6 +13,9 @@ import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
@@ -37,6 +40,7 @@ public class AlertPlugIn implements PlugIn
     private String _pswd;
     private String _dataSource;
     private String _authenticate;
+    private String _helpUrl = "/cadsrsentinel/html/help.html";
     private static boolean _printFirstRequest = true;
 
     private static final Logger _logger = Logger.getLogger(AlertPlugIn.class.getName());
@@ -94,6 +98,9 @@ public class AlertPlugIn implements PlugIn
         
         // Have to verify the context and datasource.
         Context envContext = null;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
         try 
         {
             envContext = new InitialContext();
@@ -102,6 +109,14 @@ public class AlertPlugIn implements PlugIn
             {
                 servlet_.getServletContext().setAttribute(DBAlert._DATASOURCE, this);
                 _logger.info("Using JBoss datasource configuration. " + _dataSource);
+                
+                conn = ds.getConnection();
+                pstmt = conn.prepareStatement("select value from sbrext.tool_options_view_ext where tool_name = 'SENTINEL' and property = 'HELP.HOME' ");
+                rs = pstmt.executeQuery();
+                if (rs.next())
+                {
+                    _helpUrl = rs.getString(1);
+                }
             }
         }
         catch (Exception ex) 
@@ -109,6 +124,31 @@ public class AlertPlugIn implements PlugIn
             String stErr = "Error retrieving datasource [" + _dataSource + "] from JBoss [" + ex.getMessage() + "].";
             _logger.error(stErr, ex);
         }
+        finally
+        {
+            if (rs != null)
+            {
+                try { rs.close(); } catch(Exception ex) { }
+            }
+            if (pstmt != null)
+            {
+                try { pstmt.close(); } catch(Exception ex) { }
+            }
+            if (conn != null)
+            {
+                try { conn.close(); } catch(Exception ex) { }
+            }
+        }
+    }
+    
+    /**
+     * Get the Help URL
+     * 
+     * @return the Help URL
+     */
+    public String getHelpUrl()
+    {
+        return _helpUrl;
     }
     
     private DataSource getDataSource(String jndi_)
