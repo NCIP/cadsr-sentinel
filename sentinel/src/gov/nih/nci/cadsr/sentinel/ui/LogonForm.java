@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.7 2008-06-12 20:18:02 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/LogonForm.java,v 1.8 2008-06-23 12:05:12 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -131,6 +131,10 @@ public class LogonForm extends ActionForm
         {
             // A session can not already be in progress during a logon request.
             HttpSession session = request_.getSession();
+            ServletContext sc = session.getServletContext();
+            AlertPlugIn api = (AlertPlugIn) sc.getAttribute(DBAlert._DATASOURCE);
+            api.setHelpUrl(null);
+            
             AlertBean ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
             if (ub != null)
             {

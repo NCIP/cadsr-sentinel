@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.7 2008-06-20 20:12:50 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.8 2008-06-23 12:05:12 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -96,6 +96,16 @@ public class AlertPlugIn implements PlugIn
         _user = servlet_.getInitParameter(Constants._DSUSER);
         _pswd = servlet_.getInitParameter(Constants._DSPSWD);
         
+        setHelpUrl(servlet_.getServletContext());
+    }
+
+    /**
+     * Set the Help URL
+     * 
+     * @param scont_ the servlet context
+     */
+    public void setHelpUrl(ServletContext scont_)
+    {
         // Have to verify the context and datasource.
         Context envContext = null;
         Connection conn = null;
@@ -107,8 +117,11 @@ public class AlertPlugIn implements PlugIn
             DataSource ds = (DataSource)envContext.lookup(_dataSource);
             if (ds != null)
             {
-                servlet_.getServletContext().setAttribute(DBAlert._DATASOURCE, this);
-                _logger.info("Using JBoss datasource configuration. " + _dataSource);
+                if (scont_ != null)
+                {
+                    scont_.setAttribute(DBAlert._DATASOURCE, this);
+                    _logger.info("Using JBoss datasource configuration. " + _dataSource);
+                }
                 
                 conn = ds.getConnection();
                 pstmt = conn.prepareStatement("select value from sbrext.tool_options_view_ext where tool_name = 'SENTINEL' and property = 'HELP.HOME' ");
