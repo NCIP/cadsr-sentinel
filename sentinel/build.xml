@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.140 2008-05-21 20:18:22 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.143 2008-07-09 15:37:49 cvsuser Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -382,6 +382,14 @@
         <copy todir="${odi.dir}/doc">
             <fileset dir="doc" />
         </copy>
+        <mkdir dir="${odi.dir}/dtd" />
+        <copy todir="${odi.dir}/dtd">
+            <fileset dir="dtd" />
+        </copy>
+        <mkdir dir="${odi.dir}/help" />
+        <copy todir="${odi.dir}/help">
+            <fileset dir="help" />
+        </copy>
         <mkdir dir="${odi.dir}/lib" />
         <copy todir="${odi.dir}/lib">
             <fileset dir="lib" />
@@ -389,6 +397,10 @@
         <mkdir dir="${odi.dir}/scripts" />
         <copy todir="${odi.dir}/scripts">
             <fileset dir="scripts" />
+        </copy>
+        <mkdir dir="${odi.dir}/sdkapi" />
+        <copy todir="${odi.dir}/sdkapi">
+            <fileset dir="sdkapi" />
         </copy>
         <mkdir dir="${odi.dir}/src" />
         <copy todir="${odi.dir}/src">
@@ -554,21 +566,21 @@
     <target name="-do-load-options" if="found.load_options.sql" depends="-check-sql-files" description="Execute load_options.sql">
         <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql</echo>
         <exec dir="." executable="${SQL.EXE}" failonerror="true">
-            <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql" />
+            <arg line="-L ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql" />
         </exec>
     </target>
 
     <target name="-do-update-options" if="found.update_options_url.sql" depends="-check-sql-files" description="Execute update_options_url.sql">
         <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/update_options_url.sql</echo>
         <exec dir="." executable="${SQL.EXE}" failonerror="true">
-            <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/update_options_url.sql" />
+            <arg line="-L ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/update_options_url.sql" />
         </exec>
     </target>
 
     <target name="-do-deactivate-options" if="found.deactivate.sql" depends="-check-sql-files" description="Execute deactivate.sql">
         <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactivate.sql</echo>
         <exec dir="." executable="${SQL.EXE}" failonerror="true">
-            <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactivate.sql" />
+            <arg line="-L ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactivate.sql" />
         </exec>
     </target>
     
