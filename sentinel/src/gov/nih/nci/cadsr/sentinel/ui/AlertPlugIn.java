@@ -1,11 +1,13 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.8 2008-06-23 12:05:12 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.9 2008-07-11 16:35:33 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
 
 import java.util.Enumeration;
+import java.util.HashMap;
+
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import javax.naming.Context;
@@ -41,8 +43,11 @@ public class AlertPlugIn implements PlugIn
     private String _dataSource;
     private String _authenticate;
     private String _helpUrl = "/cadsrsentinel/html/help.html";
+    private String _helpUrlRoot = "/cadsrsentinel/html/";
     private static boolean _printFirstRequest = true;
 
+    private static final String _helpRoot = "HELP.ROOT";
+    private static final String _helpHome = "HELP.HOME";
     private static final Logger _logger = Logger.getLogger(AlertPlugIn.class.getName());
 
     public void destroy()
@@ -124,12 +129,19 @@ public class AlertPlugIn implements PlugIn
                 }
                 
                 conn = ds.getConnection();
-                pstmt = conn.prepareStatement("select value from sbrext.tool_options_view_ext where tool_name = 'SENTINEL' and property = 'HELP.HOME' ");
+                HashMap<String, String> props = new HashMap<String, String>();
+                pstmt = conn.prepareStatement("select property, value from sbrext.tool_options_view_ext where tool_name = 'SENTINEL' and property in (?, ?) ");
+                pstmt.setString(1, _helpRoot);
+                pstmt.setString(2, _helpHome);
                 rs = pstmt.executeQuery();
-                if (rs.next())
+                while (rs.next())
                 {
-                    _helpUrl = rs.getString(1);
+                    props.put(rs.getString(1), rs.getString(2));
                 }
+                _helpUrlRoot = props.get(_helpRoot);
+                if (_helpUrlRoot == null || _helpUrlRoot.length() == 0)
+                    _helpUrlRoot = "/cadsrsentinel/html/";
+                _helpUrl = _helpUrlRoot + props.get(_helpHome);
             }
         }
         catch (Exception ex) 

@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.11 2008-06-30 14:04:23 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.12 2008-07-11 16:35:33 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -226,7 +226,11 @@ values ('SENTINEL', 'DB.NAME', 'NCICB @TIER.NAME@ caDSR',
 */
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'HELP.HOME', 'https://cadsrsentinel@TIER@.nci.nih.gov/help/index.html', 'The Sentinel Tool online help URL');
+values ('SENTINEL', 'HELP.ROOT', 'https://cadsrsentinel@TIER@.nci.nih.gov/help/', 'The Sentinel Tool online help URL root');
+insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
+values ('SENTINEL', 'HELP.HOME', 'index.html', 'The Sentinel Tool online help main page.');
+insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
+values ('SENTINEL', 'HELP.RUN', 'index.html' || chr(63) || 'context=caDSR_Sentinel_Tool_Help' || chr(38) || 'topic=manual_run', 'The Run page help');
 
 /*
   ==============================================================================
