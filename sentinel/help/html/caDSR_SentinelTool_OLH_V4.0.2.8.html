@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <!-- MOTW-DISABLED saved from url=(0014)about:internet -->
-    <title>Edit Page</title>
+    <title>Properties Tab</title>
     <link rel="StyleSheet" href="css/caDSR_SentinelTool_OLH_V4.0.css" type="text/css" media="all" />
     <link rel="StyleSheet" href="css/webworks.css" type="text/css" media="all" />
     <script type="text/javascript" language="JavaScript1.2" src="wwhdata/common/context.js"></script>
@@ -28,28 +28,122 @@
   <body style="" onLoad="WWHUpdate();" onUnload="WWHUnload();" onKeyDown="WWHHandleKeyDown((document.all||document.getElementById||document.layers)?event:null);" onKeyPress="WWHHandleKeyPress((document.all||document.getElementById||document.layers)?event:null);" onKeyUp="WWHHandleKeyUp((document.all||document.getElementById||document.layers)?event:null);">
     <br />
     <div class="WebWorks_Breadcrumbs" style="text-align: left;">
-      <a class="WebWorks_Breadcrumb_Link" href="caDSR_SentinelTool_OLH_V4.0.2.1.html#1107729">Using the caDSR Sentinel Tool</a> &gt; Edit Page </div>
+      <a class="WebWorks_Breadcrumb_Link" href="caDSR_SentinelTool_OLH_V4.0.2.1.html#1111092">Using the caDSR Sentinel Tool</a> &gt; Properties Tab</div>
     <hr align="left" />
     <blockquote>
-      <div class="Heading1"><a name="1107729">Edit Page </a></div>
-      <div class="Body_Text"><a name="1107734">The Edit page is used to view and maintain the Alert Definition attributes. <img id="1110740" class="Default" src="images/edit1.jpg" width="327" height="326" style="display: block; float: none; left: 0.0; text-align: left; top: 0.0;" /></a></div>
-      <div class="Body_Text"><a name="1110739">Select the appropriate action button after completing any changes. </a></div>
-      <div class="Run-In"><a name="1107735">Save </a></div>
-      <div class="Body_Text"><a name="1107736">Stores the Alert Definition in the caDSR. Upon successful completion, the List </a>page appears in the browser window. </div>
-      <div class="Run-In"><a name="1107737">Clear </a></div>
-      <div class="Body_Text"><a name="1107738">Restores the definition from the caDSR when viewing an existing Alert </a>Definition. </div>
-      <div class="Run-In"><a name="1107739">Run </a></div>
-      <div class="Body_Text"><a name="1107740">Opens the Manual Run Submission page. Any changes made to the Alert </a>Definition are not saved to the caDSR, however the changes are used by the Manual Run. Upon submission from the Run page, the Edit page appears with all unsaved edits intact. See the <span class="Emphasis" style="color: #515186;"><a href="javascript:WWHClickedPopup('caDSR_Sentinel_Tool_Help', 'caDSR_SentinelTool_OLH_V4.0.2.13.html#1107871', '');">Run Page</a></span> for more information. </div>
-      <div class="Body_Text"><a name="1107741">The Alert Definition attribtues are displayed on four (4) tabs. </a></div>
-      <div class="Run-In"><a name="1107742">Properties </a></div>
-      <div class="Body_Text"><a name="1107743">Displays the name, created by, created date, modified date and </a>frequency settings. </div>
-      <div class="Run-In"><a name="1107744">Report Details </a></div>
-      <div class="Body_Text"><a name="1107745">Displays the report content and recipients. </a></div>
-      <div class="Run-In"><a name="1107746">Criteria </a></div>
-      <div class="Body_Text"><a name="1107747">Displays the scope of the data to include in the output. </a></div>
-      <div class="Run-In"><a name="1107748">Monitors </a></div>
-      <div class="Body_Text"><a name="1107749">Displays the activities that will trigger a report creation. </a></div>
-      <div class="Body_Text"><a name="1107750">The remainder of this section describes the data interdependencies and their effects on </a>the Report output. </div>
+      <div class="Heading1"><a name="1111092">Properties Tab</a></div>
+      <div class="Body_Text"><a name="1111093">The Properties tab contains the basic Alert Definition properties. <img id="1111105" class="Default" src="images/Edit-PropertiesTab.gif" width="546" height="480" style="display: block; float: none; left: 0.0; text-align: left; top: 0.0;" /></a></div>
+      <div class="Run-In"><a name="1111094">Alert Name </a></div>
+      <div class="Body_Text"><a name="1107758">The alert name identifies the Alert Definition and is used both in the </a>notification e-mail and the body of the generated report. Names should be brief but should accurately describe the function or purpose of the alert so that you (or other users) can easily identify an alert on the <span class="Emphasis" style="color: #515186;"><a href="javascript:WWHClickedPopup('caDSR_Sentinel_Tool_Help', 'caDSR_SentinelTool_OLH_V4.0.2.3.html#1107662', '');">Alerts Page</a></span>. For example, Alert Definition names like “Changes to CCR” and “Watch for Retired Records” provide quick-glance, useful information regarding the alert.</div>
+      <div class="Run-In"><a name="1107759">Summary </a></div>
+      <div class="Body_Text"><a name="1107760">Provides an overview of the alert configuration information. The summary </a>window shows the selections made on the Criteria and Monitors tabs, allowing you to quickly review this information without selecting those tabs. Any reports generated based on the current report definition will only include information that meets the description shown in the Summary window. </div>
+      <div class="Run-In"><a name="1107761">Auto Run Options </a></div>
+      <div class="Body_Text"><a name="1113275">Allows you to select how often the Alert Definition is run against </a>the caDSR (Frequency) and to select whether the definition is active or not (Status). </div>
+      <div class="Bullet_outer" style="margin-left: 18pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1113276">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_inner"><a name="1113276">The </a><span class="Bold">Frequency</span> selected more specifically identifies the execution cycle in the <span class="Emphasis">Automated Report Generation Process</span>. This process runs daily at a time determined by the System Administrator.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Body_Text_Indent_2"><a name="1113281">Alerts marked with a frequency of </a><span class="Bold">Daily</span> are evaluated with each run. Alerts marked as <span class="Bold">Weekly</span> are evaluated only on the day of the week identified. Alerts marked <span class="Bold">Monthly</span> are evaluated only on the specific day of the month identified. To indicate the first day of the month, select <span class="Bold">1</span>. To indicate the last day of the month, select <span class="Bold">31</span>. </div>
+      <div class="Note_Main_Body_outer" style="margin-left: 13px;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1113321">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Note_Main_Body_inner" style="width: 15px; white-space: nowrap;">
+                <span style="left: -20px; position: relative; top: 23px;">
+                  <img src="Lightbulb.gif" alt="*" id="bullet1113321" border="0" width="30" height="30" />
+                </span>
+              </div>
+            </td>
+            <td width="100%">
+              <div class="Note_Main_Body_inner"><a name="1113321">An alert may be run manually at anytime using the Run button. Performing a manual </a>run has no affect on the automated report generation process.</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Bullet_outer" style="margin-left: 18pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107765">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_inner"><a name="1107765">The </a><span class="Bold">Status</span> selected controls the Auto Run Frequency application of the Automated Report Generation Process. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Bullet_Indent_outer" style="margin-left: 36pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107767">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_Indent_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_Indent_inner"><span class="Bold"><a name="1107767">Active, no end date </a></span>- The Alert Definition is processed according to the Frequency until the alert status is set to Inactive. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Bullet_Indent_outer" style="margin-left: 36pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107769">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_Indent_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_Indent_inner"><span class="Bold"><a name="1107769">Active until the first report …</a></span> After sending a report containing some activity, the status automatically changes to Inactive. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Bullet_Indent_outer" style="margin-left: 36pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107771">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_Indent_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_Indent_inner"><span class="Bold"><a name="1107771">Active only from …</a></span> The Alert Definition is processed only within the dates specified. If you leave the begin date blank, the Alert Definition creation date is used. If you leave the end date blank, the alert will be processed beginning on the begin date and continue thereafter until the alert status is set to Inactive. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Bullet_Indent_outer" style="margin-left: 36pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1113616">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_Indent_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_Indent_inner"><span class="Bold"><a name="1113616">Inactive</a></span> The Alert Definition is retained in the caDSR, but is not processed by the Automated Report Generation Process until it is made Active. If you set an alert as Inactive, you must provide a brief description explaining why the alert exists but is not active. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Note_Main_Body_outer" style="margin-left: 13px;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1108621">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Note_Main_Body_inner" style="width: 15px; white-space: nowrap;">
+                <span style="left: -20px; position: relative; top: 23px;">
+                  <img src="Lightbulb.gif" alt="*" id="bullet1108621" border="0" width="30" height="30" />
+                </span>
+              </div>
+            </td>
+            <td width="100%">
+              <div class="Note_Main_Body_inner"><a name="1108621">Midnight is used for all comparisons, e.g. 03/01/2006 to 03/02/2006 is the 24 hour period </a>beginning midnight 03/01/2006. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
       <script type="text/javascript" language="JavaScript1.2">
         <!--
           // Clear related topics

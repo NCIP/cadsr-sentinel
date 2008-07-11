@@ -38,23 +38,23 @@
     <h7 weight="2" />
   </ScoringPrefs>
   <DocumentInfo>
-    <Document title="Welcome to caDSR Curation Tool Online Help" href="Welcome.1.1.html" />
+    <Document title="Welcome to caDSR Sentinel Tool Online Help" href="Welcome.1.1.html" />
     <Document title="Accessing the Sentinel Tool" href="Welcome.1.2.html" />
     <Document title="Using the caDSR Sentinel Tool" href="caDSR_SentinelTool_OLH_V4.0.2.1.html" />
-    <Document title="Accessing the Sentinel Tool" href="caDSR_SentinelTool_OLH_V4.0.2.2.html" />
-    <Document title="Banners" href="caDSR_SentinelTool_OLH_V4.0.2.3.html" />
-    <Document title="Login Page" href="caDSR_SentinelTool_OLH_V4.0.2.4.html" />
-    <Document title="Alerts List Page" href="caDSR_SentinelTool_OLH_V4.0.2.5.html" />
-    <Document title="Create Page" href="caDSR_SentinelTool_OLH_V4.0.2.6.html" />
-    <Document title="Create Using Button" href="caDSR_SentinelTool_OLH_V4.0.2.7.html" />
-    <Document title="Edit Page" href="caDSR_SentinelTool_OLH_V4.0.2.8.html" />
-    <Document title="Properties Tab" href="caDSR_SentinelTool_OLH_V4.0.2.9.html" />
-    <Document title="Report Details Tab" href="caDSR_SentinelTool_OLH_V4.0.2.10.html" />
-    <Document title="Criteria Tab" href="caDSR_SentinelTool_OLH_V4.0.2.11.html" />
-    <Document title="Monitors Tab" href="caDSR_SentinelTool_OLH_V4.0.2.12.html" />
-    <Document title="Run Page" href="caDSR_SentinelTool_OLH_V4.0.2.13.html" />
-    <Document title="Dates" href="caDSR_SentinelTool_OLH_V4.0.2.14.html" />
-    <Document title="Report Output" href="caDSR_SentinelTool_OLH_V4.0.2.15.html" />
+    <Document title="Login Page" href="caDSR_SentinelTool_OLH_V4.0.2.2.html" />
+    <Document title="Alerts Page" href="caDSR_SentinelTool_OLH_V4.0.2.3.html" />
+    <Document title="Viewing/Sorting Alert Definitions" href="caDSR_SentinelTool_OLH_V4.0.2.4.html" />
+    <Document title="Create caDSR Alert Definitions" href="caDSR_SentinelTool_OLH_V4.0.2.5.html" />
+    <Document title="Create Using Button" href="caDSR_SentinelTool_OLH_V4.0.2.6.html" />
+    <Document title="Edit Page" href="caDSR_SentinelTool_OLH_V4.0.2.7.html" />
+    <Document title="Properties Tab" href="caDSR_SentinelTool_OLH_V4.0.2.8.html" />
+    <Document title="Report Details Tab" href="caDSR_SentinelTool_OLH_V4.0.2.9.html" />
+    <Document title="Criteria Tab" href="caDSR_SentinelTool_OLH_V4.0.2.10.html" />
+    <Document title="Monitors Tab" href="caDSR_SentinelTool_OLH_V4.0.2.11.html" />
+    <Document title="Manual Alert Run Page" href="caDSR_SentinelTool_OLH_V4.0.2.12.html" />
+    <Document title="Report Output" href="caDSR_SentinelTool_OLH_V4.0.2.13.html" />
   </DocumentInfo>
-  <TopicMap />
+  <TopicMap>
+    <Topic name="manual_run" href="caDSR_SentinelTool_OLH_V4.0.2.12.html#1107871" />
+  </TopicMap>
 </WebWorksHelpBook>

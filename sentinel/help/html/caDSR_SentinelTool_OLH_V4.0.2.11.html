@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <!-- MOTW-DISABLED saved from url=(0014)about:internet -->
-    <title>Criteria Tab</title>
+    <title>Monitors Tab</title>
     <link rel="StyleSheet" href="css/caDSR_SentinelTool_OLH_V4.0.css" type="text/css" media="all" />
     <link rel="StyleSheet" href="css/webworks.css" type="text/css" media="all" />
     <script type="text/javascript" language="JavaScript1.2" src="wwhdata/common/context.js"></script>
@@ -28,53 +28,85 @@
   <body style="" onLoad="WWHUpdate();" onUnload="WWHUnload();" onKeyDown="WWHHandleKeyDown((document.all||document.getElementById||document.layers)?event:null);" onKeyPress="WWHHandleKeyPress((document.all||document.getElementById||document.layers)?event:null);" onKeyUp="WWHHandleKeyUp((document.all||document.getElementById||document.layers)?event:null);">
     <br />
     <div class="WebWorks_Breadcrumbs" style="text-align: left;">
-      <a class="WebWorks_Breadcrumb_Link" href="caDSR_SentinelTool_OLH_V4.0.2.1.html#1107812">Using the caDSR Sentinel Tool</a> &gt; Criteria Tab </div>
+      <a class="WebWorks_Breadcrumb_Link" href="caDSR_SentinelTool_OLH_V4.0.2.1.html#1107844">Using the caDSR Sentinel Tool</a> &gt; Monitors Tab </div>
     <hr align="left" />
     <blockquote>
-      <div class="Heading1"><a name="1107812">Criteria Tab </a></div>
-      <div class="Body_Text"><a name="1107817">The Criteria Tab contains attributes controlling the Alert Report scope.<img id="1111225" class="Default" src="images/edit4.jpg" width="328" height="379" style="display: block; float: none; left: 0.0; text-align: left; top: 0.0;" /></a></div>
-      <div class="Body_Text"><a name="1111266">All lists on this page support multiple selections using standard selection key </a>combinations using the mouse, Ctrl and Shift. </div>
-      <div class="Run-In"><a name="1107818">Select Context(s) </a></div>
-      <div class="Body_Text"><a name="1107819">Limit the report scope to records directly or indirectly associated </a>to one or more Contexts. A record is directly associated when Owned By a Context, e.g. a Data Element. A record is indirectly associated when it is referenced by a record Owned By a Context, e.g. a Value Domain associated to a Data Element in the selected Context. </div>
-      <div class="Run-In"><a name="1107820">Select Protocol(s) </a></div>
-      <div class="Body_Text"><a name="1107821">Limit the report scope to records directly or indirectly associated </a>to one or more Protocols. </div>
-      <div class="Run-In"><a name="1107822">Select Form(s)/Template(s) </a></div>
-      <div class="Body_Text"><a name="1107823">Limit the report scope to records directly or indirectly </a>associated to one or more Forms or Templates. </div>
-      <div class="Run-In"><a name="1107824">Select Classification Scheme(s) </a></div>
-      <div class="Body_Text"><a name="1107825">Limit the report scope to records directly or </a>indirectly associated to one or more Classification Schemes. </div>
-      <div class="Run-In"><a name="1107826">Select Classification Scheme Item(s) </a></div>
-      <div class="Body_Text"><a name="1107827">Limit the report scope to records directly or </a>indirectly associated to one or more Classification Scheme Items. </div>
-      <div class="Run-In"><a name="1107828">Select Administered Component Types </a></div>
-      <div class="Body_Text"><a name="1107829">Limit the report scope to specific record </a>types. </div>
-      <div class="Run-In"><a name="1107830">Reporting Dates are compared to </a></div>
-      <div class="Body_Text"><a name="1107831">Limit the report scope by activity types, created </a>or changed, created only or changed only. This is the only single selection attribute on the page. </div>
-      <div class="Run-In"><a name="1107832">Select Workflow Status(es) </a></div>
-      <div class="Body_Text"><a name="1107833">Limit the report scope to records with a specific </a>Workflow Status. The Workflow Status must be equal to the selection(s) indicated during report generation to be eligible. </div>
-      <div class="Run-In"><a name="1107834">Select Registration Status(es) </a></div>
-      <div class="Body_Text"><a name="1107835">Limit the report scope to records with a specific </a>Registration Status. The Registration Status must be equal to the selection(s) indicated during report generation to be eligible. </div>
-      <div class="Run-In"><a name="1107836">Select Created By </a></div>
-      <div class="Body_Text"><a name="1107837">Limit the report scope to records created by the users selected. </a></div>
-      <div class="Run-In"><a name="1107838">Select Last Modified By </a></div>
-      <div class="Body_Text"><a name="1107839">Limit the report scope to records last modified by the users </a>selected. Some records only record the last user applying changes. Others keep a change history with the user making the change. When history records exist the scope includes all changes made by the users selected. </div>
-      <div class="Body_Text"><a name="1107840">Selections are combined using logical "OR" conditions for an attribute and logical </a>"AND" conditions for the criteria. For example, a selection of Contexts CTEP and CCR and a selection of Created By user Bob Marley will result in a scope set of: </div>
-      <div class="Body_Text"><a name="1107841">((Context equal "CTEP") or (Context equal "CCR")) and (Created By equal "Bob </a>Marley") </div>
-      <div class="Body_Text"><a name="1107842">The summary which appears on the Properties tab has been annotated to clearly </a>convey the interpretation of the criteria scope. The parentheses in this example illustrate the logical association of expressions. </div>
-      <div class="Note_Main_Body_outer" style="margin-left: 13px;">
-        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107843">
+      <div class="Heading1"><a name="1107844">Monitors Tab </a></div>
+      <div class="Body_Text"><a name="1107849">The Monitors tab contains selections that control the triggers for the alert report. <img id="1111303" class="Default" src="images/Edit-MonitorTab.gif" width="640" height="417" style="display: block; float: none; left: 0.0; text-align: left; top: 0.0;" /></a></div>
+      <div class="Body_Text"><a name="1116975">The selection combination on the Monitors tab triggers the alert report creation by </a>interrogating the data activities. When the selections are set to <span class="Bold">Any Change</span>, all activity within the scope defined on the Criteria tab will trigger creation of the report. This is the default setting for all new Alert Definitions. </div>
+      <div class="Body_Text"><a name="1116992">Selecting specific values for one or more of the statuses significantly limits the data </a>activities triggering report creation because a specific activity matching the selected value(s) must be found in the caDSR history for the reporting dates. For example, selecting the Workflow Status “RELEASED” will only trigger a report when this specific change is found in the history - other changes would not trigger a report creation. </div>
+      <div class="Body_Text"><a name="1116967">The lists on this page support multiple selections using the standard </a><span class="Keypress">Ctrl+Select</span> or <span class="Keypress">Shift+Select</span> method. </div>
+      <div class="Run-In"><a name="1107850">Workflow Status(es) </a></div>
+      <div class="Body_Text"><a name="1107851">Trigger an alert report when the Workflow Status is changed to </a>one of the selections, or any change if that option is selected. Selecting <span class="Bold">Ignore</span> causes the monitor to ignore any changes to this field as a trigger for the report.</div>
+      <div class="Run-In"><a name="1107852">Registration Status(es) </a></div>
+      <div class="Body_Text"><a name="1107853">Trigger an alert report when the Registration Status is </a>changed to one of the selections, or any change if that option is selected. Selecting <span class="Bold">Ignore</span> causes the monitor to ignore any changes to this field as a trigger for the report. </div>
+      <div class="Run-In"><a name="1107854">Version </a></div>
+      <div class="Body_Text"><a name="1108240">Trigger an alert report when the Version is changed in a way that meets the </a>selected version trigger: </div>
+      <div class="Bullet_outer" style="margin-left: 18pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1108242">
           <tr style="vertical-align: baseline;">
             <td>
-              <div class="Note_Main_Body_inner" style="width: 15px; white-space: nowrap;">
-                <span style="left: -20px; position: relative; top: 23px;">
-                  <img src="Lightbulb.gif" alt="*" id="bullet1107843" border="0" width="30" height="30" />
-                </span>
-              </div>
+              <div class="Bullet_inner" style="width: 18pt; white-space: nowrap;">•</div>
             </td>
             <td width="100%">
-              <div class="Note_Main_Body_inner"><a name="1107843">The Workflow Status and Registration Status on this tab are not related to the attributes </a>on the Monitors tab. On the Criteria tab these attributes define the current data scope. Selecting a specific value limits the scope using the current value not a previous value. On the Monitor tab these attributes define a specific change to trigger an Alert Report. </div>
+              <div class="Bullet_inner"><span class="Bold"><a name="1108242">Any Change:</a></span> Triggers a report for any and all value changes to the record property. </div>
             </td>
           </tr>
         </table>
       </div>
+      <div class="Bullet_outer" style="margin-left: 18pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107859">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_inner"><span class="Bold"><a name="1107859">Ignore: </a></span>Disables triggers for alert report creation for the record property. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Bullet_outer" style="margin-left: 18pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107861">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_inner"><span class="Bold"><a name="1107861">Whole Number Change: </a></span>Applies to Version number changes only, triggers a report when the record whole number part changes, decimal number part changes are ignored. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Bullet_outer" style="margin-left: 18pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107863">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_inner"><span class="Bold"><a name="1107863">Specific:</a></span> Applies to Version number changes only, used to indicate a specific version number to trigger the report creation. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Note_Main_Body_outer" style="margin-left: 13px;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107866">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Note_Main_Body_inner" style="width: 15px; white-space: nowrap;">
+                <span style="left: -20px; position: relative; top: 23px;">
+                  <img src="Lightbulb.gif" alt="*" id="bullet1107866" border="0" width="30" height="30" />
+                </span>
+              </div>
+            </td>
+            <td width="100%">
+              <div class="Note_Main_Body_inner"><a name="1107866">Some data is not logged in the caDSR history and will appear as “Details not available” </a>on an alert report. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Body_Text"><a name="1107867">See </a><span class="Emphasis" style="color: #515186;"><a href="javascript:WWHClickedPopup('caDSR_Sentinel_Tool_Help', 'caDSR_SentinelTool_OLH_V4.0.2.13.html#1114006', '');">Report Output</a></span> for more details. </div>
       <script type="text/javascript" language="JavaScript1.2">
         <!--
           // Clear related topics

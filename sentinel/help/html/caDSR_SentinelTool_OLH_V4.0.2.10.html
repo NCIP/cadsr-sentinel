@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <!-- MOTW-DISABLED saved from url=(0014)about:internet -->
-    <title>Report Details Tab</title>
+    <title>Criteria Tab</title>
     <link rel="StyleSheet" href="css/caDSR_SentinelTool_OLH_V4.0.css" type="text/css" media="all" />
     <link rel="StyleSheet" href="css/webworks.css" type="text/css" media="all" />
     <script type="text/javascript" language="JavaScript1.2" src="wwhdata/common/context.js"></script>
@@ -28,74 +28,53 @@
   <body style="" onLoad="WWHUpdate();" onUnload="WWHUnload();" onKeyDown="WWHHandleKeyDown((document.all||document.getElementById||document.layers)?event:null);" onKeyPress="WWHHandleKeyPress((document.all||document.getElementById||document.layers)?event:null);" onKeyUp="WWHHandleKeyUp((document.all||document.getElementById||document.layers)?event:null);">
     <br />
     <div class="WebWorks_Breadcrumbs" style="text-align: left;">
-      <a class="WebWorks_Breadcrumb_Link" href="caDSR_SentinelTool_OLH_V4.0.2.1.html#1107777">Using the caDSR Sentinel Tool</a> &gt; Report Details Tab </div>
+      <a class="WebWorks_Breadcrumb_Link" href="caDSR_SentinelTool_OLH_V4.0.2.1.html#1107812">Using the caDSR Sentinel Tool</a> &gt; Criteria Tab </div>
     <hr align="left" />
     <blockquote>
-      <div class="Heading1"><a name="1107777">Report Details Tab </a></div>
-      <div class="Body_Text"><a name="1107782">The Report Details Tab contains the properties controlling heading content and </a>distribution.<img id="1111180" class="Default" src="images/edit3.jpg" width="330" height="361" style="display: block; float: none; left: 0.0; text-align: left; top: 0.0;" /></div>
-      <div class="Run-In"><a name="1107783">Content </a></div>
-      <div class="Body_Text"><a name="1107784">Define the detail appearing on the report. </a></div>
-      <div class="Run-In"><a name="1107785">Include information … </a></div>
-      <div class="Body_Text"><a name="1107786">Select to include an expanded header at the top of the </a>report. The expanded header contains all the information appearing on the Properties Tab in addition to the standard information which includes the reporting date and the source database. Maximum number of levels … </div>
-      <div class="Body_Text"><a name="1107787">Set the stopping point on reporting the "Associated To" records. Each change in the </a>caDSR has a defined area of effect. The record containing the change is referred to as level 0 (zero). Records directly associated to it are a level 1 (one). Records associated to the associated records are a level 2, and so on. </div>
-      <div class="Body_Text"><a name="1111213">For example, a Value Domain is changed, it is level 0. The Data Elements referencing </a>the Value Domain are a level 1. The Modules, Class Scheme Items, etc that reference the Data Elements are a level 2. And so it continues throughout the database. Contexts appear at many levels due to the direct association between the Context and other records. </div>
-      <div class="Body_Text"><a name="1111214">Continuing the previous example, the Value Domain is directly associated to a Context </a>and so it will be a level 1. The Data Elements associated to the Value Domain are directly associated to Contexts and so it is also a level 2. This can also be visiualized as a series of rings originating at the changed record and expanding out. </div>
+      <div class="Heading1"><a name="1107812">Criteria Tab </a></div>
+      <div class="Body_Text"><a name="1107817">The Criteria tab contains configurable fields that control the scope of the information </a>returned in the alert report.<img id="1111225" class="Default" src="images/Edit-CriteriaTab.gif" width="526" height="480" style="display: block; float: none; left: 0.0; text-align: left; top: 0.0;" /></div>
+      <div class="Body_Text"><a name="1111266">All lists on this page support multiple selections using the standard </a><span class="Keypress">Ctrl+Select</span> or <span class="Keypress">Shift+Select</span> method. </div>
+      <div class="Run-In"><a name="1107818">Select Context(s) </a></div>
+      <div class="Body_Text"><a name="1107819">Limit the report scope to records directly or indirectly associated </a>to one or more Contexts. A record is directly associated when Owned By a Context, e.g. a Data Element. A record is indirectly associated when it is referenced by a record Owned By a Context, e.g. a Value Domain associated to a Data Element in the selected Context. </div>
+      <div class="Run-In"><a name="1107820">Select Protocol(s) </a></div>
+      <div class="Body_Text"><a name="1107821">Limit the report scope to records directly or indirectly associated </a>to one or more Protocols. </div>
+      <div class="Run-In"><a name="1107822">Select Form(s)/Template(s) </a></div>
+      <div class="Body_Text"><a name="1107823">Limit the report scope to records directly or indirectly </a>associated to one or more Forms or Templates. </div>
+      <div class="Run-In"><a name="1107824">Select Classification Scheme(s) </a></div>
+      <div class="Body_Text"><a name="1107825">Limit the report scope to records directly or </a>indirectly associated to one or more Classification Schemes. </div>
+      <div class="Run-In"><a name="1107826">Select Classification Scheme Item(s) </a></div>
+      <div class="Body_Text"><a name="1107827">Limit the report scope to records directly or </a>indirectly associated to one or more Classification Scheme Items. </div>
+      <div class="Run-In"><a name="1107828">Select Administered Component Types </a></div>
+      <div class="Body_Text"><a name="1107829">Limit the report scope to specific record </a>types. </div>
+      <div class="Run-In"><a name="1107830">Reporting Dates are compared to </a></div>
+      <div class="Body_Text"><a name="1107831">Limit the report scope by activity types, created </a>or changed, created only or changed only. This is the only single selection attribute on the page. </div>
+      <div class="Run-In"><a name="1107832">Select Workflow Status(es) </a></div>
+      <div class="Body_Text"><a name="1107833">Limit the report scope to records with a specific </a>Workflow Status. The Workflow Status must be equal to the selection(s) indicated during report generation to be eligible. </div>
+      <div class="Run-In"><a name="1107834">Select Registration Status(es) </a></div>
+      <div class="Body_Text"><a name="1107835">Limit the report scope to records with a specific </a>Registration Status. The Registration Status must be equal to the selection(s) indicated during report generation to be eligible. </div>
+      <div class="Run-In"><a name="1107836">Select Created By </a></div>
+      <div class="Body_Text"><a name="1107837">Limit the report scope to records created by the users selected. </a></div>
+      <div class="Run-In"><a name="1107838">Select Last Modified By </a></div>
+      <div class="Body_Text"><a name="1107839">Limit the report scope to records last modified by the users </a>selected. Some records only record the last user applying changes. Others keep a change history with the user making the change. When history records exist the scope includes all changes made by the users selected. </div>
+      <div class="Body_Text"><a name="1107840">Selections are combined using logical “OR” conditions for an attribute and logical </a>“AND” conditions for the criteria. For example, a selection of Contexts CTEP and CCR and a selection of Created By user Bob Marley will result in a scope set of: </div>
+      <div class="Body_Text"><a name="1107841">((Context equal “CTEP”) or (Context equal “CCR”)) and (Created By equal “Bob </a>Marley”) </div>
+      <div class="Body_Text"><a name="1107842">The summary which appears on the Properties tab has been annotated to clearly </a>convey the interpretation of the criteria scope. The parentheses in this example illustrate the logical association of expressions. </div>
       <div class="Note_Main_Body_outer" style="margin-left: 13px;">
-        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1108419">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107843">
           <tr style="vertical-align: baseline;">
             <td>
               <div class="Note_Main_Body_inner" style="width: 15px; white-space: nowrap;">
                 <span style="left: -20px; position: relative; top: 23px;">
-                  <img src="Lightbulb.gif" alt="*" id="bullet1108419" border="0" width="30" height="30" />
+                  <img src="Lightbulb.gif" alt="*" id="bullet1107843" border="0" width="30" height="30" />
                 </span>
               </div>
             </td>
             <td width="100%">
-              <div class="Note_Main_Body_inner"><a name="1108419">All Alert Definitions created prior to the Sentinel Tool 3.2 release have a default of nine </a>(9), show all collateral errects. </div>
+              <div class="Note_Main_Body_inner"><a name="1107843">The Workflow Status and Registration Status on this tab are not related to the attributes </a>on the Monitors tab. On the Criteria tab these attributes define the current data scope. Selecting a specific value limits the scope using the current value not a previous value. On the Monitor tab these attributes define a specific change to trigger an alert report. </div>
             </td>
           </tr>
         </table>
       </div>
-      <div class="Run-In"><a name="1107788">Distribution </a></div>
-      <div class="Body_Text"><a name="1107789">Define when and to whom reports are sent. </a></div>
-      <div class="Run-In"><a name="1107790">Send a report from … </a></div>
-      <div class="Body_Text"><a name="1107791">Choose whether a report is sent with every processing of the </a>Alert Definition or sent only when there is activity. To reduce e-mail traffic, select "… only when there is acitivity …". </div>
-      <div class="Run-In"><a name="1107792">Recipients </a></div>
-      <div class="Body_Text"><a name="1107793">The e-mail distribution list for Automated and Manually generated </a>reports. There are no limits on the list size or content. Add a recipient e-mail address by selecting a User Name, a Curators group or typing the address. A Process URL may also be entered. </div>
-      <div class="Run-In"><a name="1107794">Users </a></div>
-      <div class="Body_Text"><a name="1107795">The user accounts defined within the caDSR. The list displays the user name, </a>suffixed first by an asterisk when the account is missing the e-mail address and suffixed by the associated Curator group names as appropriate within parenthesis. If the e-mail address is missing the user may still be added as a Recipient. When the account profile is updated with an e-mail address, the user will begin receiving Alert Reports. </div>
-      <div class="Run-In"><a name="1107796">Curators </a></div>
-      <div class="Body_Text"><a name="1107797">The Curator groups derived from the user account profiles. A user is </a>included in a Curator group when the account is given any write permissions to the caDSR. Read only accounts are not included in any group. Selecting a Curator group as a recipient hides changes in the organization or assigned responsibilities. Alert Report e-mails to Curator groups are sent to all members except those listed below "Additional e-mail address". </div>
-      <div class="Run-In"><a name="1107798">Additional e-mail address and Process URL </a></div>
-      <div class="Body_Text"><a name="1107799">A desired recipients well formed e-</a>mail address or software well formed URL. This is often used to specify alternate e-mail addresses, temporary recipients and software process applications. The user account profile supports a single e-mail address. Additional e-mail addresses must be entered here, e.g. for John Smith to recieve an Alert Report at both work and home, the user account profile may contain one and the other entered here. Alternatively, the user account profile may not have an e-mail address and both are entered here. If entering a process URL, please contact the NCI Help Desk for programming design requirements and instructions on the target server application. </div>
-      <div class="Run-In"><a name="1107800">The following users only receive … </a></div>
-      <div class="Body_Text"><a name="1107801">The users who have intentionally requested </a>exclusion from the Recipient Curator groups. These users only receive Alert Report e-mails when included by name or by e-mail address in the Recipient list. </div>
-      <div class="Body_Text"><a name="1107802">Once a selection is made or e-mail address is entered, select "Add" to insert the </a>address into the recipients. Select a recipient and "Remove" to stop Alert Report e-mail distribution to an address. </div>
-      <div class="Note_Main_Body_outer" style="margin-left: 13px;">
-        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1108487">
-          <tr style="vertical-align: baseline;">
-            <td>
-              <div class="Note_Main_Body_inner" style="width: 15px; white-space: nowrap;">
-                <span style="left: -20px; position: relative; top: 23px;">
-                  <img src="Lightbulb.gif" alt="*" id="bullet1108487" border="0" width="30" height="30" />
-                </span>
-              </div>
-            </td>
-            <td width="100%">
-              <div class="Note_Main_Body_inner"><a name="1108487">During the Automated Generation process, Alert Reports are bundled into a single e-</a>mail per address. </div>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="Run-In"><a name="1107803">To: </a></div>
-      <div class="Body_Text"><a name="1107804">A sample e-mail "To:" address displaying the selected recipients. </a></div>
-      <div class="Run-In"><a name="1107805">Subject: </a></div>
-      <div class="Body_Text"><a name="1107806">The "Subject:" appearing on Alert Report distribution e-mails. </a></div>
-      <div class="Run-In"><a name="1107807">(enter static comment here) </a></div>
-      <div class="Body_Text"><a name="1107808">Text entered in this field appears in the Report header. </a>It does not appear in the distribution e-mails. As noted above, a recipient may have multiple report references in a single e-mail, consequently the text is included in the report. HTML tags are permitted within the text. </div>
-      <div class="Run-In"><a name="1107809">Report Examples </a></div>
-      <div class="Body_Text"><a name="1107810">Opens a page containing two (2) Alert Report examples. </a></div>
-      <div class="Body_Text"><a name="1107811">Alert Report distribution e-mails contain a brief general introduction and instructions </a>followed by the Alert Report links. Please refer to the <span class="Emphasis" style="color: #515186;"><a href="javascript:WWHClickedPopup('caDSR_Sentinel_Tool_Help', 'caDSR_SentinelTool_OLH_V4.0.2.15.html#1107890', '');">Report Output</a></span> section for more information. </div>
       <script type="text/javascript" language="JavaScript1.2">
         <!--
           // Clear related topics
