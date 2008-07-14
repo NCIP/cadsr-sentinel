@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertImpl.java,v 1.13 2008-05-01 20:18:17 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertImpl.java,v 1.14 2008-07-14 14:52:46 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -55,9 +55,9 @@ public class DSRAlertImpl
     public static DSRAlert factory(Connection conn_)
     {
         String select = "select value from sbrext.tool_options_view_ext "
-            + "where tool_name = 'SENTINEL' and property = 'URL'";
+            + "where tool_name = 'SENTINEL' and property = 'URL' ";
         
-        String rc = null;
+        String url = null;
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -66,7 +66,7 @@ public class DSRAlertImpl
             pstmt = conn_.prepareStatement(select);
             rs = pstmt.executeQuery();
             if (rs.next())
-                rc = rs.getString(1);
+                url = rs.getString(1);
         }
         catch (SQLException ex)
         {
@@ -86,7 +86,7 @@ public class DSRAlertImpl
             }
         }
 
-        return (rc == null) ? null : new DSRAlertV1(rc);
+        return (url == null) ? null : new DSRAlertV1(url);
     }
     
     private static final Logger _logger = Logger.getLogger(DSRAlertImpl.class.getName());

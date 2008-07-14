@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.19 2008-05-01 20:18:17 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.20 2008-07-14 14:52:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -8636,5 +8637,99 @@ public class DBAlertOracle implements DBAlert
             total += map.length;
         }
         return concatMap;
+    }
+    
+    /**
+     * Get the Sentinel Help properties from the tool options table.
+     * 
+     * @param ds_ the datasource for the connection
+     * @return the map of property values
+     */
+    public HashMap<String, String> getHelpProps(DataSource ds_)
+    {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        HashMap<String, String> props = new HashMap<String, String>();
+        
+        try
+        {
+            conn = ds_.getConnection();
+            pstmt = conn.prepareStatement("select property, value from sbrext.tool_options_view_ext where tool_name = 'SENTINEL' and property like 'HELP.%' ");
+            rs = pstmt.executeQuery();
+            while (rs.next())
+            {
+                props.put(rs.getString(1), rs.getString(2));
+            }
+        }
+        catch (Exception ex)
+        {
+            // Don't care, this is non-critical, continue processing.
+        }
+        finally
+        {
+            if (rs != null)
+            {
+                try { rs.close(); } catch(Exception ex) { }
+            }
+            if (pstmt != null)
+            {
+                try { pstmt.close(); } catch(Exception ex) { }
+            }
+            if (conn != null)
+            {
+                try { conn.close(); } catch(Exception ex) { }
+            }
+        }
+        
+        return props;
+    }
+    
+    /**
+     * Get the CDE Browser Url
+     * 
+     * @param conn_ an existing database connection
+     * @return the URL
+     */
+    public String getCdeBrowserUrl(Connection conn_)
+    {
+        String url = null;
+        String select = "select value from sbrext.tool_options_view_ext "
+            + "where tool_name = 'CDEBrowser' and property = 'URL'";
+        
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try
+        {
+            pstmt = conn_.prepareStatement(select);
+            rs = pstmt.executeQuery();
+            if (rs.next())
+            {
+                url = rs.getString(1);
+                if (url == null || url.length() == 0)
+                    url = null;
+            }
+        }
+        catch (SQLException ex)
+        {
+            // Ooops...
+            int errorCode = ex.getErrorCode();
+            String errorMsg = errorCode + ": " + select
+                + "\n\n" + ex.toString();
+            _logger.error(errorMsg);
+        }
+        finally
+        {
+            if (rs != null)
+            {
+                try { rs.close(); } catch(Exception ex) { }
+            }
+            if (pstmt != null)
+            {
+                try { pstmt.close(); } catch(Exception ex) { }
+            }
+        }
+        
+        return url;
     }
 }

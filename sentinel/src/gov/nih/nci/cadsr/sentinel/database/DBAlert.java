@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.7 2007-12-17 18:13:54 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.8 2008-07-14 14:52:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -10,6 +10,7 @@ import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.ConceptItem;
 import java.sql.Connection;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.servlet.ServletContext;
@@ -2093,4 +2094,20 @@ public interface DBAlert
      * The global data source within JBoss
      */
     public static final String _DATASOURCE = "cadsrsentinelDataSource";
+    
+    /**
+     * Get the Sentinel Help properties from the tool options table.
+     * 
+     * @param ds_ the datasource for the connection
+     * @return the map of property values
+     */
+    public HashMap<String, String> getHelpProps(DataSource ds_);
+    
+    /**
+     * Get the CDE Browser Url
+     * 
+     * @param conn_ an existing database connection
+     * @return the URL
+     */
+    public String getCdeBrowserUrl(Connection conn_);
 }

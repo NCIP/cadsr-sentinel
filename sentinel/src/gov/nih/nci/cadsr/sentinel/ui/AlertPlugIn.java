@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.10 2008-07-14 14:13:06 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.11 2008-07-14 14:52:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -9,15 +9,13 @@ import java.util.Enumeration;
 import java.util.HashMap;
 
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
+import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.Globals;
@@ -113,9 +111,6 @@ public class AlertPlugIn implements PlugIn
     {
         // Have to verify the context and datasource.
         Context envContext = null;
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try 
         {
             envContext = new InitialContext();
@@ -128,14 +123,9 @@ public class AlertPlugIn implements PlugIn
                     _logger.info("Using JBoss datasource configuration. " + _dataSource);
                 }
                 
-                conn = ds.getConnection();
-                HashMap<String, String> props = new HashMap<String, String>();
-                pstmt = conn.prepareStatement("select property, value from sbrext.tool_options_view_ext where tool_name = 'SENTINEL' and property like 'HELP.%' ");
-                rs = pstmt.executeQuery();
-                while (rs.next())
-                {
-                    props.put(rs.getString(1), rs.getString(2));
-                }
+                DBAlert db = DBAlertUtil.factory();
+                
+                HashMap<String, String> props = db.getHelpProps(ds);
                 _helpUrlRoot = props.get(_helpRoot);
                 if (_helpUrlRoot == null || _helpUrlRoot.length() == 0)
                     _helpUrlRoot = "/cadsrsentinel/html/";
@@ -146,21 +136,6 @@ public class AlertPlugIn implements PlugIn
         {
             String stErr = "Error retrieving datasource [" + _dataSource + "] from JBoss [" + ex.getMessage() + "].";
             _logger.error(stErr, ex);
-        }
-        finally
-        {
-            if (rs != null)
-            {
-                try { rs.close(); } catch(Exception ex) { }
-            }
-            if (pstmt != null)
-            {
-                try { pstmt.close(); } catch(Exception ex) { }
-            }
-            if (conn != null)
-            {
-                try { conn.close(); } catch(Exception ex) { }
-            }
         }
     }
     

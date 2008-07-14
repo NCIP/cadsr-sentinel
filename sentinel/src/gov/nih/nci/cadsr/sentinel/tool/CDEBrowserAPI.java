@@ -2,17 +2,15 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/CDEBrowserAPI.java,v 1.14 2008-05-01 20:18:17 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/CDEBrowserAPI.java,v 1.15 2008-07-14 14:52:46 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import gov.nih.nci.cadsr.sentinel.database.DBAlert;
+import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 
 /**
  * This class encapsulates remote calls to the CDE Browser.
@@ -22,6 +20,10 @@ import org.apache.log4j.Logger;
 
 public class CDEBrowserAPI
 {
+    private String _url;
+    
+    private boolean _isPresent;
+
     /**
      * Constructor.
      * 
@@ -40,41 +42,9 @@ public class CDEBrowserAPI
      */
     public CDEBrowserAPI(Connection conn_)
     {
-        _isPresent = false;
-        String select = "select value from sbrext.tool_options_view_ext "
-            + "where tool_name = 'CDEBrowser' and property = 'URL'";
-        
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try
-        {
-            pstmt = conn_.prepareStatement(select);
-            rs = pstmt.executeQuery();
-            if (rs.next())
-            {
-                _url = rs.getString(1);
-                _isPresent = true;
-            }
-        }
-        catch (SQLException ex)
-        {
-            // Ooops...
-            int errorCode = ex.getErrorCode();
-            String errorMsg = errorCode + ": " + select
-                + "\n\n" + ex.toString();
-            _logger.error(errorMsg);
-        }
-        finally
-        {
-            if (rs != null)
-            {
-                try { rs.close(); } catch(Exception ex) { }
-            }
-            if (pstmt != null)
-            {
-                try { pstmt.close(); } catch(Exception ex) { }
-            }
-        }
+        DBAlert db = DBAlertUtil.factory();
+        _url = db.getCdeBrowserUrl(conn_);
+        _isPresent = (_url != null);
     }
     
     /**
@@ -113,10 +83,4 @@ public class CDEBrowserAPI
     {
         return _isPresent;
     }
-    
-    private String _url;
-    
-    private boolean _isPresent;
-    
-    private static final Logger _logger = Logger.getLogger(CDEBrowserAPI.class.getName());
 }
