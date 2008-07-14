@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.9 2008-07-11 16:35:33 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.10 2008-07-14 14:13:06 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -130,9 +130,7 @@ public class AlertPlugIn implements PlugIn
                 
                 conn = ds.getConnection();
                 HashMap<String, String> props = new HashMap<String, String>();
-                pstmt = conn.prepareStatement("select property, value from sbrext.tool_options_view_ext where tool_name = 'SENTINEL' and property in (?, ?) ");
-                pstmt.setString(1, _helpRoot);
-                pstmt.setString(2, _helpHome);
+                pstmt = conn.prepareStatement("select property, value from sbrext.tool_options_view_ext where tool_name = 'SENTINEL' and property like 'HELP.%' ");
                 rs = pstmt.executeQuery();
                 while (rs.next())
                 {
