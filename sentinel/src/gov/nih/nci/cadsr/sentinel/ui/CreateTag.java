@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/CreateTag.java,v 1.7 2008-06-20 20:44:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/CreateTag.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -10,7 +10,9 @@ import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import java.io.IOException;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * The JSP tags specific to create.jsp. <dtags:create section="script" />
@@ -19,16 +21,24 @@ import javax.servlet.jsp.JspWriter;
  * @author Larry Hebel
  */
 
-public class CreateTag extends AlertRootTag
+public class CreateTag extends TagSupport
 {
-    private static final long serialVersionUID = -6781255356606529465L;
-
     /**
      * Constructor.
      */
     public CreateTag()
     {
-        super();
+    }
+
+    /**
+     * Set section name.
+     * 
+     * @param section_
+     *        Either "script" or "field".
+     */
+    public void setSection(String section_)
+    {
+        _section = section_;
     }
 
     /**
@@ -36,8 +46,10 @@ public class CreateTag extends AlertRootTag
      * 
      * @return EVAL_PAGE to continue processing the JSP.
      */
-    public int doEnd()
+    public int doEndTag()
     {
+        HttpSession session = pageContext.getSession();
+        _ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
         String temp = null;
 
         try
@@ -84,11 +96,7 @@ public class CreateTag extends AlertRootTag
         String option1 = "\"Criteria:\\nContext must be " + contexts
             + "\\n\\nMonitors:\\nAll Change Activities\",\n";
 
-        AlertPlugIn api = (AlertPlugIn) pageContext.getServletContext().getAttribute(DBAlert._DATASOURCE);
-        
-        String temp =
-            "var helpUrl = \"" + api.getHelpUrl() + "\";\n"
-            + "var Muserid = \"" + _ub.getUserName() + "\";\n"
+        String temp = "var Muserid = \"" + _ub.getUserName() + "\";\n"
             + "var Mdesc = [\n" + "\" \",\n" + option1 + "\" \",\n"
             + "\" \",\n" + "\" \",\n" + "\"?\",\n"
             + "\"Criteria:\\nCreated By must be " + _ub.getUserName()
@@ -105,8 +113,25 @@ public class CreateTag extends AlertRootTag
      */
     private String getField()
     {
-        String temp = "<input type=\"hidden\" name=\"sessionKey\" value=\""
-            + _ub.resetKey() + "\">\n";
+        String temp = "<input type=hidden name=sessionKey value=\""
+            + _ub.getKey() + "\">\n";
         return temp;
     }
+
+    /**
+     * Standard tag release.
+     */
+    public void release()
+    {
+        _section = null;
+        _ub = null;
+        super.release();
+    }
+
+    // Class data.
+    private String    _section;
+
+    private AlertBean _ub;
+
+    private static final long serialVersionUID = -6781255356606529465L;
 }

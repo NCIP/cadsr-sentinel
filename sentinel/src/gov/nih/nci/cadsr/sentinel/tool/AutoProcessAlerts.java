@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.31 2008-05-23 15:40:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.27 2008-01-21 15:57:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -19,7 +19,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -1180,86 +1179,85 @@ public class AutoProcessAlerts
     }
 
     /**
-     * Create/Run the Audit Reports
+     * Process initialization after the database connection is open.
      */
     private void createAuditReports()
     {
         // During an Auto Run report the statistics.
-        if (_id.charAt(0) != 'A')
-            return;
-
-        if (_audits == null || _audits.length == 0)
+        if (_id.charAt(0) == 'A')
         {
-            _logSummary.writeHeading("No Audit Reports are defined for this run.");
-            return;
+            if (_audits == null || _audits.length == 0)
+            {
+                _logSummary.writeHeading("No Audit Reports are defined for this run.");
+                return;
+            }
+
+            _logAudits = new AlertOutput(_work, _http, "Audits", _version);
+            _logSummary.writeHeading("Audit Report is located at <a href=\""
+                + _logAudits.getHttpLink() + "\" target=\"_blank\">"
+                + _logAudits.getHttpLink() + "</a>");
+
+            _logAudits.writeParagraph1("Database: " + _dbname + " (" + _dsurl + ")");
+
+            String[] rows;
+            int colcnt;
+            String text;
+            int index = 0;
+            String errorPrefix = "<b>Error:</b> <i>";
+
+            String splitPattern = AuditReport.getSplitPattern();
+
+            for (index = 0; index < _audits.length; ++index)
+            {
+                try
+                {
+                    AuditReport ar = (AuditReport) Class.forName(_audits[index]).newInstance();
+                    ar.setDB(_db);
+                    rows = ar.getReportRows();
+                    colcnt = rows[0].split(splitPattern).length;
+                    String prefix = AuditReport.formatSectionTop(_auditTitles[index], index);
+                    String suffix = AuditReport.formatSectionBottom();
+                    text = AuditReport.formatHeader(
+                        _auditTitles[index],
+                        (ar.okToDisplayCount()) ? rows.length : -1,
+                        colcnt, index);
+                    text = text + AuditReport.formatRows(rows);
+                    _logAudits.writeMatrix(prefix, text, colcnt, ar.rightJustifyLastColumn(), suffix);
+                }
+                catch (InstantiationException ex)
+                {
+                    _logSummary.writeError(ex.toString());
+                    _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
+                    _logger.error(ex.toString(), ex);
+                }
+                catch (IllegalAccessException ex)
+                {
+                    _logSummary.writeError(ex.toString());
+                    _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
+                    _logger.error(ex.toString(), ex);
+                }
+                catch (ClassNotFoundException ex)
+                {
+                    _logSummary.writeError(ex.toString());
+                    _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
+                    _logger.error(ex.toString(), ex);
+                }
+                catch (ClassCastException ex)
+                {
+                    _logSummary.writeError("Class " + _audits[index] + " does not extend class AuditReport: " + ex.toString());
+                    _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
+                    _logger.error(ex.toString(), ex);
+                }
+                catch (Exception ex)
+                {
+                    _logSummary.writeError(ex.toString());
+                    _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
+                    _logger.error(ex.toString(), ex);
+                }
+            }
+
+            _logAudits.close();
         }
-
-        _logAudits = new AlertOutput(_work, _http, "Audits", _version);
-        _logSummary.writeHeading("Audit Report is located at <a href=\""
-            + _logAudits.getHttpLink() + "\" target=\"_blank\">"
-            + _logAudits.getHttpLink() + "</a>");
-
-        _logAudits.writeParagraph1("Database: " + _dbname + " (" + _dsurl + ")");
-
-        String[] rows;
-        int colcnt;
-        String text;
-        int index = 0;
-        String errorPrefix = "<b>Error:</b> <i>";
-
-        String splitPattern = AuditReport.getSplitPattern();
-
-        for (index = 0; index < _audits.length; ++index)
-        {
-            try
-            {
-                AuditReport ar = (AuditReport) Class.forName(_audits[index]).newInstance();
-                ar.setDB(_db);
-                rows = ar.getReportRows();
-                colcnt = rows[0].split(splitPattern).length;
-                String prefix = AuditReport.formatSectionTop(_auditTitles[index], index);
-                String suffix = AuditReport.formatSectionBottom();
-                text = AuditReport.formatHeader(
-                    _auditTitles[index],
-                    (ar.okToDisplayCount()) ? rows.length : -1,
-                    colcnt, index);
-                text = text + AuditReport.formatRows(rows);
-                _logAudits.writeMatrix(prefix, text, colcnt, ar.rightJustifyLastColumn(), suffix);
-            }
-            catch (InstantiationException ex)
-            {
-                _logSummary.writeError(ex.toString());
-                _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
-                _logger.error(ex.toString(), ex);
-            }
-            catch (IllegalAccessException ex)
-            {
-                _logSummary.writeError(ex.toString());
-                _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
-                _logger.error(ex.toString(), ex);
-            }
-            catch (ClassNotFoundException ex)
-            {
-                _logSummary.writeError(ex.toString());
-                _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
-                _logger.error(ex.toString(), ex);
-            }
-            catch (ClassCastException ex)
-            {
-                _logSummary.writeError("Class " + _audits[index] + " does not extend class AuditReport: " + ex.toString());
-                _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
-                _logger.error(ex.toString(), ex);
-            }
-            catch (Exception ex)
-            {
-                _logSummary.writeError(ex.toString());
-                _logAudits.writeParagraph1(errorPrefix + _auditTitles[index] + ":</i> " + ex.toString());
-                _logger.error(ex.toString(), ex);
-            }
-        }
-
-        _logAudits.close();
-
     }
 
     /**
@@ -1841,7 +1839,7 @@ public class AutoProcessAlerts
             _style = "";
         }
         
-        _logger.info("Version " + _version);
+        _logger.info("Version " + _version.replace("&nbsp;", " "));
 
         // Be sure we have a database connection.
         String errMsg = null;
@@ -2123,22 +2121,18 @@ public class AutoProcessAlerts
         {
             try
             {
-                // open the process URL
                 URL pURL = new URL(_processURL);
-                HttpURLConnection http = (HttpURLConnection) pURL.openConnection();
-                BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream()));
+                // open the process URL
+                BufferedReader in = new BufferedReader(new InputStreamReader(pURL.openStream()));
                 String inputLine;
                 String outputLine = _processURL + "<br/>\n";
-                
-                // Only an HTTP_OK is considered successful.
-                Vector<String> msgs = (http.getResponseCode() == HttpURLConnection.HTTP_OK) ? _urlMsgsInfo : _urlMsgsErr;
 
                 // read from the process URL and write the acknowledgement message to the log
                 while ((inputLine = in.readLine()) != null)
                 {
                     outputLine += inputLine.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "<br/>\n";
                 }
-                msgs.add("Notified Process URL : " + outputLine);
+                _urlMsgsInfo.add("Notified Process URL : " + outputLine);
 
                 in.close();
             }
@@ -2265,17 +2259,6 @@ public class AutoProcessAlerts
     }
 
     /**
-     * Exists solely to avoid compiler warnings - Java has some issues.
-     * @param x an object
-     * @return a casted object
-     */
-    @SuppressWarnings("unchecked")
-    private static Stack<RepRows> cStack(Object x)
-    {
-        return (Stack<RepRows>)x;
-    }
-
-    /**
      * Dump the report records to output.
      *
      * @param save_
@@ -2295,7 +2278,7 @@ public class AutoProcessAlerts
         if (hasProcesses)
         {
             // Copy the stack to another stack as it is also required for xml generation
-            xmlSave = cStack(save_.clone());
+            xmlSave = (Stack<RepRows>) save_.clone();
         }
 
         // Do all these only if the alert has a receipient which is an email

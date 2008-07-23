@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.7 2008-06-20 20:44:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -11,7 +11,9 @@ import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import java.io.IOException;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.Globals;
@@ -22,16 +24,24 @@ import org.apache.struts.Globals;
  * @author Larry Hebel
  */
 
-public class ListTag extends AlertRootTag
+public class ListTag extends TagSupport
 {
-    private static final long serialVersionUID = -5247677342477707453L;
-
     /**
      * Constructor.
      */
     public ListTag()
     {
-        super();
+    }
+
+    /**
+     * Set the section.
+     * 
+     * @param section_
+     *        Either "init", "table", "field", "button", "script" or "info".
+     */
+    public void setSection(String section_)
+    {
+        _section = section_;
     }
 
     /**
@@ -39,8 +49,10 @@ public class ListTag extends AlertRootTag
      * 
      * @return EVAL_PAGE to continue processing the JSP.
      */
-    public int doEnd()
+    public int doEndTag()
     {
+        HttpSession session = pageContext.getSession();
+        _ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
         String temp = null;
 
         try
@@ -86,11 +98,11 @@ public class ListTag extends AlertRootTag
      */
     private String getField()
     {
-        return "\n<input type=\"hidden\" name=\"sessionKey\" value=\"" + _ub.resetKey()
-            + "\"/>\n" + "<input type=\"hidden\" name=\"listShow\" value=\""
-            + _ub.getListShow() + "\"/>\n"
+        return "\n<input type=hidden name=sessionKey value=\"" + _ub.getKey()
+            + "\">\n" + "<input type=hidden name=listShow value=\""
+            + _ub.getListShow() + "\">\n"
             + "<input type=hidden name=rowCount value=\""
-            + pageContext.getRequest().getAttribute("count") + "\"/>";
+            + pageContext.getRequest().getAttribute("count") + "\">";
     }
 
     /**
@@ -119,16 +131,12 @@ public class ListTag extends AlertRootTag
     {
         String temp = (String) pageContext.getRequest().getAttribute(
             Constants._ACTSAVE);
-
-        AlertPlugIn api = (AlertPlugIn) pageContext.getServletContext().getAttribute(DBAlert._DATASOURCE);
-
         String script =
-            "var helpUrl = \"" + api.getHelpUrl() + "\";\n"
-            + "var Muserid = \"" + _ub.getUserUpper() + "\";\n"
+            "var Muserid = \"" + _ub.getUserUpper() + "\";\n"
             + "var Madmin = " + _ub.isAdmin() + ";\n"
             + "\nfunction cmdList() { "
             + "checkCount = 0; "
-            + "listForm.listShow.value = (listForm.listShow.value == \"" + AlertBean._SHOWPRIV + "\") ? \"" + AlertBean._SHOWALL + "\" : \"" + AlertBean._SHOWPRIV + "\"; "
+            + "listForm.listShow.value = (listForm.listShow.value == \"p\") ? \"a\" : \"p\"; "
             + "listForm.submit(); }";
 
         if (temp == null)
@@ -274,4 +282,21 @@ public class ListTag extends AlertRootTag
 
         return temp;
     }
+
+    /**
+     * Standard release method.
+     */
+    public void release()
+    {
+        _section = null;
+        _ub = null;
+        super.release();
+    }
+
+    // Class data.
+    private String    _section;
+
+    private AlertBean _ub;
+
+    private static final long serialVersionUID = -5247677342477707453L;
 }

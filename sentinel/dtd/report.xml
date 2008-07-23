@@ -10,7 +10,7 @@
 <cadsr>
     <!-- Identify the Alert Report output.
     -->
-    <alertReport softwareName="NCI caDSR Sentinel Report Generator" softwareVersion="4.0.0.0">
+    <alertReport softwareName="NCI caDSR Sentinel Report Generator" softwareVersion="3.2.0.2">
 
         <!-- Describe the database used as the source of the data.
         -->

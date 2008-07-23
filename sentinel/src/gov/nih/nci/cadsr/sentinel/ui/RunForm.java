@@ -1,14 +1,17 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/RunForm.java,v 1.3 2008-05-20 21:41:20 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/RunForm.java,v 1.2 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
 
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 /**
  * Validate the run.jsp form.
@@ -16,14 +19,13 @@ import org.apache.struts.action.ActionMapping;
  * @author Larry Hebel
  */
 
-public class RunForm extends AlertRootForm
+public class RunForm extends ActionForm
 {
     /**
      * Constructor.
      */
     public RunForm()
     {
-        super();
         _recipients = String.valueOf(_RECIPIENTS);
         _nextScreen = Constants._ACTRUN;
     }
@@ -92,25 +94,55 @@ public class RunForm extends AlertRootForm
     }
 
     /**
+     * Get the next action/screen name.
+     * 
+     * @return The action/screen name.
+     */
+    public String getNextScreen()
+    {
+        return _nextScreen;
+    }
+
+    /**
+     * Set the next action/screen name to transfer control to.
+     * 
+     * @param val_
+     *        The action/screen name.
+     */
+    public void setNextScreen(String val_)
+    {
+        _nextScreen = val_;
+    }
+
+    /**
      * Validate the page contents.
      * 
      * @param mapping_
      *        The action mapping from the struts-config.xml.
      * @param request_
      *        The servlet request object.
-     * @param ub_ the user AlertBean
-     * @param errors_ the current errors list
      * @return ActionErrors if something isn't quite right.
      */
     public ActionErrors validate(ActionMapping mapping_,
-        HttpServletRequest request_, AlertBean ub_, ActionErrors errors_)
+        HttpServletRequest request_)
     {
+        ActionErrors errors = new ActionErrors();
+
+        HttpSession session = request_.getSession();
+        AlertBean ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
+        if (ub == null)
+        {
+            // Must start at logon.
+            errors.add("bean", new ActionMessage("error.nobean"));
+            return errors;
+        }
+
         // If the user leaves out a date we will use the most appropriate
         // default.
         if (_start == null || _start.length() == 0)
-            _start = ub_.getWorking().getADate();
+            _start = ub.getWorking().getADate();
 
-        return errors_;
+        return errors;
     }
 
     // Class data.
@@ -119,6 +151,8 @@ public class RunForm extends AlertRootForm
     private String _start;
 
     private String _end;
+
+    private String _nextScreen;
     
     /**
      * The recipients option value to send the report to the Creator only. 

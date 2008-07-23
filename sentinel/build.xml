@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.143 2008-07-09 15:37:49 cvsuser Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.129 2008-01-31 22:25:03 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -7,11 +7,6 @@
         Build and deploy the caDSR Sentinel Alert Tool
     </description>
     <!-- set global properties for this build -->
-    <tstamp/>
-    
-    <property name="appl.release" value="4.0.0.0" />
-    <property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}"/>
-
     <property name="PROP.FILE" location="build.properties" />
     <property file="${PROP.FILE}" />
     <echo>
@@ -115,7 +110,6 @@
     <filter token="TIER.NAME" value="${TIER.NAME}" />
     <filter token="TOOL.LOG.DIR" value="${TOOL.LOG.DIR}" />
     <filter token="JBOSS.LOG.DIR" value="${JBOSS.LOG.DIR}" />
-    <filter token="appl.version" value="${appl.version}" />
 
     <path id="libpath">
         <fileset dir="${lib.dir}">
@@ -148,9 +142,6 @@
             <compilerarg line="-Xlint:unchecked" />
             <classpath refid="libpath" />
         </javac>
-        <copy todir="${classes.dir}">
-            <fileset dir="sdkapi" includes="**/*" />
-        </copy>
     </target>
 
     <target name="-assemble" depends="-compile,-prop-check" description="Assembles the deployment parts into the artifacts folders.">
@@ -202,41 +193,18 @@
             <fileset file="conf/template.log4j-autorun.xml" />
         </copy>
         <copy todir="${artifacts.dir}/bin">
-            <fileset file="${lib.dir}/acegi-security-1.0.4.jar" />
             <fileset file="${lib.dir}/activation.jar" />
             <fileset file="${lib.dir}/asm.jar" />
-            <fileset file="${lib.dir}/castor-1.0.2.jar" />
+            <fileset file="${lib.dir}/cacore32-client.jar" />
             <fileset file="${lib.dir}/cglib-2.1.3.jar" />
-            <fileset file="${lib.dir}/commons-collections-3.2.jar" />
-            <fileset file="${lib.dir}/commons-logging-1.1.jar" />
-            <fileset file="${lib.dir}/commons-pool-1.3.jar" />
-            <fileset file="${lib.dir}/dlbadapter.jar" />
-            <fileset file="${lib.dir}/evsapi40-beans.jar" />
-            <fileset file="${lib.dir}/evsapi40-framework.jar" />
+            <fileset file="${wlib.dir}/commons-logging-1.1.jar" />
             <fileset file="${lib.dir}/hibernate3.jar" />
-            <fileset file="${lib.dir}/jdom-1.0.jar" />
-            <fileset file="${lib.dir}/lbAdmin.jar" />
-            <fileset file="${lib.dir}/lbImpl.jar" />
-            <fileset file="${lib.dir}/lbInterfaces.jar" />
-            <fileset file="${lib.dir}/lbModel.jar" />
-            <fileset file="${lib.dir}/lgConverter.jar" />
-            <fileset file="${lib.dir}/lgIndexer.jar" />
-            <fileset file="${lib.dir}/lgModel.emf.jar" />
-            <fileset file="${lib.dir}/lgModel.jar" />
-            <fileset file="${lib.dir}/lgRDFConverter.jar" />
-            <fileset file="${lib.dir}/lgResourceReader.jar" />
-            <fileset file="${lib.dir}/lgUtility.jar" />
-            <fileset file="${lib.dir}/log4j-1.2.14.jar" />
-            <fileset file="${lib.dir}/lucene-core-2.0.0.jar" />
-            <fileset file="${lib.dir}/lucene-regex-10-9-06-nightly.jar" />
-            <fileset file="${lib.dir}/lucene-snowball-9-26-06-nightly.jar" />
+            <fileset file="${wlib.dir}/jdom-1.0.jar" />
+            <fileset file="${wlib.dir}/stax-api-1.0.1.jar" />
+            <fileset file="${lib.dir}/log4j-1.2.13.jar" />
             <fileset file="${lib.dir}/mail.jar" />
             <fileset file="${lib.dir}/ojdbc14.jar" />
-            <fileset file="${lib.dir}/sdk-client-framework.jar" />
             <fileset file="${lib.dir}/spring.jar" />
-            <fileset file="${wlib.dir}/stax-api-1.0.1.jar" />
-            <fileset file="${lib.dir}/xercesImpl.jar" />
-            <fileset dir="sdkapi" includes="**/*" />
         </copy>
         <fixcrlf srcdir="${artifacts.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties, **/*.dtd" />
     </target>
@@ -269,18 +237,6 @@
                 <include name="gov/nih/nci/cadsr/sentinel/database/*.class" />
                 <include name="gov/nih/nci/cadsr/sentinel/audits/*.class" />
             </fileset>
-            <manifest>
-                <attribute name="Built-By" value="Anthill"/>
-                <attribute name="Main-Class" value="gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts"/>
-                <section name="gov/nih/nci/cadsr/sentinel/">
-                    <attribute name="Specification-Title" value="caDSR Sentinel Tool" />
-                    <attribute name="Specification-Version" value="${appl.release}" />
-                    <attribute name="Specification-Vendor" value="ScenPro, Inc." />
-                    <attribute name="Implementation-Title" value="caDSR Sentinel Tool" />
-                    <attribute name="Implementation-Version" value="${appl.version}" />
-                    <attribute name="Implementation-Vendor" value="ScenPro, Inc." />
-                </section>
-            </manifest>
         </jar>
         <jar destfile="${artifacts.dir}/gforge/cadsrsentinelapi.jar">
             <fileset dir="${classes.dir}">
@@ -288,17 +244,6 @@
                 <include name="gov/nih/nci/cadsr/sentinel/*.properties" />
                 <include name="gov/nih/nci/cadsr/sentinel/util/*.class" />
             </fileset>
-            <manifest>
-                <attribute name="Built-By" value="Anthill"/>
-                <section name="gov/nih/nci/cadsr/sentinel/">
-                    <attribute name="Specification-Title" value="caDSR Sentinel Tool API" />
-                    <attribute name="Specification-Version" value="${appl.release}" />
-                    <attribute name="Specification-Vendor" value="ScenPro, Inc." />
-                    <attribute name="Implementation-Title" value="caDSR Sentinel Tool API" />
-                    <attribute name="Implementation-Version" value="${appl.version}" />
-                    <attribute name="Implementation-Vendor" value="ScenPro, Inc." />
-                </section>
-            </manifest>
         </jar>
         <delete file="${classes.dir}/cvsdeploy.txt" />
     </target>
@@ -345,17 +290,6 @@
         <delete file="${artifacts.dir}/jboss/cadsrsentinel.war" />
         <cvs command="status -v" output="${jsp.dir}/cvsdeploy.txt" />
         <war destfile="${artifacts.dir}/jboss/cadsrsentinel.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml">
-            <manifest>
-                <attribute name="Built-By" value="Anthill"/>
-                <section name="gov/nih/nci/cadsr/sentinel/">
-                    <attribute name="Specification-Title" value="caDSR Sentinel Tool" />
-                    <attribute name="Specification-Version" value="${appl.release}" />
-                    <attribute name="Specification-Vendor" value="ScenPro, Inc." />
-                    <attribute name="Implementation-Title" value="caDSR Sentinel Tool" />
-                    <attribute name="Implementation-Version" value="${appl.version}" />
-                    <attribute name="Implementation-Vendor" value="ScenPro, Inc." />
-                </section>
-            </manifest>
         </war>
         <delete file="${jsp.dir}/cvsdeploy.txt" />
     </target>
@@ -382,14 +316,6 @@
         <copy todir="${odi.dir}/doc">
             <fileset dir="doc" />
         </copy>
-        <mkdir dir="${odi.dir}/dtd" />
-        <copy todir="${odi.dir}/dtd">
-            <fileset dir="dtd" />
-        </copy>
-        <mkdir dir="${odi.dir}/help" />
-        <copy todir="${odi.dir}/help">
-            <fileset dir="help" />
-        </copy>
         <mkdir dir="${odi.dir}/lib" />
         <copy todir="${odi.dir}/lib">
             <fileset dir="lib" />
@@ -397,10 +323,6 @@
         <mkdir dir="${odi.dir}/scripts" />
         <copy todir="${odi.dir}/scripts">
             <fileset dir="scripts" />
-        </copy>
-        <mkdir dir="${odi.dir}/sdkapi" />
-        <copy todir="${odi.dir}/sdkapi">
-            <fileset dir="sdkapi" />
         </copy>
         <mkdir dir="${odi.dir}/src" />
         <copy todir="${odi.dir}/src">
@@ -516,12 +438,6 @@
             <fileset dir="${artifacts.dir}" includes="**/*" />
         </scp>
 
-        <echo>mkdir ${TOOL.LOG.DIR}</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" failonerror="false" command="mkdir -p ${TOOL.LOG.DIR}" />
-
-        <echo>mkdir ${TOOL.ROOT.DIR}</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" failonerror="false" command="mkdir -p ${TOOL.ROOT.DIR}" />
-
         <echo>mkdir ${toolDtd.dir}</echo>
         <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" failonerror="false" command="mkdir -p ${toolDtd.dir}" />
         <echo>cp ${scpPath.dir}/dtd/* ${toolDtd.dir}/.</echo>
@@ -529,11 +445,6 @@
         <echo>chmod +r ${toolDtd.dir}/*</echo>
         <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="chmod +r ${toolDtd.dir}/*" />
 
-        <echo>mkdir ${toolBin.dir}/../reports</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" failonerror="false" command="mkdir -p ${toolBin.dir}/../reports" />
-
-        <echo>mkdir ${toolBin.dir}</echo>
-        <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" failonerror="false" command="mkdir -p ${toolBin.dir}" />
         <echo>cp ${scpPath.dir}/bin/* ${toolBin.dir}/.</echo>
         <sshexec username="${SCP.USER}" host="${SCP.HOST}" port="${SCP.PORT}" passphrase="${SCP.PASSPHRASE}" keyfile="${SCP.KEYFILE}" trust="true" verbose="true" command="cp ${scpPath.dir}/bin/* ${toolBin.dir}/." />
         <echo>chmod +rx ${toolBin.dir}/autorun.sh</echo>
@@ -566,21 +477,21 @@
     <target name="-do-load-options" if="found.load_options.sql" depends="-check-sql-files" description="Execute load_options.sql">
         <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql</echo>
         <exec dir="." executable="${SQL.EXE}" failonerror="true">
-            <arg line="-L ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql" />
+            <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/load_options.sql" />
         </exec>
     </target>
 
     <target name="-do-update-options" if="found.update_options_url.sql" depends="-check-sql-files" description="Execute update_options_url.sql">
         <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/update_options_url.sql</echo>
         <exec dir="." executable="${SQL.EXE}" failonerror="true">
-            <arg line="-L ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/update_options_url.sql" />
+            <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/update_options_url.sql" />
         </exec>
     </target>
 
     <target name="-do-deactivate-options" if="found.deactivate.sql" depends="-check-sql-files" description="Execute deactivate.sql">
         <echo>Deploying caDSR database changes ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactivate.sql</echo>
         <exec dir="." executable="${SQL.EXE}" failonerror="true">
-            <arg line="-L ${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactivate.sql" />
+            <arg line="${CADSR.DS.USER}/${CADSR.DS.PSWD}@${CADSR.DS.TNS.ENTRY} @ ${artifacts.dir}/sql/deactivate.sql" />
         </exec>
     </target>
     
@@ -626,8 +537,8 @@ Deployment is complete. Check the formal request for any special post deployment
         <echo>All properties are present.</echo>
     </target>
 
-    <target name="init" description="The default target which only validates the presence of the script properties.">
-        <echo>This script can be run with one or more of the following: build-all, build-product, clean, deploy, javadoc, package-download, test. Execute Ant with the "-p" option for a description of all targets.</echo>
+    <target name="init" depends="-prop-check,-init-check" description="The default target which only validates the presence of the script properties.">
+        <fail>This build script must be run with the name of the desired target: build-all, build-product, clean, deploy, javadoc, package-download, test.</fail>
     </target>
     
     <target name="-assemble-sql" depends="clean" description="create the tier specific scripts">

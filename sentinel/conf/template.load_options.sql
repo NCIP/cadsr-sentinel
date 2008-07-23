@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.12 2008-07-11 16:35:33 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.7 2007-12-17 18:13:54 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -65,21 +65,12 @@ values ('SENTINEL', 'ADMIN.00', '01', 'HEBELL',
 'An account given full Sentinel Administrator privileges.');
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.01', '2', 'ALREDS',
-'An account to receive the caDSR Audit Report.');
-
-insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
 values ('SENTINEL', 'ADMIN.02', '2', 'DWARZEL',
-'An account to receive the caDSR Audit Report.');
+'An account to receive the caDSR Statistics Report.');
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
 values ('SENTINEL', 'ADMIN.03', '2', 'REEVESD',
-'An account to receive the caDSR Audit Report.');
-
-insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.04', '2', 'PAGGARWA',
-'An account to receive the caDSR Audit Report.');
-
+'An account to receive the caDSR Statistics Report.');
 
 /*
    The URL should be retrieved and passed to the Sentinel API
@@ -89,7 +80,7 @@ values ('SENTINEL', 'ADMIN.04', '2', 'PAGGARWA',
 */
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'URL', 'https://cadsrsentinel@TIER@.nci.nih.gov',
+values ('SENTINEL', 'URL', 'http://cadsrsentinel@TIER@.nci.nih.gov',
 'The URL for the Sentinel Tool connected this caDSR database.');
 
 /*
@@ -218,19 +209,6 @@ values ('SENTINEL', 'OUTPUT.DIR', '/local/content/cadsrsentinel/reports/',
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
 values ('SENTINEL', 'DB.NAME', 'NCICB @TIER.NAME@ caDSR',
 'The name to identify this database on report output.');
-
-/*
-  Online Help URL
-
-   The URL hosting the Sentinel Tool online Help. This must include the full URI and file name for the first page.
-*/
-
-insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'HELP.ROOT', 'https://cadsrsentinel@TIER@.nci.nih.gov/help/', 'The Sentinel Tool online help URL root');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'HELP.HOME', 'index.html', 'The Sentinel Tool online help main page.');
-insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'HELP.RUN', 'index.html' || chr(63) || 'context=caDSR_Sentinel_Tool_Help' || chr(38) || 'topic=manual_run', 'The Run page help');
 
 /*
   ==============================================================================

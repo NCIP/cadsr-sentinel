@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.19 2008-05-01 20:18:17 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.14 2008-01-23 15:33:19 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -370,13 +370,13 @@ public class DBAlertOracle implements DBAlert
         new DBAlertOracleMap2("CONTE_IDSEQ", "sbr.contexts_view", "conte_idseq", "", "name || ' (v' || version || ')' as label"),
         new DBAlertOracleMap2("CON_IDSEQ", "sbrext.concepts_view_ext", "con_idseq", "", "long_name || ' (' || con_id || 'v' || version || ') (' || origin || ':' || preferred_name || ')' as label"),
         new DBAlertOracleMap2("CREATED_BY", "sbr.user_accounts_view", "ua_name", "", "name as label"),
-        new DBAlertOracleMap2("CS_CSI_IDSEQ", "sbr.cs_csi_view cci, sbr.cs_items_view csi", "cci.cs_csi_idseq", " and csi.csi_idseq = cci.csi_idseq","csi.long_name as label"),
+        new DBAlertOracleMap2("CS_CSI_IDSEQ", "sbr.cs_csi_view cci, sbr.class_scheme_items_view csi", "cci.cs_csi_idseq", " and csi.csi_idseq = cci.csi_idseq","csi.csi_name as label"),
         new DBAlertOracleMap2("DEC_IDSEQ", "sbr.data_element_concepts_view", "dec_idseq", "", "long_name || ' (' || dec_id || 'v' || version || ')' as label"),
         new DBAlertOracleMap2("DE_IDSEQ", "sbr.data_elements_view", "de_idseq", "", "long_name || ' (' || cde_id || 'v' || version || ')' as label"),
         new DBAlertOracleMap2("MODIFIED_BY", "sbr.user_accounts_view", "ua_name", "", "name as label"),
         new DBAlertOracleMap2("OC_IDSEQ", "sbrext.object_classes_view_ext", "oc_idseq", "", "long_name || ' (' || oc_id || 'v' || version || ')' as label"),
         new DBAlertOracleMap2("PROP_IDSEQ", "sbrext.properties_view_ext", "prop_idseq", "", "long_name || ' (' || prop_id || 'v' || version || ')' as label"),
-        new DBAlertOracleMap2("PV_IDSEQ", "sbr.permissible_values_view pv, sbr.value_meanings_view vm", "pv.pv_idseq", " and vm.vm_idseq = pv.vm_idseq", "pv.value || ' (' || vm.long_name || ')' as label"),
+        new DBAlertOracleMap2("PV_IDSEQ", "sbr.permissible_values_view", "pv_idseq", "", "value || ' (' || short_meaning || ')' as label"),
         new DBAlertOracleMap2("RD_IDSEQ", "sbr.reference_documents_view", "rd_idseq", "", "name || ' (' || nvl(doc_text, url) || ')' as label"),
         new DBAlertOracleMap2("REP_IDSEQ", "sbrext.representations_view_ext", "rep_idseq", "", "long_name || ' (' || rep_id || 'v' || version || ')' as label"),
         new DBAlertOracleMap2("UA_NAME", "sbr.user_accounts_view", "ua_name", "", "name as label"),
@@ -389,7 +389,7 @@ public class DBAlertOracle implements DBAlert
         new DBAlertOracleMap3("con", "Concept", "sbrext.concepts_view_ext", null),
         new DBAlertOracleMap3("conte", "Context", "sbr.contexts_view", null),
         new DBAlertOracleMap3("cs", "Classification Scheme", "sbr.classification_schemes_view", "CLASSIFICATION_SCHEMES"),
-        new DBAlertOracleMap3("csi", "Classification Scheme Item", "sbr.cs_items_view", null),
+        new DBAlertOracleMap3("csi", "Classification Scheme Item", "sbr.class_scheme_items_view", null),
         new DBAlertOracleMap3("de", "Data Element", "sbr.data_elements_view", "DATA_ELEMENTS"),
         new DBAlertOracleMap3("dec", "Data Element Concept", "sbr.data_element_concepts_view", "DATA_ELEMENT_CONCEPTS"),
         new DBAlertOracleMap3("oc", "Object Class", "sbrext.object_classes_view_ext", "OBJECT_CLASSES_EXT"),
@@ -689,10 +689,6 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + ex.toString();
             _logger.error(_errorMsg);
             _sc = null;
-            if (_conn != null)
-            {
-                try { _conn.close(); } catch(Exception ex2) { }
-            }
             _conn = null;
             return _errorCode;
         }
@@ -843,15 +839,26 @@ public class DBAlertOracle implements DBAlert
      */
     public int close()
     {
+/*
+        try
+        {
+            throw new Exception("Trace");
+        }
+        catch (Exception ex)
+        {
+            _logger.debug("Trace", ex);
+        }
+*/
+
         // We only need to do something if a connection is obtained.
-        int rc = 0;
         if (_conn != null)
         {
-            // Don't forget to commit if needed.
             try
             {
+                // Don't forget to commit if needed.
                 if (_needCommit)
                     _conn.commit();
+
             }
             catch (SQLException ex)
             {
@@ -861,28 +868,26 @@ public class DBAlertOracle implements DBAlert
                     + ex.toString();
                 _logger.error(_errorMsg);
             }
-
-            // Close the connection and release all pointers.
             try
             {
+                // Close the connection and release all pointers.
                 _conn.close();
-            }
-            catch (SQLException ex)
-            {
-                // There seems to be a problem.
-                _errorCode = DBAlertUtil.getSQLErrorCode(ex);
-                _errorMsg = _errorCode + ": "
-                    + ex.toString();
-                _logger.error(_errorMsg);
-                rc = _errorCode;
-            }
-            finally
-            {
                 _conn = null;
                 _sc = null;
             }
+            catch (SQLException ex)
+            {
+                // There seems to be a problem.
+                _errorCode = DBAlertUtil.getSQLErrorCode(ex);
+                _errorMsg = _errorCode + ": "
+                    + ex.toString();
+                _logger.error(_errorMsg);
+                _conn = null;
+                _sc = null;
+                return _errorCode;
+            }
         }
-        return rc;
+        return 0;
     }
 
     /**
@@ -922,7 +927,6 @@ public class DBAlertOracle implements DBAlert
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         Vector<AlertRec> results = new Vector<AlertRec>();
-        AlertRec[] database = null;
 
         try
         {
@@ -959,6 +963,8 @@ public class DBAlertOracle implements DBAlert
                 rec.setSummary(select);
                 results.add(rec);
             }
+            rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -966,15 +972,13 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
             _logger.error(_errorMsg);
-        }
-        finally
-        {
-            closeCursors(pstmt, rs);
+            return null;
         }
 
         // Now that we have the full results we can create a single simple array
         // to contain
         // them. This greatly simplifies access throughout the code.
+        AlertRec database[] = null;
         int count = results.size();
         if (count > 0)
         {
@@ -1000,18 +1004,15 @@ public class DBAlertOracle implements DBAlert
         // A Report has a list of one or more recipients.
         String select = "select ua_name, email, conte_idseq "
             + "from sbrext.sn_recipient_view_ext " + "where rep_idseq = ?";
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        int rc = 0;
         try
         {
             // Get ready...
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, rec_.getReportRecNum());
 
             // Go!
             Vector<String> rlist = new Vector<String>();
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next())
             {
                 String temp = rs.getString(1);
@@ -1035,6 +1036,8 @@ public class DBAlertOracle implements DBAlert
                     }
                 }
             }
+            rs.close();
+            pstmt.close();
 
             // Move the data to an array and drop the Vector.
             if (rlist.size() > 0)
@@ -1050,6 +1053,7 @@ public class DBAlertOracle implements DBAlert
             {
                 rec_.setRecipients(null);
             }
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -1058,13 +1062,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        return rc;
     }
 
     /**
@@ -1080,20 +1079,17 @@ public class DBAlertOracle implements DBAlert
         // Each Alert has one Report definition.
         String select = "select rep_idseq, include_property_ind, style, send, acknowledge_ind, comments, assoc_lvl_num "
             + "from sbrext.sn_report_view_ext " + "where al_idseq = ?";
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        int rc = 0;
         try
         {
             // Get ready...
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, rec_.getAlertRecNum());
 
             // Strictly speaking if a record is not found it is a violation of a
             // business rule, however,
             // the code is written to default all values to avoid these types of
             // quirks.
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             if (rs.next())
             {
                 rec_.setReportRecNum(rs.getString(1));
@@ -1105,11 +1101,9 @@ public class DBAlertOracle implements DBAlert
                 rec_.setIAssocLvl(rs.getInt(7));
             }
             rs.close();
-            rs = null;
             pstmt.close();
-            pstmt = null;
 
-            rc = selectRecipients(rec_);
+            return selectRecipients(rec_);
         }
         catch (SQLException ex)
         {
@@ -1118,13 +1112,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        return rc;
     }
 
     /**
@@ -1149,7 +1138,7 @@ public class DBAlertOracle implements DBAlert
             + "where a.al_idseq = ? and u1.ua_name = a.created_by and u2.ua_name(+) = a.modified_by";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        int rc = 0;
+
         try
         {
             // Get ready...
@@ -1184,6 +1173,9 @@ public class DBAlertOracle implements DBAlert
                 // This shouldn't happen but just in case...
                 rec_.setAlertRecNum(null);
             }
+            rs.close();
+            pstmt.close();
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -1192,14 +1184,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select + "\n\n"
                 + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-
-        return rc;
     }
 
     /**
@@ -1255,7 +1241,6 @@ public class DBAlertOracle implements DBAlert
 
         cleanRec(rec_);
         PreparedStatement pstmt = null;
-        int rc = 0;
         try
         {
             // Set all the SQL arguments.
@@ -1272,7 +1257,9 @@ public class DBAlertOracle implements DBAlert
 
             // Send it to the database. And remember to flag a commit for later.
             pstmt.executeUpdate();
+            pstmt.close();
             _needCommit = true;
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -1282,13 +1269,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, null);
-        }
-        return rc;
     }
 
     /**
@@ -1307,12 +1289,10 @@ public class DBAlertOracle implements DBAlert
             + "comments = ?, include_property_ind = ?, style = ?, send = ?, acknowledge_ind = ?, assoc_lvl_num = ?, "
             + "modified_by = ? "
             + "where rep_idseq = ?";
-        PreparedStatement pstmt = null;
-        int rc = 0;
         try
         {
             // Set all the SQL arguments.
-            pstmt = _conn.prepareStatement(update);
+            PreparedStatement pstmt = _conn.prepareStatement(update);
             pstmt.setString(1, rec_.getIntro(false));
             pstmt.setString(2, rec_.getIncPropSectString());
             pstmt.setString(3, rec_.getReportStyleString());
@@ -1324,7 +1304,9 @@ public class DBAlertOracle implements DBAlert
             pstmt.setString(8, rec_.getReportRecNum());
 
             pstmt.executeUpdate();
+            pstmt.close();
             _needCommit = true;
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -1334,13 +1316,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, null);
-        }
-        return rc;
     }
 
     /**
@@ -1456,7 +1433,6 @@ public class DBAlertOracle implements DBAlert
         // to clean up
         // all related tables.
         PreparedStatement pstmt = null;
-        int rc = 0;
         try
         {
             // Set all the SQL arguments.
@@ -1468,7 +1444,9 @@ public class DBAlertOracle implements DBAlert
 
             // Send it to the database. And remember to flag a commit for later.
             pstmt.executeUpdate();
+            pstmt.close();
             _needCommit = true;
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -1477,13 +1455,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + delete
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, null);
-        }
-        return rc;
     }
 
     /**
@@ -1516,18 +1489,15 @@ public class DBAlertOracle implements DBAlert
         // wipe out the existing list and replace it with the new one.
         String delete = "delete " + "from sn_recipient_view_ext "
             + "where rep_idseq = ?";
-        PreparedStatement pstmt = null;
-        int rc = 0;
         try
         {
-            pstmt = _conn.prepareStatement(delete);
+            PreparedStatement pstmt = _conn.prepareStatement(delete);
             pstmt.setString(1, rec_.getReportRecNum());
 
             pstmt.executeUpdate();
             pstmt.close();
-            pstmt = null;
 
-            rc = insertRecipients(rec_);
+            return insertRecipients(rec_);
         }
         catch (SQLException ex)
         {
@@ -1537,13 +1507,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + delete
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, null);
-        }
-        return rc;
     }
 
     /**
@@ -1560,8 +1525,6 @@ public class DBAlertOracle implements DBAlert
     {
         // Add the Recipient record(s).
         String insert = "";
-        int rc = 0;
-        PreparedStatement pstmt = null;
         try
         {
             for (int ndx = 0; ndx < rec_.getRecipients().length; ++ndx)
@@ -1609,13 +1572,12 @@ public class DBAlertOracle implements DBAlert
                 insert = insert + " values (?, ?, ?)";
 
                 // Update
-                pstmt = _conn.prepareStatement(insert);
+                PreparedStatement pstmt = _conn.prepareStatement(insert);
                 pstmt.setString(1, rec_.getReportRecNum());
                 pstmt.setString(2, temp);
                 pstmt.setString(3, _user);
                 pstmt.executeUpdate();
                 pstmt.close();
-                pstmt = null;
             }
             // Remember to commit. It appears that we may flagging a commit when
             // the recipients list
@@ -1623,6 +1585,7 @@ public class DBAlertOracle implements DBAlert
             // the other calling methods
             // depend on this to set the flag.
             _needCommit = true;
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -1632,13 +1595,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + insert
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, null);
-        }
-        return rc;
     }
 
     /**
@@ -1694,17 +1652,15 @@ public class DBAlertOracle implements DBAlert
             tSelect = tSelect + ",?";
         tSelect = tSelect + select_.substring(pos + 1);
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try
         {
             // Now bind each value in the array to the expanded "?" list.
-            pstmt = _conn.prepareStatement(tSelect);
+            PreparedStatement pstmt = _conn.prepareStatement(tSelect);
             for (int ndx = 0; ndx < values_.length; ++ndx)
             {
                 pstmt.setString(ndx + 1, values_[ndx]);
             }
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
 
             // Concatenate the results into a single comma separated string.
             tSelect = "";
@@ -1713,6 +1669,8 @@ public class DBAlertOracle implements DBAlert
             {
                 tSelect = tSelect + sep + rs.getString(1).replaceAll("[\\r\\n]", " ");
             }
+            rs.close();
+            pstmt.close();
 
             // We always start the string with a comma so be sure to remove it
             // before returning.
@@ -1732,10 +1690,6 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + tSelect;
             _logger.error(_errorMsg);
-        }
-        finally
-        {
-            closeCursors(pstmt, rs);
         }
         return tSelect;
     }
@@ -1837,9 +1791,9 @@ public class DBAlertOracle implements DBAlert
                 + "Classification Scheme Items may be anything ";
             else
             {
-                select = "select long_name "
-                    + "from sbr.cs_items_view "
-                    + "where csi_idseq in (?) order by upper(long_name) ASC";
+                select = "select csi_name "
+                    + "from sbr.class_scheme_items_view "
+                    + "where csi_idseq in (?) order by upper(csi_name) ASC";
                 criteria = criteria + "Classification Scheme Items must be "
                     + selectText(select, rec_.getSchemeItems(), 1);
                 specific += marker;
@@ -2057,14 +2011,14 @@ public class DBAlertOracle implements DBAlert
 
         // Update creator in database.
         String update = "update sbrext.sn_alert_view_ext set created_by = ?, modified_by = ? where al_idseq = ?";
-        PreparedStatement pstmt = null;
         try
         {
-            pstmt = _conn.prepareStatement(update);
+            PreparedStatement pstmt = _conn.prepareStatement(update);
             pstmt.setString(1, rec_.getCreator());
             pstmt.setString(2, _user);
             pstmt.setString(3, rec_.getAlertRecNum());
             pstmt.executeUpdate();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -2073,10 +2027,6 @@ public class DBAlertOracle implements DBAlert
             String errorMsg = errorCode + ": " + update
                 + "\n\n" + ex.toString();
             _logger.error(errorMsg);
-        }
-        finally
-        {
-            closeCursors(pstmt, null);
         }
     }
 
@@ -2093,23 +2043,21 @@ public class DBAlertOracle implements DBAlert
             + "union "
             + "select 'cs', long_name from sbr.classification_schemes_view where cs_idseq = ? "
             + "union "
-            + "select 'csi', long_name from sbr.cs_items_view where csi_idseq = ? "
+            + "select 'csi', csi_name from sbr.class_scheme_items_view where csi_idseq = ? "
             + "union "
             + "select 'qc', long_name from sbrext.quest_contents_view_ext where qc_idseq = ? and qtl_name in ('TEMPLATE','CRF') "
             + "union "
             + "select 'proto', long_name from sbrext.protocols_view_ext where proto_idseq = ?";
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try
         {
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, id_);
             pstmt.setString(2, id_);
             pstmt.setString(3, id_);
             pstmt.setString(4, id_);
             pstmt.setString(5, id_);
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             if (rs.next())
             {
                 out[0] = rs.getString(1);
@@ -2120,6 +2068,8 @@ public class DBAlertOracle implements DBAlert
                 out[0] = null;
                 out[1] = null;
             }
+            rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -2129,31 +2079,9 @@ public class DBAlertOracle implements DBAlert
                 + "\n\n" + ex.toString();
             _logger.error(errorMsg);
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
         return out;
     }
 
-    /**
-     * Close the statement and result set.
-     * 
-     * @param stmt_ The open statement or null
-     * @param rs_ The open result set or null
-     */
-    private static void closeCursors(Statement stmt_, ResultSet rs_)
-    {
-        if (rs_ != null)
-        {
-            try { rs_.close(); } catch(Exception ex) { }
-        }
-        if (stmt_ != null)
-        {
-            try { stmt_.close(); } catch(Exception ex) { }
-        }
-    }
-    
     /**
      * Look for an Alert owned by the user with a Query which
      * references the id specified.
@@ -2169,16 +2097,16 @@ public class DBAlertOracle implements DBAlert
             + "where al.created_by = ? and qur.al_idseq = al.al_idseq and qur.value = ?";
 
         String rc = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try
         {
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, user_);
             pstmt.setString(2, id_);
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             if (rs.next())
                 rc = rs.getString(1);
+            rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -2187,10 +2115,6 @@ public class DBAlertOracle implements DBAlert
             String errorMsg = errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(errorMsg);
-        }
-        finally
-        {
-            closeCursors(pstmt, rs);
         }
 
         return rc;
@@ -2225,15 +2149,15 @@ public class DBAlertOracle implements DBAlert
             + "where tool_name = 'CDEBrowser' and property = 'URL'";
 
         String rc = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
 
         try
         {
-            pstmt = _conn.prepareStatement(select);
-            rs = pstmt.executeQuery();
+            PreparedStatement pstmt = _conn.prepareStatement(select);
+            ResultSet rs = pstmt.executeQuery();
             if (rs.next())
                 rc = rs.getString(1);
+            rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -2242,10 +2166,6 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-        }
-        finally
-        {
-            closeCursors(pstmt, rs);
         }
 
         return rc;
@@ -2263,14 +2183,14 @@ public class DBAlertOracle implements DBAlert
 
         int rc = 100;
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try
         {
-            pstmt = _conn.prepareStatement(select);
-            rs = pstmt.executeQuery();
+            PreparedStatement pstmt = _conn.prepareStatement(select);
+            ResultSet rs = pstmt.executeQuery();
             if (rs.next())
                 rc = rs.getInt(1);
+            rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -2279,10 +2199,6 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-        }
-        finally
-        {
-            closeCursors(pstmt, rs);
         }
 
         return rc;
@@ -2307,14 +2223,11 @@ public class DBAlertOracle implements DBAlert
         // ASC,
         // property
         // ASC";
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        int rc = 0;
         try
         {
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, rec_.getAlertRecNum());
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             Vector<String> context = new Vector<String>();
             Vector<String> actype = new Vector<String>();
             Vector<String> scheme = new Vector<String>();
@@ -2380,6 +2293,8 @@ public class DBAlertOracle implements DBAlert
                     }
                 }
             }
+            rs.close();
+            pstmt.close();
 
             // Move the data into appropriate arrays within the Alert record to
             // simplify use
@@ -2531,6 +2446,8 @@ public class DBAlertOracle implements DBAlert
 
             // Create the summary string now the data is loaded.
             rec_.setSummary(buildSummary(rec_));
+
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -2539,14 +2456,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        
-        return rc;
     }
 
     /**
@@ -2565,17 +2476,14 @@ public class DBAlertOracle implements DBAlert
         // the new than trying to track individual changes.
         String delete = "delete " + "from sbrext.sn_query_view_ext "
             + "where al_idseq = ?";
-        PreparedStatement pstmt = null;
-        int rc = 0;
         try
         {
-            pstmt = _conn.prepareStatement(delete);
+            PreparedStatement pstmt = _conn.prepareStatement(delete);
             pstmt.setString(1, rec_.getAlertRecNum());
             pstmt.executeUpdate();
             pstmt.close();
-            pstmt = null;
 
-            rc = insertQuery(rec_);
+            return insertQuery(rec_);
         }
         catch (SQLException ex)
         {
@@ -2585,13 +2493,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + delete
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, null);
-        }
-        return rc;
     }
 
     /**
@@ -2609,11 +2512,9 @@ public class DBAlertOracle implements DBAlert
             + "values (?, ?, ?, ?, ?, ?)";
 
         int marker = 0;
-        PreparedStatement pstmt = null;
-        int rc = 0;
         try
         {
-            pstmt = _conn.prepareStatement(insert);
+            PreparedStatement pstmt = _conn.prepareStatement(insert);
             pstmt.setString(1, rec_.getAlertRecNum());
             pstmt.setString(2, "C");
             pstmt.setString(6, _user);
@@ -2806,7 +2707,9 @@ public class DBAlertOracle implements DBAlert
 
             // Remember to commit.
             ++marker;
+            pstmt.close();
             _needCommit = true;
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -2816,14 +2719,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = "(" + marker + "): " + _errorCode + ": "
                 + insert + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, null);
-        }
-        
-        return rc;
     }
 
     /**
@@ -2918,7 +2815,6 @@ public class DBAlertOracle implements DBAlert
             + "values (?, ?, ?, ?, ?, ?, ?, ?) return al_idseq into ?; end;";
 
         CallableStatement pstmt = null;
-        int rc = 0;
         cleanRec(rec_);
         try
         {
@@ -2940,6 +2836,8 @@ public class DBAlertOracle implements DBAlert
             // We need the record id to populate the foreign keys for other
             // tables.
             rec_.setAlertRecNum(pstmt.getString(9));
+            pstmt.close();
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -2950,13 +2848,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + insert
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, null);
-        }
-        return rc;
     }
 
     /**
@@ -2977,7 +2870,6 @@ public class DBAlertOracle implements DBAlert
             + "values (?, ?, ?, ?, ?, ?, ?, ?) return rep_idseq into ?; end;";
 
         CallableStatement pstmt = null;
-        int rc = 0;
         try
         {
             pstmt = _conn.prepareCall(insert);
@@ -2995,6 +2887,8 @@ public class DBAlertOracle implements DBAlert
             // We need the record id to populate the foreign keys for other
             // tables.
             rec_.setReportRecNum(pstmt.getString(9));
+            pstmt.close();
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -3005,13 +2899,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + insert
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, null);
-        }
-        return rc;
     }
 
     /**
@@ -3025,17 +2914,19 @@ public class DBAlertOracle implements DBAlert
     {
         String user = user_.toUpperCase();
 
-        CallableStatement stmt = null;
-        String csi = null;
         try
         {
+            CallableStatement stmt;
             stmt = _conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.ADD_TO_SENTINEL_CS(?,?,?); end;");
             stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
             stmt.setString(2, user);
             stmt.setString(1, idseq_);
             stmt.execute();
-            csi = stmt.getString(3);
+            String csi = stmt.getString(3);
+            stmt.close();
             _needCommit = true;
+
+            return csi;
         }
         catch (SQLException ex)
         {
@@ -3043,13 +2934,8 @@ public class DBAlertOracle implements DBAlert
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(stmt, null);
-        }
-
-        return csi;
     }
 
     /**
@@ -3124,7 +3010,7 @@ public class DBAlertOracle implements DBAlert
             + "from sbr.user_accounts_view uav, sbrext.user_contexts_view ucv "
             + "where uav.ua_name = ? and ucv.ua_name = uav.ua_name and ucv.privilege = 'W'";
         PreparedStatement pstmt = null;
-        String result = null;
+        String result;
         ResultSet rs = null;
 
         try
@@ -3140,6 +3026,13 @@ public class DBAlertOracle implements DBAlert
                 // Get the name, remember 1 indexing.
                 result = rs.getString(1);
             }
+            else
+            {
+                // User must have some kind of write permissions.
+                result = null;
+            }
+            rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -3148,10 +3041,7 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-        }
-        finally
-        {
-            closeCursors(pstmt, rs);
+            result = null;
         }
         return result;
     }
@@ -3196,7 +3086,6 @@ public class DBAlertOracle implements DBAlert
     {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        String[] list = null;
 
         try
         {
@@ -3211,11 +3100,16 @@ public class DBAlertOracle implements DBAlert
                 data.add(rs.getString(1));
             }
 
-            list = new String[data.size()];
+            String[] list = new String[data.size()];
             for (int i = 0; i < list.length; ++i)
             {
                 list[i] = data.get(i);
             }
+
+            rs.close();
+            pstmt.close();
+
+            return (list.length > 0) ? list : null;
         }
         catch (SQLException ex)
         {
@@ -3224,13 +3118,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-
-        return (list != null && list.length > 0) ? list : null;
     }
 
     /**
@@ -3266,6 +3155,8 @@ public class DBAlertOracle implements DBAlert
                 rec._label = rs.getString(2);
                 results.add(rec);
             }
+            rs.close();
+            pstmt.close();
 
             // We know there will always be someone in the table but we should
             // follow good
@@ -3312,10 +3203,6 @@ public class DBAlertOracle implements DBAlert
             _logger.error(_errorMsg);
             data._rc = _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
         return data;
     }
 
@@ -3333,25 +3220,25 @@ public class DBAlertOracle implements DBAlert
             + "from sbr.contexts_view cv, sbrext.user_contexts_view ucv "
             + "where ucv.ua_name = ? and ucv.privilege = 'W' and ucv.name not in ('TEST','Test','TRAINING','Training') and cv.name = ucv.name";
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        String[] temp  = null;
         try
         {
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, user_);
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             Vector<String> list = new Vector<String>();
             while (rs.next())
             {
                 list.add(rs.getString(1));
             }
+            rs.close();
+            pstmt.close();
 
-            temp = new String[list.size()];
+            String temp[] = new String[list.size()];
             for (int ndx = 0; ndx < temp.length; ++ndx)
             {
                 temp[ndx] = (String) list.get(ndx);
             }
+            return temp;
         }
         catch (SQLException ex)
         {
@@ -3359,13 +3246,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-
-        return temp;
     }
 
     /**
@@ -3832,7 +3714,6 @@ public class DBAlertOracle implements DBAlert
             + "opt.property like 'EVS.VOCAB.%.EVSNAME' or "
             + "opt.property like 'EVS.VOCAB.%.DISPLAY' or "
             + "opt.property like 'EVS.VOCAB.%.PROPERTY.DEFINITION' or "
-            + "opt.property like 'EVS.VOCAB.%.VOCABCODETYPE' or "
             + "opt.property like 'EVS.VOCAB.%.ACCESSREQUIRED' "
             + ") order by opt.property";
 
@@ -3864,16 +3745,14 @@ public class DBAlertOracle implements DBAlert
             + "ORDER BY upper(long_name) ASC";
 
         Statement stmt = null;
-        ResultSet rs = null;
-        Vector<ConceptItem> list = null;
+        Vector<ConceptItem> list = new Vector<ConceptItem>();
         try
         {
             // Prepare the statement.
             stmt = _conn.createStatement();
-            rs = stmt.executeQuery(select);
+            ResultSet rs = stmt.executeQuery(select);
 
             // Get the list.
-            list = new Vector<ConceptItem>();
             while (rs.next())
             {
                 ConceptItem rec = new ConceptItem();
@@ -3887,6 +3766,8 @@ public class DBAlertOracle implements DBAlert
                 rec._preferredDefinition = rs.getString(8);
                 list.add(rec);
             }
+            rs.close();
+            stmt.close();
         }
         catch (SQLException ex)
         {
@@ -3895,10 +3776,7 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-        }
-        finally
-        {
-            closeCursors(stmt, rs);
+            return null;
         }
         return list;
     }
@@ -4262,7 +4140,7 @@ public class DBAlertOracle implements DBAlert
      */
     public int getSchemes()
     {
-        String select = "select csv.conte_idseq, csv.cs_idseq, csv.long_name || ' (' || csv.cs_id || 'v' || csv.version || ' / ' || cv.name || ')' as lname "
+        String select = "select csv.conte_idseq, csv.cs_idseq, csv.long_name || ' (v' || csv.version || ' / ' || cv.name || ')' as lname "
             + "from sbr.classification_schemes_view csv, sbr.contexts_view cv "
             + "where cv.conte_idseq = csv.conte_idseq order by upper(lname) ASC";
 
@@ -4454,8 +4332,8 @@ public class DBAlertOracle implements DBAlert
     public int getSchemeItems()
     {
         String select = "select cv.cs_idseq, cv.csi_idseq, level as lvl, "
-            + "(select csi.long_name || ' (' || csi.csi_id || 'v' || csi.version || ')' as xname from sbr.cs_items_view csi where csi.csi_idseq = cv.csi_idseq), "
-            + "(select cs.long_name || ' (' || cs.cs_id || 'v' || cs.version || ')' as xname from sbr.classification_schemes_view cs where cs.cs_idseq = cv.cs_idseq) "
+            + "(select csi.csi_name from sbr.class_scheme_items_view csi where csi.csi_idseq = cv.csi_idseq), "
+            + "(select cs.long_name || ' / v' || cs.version as xname from sbr.classification_schemes_view cs where cs.cs_idseq = cv.cs_idseq) "
             + "from sbr.cs_csi_view cv "
             + "start with cv.p_cs_csi_idseq is null "
             + "connect by prior cv.cs_csi_idseq = cv.p_cs_csi_idseq";
@@ -4553,7 +4431,7 @@ public class DBAlertOracle implements DBAlert
      * must be called first. Once this method is used the internal copy is
      * deleted to reclaim the memory space.
      *
-     * @return An array of strings from the sbr.cs_items_view.long_name
+     * @return An array of strings from the sbr.class_scheme_items_view.csi_name
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeItems getSchemeItems()
      */
@@ -4570,7 +4448,7 @@ public class DBAlertOracle implements DBAlert
      * deleted to reclaim the memory space.
      *
      * @return An array of strings from the
-     *         sbr.cs_items_view.csi_idseq column.
+     *         sbr.class_scheme_items_view.csi_idseq column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeItems getSchemeItems()
      */
     public String[] getSchemeItemVals()
@@ -4586,7 +4464,7 @@ public class DBAlertOracle implements DBAlert
      * first. Once this method is used the internal copy is deleted to reclaim
      * the memory space.
      *
-     * @return An array of strings from the sbr.cs_items_view.cs_idseq
+     * @return An array of strings from the sbr.class_scheme_items_view.cs_idseq
      *         column.
      * @see gov.nih.nci.cadsr.sentinel.database.DBAlert#getSchemeItems getSchemeItems()
      */
@@ -4663,6 +4541,8 @@ public class DBAlertOracle implements DBAlert
                 rec._label = rs.getString(3);
                 results.add(rec);
             }
+            rs.close();
+            pstmt.close();
 
             // Move the list from a Vector to an array and add "(All)" to
             // the beginning.
@@ -4692,10 +4572,6 @@ public class DBAlertOracle implements DBAlert
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
             data._rc = _errorCode;
-        }
-        finally
-        {
-            closeCursors(pstmt, rs);
         }
         return data;
     }
@@ -4780,6 +4656,8 @@ public class DBAlertOracle implements DBAlert
                 rec._label2 = rs.getString(5);
                 results.add(rec);
             }
+            rs.close();
+            pstmt.close();
 
             // Move the list from a Vector to an array and add "(All)" to
             // the beginning.
@@ -4816,10 +4694,6 @@ public class DBAlertOracle implements DBAlert
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
             data._rc = _errorCode;
-        }
-        finally
-        {
-            closeCursors(pstmt, rs);
         }
         return data;
     }
@@ -5087,72 +4961,65 @@ public class DBAlertOracle implements DBAlert
         int dayWeek = tdate.get(Calendar.DAY_OF_WEEK);
         int dayMonth = tdate.get(Calendar.DAY_OF_MONTH);
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        AlertRec[] recs = null;
         try
         {
             // Set SQL arguments
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             pstmt.setInt(1, dayWeek);
             pstmt.setInt(2, dayMonth);
 
             // Retrieve all applicable definition ids.
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             Vector<String> list = new Vector<String>();
             while (rs.next())
             {
                 list.add(rs.getString(1));
             }
             rs.close();
-            rs = null;
             pstmt.close();
-            pstmt = null;
 
             // There may be nothing to do.
             if (list.size() == 0)
-                recs = new AlertRec[0];
-            else
+                return new AlertRec[0];
+
+            // retrieve the full alert definition, we will need it.
+            AlertRec recs[] = new AlertRec[list.size()];
+            int keep = 0;
+            int ndx;
+            for (ndx = 0; ndx < recs.length; ++ndx)
             {
-                // retrieve the full alert definition, we will need it.
-                recs = new AlertRec[list.size()];
-                int keep = 0;
-                int ndx;
-                for (ndx = 0; ndx < recs.length; ++ndx)
-                {
-                    // Be sure we can read the Alert Definition.
-                    recs[keep] = selectAlert((String) list.get(ndx));
-                    if (recs[keep] == null)
-                        return null;
-    
-                    // Check the date. We do this here and not in the SQL because
-                    // 99.99% of the time this will return true and complicating the
-                    // SQL isn't necessary.
-                    if (recs[keep].isActive(target_))
-                        ++keep;
-    
-                    // In the RARE situation that the alert is inactive at this
-                    // point,
-                    // we reset the object pointer to release the memory.
-                    else
-                        recs[keep] = null;
-                }
-    
-                // Return the results. It is possible that sometimes the last entry
-                // in the
-                // list will be null. Consequently the use of the list should be in
-                // a loop
-                // with the following condition: "cnt < recs.length && recs[cnt] !=
-                // null"
-                if (keep != ndx)
-                {
-                    // Only process the ones that are Active.
-                    AlertRec trecs[] = new AlertRec[keep];
-                    for (ndx = 0; ndx < keep; ++ndx)
-                        trecs[ndx] = recs[ndx];
-                    recs = trecs;
-                }
+                // Be sure we can read the Alert Definition.
+                recs[keep] = selectAlert((String) list.get(ndx));
+                if (recs[keep] == null)
+                    return null;
+
+                // Check the date. We do this here and not in the SQL because
+                // 99.99% of the time this will return true and complicating the
+                // SQL isn't necessary.
+                if (recs[keep].isActive(target_))
+                    ++keep;
+
+                // In the RARE situation that the alert is inactive at this
+                // point,
+                // we reset the object pointer to release the memory.
+                else
+                    recs[keep] = null;
             }
+
+            // Return the results. It is possible that sometimes the last entry
+            // in the
+            // list will be null. Consequently the use of the list should be in
+            // a loop
+            // with the following condition: "cnt < recs.length && recs[cnt] !=
+            // null"
+            if (keep == ndx)
+                return recs;
+
+            // Only process the ones that are Active.
+            AlertRec trecs[] = new AlertRec[keep];
+            for (ndx = 0; ndx < keep; ++ndx)
+                trecs[ndx] = recs[ndx];
+            return trecs;
         }
         catch (SQLException ex)
         {
@@ -5160,12 +5027,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        return recs;
     }
 
     /**
@@ -5345,20 +5208,20 @@ public class DBAlertOracle implements DBAlert
     private ACData[] selectAC(String select_, Timestamp start_, Timestamp end_,
         int pairs_)
     {
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        ACData[] list = null;
         try
         {
-            pstmt = _conn.prepareStatement(select_);
+            PreparedStatement pstmt = _conn.prepareStatement(select_);
             for (int ndx = 0; ndx < pairs_; ++ndx)
             {
                 pstmt.setTimestamp((ndx * 2) + 1, start_);
                 pstmt.setTimestamp((ndx * 2) + 2, end_);
             }
 
-            rs = pstmt.executeQuery();
-            list = copyResults(rs);
+            ResultSet rs = pstmt.executeQuery();
+            ACData list[] = copyResults(rs);
+            rs.close();
+            pstmt.close();
+            return list;
         }
         catch (SQLException ex)
         {
@@ -5366,12 +5229,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        return list;
     }
 
     /**
@@ -5440,12 +5299,9 @@ public class DBAlertOracle implements DBAlert
             }
         }
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        ACData[] list = null;
         try
         {
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             int arg = 1;
             for (int cnt = 0; cnt < loop; ++cnt)
             {
@@ -5459,8 +5315,11 @@ public class DBAlertOracle implements DBAlert
                     pstmt.setTimestamp(arg++, end_);
                 }
             }
-            rs = pstmt.executeQuery();
-            list = copyResults(rs);
+            ResultSet rs = pstmt.executeQuery();
+            ACData list[] = copyResults(rs);
+            rs.close();
+            pstmt.close();
+            return list;
         }
         catch (SQLException ex)
         {
@@ -5468,12 +5327,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        return list;
     }
 
     /**
@@ -5528,12 +5383,9 @@ public class DBAlertOracle implements DBAlert
             }
         }
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        ACData[] list = null;
         try
         {
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             int arg = 1;
             for (int cnt = 0; cnt < loop; ++cnt)
             {
@@ -5551,8 +5403,11 @@ public class DBAlertOracle implements DBAlert
                     pstmt.setTimestamp(arg++, end_);
                 }
             }
-            rs = pstmt.executeQuery();
-            list = copyResults(rs);
+            ResultSet rs = pstmt.executeQuery();
+            ACData list[] = copyResults(rs);
+            rs.close();
+            pstmt.close();
+            return list;
         }
         catch (SQLException ex)
         {
@@ -5560,24 +5415,20 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        return list;
     }
 
     private ACData[] selectAC(String select_)
     {
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        ACData[] list = null;
         try
         {
-            pstmt = _conn.prepareStatement(select_);
-            rs = pstmt.executeQuery();
-            list = copyResults(rs);
+            PreparedStatement pstmt = _conn.prepareStatement(select_);
+            ResultSet rs = pstmt.executeQuery();
+            ACData list[] = copyResults(rs);
+            rs.close();
+            pstmt.close();
+            return list;
         }
         catch (SQLException ex)
         {
@@ -5585,12 +5436,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select_
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        return list;
     }
 
     private int selectChangedTableType(String idseq_)
@@ -5599,13 +5446,11 @@ public class DBAlertOracle implements DBAlert
             + "where changed_table_idseq = ? and rownum < 2";
         int itype = -1;
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try
         {
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, idseq_);
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             if (rs.next())
             {
                 String stype = rs.getString(1);
@@ -5623,6 +5468,8 @@ public class DBAlertOracle implements DBAlert
                 else if (stype.equals("VALUE_DOMAINS"))
                     itype = _ACTYPE_VD;
             }
+            rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -5630,10 +5477,6 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-        }
-        finally
-        {
-            closeCursors(pstmt, rs);
         }
         return itype;
     }
@@ -5779,7 +5622,7 @@ public class DBAlertOracle implements DBAlert
 
         String[] select = new String[4];
         select[0] =
-            "select 'p', 1, 'vm', zz.vm_idseq as id, zz.version, zz.vm_id, zz.long_name, zz.conte_idseq as cid, "
+            "select 'p', 1, 'vm', zz.short_meaning as id, zz.version, zz.vm_id, zz.long_name, zz.conte_idseq as cid, "
             + "zz.date_modified as ctime, zz.date_created, zz.modified_by, zz.created_by, zz.comments, c.name, '' "
             + "from sbr.value_meanings_view zz, sbr.contexts_view c where ";
         select[1] = "zz.created_by in (?) and ";
@@ -6253,9 +6096,9 @@ public class DBAlertOracle implements DBAlert
         String creators_[], String modifiers_[])
     {
         String select[] = new String[4];
-        select[0] = "select 'p', 1, 'csi', csi_idseq as id, version, csi_id, long_name, '', "
+        select[0] = "select 'p', 1, 'csi', csi_idseq as id, '', -1, csi_name, '', "
             + "date_modified, date_created, modified_by, created_by, comments, '', '' "
-            + "from sbr.cs_items_view " + "where ";
+            + "from sbr.class_scheme_items_view " + "where ";
         select[1] = "created_by in (?) and ";
         select[2] = "modified_by in (?) and ";
         select[3] = "((date_modified is not null and date_modified "
@@ -6686,13 +6529,10 @@ public class DBAlertOracle implements DBAlert
             return null;
         }
 
-        ACData[] list = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try
         {
             // Build, bind and execute the statement.
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
 
             int cnt = 1;
             for (int ndx = 0; ndx < ids_.length; ++ndx)
@@ -6707,8 +6547,12 @@ public class DBAlertOracle implements DBAlert
                 }
             }
 
-            rs = pstmt.executeQuery();
-            list = copyResults(rs);
+            ResultSet rs = pstmt.executeQuery();
+            ACData list[] = copyResults(rs);
+            rs.close();
+            pstmt.close();
+
+            return list;
         }
         catch (SQLException ex)
         {
@@ -6716,13 +6560,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-
-        return list;
     }
 
     /**
@@ -6763,9 +6602,9 @@ public class DBAlertOracle implements DBAlert
     public ACData[] selectPVfromVM(ACData vm_[])
     {
         String select = "select 's', 1, 'pv', pv.pv_idseq as id, '', -1, pv.value, '', "
-        + "pv.date_modified, pv.date_created, pv.modified_by, pv.created_by, '', '', vm.vm_idseq "
+        + "pv.date_modified, pv.date_created, pv.modified_by, pv.created_by, '', '', vm.short_meaning "
         + "from sbr.permissible_values_view pv, sbr.value_meanings_view vm "
-        + "where vm.vm_idseq in (?) and pv.vm_idseq = vm.vm_idseq ";
+        + "where vm.short_meaning in (?) and pv.short_meaning = vm.short_meaning ";
 
         return selectAC(select, vm_);
     }
@@ -6968,9 +6807,9 @@ public class DBAlertOracle implements DBAlert
      */
     public ACData[] selectCSIfromDE(ACData de_[])
     {
-        String select = "select 's', 1, 'csi', civ.csi_idseq as id, civ.version, civ.csi_id, civ.long_name, '', "
+        String select = "select 's', 1, 'csi', civ.csi_idseq as id, '', -1, civ.csi_name, '', "
             + "civ.date_modified, civ.date_created, civ.modified_by, civ.created_by, civ.comments, '', de.de_idseq "
-            + "from sbr.cs_items_view civ, sbr.data_elements_view de, sbr.admin_components_view ac, "
+            + "from sbr.class_scheme_items_view civ, sbr.data_elements_view de, sbr.admin_components_view ac, "
             + "sbr.ac_csi_view ai, sbr.cs_csi_view ci "
             + "where de.de_idseq in (?) and ac.ac_idseq = de.de_idseq and ai.ac_idseq = ac.ac_idseq and "
             + "ci.cs_csi_idseq = ai.cs_csi_idseq and civ.csi_idseq = ci.csi_idseq "
@@ -6989,9 +6828,9 @@ public class DBAlertOracle implements DBAlert
      */
     public ACData[] selectCSIfromDEC(ACData dec_[])
     {
-        String select = "select 's', 1, 'csi', civ.csi_idseq as id, civ.version, civ.csi_id, civ.long_name, '', "
+        String select = "select 's', 1, 'csi', civ.csi_idseq as id, '', -1, civ.csi_name, '', "
             + "civ.date_modified, civ.date_created, civ.modified_by, civ.created_by, civ.comments, '', dec.dec_idseq "
-            + "from sbr.cs_items_view civ, sbr.data_element_concepts_view dec, sbr.admin_components_view ac, "
+            + "from sbr.class_scheme_items_view civ, sbr.data_element_concepts_view dec, sbr.admin_components_view ac, "
             + "sbr.ac_csi_view ai, sbr.cs_csi_view ci "
             + "where dec.dec_idseq in (?) and ac.ac_idseq = dec.dec_idseq and ai.ac_idseq = ac.ac_idseq and "
             + "ci.cs_csi_idseq = ai.cs_csi_idseq and civ.csi_idseq = ci.csi_idseq "
@@ -7010,9 +6849,9 @@ public class DBAlertOracle implements DBAlert
      */
     public ACData[] selectCSIfromVD(ACData vd_[])
     {
-        String select = "select 's', 1, 'csi', civ.csi_idseq as id, civ.version, civ.csi_id, civ.long_name, '', "
+        String select = "select 's', 1, 'csi', civ.csi_idseq as id, '', -1, civ.csi_name, '', "
             + "civ.date_modified, civ.date_created, civ.modified_by, civ.created_by, civ.comments, '', vd.vd_idseq "
-            + "from sbr.cs_items_view civ, sbr.value_domains_view vd, sbr.admin_components_view ac, "
+            + "from sbr.class_scheme_items_view civ, sbr.value_domains_view vd, sbr.admin_components_view ac, "
             + "sbr.ac_csi_view ai, sbr.cs_csi_view ci "
             + "where vd.vd_idseq in (?) and ac.ac_idseq = vd.vd_idseq and ai.ac_idseq = ac.ac_idseq and "
             + "ci.cs_csi_idseq = ai.cs_csi_idseq and civ.csi_idseq = ci.csi_idseq "
@@ -7162,14 +7001,14 @@ public class DBAlertOracle implements DBAlert
         String select = "(select 's', 1, 'cs', cs.cs_idseq as id, cs.version, cs.cs_id, cs.long_name, cs.conte_idseq as cid, "
             + "cs.date_modified, cs.date_created, cs.modified_by, cs.created_by, cs.change_note, c.name, civ.csi_idseq "
             + "from sbr.classification_schemes_view cs, sbr.contexts_view c, sbr.cs_csi_view ci, "
-            + "sbr.cs_items_view civ "
+            + "sbr.class_scheme_items_view civ "
             + "where civ.csi_idseq in (?) and ci.csi_idseq = civ.csi_idseq and cs.cs_idseq = ci.cs_idseq and "
             + "c.conte_idseq = cs.conte_idseq "
             + "union "
             + "select 's', 1, 'cs', ac.ac_idseq as id, ac.version, xx.cs_id, ac.long_name, dv.conte_idseq as cid, "
             + "ac.date_modified, ac.date_created, ac.modified_by, ac.created_by, ac.change_note, c.name, civ.csi_idseq "
             + "from sbr.admin_components_view ac, sbr.classification_schemes_view xx, sbr.cs_csi_view ci, "
-            + "sbr.designations_view dv, sbr.contexts_view c, sbr.cs_items_view civ "
+            + "sbr.designations_view dv, sbr.contexts_view c, sbr.class_scheme_items_view civ "
             + "where civ.csi_idseq in (?) and ci.csi_idseq = civ.csi_idseq and xx.cs_idseq = ci.cs_idseq and "
             + "ac.ac_idseq = xx.cs_idseq and ac.actl_name = 'CLASSIFICATION' and "
             + "dv.ac_idseq = ac.ac_idseq and c.conte_idseq = dv.conte_idseq) "
@@ -7514,13 +7353,11 @@ public class DBAlertOracle implements DBAlert
         // Build a select and retrieve the "name".
         String select = "select " + name + " from " + table + " where " + col
             + " = ?" + extra;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try
         {
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, id_);
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             name = "";
             while (rs.next())
                 name = name + "\n" + rs.getString(1);
@@ -7528,6 +7365,8 @@ public class DBAlertOracle implements DBAlert
                 name = null;
             else
                 name = name.substring(1);
+            rs.close();
+            pstmt.close();
 
             if (col.equals("ua_name") && npos < 0)
             {
@@ -7541,10 +7380,6 @@ public class DBAlertOracle implements DBAlert
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
             name = "(*error*)";
-        }
-        finally
-        {
-            closeCursors(pstmt, rs);
         }
         return (name == null) ? id_ : name;
     }
@@ -7590,17 +7425,18 @@ public class DBAlertOracle implements DBAlert
             + ((run_) ? "last_auto_run" : "last_manual_run") + " = ?,"
             + ((setInactive_) ? " al_status = 'I', " : "")
             + "modified_by = ? where al_idseq = ?";
-        PreparedStatement pstmt = null;
-        int rc = 0;
         try
         {
+            PreparedStatement pstmt = null;
             // Set all the SQL arguments.
             pstmt = _conn.prepareStatement(update);
             pstmt.setTimestamp(1, stamp_);
             pstmt.setString(2, _user);
             pstmt.setString(3, id_);
             pstmt.executeUpdate();
+            pstmt.close();
             _needCommit = true;
+            return 0;
         }
         catch (SQLException ex)
         {
@@ -7608,13 +7444,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + update
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
-            rc = _errorCode;
+            return _errorCode;
         }
-        finally
-        {
-            closeCursors(pstmt, null);
-        }
-        return rc;
     }
 
     /**
@@ -7672,19 +7503,19 @@ public class DBAlertOracle implements DBAlert
             // Sort the results.
             select = "select lname from (" + select + ") order by upper(lname) asc";
 
-            PreparedStatement pstmt = null;
-            ResultSet rs = null;
             try
             {
                 // Retrieve the user names from the database.
-                pstmt = _conn.prepareStatement(select);
-                rs = pstmt.executeQuery();
+                PreparedStatement pstmt = _conn.prepareStatement(select);
+                ResultSet rs = pstmt.executeQuery();
 
                 // Make this a comma separated list.
                 while (rs.next())
                 {
                     names += ", " + rs.getString(1);
                 }
+                rs.close();
+                pstmt.close();
             }
             catch (SQLException ex)
             {
@@ -7692,11 +7523,7 @@ public class DBAlertOracle implements DBAlert
                 _errorMsg = _errorCode + ": " + select
                     + "\n\n" + ex.toString();
                 _logger.error(_errorMsg);
-                names = "";
-            }
-            finally
-            {
-                closeCursors(pstmt, rs);
+                return null;
             }
         }
 
@@ -7721,26 +7548,26 @@ public class DBAlertOracle implements DBAlert
             + "where c.conte_idseq = ? and uc.name = c.name and uc.privilege = 'W' and ua.ua_name = uc.ua_name "
             + "and ua.alert_ind = 'Yes'";
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        String[] curators = null;
         try
         {
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             if (conte_.charAt(0) == '/')
                 pstmt.setString(1, conte_.substring(1));
             else
                 pstmt.setString(1, conte_);
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
             Vector<String> temp = new Vector<String>();
             while (rs.next())
             {
                 temp.add(rs.getString(1));
             }
+            rs.close();
+            pstmt.close();
 
-            curators = new String[temp.size()];
+            String curators[] = new String[temp.size()];
             for (int ndx = 0; ndx < curators.length; ++ndx)
                 curators[ndx] = (String) temp.get(ndx);
+            return curators;
         }
         catch (SQLException ex)
         {
@@ -7748,13 +7575,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        
-        return curators;
     }
 
     /**
@@ -7769,18 +7591,19 @@ public class DBAlertOracle implements DBAlert
         String select = "select ua.electronic_mail_address "
             + "from sbr.user_accounts_view ua " + "where ua.ua_name = ?";
 
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        String temp = null;
         try
         {
-            pstmt = _conn.prepareStatement(select);
+            PreparedStatement pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, user_);
-            rs = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
+            String temp = null;
             if (rs.next())
             {
                 temp = rs.getString(1);
             }
+            rs.close();
+            pstmt.close();
+            return temp;
         }
         catch (SQLException ex)
         {
@@ -7788,13 +7611,8 @@ public class DBAlertOracle implements DBAlert
             _errorMsg = _errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-
-        return temp;
     }
 
     /**
@@ -7807,27 +7625,23 @@ public class DBAlertOracle implements DBAlert
      */
     private int testDB(String select_)
     {
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        int rows = 0;
         try
         {
-            pstmt = _conn.prepareStatement(select_);
-            rs = pstmt.executeQuery();
+            PreparedStatement pstmt = _conn.prepareStatement(select_);
+            ResultSet rs = pstmt.executeQuery();
+            int rows;
             for (rows = 0; rs.next(); ++rows)
                 ;
+            rs.close();
+            pstmt.close();
+            return rows;
         }
         catch (SQLException ex)
         {
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = select_ + "\n" + ex.toString();
-            rows = -1;
+            return -1;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        return rows;
     }
 
     /**
@@ -7839,28 +7653,24 @@ public class DBAlertOracle implements DBAlert
      */
     private String testDB2(String select_)
     {
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        String result = null;
         try
         {
-            pstmt = _conn.prepareStatement(select_);
-            rs = pstmt.executeQuery();
-            result = null;
+            PreparedStatement pstmt = _conn.prepareStatement(select_);
+            ResultSet rs = pstmt.executeQuery();
+            String result = null;
             int rows;
             for (rows = 0; rs.next(); ++rows)
                 result = rs.getString(1);
+            rs.close();
+            pstmt.close();
+            return result;
         }
         catch (SQLException ex)
         {
             _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = select_ + "\n" + ex.toString();
+            return null;
         }
-        finally
-        {
-            closeCursors(pstmt, rs);
-        }
-        return result;
     }
 
     /**
@@ -8376,26 +8186,22 @@ public class DBAlertOracle implements DBAlert
             }
 
             String temp = select + table;
-            PreparedStatement pstmt = null;
-            ResultSet rs = null;
             try
             {
-                pstmt = _conn.prepareStatement(temp);
-                rs = pstmt.executeQuery();
+                PreparedStatement pstmt = _conn.prepareStatement(temp);
+                ResultSet rs = pstmt.executeQuery();
                 if (rs.next())
                 {
                     counts[ndx] = name + AuditReport._ColSeparator + formatInt(rs.getString(1));
                 }
+                rs.close();
+                pstmt.close();
             }
             catch (SQLException ex)
             {
                 _errorCode = DBAlertUtil.getSQLErrorCode(ex);
                 _errorMsg = temp + "\n" + ex.toString();
                 counts[ndx] = name + ": " + _errorMsg;
-            }
-            finally
-            {
-                closeCursors(pstmt, rs);
             }
         }
 
@@ -8524,9 +8330,8 @@ public class DBAlertOracle implements DBAlert
      * Pull the name and email address for all the recipients on a specific Alert Definition.
      *
      * @param idseq_ the database id of the Alert Definition
-     * @return the name/email list
      */
-    public Results1 selectAlertRecipients(String idseq_)
+    public void selectAlertRecipients(String idseq_)
     {
         //TODO use this method to retrieve the name and emails for the distribution. It will
         // guarantee that the pair only appears once in the list. The method signature must be
@@ -8559,8 +8364,6 @@ public class DBAlertOracle implements DBAlert
             + "AND email IS NOT NULL";
 
         Results1 temp = getBasicData1(select, false);
-        
-        return temp;
     }
 
     /**
@@ -8575,22 +8378,13 @@ public class DBAlertOracle implements DBAlert
     }
 
     /**
-     * Exists solely to avoid a compile error
-     * @param x a list
-     */
-    @SuppressWarnings("unchecked")
-    static public void sort(List<DBAlertOracleMap1> x)
-    {
-        Collections.sort(x);
-    }
-
-    /**
      * Convert all meaning full names back to the internal codes for the XML generation
      *
      * @param changes -
      *        array of names for changes
      * @return - array of the corresponding key values
      */
+    @SuppressWarnings("unchecked")
     public String[] getKeyNames(String[] changes)
     {
         // Convert to list
@@ -8598,7 +8392,7 @@ public class DBAlertOracle implements DBAlert
             _DBMAP1OTHER)));
 
         // Ensure list sorted
-        DBAlertOracle.sort(list);
+        Collections.sort(list);
 
         // Convert it back to array as this is how the binary search is implemented
         DBAlertOracleMap1[] tempMap = list.toArray(new DBAlertOracleMap1[list.size()]);

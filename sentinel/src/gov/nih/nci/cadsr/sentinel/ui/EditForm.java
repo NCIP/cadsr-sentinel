@@ -1,14 +1,17 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditForm.java,v 1.3 2008-05-20 21:41:20 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditForm.java,v 1.2 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
 
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 /**
  * The struts form bean for edit.jsp.
@@ -16,126 +19,13 @@ import org.apache.struts.action.ActionMapping;
  * @author Larry Hebel
  */
 
-public class EditForm extends AlertRootForm
+public class EditForm extends ActionForm
 {
-
-    // Class data elements.
-    private String           _propName;
-
-    private String           _propDesc;
-
-    private String           _propCreator;
-
-    private String           _propCreateDate;
-
-    private String           _propLastRunDate;
-
-    private String           _propModifyDate;
-
-    private String           _repIncProp;
-
-    private String           _repStyle;
-
-    private String           _propIntro;
-
-    private String           _actAdminChg;
-
-    private String           _actAdminNew;
-
-    private String           _actAdminDel;
-
-    private String           _actAdminCopy;
-
-    private String           _infoSearchTerm;
-
-    private String           _infoVDTE;
-
-    private String           _infoVDTN;
-
-    private String           _freqUnit;
-
-    private String           _propStatus;
-
-    private String           _propBeginDate;
-
-    private String           _propEndDate;
-
-    private String           _freqEmpty;
-
-    private String           _freqAck;
-
-    private String           _propEmail;
-
-    private String           _actVersion;
-
-    private String           _actVerNum;
-
-    private String           _actVDT;
-
-    private String           _propStatusReason;
-
-    private String           _actContextUse;
-
-    private String           _actDependantChg;
-
-    private String           _infoContextUse;
-
-    private String           _infoVersion;
-
-    private String           _infoVerNum;
-
-    private String           _propRecipients[];
-
-    private String           _freqWeekly;
-
-    private String           _freqMonthly;
-
-    private String           _repAttributes[];
-
-    private String           _infoSearchIn;
-    
-    private int              _infoAssocLvl;
-
-    private String           _actWorkflowStatus[];
-
-    private String           _infoWorkflow[];
-
-    private String           _actRegStatus[];
-
-    private String           _infoRegStatus[];
-
-    private String           _infoCreator[];
-
-    private String           _infoModifier[];
-
-    private String           _infoProtos[];
-
-    private String           _infoSchemes[];
-
-    private String           _infoSchemeItems[];
-
-    private String           _infoForms[];
-
-    private String           _infoConceptDomain[];
-
-    private String           _infoSearchFor[];
-
-    private String           _propUsers[];
-
-    private String           _infoContext[];
-    
-    private String           _infoDateFilter;
-    
-    private String           _infoACTypes[];
-
-    private static final long serialVersionUID = 1111591331986981868L;
-
     /**
      * Constructor.
      */
     public EditForm()
     {
-        super();
         _nextScreen = Constants._ACTEDIT;
         _infoAssocLvl = 9;
     }
@@ -1278,13 +1168,22 @@ public class EditForm extends AlertRootForm
      *        The action map defined for Edit.
      * @param request_
      *        The servlet request object.
-     * @param ub_ the user AlertBean
-     * @param errors_ the current errors list
      * @return Any errors found.
      */
     public ActionErrors validate(ActionMapping mapping_,
-        HttpServletRequest request_, AlertBean ub_, ActionErrors errors_)
+        HttpServletRequest request_)
     {
+        ActionErrors errors = new ActionErrors();
+
+        HttpSession session = request_.getSession();
+        AlertBean ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
+        if (ub == null)
+        {
+            // Can't do this without a bean.
+            errors.add("bean", new ActionMessage("error.nobean"));
+            return errors;
+        }
+
         if (_nextScreen.equals(Constants._ACTSAVE))
         {
             // The form is self validating. Meaning we handle as much as
@@ -1305,6 +1204,119 @@ public class EditForm extends AlertRootForm
             // then to the user interface.
         }
 
-        return errors_;
+        return errors;
     }
+
+    // Class data elements.
+    private String           _nextScreen;
+
+    private String           _propName;
+
+    private String           _propDesc;
+
+    private String           _propCreator;
+
+    private String           _propCreateDate;
+
+    private String           _propLastRunDate;
+
+    private String           _propModifyDate;
+
+    private String           _repIncProp;
+
+    private String           _repStyle;
+
+    private String           _propIntro;
+
+    private String           _actAdminChg;
+
+    private String           _actAdminNew;
+
+    private String           _actAdminDel;
+
+    private String           _actAdminCopy;
+
+    private String           _infoSearchTerm;
+
+    private String           _infoVDTE;
+
+    private String           _infoVDTN;
+
+    private String           _freqUnit;
+
+    private String           _propStatus;
+
+    private String           _propBeginDate;
+
+    private String           _propEndDate;
+
+    private String           _freqEmpty;
+
+    private String           _freqAck;
+
+    private String           _propEmail;
+
+    private String           _actVersion;
+
+    private String           _actVerNum;
+
+    private String           _actVDT;
+
+    private String           _propStatusReason;
+
+    private String           _actContextUse;
+
+    private String           _actDependantChg;
+
+    private String           _infoContextUse;
+
+    private String           _infoVersion;
+
+    private String           _infoVerNum;
+
+    private String           _propRecipients[];
+
+    private String           _freqWeekly;
+
+    private String           _freqMonthly;
+
+    private String           _repAttributes[];
+
+    private String           _infoSearchIn;
+    
+    private int              _infoAssocLvl;
+
+    private String           _actWorkflowStatus[];
+
+    private String           _infoWorkflow[];
+
+    private String           _actRegStatus[];
+
+    private String           _infoRegStatus[];
+
+    private String           _infoCreator[];
+
+    private String           _infoModifier[];
+
+    private String           _infoProtos[];
+
+    private String           _infoSchemes[];
+
+    private String           _infoSchemeItems[];
+
+    private String           _infoForms[];
+
+    private String           _infoConceptDomain[];
+
+    private String           _infoSearchFor[];
+
+    private String           _propUsers[];
+
+    private String           _infoContext[];
+    
+    private String           _infoDateFilter;
+    
+    private String           _infoACTypes[];
+
+    private static final long serialVersionUID = 1111591331986981868L;
 }

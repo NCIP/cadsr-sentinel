@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/CDEBrowserAPI.java,v 1.14 2008-05-01 20:18:17 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/CDEBrowserAPI.java,v 1.13 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -44,17 +44,17 @@ public class CDEBrowserAPI
         String select = "select value from sbrext.tool_options_view_ext "
             + "where tool_name = 'CDEBrowser' and property = 'URL'";
         
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try
         {
-            pstmt = conn_.prepareStatement(select);
-            rs = pstmt.executeQuery();
+            PreparedStatement pstmt = conn_.prepareStatement(select);
+            ResultSet rs = pstmt.executeQuery();
             if (rs.next())
             {
                 _url = rs.getString(1);
                 _isPresent = true;
             }
+            rs.close();
+            pstmt.close();
         }
         catch (SQLException ex)
         {
@@ -63,17 +63,6 @@ public class CDEBrowserAPI
             String errorMsg = errorCode + ": " + select
                 + "\n\n" + ex.toString();
             _logger.error(errorMsg);
-        }
-        finally
-        {
-            if (rs != null)
-            {
-                try { rs.close(); } catch(Exception ex) { }
-            }
-            if (pstmt != null)
-            {
-                try { pstmt.close(); } catch(Exception ex) { }
-            }
         }
     }
     

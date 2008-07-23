@@ -2,7 +2,7 @@
  * Copyright (c) 2005 ScenPro, Inc.
  */
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.18 2008-05-16 18:28:25 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/util/DSRAlertV1.java,v 1.12 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.util;
@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -39,7 +38,7 @@ public class DSRAlertV1 implements DSRAlert
         _alertName = "";
         if (url_ == null || url_.length() == 0)
         {
-            url_ = "https://cadsrsentinel.nci.nih.gov/cadsrsentinel/do/";
+            url_ = "http://cadsrsentinel.nci.nih.gov/cadsrsentinel/do/";
             return;
         }
         
@@ -48,23 +47,9 @@ public class DSRAlertV1 implements DSRAlert
         int tndx = 0;
         
         // Must start with http:
-        _url = null;
-        if (tndx < tokens.length)
-        {
-            if (tokens[tndx].compareToIgnoreCase("http:") == 0)
-            {
-                _url = "http://";
-                ++tndx;
-            }
-            else if (tokens[tndx].compareToIgnoreCase("https:") == 0)
-            {
-                _url = "https://";
-                ++tndx;
-            }
-        }
-        if (_url == null)
-            _url = "http://";
-
+        _url = "http://";
+        if (tndx < tokens.length && tokens[tndx].compareToIgnoreCase("http:") == 0)
+            ++tndx;
         if (tndx < tokens.length && (tokens[tndx] == null || tokens[tndx].length() == 0))
             ++tndx;
         
@@ -95,44 +80,12 @@ public class DSRAlertV1 implements DSRAlert
         if (user_ != null && user_.length() > 0 &&
             idseq_ != null && idseq_.length() > 0)
         {
-            HttpURLConnection http = null;
             try
             {
-                boolean writeToLog = false;
                 URL rps = new URL(url);
-                http = (HttpURLConnection) rps.openConnection();
+                HttpURLConnection http = (HttpURLConnection) rps.openConnection();
                 http.setUseCaches(false);
-                InputStream iStream = http.getInputStream();
-                int response = http.getResponseCode();
-
-                // Test for redirection of the URL and open a connection to the real location.
-                switch (response)
-                {
-                    case HttpURLConnection.HTTP_MOVED_TEMP:
-                    case HttpURLConnection.HTTP_SEE_OTHER:
-                        // Log the redirect, ignore the default HTML response, we aren't a browser.
-                        _logger.info("Original URL " + url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
-                        url = http.getHeaderField("Location");
-                        _logger.info("Redirect URL " + url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
-                        
-                        // Drop the old connection.
-                        http.disconnect();
-                        
-                        // Turn up the new one.
-                        rps = new URL(url);
-                        http = (HttpURLConnection) rps.openConnection();
-                        http.setUseCaches(false);
-                        iStream = http.getInputStream();
-                        response = http.getResponseCode();
-                        break;
-
-                    // No redirect so fall through.
-                    default:
-                        break;
-                }
-
-                // Check the results of the create request.
-                switch (response)
+                switch (http.getResponseCode())
                 {
                     case HttpURLConnection.HTTP_NOT_IMPLEMENTED: rc = DSRAlert.RC_INCOMPATIBLE; break;
                     case HttpURLConnection.HTTP_CREATED: rc = DSRAlert.RC_CREATED; break;
@@ -140,25 +93,17 @@ public class DSRAlertV1 implements DSRAlert
                     case HttpURLConnection.HTTP_FORBIDDEN: rc = DSRAlert.RC_UNAUTHORIZED; break;
                     default:
                         rc = DSRAlert.RC_FAILED;
-                        _logger.error(url + " [" + http.getResponseCode() + " : " + http.getResponseMessage() + "]");
+                        _logger.error(http.getResponseMessage());
                         break;
                 }
                 
                 // Get the Alert Name returned from the create service.
                 if (rc >= 0)
                 {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(iStream));
-                    while (true)
-                    {
-                        String line = in.readLine();
-                        if (line == null)
-                            break;
-                        line = line.trim();
-                        _alertName = line;
-                        if (writeToLog)
-                            _logger.info(line);
-                    }
+                    BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream()));
+                    _alertName = in.readLine().trim();
                 }
+                http.disconnect();
             }
             catch(MalformedURLException ex)
             {
@@ -167,12 +112,6 @@ public class DSRAlertV1 implements DSRAlert
             catch(IOException ex)
             {
                 _logger.error("[" + url + "] " + ex.toString());
-            }
-            finally
-            {
-                // Clean up
-                if (http != null)
-                    http.disconnect();
             }
         }
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.11 2008-05-15 17:35:48 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/audits/AuditConceptToEVS.java,v 1.6 2007-07-19 15:26:44 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.audits;
@@ -16,9 +16,7 @@ import gov.nih.nci.evs.query.EVSQuery;
 import gov.nih.nci.evs.query.EVSQueryImpl;
 import gov.nih.nci.evs.security.SecurityToken;
 import gov.nih.nci.system.applicationservice.ApplicationException;
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
-import gov.nih.nci.system.client.ApplicationServiceProvider;
-
+import gov.nih.nci.system.applicationservice.ApplicationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -132,7 +130,7 @@ public class AuditConceptToEVS extends AuditReport
                     vocab._vocab = vName;
                     vocab._access = vAccess;
                     vocab._preferredDefinitionProp = (vDefProp == null) ? defProp : vDefProp;
-                    vocab._preferredNameProp = (vSearch == null) ? vDisplay : vSearch;
+                    vocab._preferredNameProp = vSearch;
                     vocab._ed = new NonMetaTh(vocab);
                     vocab._source = vSource;
                     vocabs.add(vocab);
@@ -150,11 +148,26 @@ public class AuditConceptToEVS extends AuditReport
                     if (text[3].equals("DISPLAY"))
                         vDisplay = props_[i]._value;
                     else if (text[3].equals("EVSNAME"))
+                    {
                         vName = props_[i]._value;
+
+                        if (vName.equals("NCI_Thesaurus"))
+                            vSource = "NCI_CONCEPT_CODE";
+                        else if (vName.equals("LOINC"))
+                            vSource = "LOINC_CODE";
+                        else if (vName.equals("GO"))
+                            vSource = "GO_CODE";
+                        else if (vName.equals("MedDRA"))
+                            vSource = "MEDDRA_CODE";
+                        else if (vName.equals("SNOMED_CT"))
+                            vSource = "SNOMED_CODE";
+                        else if (vName.equals("VA_NDFRT"))
+                            vSource = "VA_NDF_CODE";
+                        else if (vName.equals("MGED_Ontology"))
+                            vSource = "NCI_MO_CODE";
+                    }
                     else if (text[3].equals("ACCESSREQUIRED"))
                         vAccess = props_[i]._value;
-                    else if (text[3].equals("VOCABCODETYPE"))
-                        vSource = props_[i]._value;
                 }
                 else if (text.length == 5)
                 {
@@ -178,7 +191,7 @@ public class AuditConceptToEVS extends AuditReport
         vocab._vocab = vName;
         vocab._access = vAccess;
         vocab._preferredDefinitionProp = (vDefProp == null) ? defProp : vDefProp;
-        vocab._preferredNameProp = (vSearch == null) ? vDisplay : vSearch;
+        vocab._preferredNameProp = vSearch;
         vocab._ed = new NonMetaTh(vocab);
         vocab._source = vSource;
         vocabs.add(vocab);
@@ -381,6 +394,7 @@ public class AuditConceptToEVS extends AuditReport
                 {
                     // Need definitions.
                     MetaThesaurusConcept temp = (MetaThesaurusConcept) _cons.get(i);
+                    @SuppressWarnings("unchecked")
                     ArrayList<Definition> defs = temp.getDefinitionCollection();
                     if (defs != null && defs.size() > 0)
                     {
@@ -408,6 +422,7 @@ public class AuditConceptToEVS extends AuditReport
                 {
                     // Need definitions.
                     MetaThesaurusConcept temp = (MetaThesaurusConcept) _cons.get(i);
+                    @SuppressWarnings("unchecked")
                     ArrayList<Definition> defs = temp.getDefinitionCollection();
                     if (defs != null && defs.size() > 0)
                     {
@@ -501,7 +516,7 @@ public class AuditConceptToEVS extends AuditReport
                     _logger.error(ex);
                 }
             }
-            query_.getDescLogicConcept(_vocab._vocab, _rec._preferredName);
+            query_.getDescLogicConcept(_vocab._vocab, _rec._preferredName, true);
         }
 
         @Override
@@ -514,6 +529,7 @@ public class AuditConceptToEVS extends AuditReport
             
             String name = "no recommendations available";
             
+            @SuppressWarnings ("unchecked")
             Vector<Property> collection = obj.getPropertyCollection();
             if (collection == null || collection.size() == 0)
             {
@@ -525,8 +541,7 @@ public class AuditConceptToEVS extends AuditReport
             {
                 for (Property prop : collection)
                 {
-                    if (preferredName.equals(prop.getName()) ||
-                                    prop.getName().equals(_vocab._preferredNameProp))
+                    if (prop.getName().equals(_vocab._preferredNameProp))
                     {
                         name = prop.getValue();
                         break;
@@ -581,13 +596,6 @@ public class AuditConceptToEVS extends AuditReport
                         prop = (Property) collection.get(n);
                         if (_rec._longName.compareToIgnoreCase(prop.getValue()) == 0)
                         {
-                            // The collection.contains() test above doesn't always catch matching property names because of case.
-                            if (preferredName.equals(prop.getName()) || _vocab._preferredNameProp.compareToIgnoreCase(prop.getName()) == 0)
-                            {
-                                _flag = false;
-                                break;
-                            }
-
                             // Name matches on property {0} but expected to match on property {1}
                             _msg += formatMsg(_MSG010, prop.getName(),  ((_vocab._preferredNameProp == null) ? "(default)" : _vocab._preferredNameProp));
                             _flag = false;
@@ -614,6 +622,7 @@ public class AuditConceptToEVS extends AuditReport
             for (int i = 0; i < _cons.size() && srcFlag && defFlag; ++i)
             {
                 DescLogicConcept temp = (DescLogicConcept) _cons.get(i);
+                @SuppressWarnings("unchecked")
                 Vector<Property> props = temp.getPropertyCollection();
                 for (Property prop : props)
                 {
@@ -708,20 +717,7 @@ public class AuditConceptToEVS extends AuditReport
 
         // Get the EVS URL and establish the application service.
         String evsURL = _db.selectEvsUrl();
-        
-        EVSApplicationService evsApi;
-        try
-        {
-            evsApi = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
-        }
-        catch (Exception ex)
-        {
-            msgs.add("EVS API URL " + evsURL + " " + ex.toString());
-            StackTraceElement[] list = ex.getStackTrace();
-            for (int i = 0; i < list.length; ++i)
-                msgs.add(list[i].toString());
-            return msgs;
-        }
+        ApplicationService coreapi = ApplicationService.getRemoteInstance(evsURL);
 
         // Check each concept with EVS.
         String msg = null;
@@ -792,7 +788,7 @@ public class AuditConceptToEVS extends AuditReport
                 try
                 {
                     // Get the attributes for the concept code.
-                    ed._cons = evsApi.evsSearch(query);
+                    ed._cons = coreapi.evsSearch(query);
                 }
                 catch (ApplicationException ex)
                 {
@@ -815,20 +811,12 @@ public class AuditConceptToEVS extends AuditReport
                     // An unexpected exception occurred so record it and terminate the validation.
                     else
                     {
-                        msg += formatMsg(ex.toString());
-                        // msgs.add(msg);
-                        // _logger.error(ex.toString());
-                        // return msgs;
-                        break;
+                        msg += "\n" + ex.toString();
+                        msg = formatMsg(rec, vocab, msg);
+                        msgs.add(msg);
+                        _logger.error(ex.toString());
+                        return msgs;
                     }
-                }
-                catch (Exception ex)
-                {
-                    msgs.add(ex.toString());
-                    StackTraceElement[] list = ex.getStackTrace();
-                    for (int i = 0; i < list.length; ++i)
-                        msgs.add(list[i].toString());
-                    return msgs;
                 }
 
                 // Failed to retrieve EVS concept
@@ -900,35 +888,19 @@ public class AuditConceptToEVS extends AuditReport
     
     private String formatMsg(ConceptItem rec_, EVSVocab vocab_, String msg_)
     {
-        return rec_._longName + AuditReport._ColSeparator
-        + rec_._publicID + AuditReport._ColSeparator 
-        + rec_._version + AuditReport._ColSeparator
-        + ((vocab_ == null) ? "" : vocab_._display) + AuditReport._ColSeparator 
-        + rec_._preferredName + AuditReport._ColSeparator
+        return rec_._longName + AuditReport._ColSeparator + rec_._publicID + AuditReport._ColSeparator + rec_._version + AuditReport._ColSeparator + ((vocab_ == null) ? "" : vocab_._display) + AuditReport._ColSeparator + rec_._preferredName + AuditReport._ColSeparator
             + ((msg_.charAt(0) == '\n') ? msg_.substring(1) : msg_);
     }
     
     private String formatMaxMsg()
     {
-        return "*** Maximum Messages ***" + AuditReport._ColSeparator
-        + "***" + AuditReport._ColSeparator
-        + "***" + AuditReport._ColSeparator
-        + "***" + AuditReport._ColSeparator
-        + "***" + AuditReport._ColSeparator
-        + "The Error Message maximum limit [" + _maxMsgs + "] has been reached, report truncated.";
+        return "*** Maximum Messages ***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "***" + AuditReport._ColSeparator + "The Error Message maximum limit [" + _maxMsgs + "] has been reached, report truncated.";
     }
     
     private String formatTitleMsg()
     {
-        return "Concept" + AuditReport._ColSeparator
-        + "Public ID" + AuditReport._ColSeparator
-        + "Version" + AuditReport._ColSeparator
-        + "Vocabulary" + AuditReport._ColSeparator
-        + "Concept Code" + AuditReport._ColSeparator
-        + "Message";
+        return "Concept" + AuditReport._ColSeparator + "Public ID" + AuditReport._ColSeparator + "Version" + AuditReport._ColSeparator + "Vocabulary" + AuditReport._ColSeparator + "Concept Code" + AuditReport._ColSeparator + "Message";
     }
-    
-    private static final String preferredName = "Preferred_Name";
     
     private static final String _MSG001 = "Mislabeled as a MetaThesaurus Concept.";
     private static final String _MSG002 = "The caDSR definition source is missing and EVS has possible definitions.";

@@ -5,7 +5,7 @@
           "http://jakarta.apache.org/struts/dtds/struts-config_1_3.dtd">
 
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/WEB-INF/struts-config.xml,v 1.3 2008-07-02 15:55:11 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/WEB-INF/struts-config.xml,v 1.2 2007-12-07 21:52:53 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 
@@ -36,7 +36,6 @@
     <forward name="run" path="/jsp/run.jsp"/>
     <forward name="clear" path="/jsp/edit.jsp"/>
     <forward name="save" path="/jsp/edit.jsp"/>
-    <forward name="notfound" path="/jsp/notfound.jsp"/>
   </global-forwards>
 
   <!-- ========== Action Mapping Definitions ============================== -->
@@ -115,12 +114,6 @@
             name="urlForm"
             scope="request"
             input="/jsp/logon.jsp">
-    </action>
-    
-    <action path="/*"
-            type="gov.nih.nci.cadsr.sentinel.ui.NotFound"
-            scope="request"
-            input="/jsp/notfound.jsp">
     </action>
 
   </action-mappings>

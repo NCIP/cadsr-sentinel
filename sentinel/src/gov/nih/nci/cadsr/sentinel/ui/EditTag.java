@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.7 2008-06-20 20:44:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/EditTag.java,v 1.3 2007-07-19 15:26:45 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -9,7 +9,9 @@ import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import java.io.IOException;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.Globals;
 
@@ -19,83 +21,26 @@ import org.apache.struts.Globals;
  * @author Larry Hebel
  */
 
-public class EditTag extends AlertRootTag
+public class EditTag extends TagSupport
 {
-    // Class data elements.
-    private String         _namesList[];
-
-    private String         _namesVals[];
-
-    private String         _namesExempt;
-
-    private String         _groupsList[];
-
-    private String         _groupsVals[];
-
-    private String         _contextList[];
-
-    private String         _contextVals[];
-
-    private String         _schemeList[];
-
-    private String         _schemeVals[];
-
-    private String         _schemeContext[];
-
-    private String         _protoList[];
-
-    private String         _protoVals[];
-
-    private String         _protoContext[];
-
-    private String         _formsList[];
-
-    private String         _formsVals[];
-
-    private String         _formsContext[];
-
-    private String         _schemeItemList[];
-
-    private String         _schemeItemVals[];
-
-    private String         _schemeItemSchemes[];
-
-    private String         _workflowList[];
-
-    private String         _workflowVals[];
-
-    private String         _cworkflowList[];
-
-    private String         _cworkflowVals[];
-
-    private String         _regstatusList[];
-
-    private String         _regstatusVals[];
-
-    private String         _regcstatusList[];
-
-    private String         _regcstatusVals[];
-    
-    private String         _actypesList[];
-    
-    private String         _actypesVals[];
-    
-    private StringBuffer   _buf;
-    
-    private int            _bufLen;
-    
-    private String       _subject;
-
-    private static final long serialVersionUID = 1822843268148691725L;
-
     /**
      * Constructor
      */
     public EditTag()
     {
-        super();
         _buf = null;
         _bufLen = 0;
+    }
+
+    /**
+     * Set the section name.
+     * 
+     * @param section_
+     *        Either "init", "script" or "field".
+     */
+    public void setSection(String section_)
+    {
+        _section = section_;
     }
 
     /**
@@ -104,8 +49,12 @@ public class EditTag extends AlertRootTag
      * 
      * @return EVAL_PAGE to continue processing the remaining JSP.
      */
-    public int doEnd()
+    public int doEndTag()
     {
+        // Set the class data.
+        HttpSession session = pageContext.getSession();
+        _ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
+
         // Process the desired section.
         String temp = null;
 
@@ -154,13 +103,13 @@ public class EditTag extends AlertRootTag
      */
     private String getField()
     {
-        String temp = "<input type=\"hidden\" name=\"sessionKey\" value=\""
-            + _ub.resetKey() + "\">\n"
-            + "<input type=\"hidden\" name=\"creatorID\" value=\""
+        String temp = "<input type=hidden name=sessionKey value=\""
+            + _ub.getKey() + "\">\n"
+            + "<input type=hidden name=creatorID value=\""
             + _ub.getWorking().getRecipients(0) + "\">\n"
-            + "<input type=\"hidden\" name=\"usersTab\" value=\""
+            + "<input type=hidden name=usersTab value=\""
             + _ub.getLastUserTab() + "\">\n"
-            + "<input type=\"hidden\" name=\"mainTab\" value=\"" + _ub.getLastMainTab()
+            + "<input type=hidden name=mainTab value=\"" + _ub.getLastMainTab()
             + "\">\n";
         return temp;
     }
@@ -324,11 +273,7 @@ public class EditTag extends AlertRootTag
             .findAttribute(Globals.MESSAGES_KEY);
 
         int tspot = 0;
-        String temp[] = new String[107];
-
-        AlertPlugIn api = (AlertPlugIn) pageContext.getServletContext().getAttribute(DBAlert._DATASOURCE);
-        temp[tspot++] = "var helpUrl = \"" + api.getHelpUrl() + "\";\n";
-
+        String temp[] = new String[106];
         temp[tspot++] = "var MstatusReason = false;\nvar Mprev = \""
             + _ub.getEditPrev() + "\";\n";
 
@@ -666,6 +611,8 @@ public class EditTag extends AlertRootTag
      */
     public void release()
     {
+        _section = null;
+        _ub = null;
         _namesList = null;
         _namesVals = null;
         _namesExempt = null;
@@ -697,4 +644,75 @@ public class EditTag extends AlertRootTag
         _bufLen = 0;
         super.release();
     }
+
+    // Class data elements.
+    private String         _section;
+
+    private AlertBean      _ub;
+
+    private String         _namesList[];
+
+    private String         _namesVals[];
+
+    private String         _namesExempt;
+
+    private String         _groupsList[];
+
+    private String         _groupsVals[];
+
+    private String         _contextList[];
+
+    private String         _contextVals[];
+
+    private String         _schemeList[];
+
+    private String         _schemeVals[];
+
+    private String         _schemeContext[];
+
+    private String         _protoList[];
+
+    private String         _protoVals[];
+
+    private String         _protoContext[];
+
+    private String         _formsList[];
+
+    private String         _formsVals[];
+
+    private String         _formsContext[];
+
+    private String         _schemeItemList[];
+
+    private String         _schemeItemVals[];
+
+    private String         _schemeItemSchemes[];
+
+    private String         _workflowList[];
+
+    private String         _workflowVals[];
+
+    private String         _cworkflowList[];
+
+    private String         _cworkflowVals[];
+
+    private String         _regstatusList[];
+
+    private String         _regstatusVals[];
+
+    private String         _regcstatusList[];
+
+    private String         _regcstatusVals[];
+    
+    private String         _actypesList[];
+    
+    private String         _actypesVals[];
+    
+    private StringBuffer   _buf;
+    
+    private int            _bufLen;
+    
+    private String       _subject;
+
+    private static final long serialVersionUID = 1822843268148691725L;
 }

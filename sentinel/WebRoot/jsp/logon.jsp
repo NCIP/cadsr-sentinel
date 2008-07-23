@@ -1,21 +1,17 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.6 2008-06-20 20:18:54 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.3 2007-09-25 14:26:46 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ taglib uri="/tags/struts-bean" prefix="bean" %>
 <%@ taglib uri="/tags/struts-html" prefix="html" %>
 <%@ taglib uri="/tags/dsralert" prefix="dtags" %>
 
-<%@ page import="gov.nih.nci.cadsr.sentinel.ui.AlertPlugIn" %>
-<%@ page import="gov.nih.nci.cadsr.sentinel.database.DBAlert" %>
-
 <html>
     <head>
         <title><bean:message key="logon.title" /></title>
         <html:base />
         <meta http-equiv="Content-Language" content="en-us">
-        <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
-        <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
         <LINK href="/cadsrsentinel/css/sentinel.css" rel="stylesheet" type="text/css">
     </head>
 
@@ -28,10 +24,7 @@
         }
         function cmdHelp()
         {
-        <%
-            AlertPlugIn api = (AlertPlugIn) pageContext.getServletContext().getAttribute(DBAlert._DATASOURCE);
-        %>
-            window.open("<%=api.getHelpUrl()%>", "_blank");
+            window.open("/cadsrsentinel/html/help.html", "_blank");
         }
     </script>
 
@@ -61,7 +54,4 @@
     </td></tr></table>
     </html:form>
 </body>
-    <head>
-        <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
-    </head>
 </html>

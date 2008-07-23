@@ -1,6 +1,6 @@
 <!-- Copyright 2006 ScenPro, Inc.
 
-    $Header: /share/content/gforge/sentinel/sentinel/conf/template.sentinel-oracle-ds.xml,v 1.4 2008-05-16 20:15:28 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/conf/template.sentinel-oracle-ds.xml,v 1.3 2007-07-26 19:27:03 hebell Exp $
     $Names$
     
     This is the datasource for the Sentinel Tool pool for all work.
@@ -14,7 +14,7 @@
         <exception-sorter-class-name>org.jboss.resource.adapter.jdbc.vendor.OracleExceptionSorter</exception-sorter-class-name>
         <check-valid-connection-sql>select 1 from dual</check-valid-connection-sql>
         <blocking-timeout-millis>10000</blocking-timeout-millis>
-        <idle-timeout-minutes>5</idle-timeout-minutes>
+        <idle-timeout-minutes>2</idle-timeout-minutes>
         <max-pool-size>85</max-pool-size>
         <min-pool-size>1</min-pool-size>
         <user-name>@CADSR.DS.USER@</user-name> 
