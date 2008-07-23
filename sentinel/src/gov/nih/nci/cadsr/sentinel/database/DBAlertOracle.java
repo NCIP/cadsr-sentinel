@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.20 2008-07-14 14:52:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.21 2008-07-23 14:08:48 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -29,6 +29,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -4952,8 +4953,7 @@ public class DBAlertOracle implements DBAlert
                 // have to escape them or it causes
                 // problems downstream.
                 _formsList[ndx] = rec._data[ndx]._label;
-                _formsList[ndx] = _formsList[ndx].replaceAll("[\"]", "\\\\\"");
-                _formsList[ndx] = _formsList[ndx].replaceAll("[\\r\\n]", " ");
+                _formsList[ndx] = StringEscapeUtils.escapeJavaScript(_formsList[ndx]);
 
                 _formsVals[ndx] = rec._data[ndx]._id2;
                 _formsContext[ndx] = rec._data[ndx]._id1;

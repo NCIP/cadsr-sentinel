@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AlertRec.java,v 1.12 2007-07-19 15:26:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AlertRec.java,v 1.13 2008-07-23 14:08:48 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -9,6 +9,8 @@ import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * The Alert definition specifics. This contains all the information for a
@@ -395,9 +397,7 @@ public class AlertRec
         // Playing with the escape character to get past the compiler.
         String temp;
         temp = text_;
-        temp = temp.replaceAll("[&]", "&amp;");
-        temp = temp.replaceAll("[<]", "&lt;");
-        temp = temp.replaceAll("[>]", "&gt;");
+        temp = StringEscapeUtils.escapeHtml(temp);
         temp = temp.replaceAll("\\n", "<br>");
         return temp;
     }
