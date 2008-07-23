@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.144 2008-07-23 15:12:53 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.145 2008-07-23 15:26:22 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -211,8 +211,8 @@
             <fileset file="${lib.dir}/commons-logging-1.1.jar" />
             <fileset file="${lib.dir}/commons-pool-1.3.jar" />
             <fileset file="${lib.dir}/dlbadapter.jar" />
-            <fileset file="${lib.dir}/evsapi40-beans.jar" />
-            <fileset file="${lib.dir}/evsapi40-framework.jar" />
+            <fileset file="${lib.dir}/evsapi41-beans.jar" />
+            <fileset file="${lib.dir}/evsapi41-framework.jar" />
             <fileset file="${lib.dir}/hibernate3.jar" />
             <fileset file="${lib.dir}/jdom-1.0.jar" />
             <fileset file="${lib.dir}/lbAdmin.jar" />
