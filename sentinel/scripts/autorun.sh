@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Executing Auto Run for Sentinel Tool"
-echo "\$Header: /share/content/gforge/sentinel/sentinel/scripts/autorun.sh,v 1.6 2008-04-23 18:17:10 hebell Exp $"
+echo "\$Header: /share/content/gforge/sentinel/sentinel/scripts/autorun.sh,v 1.7 2008-07-24 13:55:03 hebell Exp $"
 echo "\$Name: not supported by cvs2svn $"
 
 DATE=`date +%Y%m%d`
@@ -30,6 +30,7 @@ CP=$CP:$BASE_DIR/cadsrsentinel.jar
 CP=$CP:$BASE_DIR/castor-1.0.2.jar
 CP=$CP:$BASE_DIR/cglib-2.1.3.jar
 CP=$CP:$BASE_DIR/commons-collections-3.2.jar
+CP=$CP:$BASE_DIR/commons-lang-2.4.jar
 CP=$CP:$BASE_DIR/commons-logging-1.1.jar
 CP=$CP:$BASE_DIR/commons-pool-1.3.jar
 CP=$CP:$BASE_DIR/dlbadapter.jar
