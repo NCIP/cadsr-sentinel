@@ -1,0 +1,949 @@
+<!-- Copyright ScenPro, Inc. 2005
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/html/help.html,v 1.5 2008-05-15 17:35:48 hebell Exp $
+     $Name: not supported by cvs2svn $
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252" content=""></meta>
+        <link href="/cadsrsentinel/css/sentinel.css" rel="stylesheet" type="text/css" />
+        <title>
+            caDSR Sentinel Tool
+        </title>
+        <style type="text/css">
+        .div1 { border-top: 3px solid black }
+        .aleft { text-align: left }
+        .aright { text-align: right }
+        .subsect { margin-top: 10pt; border-bottom: 1px solid #aaaaaa; border-top: 1px solid #aaaaaa }
+        .subbull { font-size: 12pt; font-weight: bold }
+        p.image { text-align: center; margin: 1cm 0cm 1cm 0cm }
+        img.image { border: outset 2px #bbddff }
+        ul { list-style-position: outside; list-style-type: disc; margin-left: 0.4in; padding-left: 0.4in }
+        ol { list-style-position: outside; list-style-type: decimal; margin-left: 0.4in; padding-left: 0.4in }
+        li { margin-top: 0.1in }
+        .rtable1 { border-collapse: collapse; margin-left: 0.5in; margin-top: 10pt }
+        .rcol1 { width: 0.5in }
+        .rtd1 { border-top: 1px solid black; border-bottom: 1px solid black }
+        .rtd2 { padding-bottom: 0.2in }
+        dt { font-weight: bold; margin-top: 0.1in }
+    </style>
+    </head>
+    <body>
+        <div style="text-align: center; margin-left: 1cm; margin-right: 1cm">
+            <div style="background-color: #A90101; width: 100%">
+                <div style="text-align: left; float: left">
+                    <a href="http://www.cancer.gov" target="_blank" title="National Cancer Institute">
+                        <img src="/cadsrsentinel/images/brandtype.gif" border="0" alt="NCI Logo">
+                    </a>
+                </div>
+                <div style="vertical-align: center; text-align: right">
+                    <a href="http://www.cancer.gov" target="_blank" title="National Cancer Institute">
+                        <img src="/cadsrsentinel/images/tagline_nologo.gif" border="0" alt="NCI Logo">
+                    </a>
+                </div>
+            </div>
+            <div style="text-align: left">
+                <a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr">
+                    <img style="border: 0px solid black" title="NCICB caDSR" src="/cadsrsentinel/images/sentinel_banner.gif" alt="caDSR Sentinel Banner">
+                </a>
+            </div>
+            <div>
+                <p class="ttl18" style="text-align: center">
+                    caDSR Sentinel Tool Documentation
+                    <br />
+                    Version 4.0.0.0
+                </p>
+                <a name="toc"></a>
+            </div>
+            <div style="text-align: left">
+                <div class="div1">
+                    <p class="bstd12">
+                        Table Of Contents
+                    </p>
+                    <ol style="margin-top: 10pt; margin-bottom: 10pt">
+                        <li>
+                            <a href="#intro">
+                                Introduction
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#banner">
+                                Banners
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#logon">
+                                Login
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#list">
+                                Alert List
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#create">
+                                Create
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#using">
+                                Create Using
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#edit">
+                                Edit
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#run">
+                                Run
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#dates">
+                                Dates
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#reports">
+                                Report Output
+                            </a>
+                        </li>
+                    </ol>
+                    <a name="intro"></a>
+                </div>
+                <div class="div1">
+                    <p class="bstd12">
+                        Introduction
+                    </p>
+                    <p class="std12" style="border-left: solid blue 3px; padding-left: 0.1in">
+                        Important changes between the Sentinel Tool release 3.2 and 4.0.0.0 are indicated by the heavy blue line to the left of the paragraph. All window images and
+                        report examples are updated for the 4.0 interface. More information concerning changes can be found in the <a>caCORE 4.0 Release Notes</a>.
+                    </p>
+                    <p class="std12">
+                        The caDSR Sentinel Tool is a web-based tool that allows users to create and manage Alert Definitions for the caDSR database. Alert
+                        Definitions are a set of rules that are periodically evaluated against the caDSR. If the conditions in those rules are met, notification
+                        is sent to the user (via e-mail) in the form of a hyperlink to an Alert Report. Alert Reports detail the changes (activities) that have
+                        taken place within the database.
+                    </p>
+                    <p class="std12">
+                        The caDSR Sentinel Tool provides users with the ability to monitor all changes to Administered Components (Data Elements, Data Element
+                        Concepts and Value Domains). The Administered Components of interest are specified through the selection of one or more of the following
+                        criteria:
+                    </p>
+                    <ul class="std12">
+                        <li>
+                            Context
+                        </li>
+                        <li>
+                            Protocols
+                        </li>
+                        <li>
+                            Forms / Templates
+                        </li>
+                        <li>
+                            Classification Scheme / Classification Scheme Item
+                        </li>
+                        <li>
+                            Administered Component Type
+                        </li>
+                        <li>
+                            Created By (Name)
+                        </li>
+                        <li>
+                            Modified By (Name)
+                        </li>
+                    </ul>
+                    <p class="std12">
+                        Users can also specify Administered Component attributes to monitor, including:
+                    </p>
+                    <ul class="std12">
+                        <li>
+                            Workflow Status
+                        </li>
+                        <li>
+                            Registration Status
+                        </li>
+                        <li>
+                            Version
+                        </li>
+                    </ul>
+                    <p class="std12">
+                        Additional details on the processing and interpretation of an Alert Definition can be found in the
+                        <a href="https://gforge.nci.nih.gov/docman/index.php?group_id=32&selected_doc_group_id=573&language_id=1" target="_blank">Sentinel
+                        Tool Installation Guide</a>, System
+                        Administrator Notes section. Please direct questions, comments and suggestions to the
+                        <a href="mailto:ncicb@pop.nci.nih.gov?subject=caDSR%20Sentinel%20Tool">
+                            NCICB Help Desk
+                        </a>
+                        or use one of the Forums on the
+                        <a href="http://gforge.nci.nih.gov" target="_blank">
+                            NCICB GForge
+                        </a>
+                        site under the caDSR Sentinel Tool project.
+                    </p>
+                    <p class="std12">
+                        <u>Note:</u> Within the Sentinel Tool pages please do not use the browser "Back" button. Each page provides the necessary links and buttons for
+                        navigation.
+                    </p>
+                    <p class="bstd12">
+                        Accessing and Using the Sentinel Tool
+                    </p>
+                    <p class="std12">
+                        Enter the URL, <a href="http://cadsrsentinel.nci.nih.gov" target="_blank">http://cadsrsentinel.nci.nih.gov</a>, into the Browser address bar
+                        or select the link from the <a href="http://cdecurate.nci.nih.gov" target="_blank">CDE Curation Tool</a>, Options menu. The application login page will open.
+                    </p>
+                    <p class="std12">
+                        <u>Note:</u> Only Internet Explorer Version 6.0 or higher has been certified.
+                    </p>
+                    <p class="std12">
+                        <a href="#toc">
+                            Table Of Contents
+                        </a>
+                    </p>
+                    <a name="banner"></a>
+                </div>
+                <div class="div1">
+                    <p class="bstd12">
+                        Banners
+                    </p>
+
+                    <p class="image">
+                        <img class="image" title="Header Banner" alt="Header Banner Picture" src="/cadsrsentinel/images/bannerhead.jpg" />
+                        <br />&nbsp;<br />
+                        <img class="image" title="Footer Banner" alt="Footer Banner Picture" src="/cadsrsentinel/images/bannerfoot.jpg" />
+                    </p>
+
+                    <p class="std12">
+                        The header and footer banners appear consistently on every page in the Sentinel Tool. Moving the mouse over the images and text
+                        displays a tool tip description for the link. In all cases selecting one of these links opens a new browser window and retains the
+                        Sentinel Tool page display.
+                    </p>
+                    <p class="std12">
+                        <a href="#toc">
+                            Table Of Contents
+                        </a>
+                    </p>
+                    <a name="logon"></a>
+                </div>
+                <div class="div1">
+                    <p class="bstd12">
+                        Login Page
+                    </p>
+                    <p class="image">
+                        <img class="image" title="Login Page" alt="Login Page Picture" src="/cadsrsentinel/images/logon.jpg" />
+                    </p>
+                    <p class="std12">
+                        The caDSR Sentinel Tool requires user authentication. By design, users must have a caDSR account to view,
+                        create, edit and run Alert Definitions. At NCICB, the Guest account is not valid for the Sentinel Tool. To obtain a user account for the
+                        Sentinel Tool, please
+                        contact the Alert or System Administrator for the URL on which it was installed. At NCICB, the URL is
+                        <a href="http://cadsrsentinel.nci.nih.gov" target="_blank">http://cadsrsentinel.nci.nih.gov</a>. Enter your caDSR Login ID and
+                        Password. The <a href="#list">Alerts List</a> page opens.
+                    </p>
+                    <p class="std12">
+                        <a href="#toc">
+                            Table Of Contents
+                        </a>
+                    </p>
+                    <a name="list"></a>
+                </div>
+                <div class="div1">
+                    <p class="bstd12">
+                        Alerts List Page
+                    </p>
+                    <p class="image">
+                        <img class="image" title="New List Page" alt="New List Page Picture" src="/cadsrsentinel/images/list1.jpg" />
+                    </p>
+                    <p class="std12">
+                        The main page within the Sentinel Tool is the Alerts List page. All features of the tool are accessible from this page. When a task
+                        completes, the tool often returns to this page. Initially, this page opens displaying either an empty list with a Welcome message
+                        or the Alerts that you have created. From this page, you can also create a new Alert, view all Alerts in the database, and Edit an
+                        existing Alert. 
+                    </p>
+                    <p class="std12">
+                        The buttons on the Alerts List page perform actions on one or more Alert Definitions in the list. These
+                        buttons are enabled and disabled appropriately as items are selected. 
+                    </p>
+                    <dl class="std12">
+
+                        <dt>Create
+                        <dd>
+                            Click to create a new Alert Definition. This opens a new page with fields to create a new Alert Definition, see
+                            <a href="#create">Create</a> for a complete description.
+
+                        <dt>Edit
+                        <dd>
+                            To enable, select exactly one Alert from the list. The Edit page opens allowing changes to the selected Alert. See
+                            <a href="#edit">Edit</a> for a complete description. 
+                            <br/><br/><u>Note:</u> Use of this button is restricted to the Alert creator.
+
+                        <dt>Create Using
+                        <dd>
+                            To enable, select exactly one Alert. The Edit page opens using the information from the selected Alert with some properties
+                            modified to reflect the new state. See <a href="#using">Create Using</a> for a complete description.
+
+                        <dt>Delete
+                        <dd>
+                            To enable, select one or more Alerts. A confirmation message box opens to avoid accidental deletion. Once
+                            confirmed, the selected Alerts are permanently deleted from the database.
+                            <br/><br/><u>Note:</u> This button is restricted to the Alert creator.
+                            <br/><br/><u>Note:</u> To exclude an Alert in the Auto Run Process, it is not necessary to delete it. See
+                            <a href="#edit">Edit</a> for details on the eligibility of an Alert for Auto Run.
+
+                        <dt>Run
+                        <dd>
+                            To enable, select exactly one Alert. The Run Submission page opens allowing the selection of run options prior to submission
+                            to the server. See <a href="#run">Run</a> for a complete description of the page.
+                            <br/><br/><u>Note:</u> Use of this button is restricted to the Alert creator.
+
+                        <dt>Show All / Show Private
+                        <dd>
+                            This button switches between "Show All" and "Show Private". Pressing "Show All" displays all alerts defined in the database and
+                            changes the button label to "Show Private". Pressing "Show Private" displays alerts that were created by the current user and
+                            changes the button label to "Show All".
+
+                        <dt>Help
+                        <dd>
+                            Appears on every page and displays this file in a separate browser window.
+
+                        <dt>Logout
+                        <dd>
+                            Appears on every page. Terminates the current Sentinel Tool session and returns to the
+                            <a href="#logon">Login</a> page.
+                    </dl>
+                    <p class="std12">
+                        To select or deselect an Alert, click the checkbox to the left of its name. You may also select or deselect all Alerts in the list via the
+                        checkbox at the top of the list.
+                    </p>
+                    <p class="image">
+                        <img class="image" title="List Page" alt="List Page Picture" src="/cadsrsentinel/images/list2.jpg" />
+                    </p>
+                    <p class="std12">
+                        The column headings may be selected to sort the list. Selecting a heading once sorts the list in ascending order; selecting the
+                        same heading again sorts in descending order. To perform a more complex sort, select the desired columns in reverse order.
+                        For example, to sort the list by Name and Last Auto Run, first select the column heading for the Last Auto Run and then select
+                        the column heading for Name. By default the List is initially sorted by Name.
+                    </p>
+                    <p class="std12">
+                        The columns are:
+                    </p>
+                    <dl class="std12">
+                        <dt>Name
+                        <dd>
+                            The name is provided by the Creator on the Edit Properties page. Names are not required to be unique. Alert Definitions are
+                            created with a hidden unique identifier to allow editing names at the creator's discretion.
+                        <dt>Summary
+                        <dd>
+                            The summary is generated from the content of the Alert Definition when a Save is performed. This column can not be used for sorting.
+                        <dt>Frequency
+                        <dd>
+                            The frequency is selected by the Creator on the Edit Properties page. It defines when the Alert Definition is processed by the
+                            Automated Alert Report Generator.
+                        <dt><b>Last Auto Run</b>
+                        <dd>
+                            The date/time is set by the Sentinel Automated Alert Report Generator when the Alert Definition is processed. This date is set whether or not a
+                            report is generated. For example, the frequency of an Alert Definition is set to daily but the date/time shows a date from more than
+                            a week ago. Upon inspection of the Alert Definition, note the Start and End dates are set and the Active period ended on the date of
+                            the Last Auto Run. A blank date/time and the string "(not yet run)" indicates a report has never been created for this Alert by the
+                            Auto Run Process.
+                        <dt>Active
+                        <dd>
+                            The active state of an Alert Definition appears as a check mark when the Edit Properties shows a state other than Inactive. An '<b>x</b>'
+                            will appear when the state is set to Inactive on the Edit Properties page.
+                        <dt>Creator
+                        <dd>
+                            The Alert Definition Creator Login ID.
+                    </dl>
+                    <p class="std12">
+                        <a href="#toc">
+                            Table Of Contents
+                        </a>
+                    </p>
+                    <a name="create"></a>
+                </div>
+                <div class="div1">
+                    <p class="bstd12">
+                        Create Page
+                    </p>
+                    <p class="image">
+                        <img class="image" title="Create Page" alt="Create Page Picture" src="/cadsrsentinel/images/create.jpg" />
+                    </p>
+                    <p class="std12">
+                        The Create page is an abbreviated interface to quickly create new Alert Definitions. Enter an Alert Name and select the desired Alert Definition
+                        template. Attributes not available on this page are set to the following values. Refer to
+                        <a href="#edit">
+                            Edit
+                        </a>
+                        for a complete description of each.
+                    </p>
+                    <ul class="std12">
+                        <li>
+                            <b>Status</b> is "Active, with no end date."
+                        </li>
+                        <li>
+                            <b>Frequency</b> is "Run Daily."
+                        </li>
+                        <li>
+                            <b>Include Properties Section</b> is "On."
+                        </li>
+                        <li>
+                            <b>Send Reports</b> is "Only when activity."
+                        </li>
+                        <li>
+                            <b>Recipient</b> is the creator only.
+                        </li>
+                        <li>
+                            <b>Static Comment</b> is "&lt;blank&gt;"
+                        </li>
+                        <li>
+                            <b>Forms/Templates, Classification Schemes and Classification Scheme Items</b> are "All."
+                        </li>
+                        <li>
+                            <b>Monitors</b> are "Any Change" for all properties.
+                        </li>
+                    </ul>
+                    <p class="std12">
+                        <a href="#toc">
+                            Table Of Contents
+                        </a>
+                    </p>
+                    <a name="using"></a>
+                </div>
+                <div class="div1">
+                    <p class="bstd12">
+                        Create Using Button
+                    </p>
+                    <p class="std12">
+                        The Create Using button uses the selected Alert Definition to populate the Edit page for creating a new Alert Definition. The Name is prefixed
+                        with "Create Using" and the Created By and Report Recipients are set to the Login ID. All attributes may be edited normally.
+                        When complete, select the Save button to record the new Alert Definition or the Back button to cancel the create. Please see
+                        <a href="#edit">
+                            Edit
+                        </a>
+                        for a complete description of the page and Alert Definition attributes.
+                    </p>
+                    <p class="std12">
+                        <a href="#toc">
+                            Table Of Contents
+                        </a>
+                    </p>
+                    <a name="edit"></a>
+                </div>
+                <div class="div1">
+                    <p class="bstd12">
+                        Edit Page
+                    </p>
+                    <p class="image">
+                        <img class="image" title="Edit Page" alt="Edit Page Picture" src="/cadsrsentinel/images/edit1.jpg" />
+                    </p>
+                    <p class="std12">
+                        The Edit page is used to view and maintain the Alert Definition attributes. Select the appropriate action button
+                        after completing any changes.
+                    </p>
+                    <dl class="std12">
+                        <dt>Save
+                        <dd>Stores the Alert Definition in the caDSR. Upon successful completion, the List page appears in the browser window.
+
+                        <dt>Clear
+                        <dd>Restores the definition from the caDSR when viewing an existing Alert Definition.
+
+                        <dt>Run
+                        <dd>Opens the Manual Run Submission page. Any changes made to the Alert Definition are not saved to the caDSR, however
+                            the changes are used by the Manual Run. Upon submission from the Run page, the Edit page appears with all unsaved edits intact.
+                            See the <a href="#run">Run Page</a> for more information.
+                    </dl>
+                    <p class="std12">
+                        The Alert Definition attribtues are displayed on four (4) tabs.
+                    </p>
+                    <dl class="std12">
+                        <dt>Properties
+                        <dd>Displays the name, created by, created date, modified date and frequency settings.
+
+                        <dt>Report Details
+                        <dd>Displays the report content and recipients.
+
+                        <dt>Criteria
+                        <dd>Displays the scope of the data to include in the output.
+
+                        <dt>Monitors
+                        <dd>Displays the activities that will trigger a report creation.
+                    </dl>
+                    <p class="std12">
+                        The remainder of this section describes the data interdependencies and their effects on the Report output.
+                    </p>
+                    <p class="subsect">
+                        <span class="subbull">
+                            &#916;
+                        </span>
+                        Properties Tab
+                    </p>
+                    <p class="image">
+                        <img class="image" title="Edit Properties Tab" alt="Edit Properties Tab Picture" src="/cadsrsentinel/images/edit2.jpg" />
+                    </p>
+                    <p class="std12">
+                        The Properties Tab contains the basic Alert Definition properties.
+                    </p>
+                    <dl class="std12">
+                        <dt>Alert Name<dd>The Alert Definition identification used both in the notification e-mail and the report body. Use names to briefly
+                            describe the function or purpose of the Alert, for example, "Changes to CCR" and "Watch for Retired Records".
+                        <dt>Summary<dd>Provides an overview of the Criteria and Monitors. Any reports generated, based on the current report definition, will only
+                            include information that meets the description shown.
+                        <dt>Auto Run Options<dd>Control the Alert Definition eligibilty in the Automated Report Generation Process by Frequency and Status.
+                            Running the Alert manually ignores both Frequency and Status.
+                        <dt>Frequency<dd>The execution cycle in the Automated Report Generation Process. The process runs daily at a time determined by the
+                            System Administrator. Alerts marked "Daily" are evaluated with each run. Those marked "Weekly" are evaluated only on the specific day of
+                            the week selected. Alerts marked "Monthly" are evaluated only on the specific day of the month selected. To indicate the first day of
+                            the month, select "1". To indicate the last day of the month, select "31". The Alert may be run manually at anytime via the Run button.
+                        <dt>Status<dd>Controls the Auto Run Frequency application in the Automated Report Generation Process.
+                        <dl>
+                            <dt>Active, no end date<dd>The Alert Definition is processed according to the Frequency.
+                            <dt>Active until the first report &hellip;<dd>After sending a report containing some activity, the status
+                                automatically changes to Inactive.
+                            <dt>Active only from &hellip;<dd>The Alert Definition is processed only within the dates specified. When the begin date is blank, the Alert
+                                Definition creation date is used. When the end date is blank and after reaching the begin date, the effect is the same as "Active, no end
+                                date".
+                                <br/><br/><u>Note:</u> Midnight is used for all comparisons, e.g. 03/01/2006 to 03/02/2006 is the 24 hour period beginning midnight
+                                03/01/2006.
+                            <dt>Inactive<dd>The Alert Definition is retained in the caDSR and not processed by the Automated Report Generation. A brief description
+                                is required.
+                        </dl>
+                    </dl>
+                    <a name="repdetail"></a>
+                    <p class="subsect">
+                        <span class="subbull">
+                            &#916;
+                        </span>
+                        Report Details Tab
+                    </p>
+                    <p class="image">
+                        <img class="image" title="Edit Report Details Tab" alt="Edit Report Details Tab Picture" src="/cadsrsentinel/images/edit3.jpg" />
+                    </p>
+                    <p class="std12">The Report Details Tab contains the properties controlling heading content and distribution.
+                    </p>
+                    <dl>
+                        <dt>Content<dd>Define the detail appearing on the report.
+                        <dt>Include information &hellip;<dd>Select to include an expanded header at the top of the report. The expanded header
+                            contains all the information appearing on the Properties Tab in addition to the standard information which includes the
+                            reporting date and the source database.
+                        <dt class="std12">Maximum number of levels &hellip;<dd>Set the stopping
+                            point on reporting the "Associated To" records. Each change in the caDSR has a defined area of effect. The record containing the
+                            change is referred to as level 0 (zero). Records directly associated to it are a level 1 (one). Records associated to the associated
+                            records are a level 2, and so on. For example, a Value Domain is changed, it is level 0. The Data Elements referencing the Value
+                            Domain are a level 1. The Modules, Class Scheme Items, etc that reference the Data Elements are a level 2. And so it continues
+                            throughout the database. Contexts appear at many levels due to the direct association between the Context and other records.
+                            Continuing the previous example, the Value Domain is directly associated to a Context and so it will be a level 1. The Data
+                            Elements associated to the Value Domain are directly associated to Contexts and so it is also a level 2. This can also be visiualized
+                            as a series of rings originating at the changed record and expanding out.
+                            <br/><br/><u>Note:</u> All Alert Definitions created prior to the Sentinel Tool 3.2 release have a default of nine (9), show all collateral
+                            errects.
+                        <dt>Distribution<dd>Define when and to whom reports are sent.
+                        <dt>Send a report from &hellip;<dd>Choose whether a report is sent with every processing of the
+                            Alert Definition or sent only when there is activity. To reduce e-mail traffic, select "&hellip; only when there is acitivity &hellip;".
+                        <dt>Recipients<dd>The e-mail distribution list for Automated and Manually generated reports. There are no limits on the list size or
+                            content. Add a recipient e-mail address by selecting a User Name, a Curators group or typing the address. A Process URL may also be entered.
+                            <dl>
+                                <dt>Users<dd>The user accounts defined within the caDSR. The list displays the user name, suffixed first by an asterisk when the account
+                                    is missing the e-mail address and suffixed by the associated Curator group names as appropriate within parenthesis. If the e-mail address is missing
+                                    the user may still be added as a Recipient. When the account profile is updated with an e-mail address, the user will begin receiving
+                                    Alert Reports.
+                                <dt>Curators<dd>The Curator groups derived from the user account profiles. A user is included in a Curator group when the account
+                                    is given any write permissions to the caDSR. Read only accounts are not included in any group. Selecting a Curator group as a recipient hides 
+                                    changes in the organization or assigned responsibilities. Alert Report e-mails to Curator groups are sent to all members except those listed
+                                    below "Additional e-mail address".
+                                <dt>Additional e-mail address and Process URL<dd>A desired recipients well formed e-mail address or software well formed URL.
+                                    This is often used to specify alternate e-mail addresses, temporary recipients and software process applications.
+                                    The user account profile supports a single e-mail address. Additional e-mail addresses must be entered here, e.g.
+                                    for John Smith to recieve an Alert Report at both work and home, the user account profile may contain one and the other entered here.
+                                    Alternatively, the user account profile may not have an e-mail address and both are entered here. If entering a process URL, please contact the NCI Help Desk
+                                    for programming design requirements and instructions on the target server application.
+                                <dt>The following users only receive &hellip;<dd>The users who have intentionally requested exclusion from the Recipient Curator groups. These users only
+                                    receive Alert Report e-mails when included by name or by e-mail address in the Recipient list.
+                            </dl>
+                            Once a selection is made or e-mail address is entered, select "Add" to insert the address into the recipients. Select a recipient and "Remove"
+                            to stop Alert Report e-mail distribution to an address.
+                            <br/><br/><u>Note:</u>During the Automated Generation process, Alert Reports are bundled into a single e-mail per address.
+                            
+                        <dt>To:<dd>A sample e-mail "To:" address displaying the selected recipients.
+                        <dt>Subject:<dd>The "Subject:" appearing on Alert Report distribution e-mails.
+                        <dt>(enter static comment here)<dd>Text entered in this field appears in the Report header. It does not appear in the distribution
+                            e-mails. As noted above, a recipient may have multiple report references in a single e-mail, consequently the text is included in the
+                            report. HTML tags are permitted within the text.
+                        <dt>Report Examples<dd>Opens a page containing two (2) Alert Report examples.
+                    </dl>
+                    <p class="std12">
+                        Alert Report distribution e-mails contain a brief general introduction and instructions followed by the Alert Report links. Please refer to the
+                        <a href="#reports">
+                            Report Output
+                        </a>
+                        section for more information.
+                    </p>
+                    <p class="subsect">
+                        <span class="subbull">
+                            &#916;
+                        </span>
+                        Criteria Tab
+                    </p>
+                    <p class="image">
+                        <img class="image" title="Edit Criteria Tab" alt="Edit Criteria Tab Picture" src="/cadsrsentinel/images/edit4.jpg" />
+                    </p>
+                    <p class="std12">
+                        The Criteria Tab contains attributes controlling the Alert Report scope. All lists on this page support multiple selections using standard
+                        selection key combinations using the mouse, Ctrl and Shift.
+                    </p>
+                    <dl>
+                        <dt>Select Context(s)<dd>Limit the report scope to records directly or indirectly associated to one or more Contexts. A record is directly
+                        associated when Owned By a Context, e.g. a Data Element. A record is indirectly associated when it is referenced by a record Owned
+                        By a Context, e.g. a Value Domain associated to a Data Element in the selected Context.
+                        
+                        <dt>Select Protocol(s)<dd>Limit the report scope to records directly or indirectly associated to one or more Protocols.
+                        
+                        <dt>Select Form(s)/Template(s)<dd>Limit the report scope to records directly or indirectly associated to one or more Forms or Templates.
+                        
+                        <dt>Select Classification Scheme(s)<dd>Limit the report scope to records directly or indirectly associated to one or more Classification Schemes.
+                        
+                        <dt>Select Classification Scheme Item(s)<dd>Limit the report scope to records directly or indirectly associated to one or more Classification Scheme Items.
+                        
+                        <dt>Select Administered Component Types<dd>Limit the report scope to specific record types.
+                        
+                        <dt>Reporting Dates are compared to<dd>Limit the report scope by activity types, created or changed, created only or changed only. This is
+                        the only single selection attribute on the page.
+                        
+                        <dt>Select Workflow Status(es)<dd>Limit the report scope to records with a specific Workflow Status. The Workflow Status must be equal to
+                        the selection(s) indicated during report generation to be eligible.
+                        
+                        <dt>Select Registration Status(es)<dd>Limit the report scope to records with a specific Registration Status. The Registration Status must be equal to
+                        the selection(s) indicated during report generation to be eligible.
+                        
+                        <dt>Select Created By<dd>Limit the report scope to records created by the users selected.
+                        
+                        <dt>Select Last Modified By<dd>Limit the report scope to records last modified by the users selected. Some records only record the last user applying
+                        changes. Others keep a change history with the user making the change. When history records exist the scope includes all changes made by
+                        the users selected.
+                    </dl>
+                    <p class="std12">
+                        Selections are combined using logical "OR" conditions for an attribute and logical "AND" conditions for the criteria. For example, a selection of
+                        Contexts CTEP and CCR and a selection of Created By user Bob Marley will result in a scope set of:
+                    </p>
+                    <p class="std12" style="margin-left: 0.5in">
+                        ((Context equal "CTEP") or (Context equal "CCR")) and (Created By equal "Bob Marley")
+                    </p>
+                    <p class="std12">
+                        The summary which appears on the Properties tab has been annotated to clearly convey the interpretation of the criteria scope. The
+                        parentheses in this example illustrate the logical association of expressions.
+                    </p>
+                    <p class="std12">
+                        <u>Note:</u> The Workflow Status and Registration Status on this tab are not related to the attributes on the Monitors tab. On the
+                        Criteria tab these attributes define the current data scope. Selecting a specific value limits the scope using the current value not a
+                        previous value. On the Monitor tab these attributes define a specific change to trigger an Alert Report.
+                    </p>
+                    <p class="subsect">
+                        <span class="subbull">
+                            &#916;
+                        </span>
+                        Monitors Tab
+                    </p>
+                    <p class="image">
+                        <img class="image" title="Edit Monitors Tab" alt="Edit Monitors Tab Picture" src="/cadsrsentinel/images/edit5.jpg" />
+                    </p>
+                    <p class="std12">
+                        The Monitors Tab contains attributes controlling the Alert Report triggers. All lists on this page support multiple selections using standard
+                        selection key combinations using the mouse, Ctrl and Shift.
+                    </p>
+                    <dl>
+                        <dt>Workflow Status(es)<dd>Trigger an Alert Report when the Workflow Status is changed to one of the selections.
+                        <dt>Registration Status(es)<dd>Trigger an Alert Report when the Registration Status is changed to one of the selections.
+                        <dt>Versoin<dd>Trigger an Alert Report when the Version is changed to one of the selections.
+                    </dl>
+                    <p class="std12">
+                        Special selections:
+                    </p>
+                    <dl>
+                        <dt>Any Change<dd>Triggers a report for any and all value changes to the record property.
+                        <dt>Ignore<dd>Disables triggers for Alert Report creation for the record property.
+                        <dt>Whole Number Change<dd>Applies to Version number changes only, triggers a report when the record whole number part changes, decimal
+                            number part changes are ignored.
+                        <dt>Specific<dd>Applies to Version number changes only, used to indicate a specific version number to trigger the report creation.
+                    </dl>
+                    <p class="std12">
+                        <u>Note:</u> The selection combination on the Monitors Tab triggers the Alert Report creation by interrogating the data activities. When all
+                        attributes are set to "Any Change", all activity within the scope defined on the Criteria Tab will trigger the report creation. This is the default
+                        setting for new Alert Definitions. Selecting specific values for one or more attributes significantly limits that data activities triggering report
+                        creation because a specific activity matching the attributes values must be found in the caDSR history for the reporting dates. For example, selecting
+                        the Workflow Status "RELEASED" will only trigger a report when this specific change is found in the history - other changes would not trigger
+                        a report creation.
+                    </p>
+                    <p class="std12">
+                        <u>Note:</u> Some data is not logged in the caDSR history and will appear as "Details not available" on an Alert Report.
+                    </p>
+                    <p class="std12">
+                        See the
+                        <a href="#reports">
+                            Report Output
+                        </a>
+                        section for more details.
+                    </p>
+                    <p class="std12">
+                        <a href="#toc">
+                            Table Of Contents
+                        </a>
+                    </p>
+                    <a name="run"></a>
+                </div>
+                <div class="div1">
+                    <p class="bstd12">
+                        Run Page
+                    </p>
+                    <p class="image">
+                        <img class="image" title="Run Page" alt="Run Page Picture" src="/cadsrsentinel/images/run.jpg" />
+                    </p>
+                    <p class="std12">
+                        The Manual Alert Run page provides input for a report date range and a selection to use either the creator as the sole recipient or the defined
+                        recipient list. The request can then be submitted to the server for the single Alert Definition by selecting the Run button from the
+                        List and Edit pages.
+                    </p>
+                    <p class="std12">
+                        The process, called a Manual Run, executes on the web server which hosts the Sentinel Tool. A confirmation message appears after
+                        submitting the request. Manual Runs always send an e-mail, the "Send a report from &hellip;" specified on the <a href="#repdetail">Edit page, Report Details tab</a>
+                        is ignored. Although the confirmation message appears immediately, the time to create and send the Alert Report depends on many
+                        factors including the number of manual runs being processed and the volume of output generated.
+                    </p>
+                    <p class="std12">
+                        A Manual Run executes the same logic and code as an Auto Run with minor exceptions. First, the Manual Run only processes one Alert
+                        Definition where the Auto Run may process many. Second, a report is always sent by a Manual Run.
+                        When started from the Edit page, an Alert can be run without saving changes to the Definition.
+                    </p>
+                    <p class="std12">
+                        <u>Note:</u> After submitting a Manual Run there is no means to monitor its progress or determine when the Report e-mail will be received.
+                    </p>
+                    <p class="std12">
+                        <a href="#toc">
+                            Table Of Contents
+                        </a>
+                    </p>
+                    <a name="dates"></a>
+                </div>
+                <div class="div1">
+                    <p class="bstd12">
+                        Dates
+                    </p>
+                    <p class="std12">
+                        Date ranges within the Sentinel Tool and Alerts are always interpreted from midnight to midnight.
+                    </p>
+                    <ul class="std12">
+                        <li>
+                            To manually run an Alert to cover all changes made today, make the starting date the same as today's date and the ending date
+                            tomorrow's date.
+                        </li>
+                        <li>
+                            To manually run an Alert to cover all changes made yesterday, make the starting date yesterday's date and the ending date today's
+                            date.
+                        </li>
+                    </ul>
+                    <p class="std12">
+                        <a href="#toc">
+                            Table Of Contents
+                        </a>
+                    </p>
+                    <a name="reports"></a>
+                </div>
+                <div class="div1">
+                    <p class="bstd12">
+                        Report Output
+                    </p>
+                    <p class="std12">
+                        Report output is controlled by many settings in the Alert Definition.
+                    </p>
+                    <p class="std12">
+                        Reports contain two sections, a header and body. The header always contains the Sentinel Name, Created By Name, Summary, Static
+                        Introduction (from the Edit, Report Details tab), Report Date Range and Report Creation Date. Additional information appears as
+                        specified by the attributes on the <a href="#repdetail">Edit page, Report Details tab</a>. The body contains details relating to the
+                        scope and triggers specified by the attributes on the Edit page, Criteria and Monitors tab.
+                    </p>
+                    <p class="std12">
+                        The report body contains several major blocks of information. Each block starts with a Row Number, Group Number, Record Type prefix and
+                        Record Name. For example:
+                    </p>
+                    <table class="rtable1" style="margin-top: 10pt">
+                        <colgroup>
+                            <col class="rcol1" />
+                            <col class="rcol1" />
+                            <col />
+                        </colgroup>
+                        <tbody />
+                            <tr>
+                                <td class="rtd1">
+                                    1
+                                </td>
+                                <td class="rtd1">
+                                    1
+                                </td>
+                                <td class="rtd1">
+                                    Changes to the Data Element: Blood Pressure
+                                </td>
+                            </tr>
+                    </table>
+                    <p class="std12">
+                        The Row Number shows the number of logical rows of information appearing on the report. This does
+                        not represent the number of physical lines. When the Record Type prefix begins with "Changes to the &hellip;" the block indicates an actual
+                        change to the record being described. When the prefix begins with "Associated to &hellip;" the block indicates the record is associated in
+                        some way to the most previous change block. These Associated records have not changed. They are provided for the user analysis of
+                        possible collateral impacts occurring from the actual change. The Group Number shows the proximity of the change. For example:
+                    </p>
+                    <table class="rtable1">
+                        <colgroup>
+                            <col class="rcol1" />
+                            <col class="rcol1" />
+                            <col />
+                        </colgroup>
+                        <tbody />
+                            <tr>
+                                <td class="rtd1">
+                                    1
+                                </td>
+                                <td class="rtd1">
+                                    1
+                                </td>
+                                <td class="rtd1">
+                                    Changes to the Data Element Concept: &#8230;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="rtd2">
+                                    <b>
+                                        &#8230;
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="rtd1">
+                                    2
+                                </td>
+                                <td class="rtd1">
+                                    1.1
+                                </td>
+                                <td class="rtd1">
+                                    Associated To Data Element: &#8230;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="rtd2">
+                                    <b>
+                                        &#8230;
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="rtd1">
+                                    3
+                                </td>
+                                <td class="rtd1">
+                                    1.1.1
+                                </td>
+                                <td class="rtd1">
+                                    Associated To Context: &#8230;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="rtd2">
+                                    <b>
+                                        &#8230;
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="rtd1">
+                                    4
+                                </td>
+                                <td class="rtd1">
+                                    1.2
+                                </td>
+                                <td class="rtd1">
+                                    Associated To Context: &#8230;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="rtd2">
+                                    <b>
+                                        &#8230;
+                                    </b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="rtd1">
+                                    5
+                                </td>
+                                <td class="rtd1">
+                                    2
+                                </td>
+                                <td class="rtd1">
+                                    Changes to the Value Domain: &#8230;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="rtd2">
+                                    <b>
+                                        &#8230;
+                                    </b>
+                                </td>
+                            </tr>
+                    </table>
+                    <p class="std12">
+                        Rows 1 and 5 are actual changes to records in the caDSR. Note the use of "Changes to the &hellip;" and the group number is a simple integer.
+                        Rows 2, 3 and 4 are all associated to the change noted in row 1. Row 2 is directly associated to row 1 as noted by the group number 1.1.
+                        Row 3 is directly associated to row 2 as noted by the group number 1.1.1 and is indirectly associated to row 1. Row 4 is directly
+                        associated to row 1 as noted by the group number 1.2.
+                    </p>
+                    <p class="std12">
+                        Because the main focus of the Alert Report is to document the change activities that occurred in the caDSR, these always precede the
+                        associated record blocks. The nature of the associations is such that a true visual representation would require a two-dimensional
+                        graphical network diagram. Although the change blocks should only appear once, the associated record blocks most often have duplication.
+                    </p>
+                    <p class="std12">
+                        For each block, change or associated, when possible the report will show public id, version, modified by, modified date, created by and
+                        created date. If the public id or version appears as N/A, the record can not have the attribute. If the modified by and date appear as
+                        &lt;null&gt;, the record has not been changed since its original creation.
+                    </p>
+                    <p class="std12">
+                        For change activities for most Administered Components (including Data Element, Data Element Concept and Value Domain) another sub-block
+                        appears showing the specific changes noted by attribute, old value and new value. Some change blocks state the details are unavailable.
+                        This is due to incomplete auditing information and will be addressed with each new release.
+                    </p>
+                    <p class="std12">
+                        Reports are prevented from becoming too large for the browser via a system configuration threshold. When a report exceeds the threshold
+                        it is divided into multiple parts. The rows are counted as described above and not as individual lines. This is called a multi-part
+                        report. The e-mail sent to each recipient will note the number of parts created. The link provided in the e-mail is to an index of links
+                        to each part. Each file in a multi-part report shows the part number with Next and Previous links to facilitate reading and navigating
+                        the files. If the report size becomes cumbersome specify a smaller value for the Maximum Associated To Level or make the Alert
+                        Definition Criteria more specific.
+                    </p>
+                    <p class="std12">
+                        Example reports can be found
+                        <a href="samples.html">
+                            here
+                        </a>
+                        .
+                    </p>
+                    <p class="std12">
+                        <a href="#toc">
+                            Table Of Contents
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div>
+                <p class="ncifmenu" style="width: 100%; text-align: left; vertical-align: middle; color: #dddddd">
+                    v&#160;4.0
+                </p>
+                <p>
+                    <a href="mailto:ncicb@pop.nci.nih.gov?subject=caDSR%20Sentinel%20Tool"><span class="wdemail" title="E-mail NCICB Help Desk">&#42;</span></a>
+                    <a target="_blank" href="http://www.cancer.gov/"><img border="0" src="/cadsrsentinel/images/footer_nci.gif" alt="National Cancer Institute Logo" title="National Cancer Institute" /></a>
+                    <a target="_blank" href="http://www.dhhs.gov/"><img border="0" src="/cadsrsentinel/images/footer_hhs.gif" alt="Department of Health and Human Services Logo" title="Department of Health and Human Services" /></a>
+                    <a target="_blank" href="http://www.nih.gov/"><img border="0" src="/cadsrsentinel/images/footer_nih.gif" alt="National Institutes of Health Logo" title="National Institutes of Health" /></a>
+                    <a target="_blank" href="http://www.usa.gov/"><img border="0" src="/cadsrsentinel/images/footer_usagov.gif" alt="USA.gov" title="USA.gov" /></a>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
