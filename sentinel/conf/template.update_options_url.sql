@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.9 2008-06-09 19:39:15 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.10 2008-09-04 21:49:30 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -36,6 +36,10 @@ where REGEXP_LIKE(value, 'formbuilder[^/.]*\.nci\.nih\.gov');
 update sbrext.tool_options_view_ext
 set value = REGEXP_REPLACE(value, 'freestyle[^/.]*\.nci\.nih\.gov', 'freestyle@TIER@.nci.nih.gov')
 where REGEXP_LIKE(value, 'freestyle[^/.]*\.nci\.nih\.gov');
+
+update sbrext.tool_options_view_ext
+set value = REGEXP_REPLACE(value, 'objcart[^/.]*\.nci\.nih\.gov', 'objcart@TIER@.nci.nih.gov')
+where REGEXP_LIKE(value, 'objcart[^/.]*\.nci\.nih\.gov');
 
 update sbrext.tool_options_view_ext
 set value = REGEXP_REPLACE(value, 'ocbrowser[^/.]*\.nci\.nih\.gov', 'ocbrowser@TIER@.nci.nih.gov')
