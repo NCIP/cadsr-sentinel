@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.14 2008-08-20 15:46:15 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.15 2008-09-08 14:22:24 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -77,15 +77,11 @@ values ('SENTINEL', 'ADMIN.03', '2', 'REEVESD',
 'An account to receive the caDSR Audit Report.');
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.04', '2', 'PAGGARWA',
+values ('SENTINEL', 'ADMIN.04', '2', 'HAUD',
 'An account to receive the caDSR Audit Report.');
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.05', '2', 'HAUD',
-'An account to receive the caDSR Audit Report.');
-
-insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.06', '2', 'CURTIST',
+values ('SENTINEL', 'ADMIN.05', '2', 'CURTIST',
 'An account to receive the caDSR Audit Report.');
 
 
