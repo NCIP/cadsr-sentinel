@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.15 2008-09-08 14:22:24 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.16 2008-09-22 12:54:29 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -60,30 +60,32 @@ values ('SENTINEL', 'ALERT.NAME.FORMAT', '$ac_name$',
    documented in the Installation Guide.
 */
 
-insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.00', '01', 'HEBELL',
-'An account given full Sentinel Administrator privileges.');
-
-insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.01', '2', 'ALREDS',
-'An account to receive the caDSR Audit Report.');
-
-insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.02', '2', 'DWARZEL',
-'An account to receive the caDSR Audit Report.');
-
-insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.03', '2', 'REEVESD',
-'An account to receive the caDSR Audit Report.');
-
-insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.04', '2', 'HAUD',
-'An account to receive the caDSR Audit Report.');
-
-insert into sbrext.tool_options_view_ext (tool_name, property, value, ua_name, description)
-values ('SENTINEL', 'ADMIN.05', '2', 'CURTIST',
-'An account to receive the caDSR Audit Report.');
-
+MERGE INTO sbrext.tool_options_view_ext s
+   USING (SELECT hits.tool_name, hits.property, hits.VALUE, hits.ua_name, hits.description
+            FROM (SELECT 'SENTINEL' AS tool_name, 'ADMIN.00' AS property, '01' AS VALUE, 'HEBELL' AS ua_name, 'An account given full Sentinel Administrator privileges.' AS description, 'ALL' AS tier FROM DUAL
+                  UNION
+                  SELECT 'SENTINEL', 'ADMIN.01', '2', 'ALREDS', 'An account to receive the caDSR Audit Report.', 'ALL' FROM DUAL
+                  UNION
+                  SELECT 'SENTINEL', 'ADMIN.02', '2', 'DWARZEL', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
+                  UNION
+                  SELECT 'SENTINEL', 'ADMIN.02', '2', 'DWARZEL', 'An account to receive the caDSR Audit Report.', 'STAGE' FROM DUAL
+                  UNION
+                  SELECT 'SENTINEL', 'ADMIN.02', '2', 'DWARZEL', 'An account to receive the caDSR Audit Report.', 'SANDBOX' FROM DUAL
+                  UNION
+                  SELECT 'SENTINEL', 'ADMIN.03', '2', 'REEVESD', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
+                  UNION
+                  SELECT 'SENTINEL', 'ADMIN.04', '2', 'HAUD', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
+                  UNION
+                  SELECT 'SENTINEL', 'ADMIN.05', '2', 'CURTIST', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
+                  ) hits
+           WHERE hits.tier IN ('ALL', '@TIER.UPPER@')) t
+   ON (s.tool_name = t.tool_name AND s.property = t.property)
+   WHEN MATCHED THEN
+      UPDATE
+         SET s.VALUE = t.VALUE, s.ua_name = t.ua_name
+   WHEN NOT MATCHED THEN
+      INSERT (tool_name, property, VALUE, ua_name, description)
+      VALUES (t.tool_name, t.property, t.VALUE, t.ua_name, t.description);
 
 /*
    The URL should be retrieved and passed to the Sentinel API
