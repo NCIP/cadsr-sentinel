@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.16 2008-09-22 12:54:29 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.17 2008-10-20 16:13:42 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -77,6 +77,8 @@ MERGE INTO sbrext.tool_options_view_ext s
                   SELECT 'SENTINEL', 'ADMIN.04', '2', 'HAUD', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
                   UNION
                   SELECT 'SENTINEL', 'ADMIN.05', '2', 'CURTIST', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
+                  UNION
+                  SELECT 'SENTINEL', 'ADMIN.06', '2', 'AZIEN', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
                   ) hits
            WHERE hits.tier IN ('ALL', '@TIER.UPPER@')) t
    ON (s.tool_name = t.tool_name AND s.property = t.property)
