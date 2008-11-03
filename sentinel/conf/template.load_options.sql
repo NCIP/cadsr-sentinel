@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.17 2008-10-20 16:13:42 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.18 2008-11-03 18:41:48 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -99,6 +99,10 @@ MERGE INTO sbrext.tool_options_view_ext s
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
 values ('SENTINEL', 'URL', 'https://cadsrsentinel@TIER@.nci.nih.gov',
 'The URL for the Sentinel Tool connected this caDSR database.');
+
+insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
+values ('SENTINEL', 'VERSION', '@appl.version@',
+'The version identification for the current Sentinel Tool.');
 
 /*
    The report threshold controls when a single report is broken into multiple
