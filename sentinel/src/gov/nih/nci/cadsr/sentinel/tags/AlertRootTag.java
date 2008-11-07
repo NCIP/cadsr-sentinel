@@ -1,9 +1,11 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertRootTag.java,v 1.1 2008-05-20 22:57:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/AlertRootTag.java,v 1.1 2008-11-07 14:11:10 hebell Exp $
 // $Name: not supported by cvs2svn $
 
-package gov.nih.nci.cadsr.sentinel.ui;
+package gov.nih.nci.cadsr.sentinel.tags;
+
+import gov.nih.nci.cadsr.sentinel.ui.AlertBean;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.tagext.TagSupport;

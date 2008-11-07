@@ -1,9 +1,9 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/HeadTag.java,v 1.4 2007-09-25 14:26:46 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/HeadTag.java,v 1.1 2008-11-07 14:11:10 hebell Exp $
 // $Name: not supported by cvs2svn $
 
-package gov.nih.nci.cadsr.sentinel.ui;
+package gov.nih.nci.cadsr.sentinel.tags;
 
 import java.io.IOException;
 import javax.servlet.jsp.JspWriter;

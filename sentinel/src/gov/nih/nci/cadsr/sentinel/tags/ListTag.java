@@ -1,14 +1,17 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListTag.java,v 1.7 2008-06-20 20:44:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/ListTag.java,v 1.1 2008-11-07 14:11:10 hebell Exp $
 // $Name: not supported by cvs2svn $
 
-package gov.nih.nci.cadsr.sentinel.ui;
+package gov.nih.nci.cadsr.sentinel.tags;
 
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
+import gov.nih.nci.cadsr.sentinel.ui.AlertBean;
+import gov.nih.nci.cadsr.sentinel.ui.AlertPlugIn;
+
 import java.io.IOException;
 
 import javax.servlet.jsp.JspWriter;

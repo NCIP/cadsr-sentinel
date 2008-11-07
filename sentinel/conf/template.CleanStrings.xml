@@ -1,6 +1,6 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 
-<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.CleanStrings.xml,v 1.1 2008-11-06 19:07:54 hebell Exp $
+<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.CleanStrings.xml,v 1.2 2008-11-07 14:11:11 hebell Exp $
        $Name: not supported by cvs2svn $
  -->
 
@@ -17,4 +17,5 @@
         
         <entry key="table.01">sbr.data_elements_view long_name preferred_definition</entry>
         <entry key="table.02">sbr.data_element_concepts_view long_name preferred_definition</entry>
+        <entry key="table.03">sbr.admin_components_view long_name preferred_definition</entry>
 </properties>
