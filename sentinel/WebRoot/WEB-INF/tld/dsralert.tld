@@ -2,7 +2,7 @@
 
 <!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/WEB-INF/tld/dsralert.tld,v 1.1 2007-07-19 15:26:45 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/WEB-INF/tld/dsralert.tld,v 1.2 2008-11-07 14:16:14 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <taglib>
@@ -11,7 +11,7 @@
 <shortname>dtags</shortname>
 <tag>
 <name>create</name>
-<tagclass>gov.nih.nci.cadsr.sentinel.ui.CreateTag</tagclass>
+<tagclass>gov.nih.nci.cadsr.sentinel.tags.CreateTag</tagclass>
 <bodycontent>empty</bodycontent>
 <attribute>
 <name>section</name>
@@ -20,7 +20,7 @@
 </tag>
 <tag>
 <name>edit</name>
-<tagclass>gov.nih.nci.cadsr.sentinel.ui.EditTag</tagclass>
+<tagclass>gov.nih.nci.cadsr.sentinel.tags.EditTag</tagclass>
 <bodycontent>empty</bodycontent>
 <attribute>
 <name>section</name>
@@ -29,7 +29,7 @@
 </tag>
 <tag>
 <name>list</name>
-<tagclass>gov.nih.nci.cadsr.sentinel.ui.ListTag</tagclass>
+<tagclass>gov.nih.nci.cadsr.sentinel.tags.ListTag</tagclass>
 <bodycontent>empty</bodycontent>
 <attribute>
 <name>section</name>
@@ -38,7 +38,7 @@
 </tag>
 <tag>
 <name>run</name>
-<tagclass>gov.nih.nci.cadsr.sentinel.ui.RunTag</tagclass>
+<tagclass>gov.nih.nci.cadsr.sentinel.tags.RunTag</tagclass>
 <bodycontent>empty</bodycontent>
 <attribute>
 <name>section</name>
@@ -47,12 +47,12 @@
 </tag>
 <tag>
 <name>foot</name>
-<tagclass>gov.nih.nci.cadsr.sentinel.ui.FootTag</tagclass>
+<tagclass>gov.nih.nci.cadsr.sentinel.tags.FootTag</tagclass>
 <bodycontent>empty</bodycontent>
 </tag>
 <tag>
 <name>head</name>
-<tagclass>gov.nih.nci.cadsr.sentinel.ui.HeadTag</tagclass>
+<tagclass>gov.nih.nci.cadsr.sentinel.tags.HeadTag</tagclass>
 <bodycontent>empty</bodycontent>
 <attribute>
 <name>key</name>
