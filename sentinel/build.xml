@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.149 2008-11-06 19:08:32 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.150 2008-11-10 12:38:55 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -281,6 +281,7 @@
                 <include name="gov/nih/nci/cadsr/sentinel/test/*.class" />
                 <include name="gov/nih/nci/cadsr/sentinel/database/*.class" />
                 <include name="gov/nih/nci/cadsr/sentinel/audits/*.class" />
+                <include name="gov/nih/nci/cadsr/sentinel/daily/*.class" />
             </fileset>
             <manifest>
                 <attribute name="Built-By" value="Anthill"/>
