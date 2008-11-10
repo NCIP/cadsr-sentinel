@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/daily/CleanStrings.java,v 1.2 2008-11-10 12:57:27 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/daily/CleanStrings.java,v 1.3 2008-11-10 18:54:35 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.daily;
@@ -56,7 +56,7 @@ public class CleanStrings
         + "set $sets$ "
         + "where REGEXP_LIKE($col$, '" + _sqlRegexp + "')";
     
-    private static final String _sqlSet = "$col$ = REGEXP_REPLACE($col$, '" + _sqlRegexp + "', chr(32))";
+    private static final String _sqlSet = "$col$ = REGEXP_REPLACE($col$, '" + _sqlRegexp + "', '')";
     
     private static final String _sqlSelect = "select * from $table$ "
         + "where REGEXP_LIKE($col$, '" + _sqlRegexp + "') ";
