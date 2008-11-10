@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/daily/CleanStrings.java,v 1.1 2008-11-06 19:07:35 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/daily/CleanStrings.java,v 1.2 2008-11-10 12:57:27 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.daily;
@@ -78,6 +78,8 @@ public class CleanStrings
         
         try
         {
+            _logger.info("");
+            _logger.info(CleanStrings.class.getClass().getName() + " begins");
             cs.doClean(args_[1]);
         }
         catch (Exception ex)
