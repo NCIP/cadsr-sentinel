@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/daily/CleanStrings.java,v 1.4 2008-11-11 12:52:44 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/daily/CleanStrings.java,v 1.5 2008-11-18 14:33:58 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.daily;
@@ -207,7 +207,7 @@ public class CleanStrings
                 for (int cnt = 0; cnt < rsmd.getColumnCount(); ++cnt)
                 {
                     String value = rs.getString(cnt + 1);
-                    if (targetCol[cnt])
+                    if (value != null && targetCol[cnt])
                     {
                         for (int ndx = 0; ndx < value.length(); ++ndx)
                         {
@@ -218,7 +218,7 @@ public class CleanStrings
                             }
                         }
                     }
-                    line = line + "\t" + value;
+                    line = line + "\t" + ((value == null) ? "(_null_)" : value);
                 }
                 if (showHead)
                 {
