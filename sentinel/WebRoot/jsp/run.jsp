@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/run.jsp,v 1.3 2008-05-20 21:41:20 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/run.jsp,v 1.4 2008-11-25 18:26:26 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ page contentType="text/html;charset=WINDOWS-1252" %>
@@ -14,6 +14,8 @@
         <html:base />
         <meta http-equiv="Content-Language" content="en-us">
         <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
+        <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
         <LINK href="/cadsrsentinel/css/sentinel.css" rel="stylesheet" type="text/css">
     </head>
 
@@ -81,4 +83,8 @@
     </td></tr></table>
     </html:form>
 </body>
+    <head>
+        <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+    </head>
 </html>

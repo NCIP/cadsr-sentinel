@@ -1,11 +1,13 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/error.jsp,v 1.2 2007-09-25 14:26:46 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/error.jsp,v 1.3 2008-11-25 18:26:26 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ page contentType="text/html;charset=windows-1252"%>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+        <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
 <%
     String title = (String)request.getAttribute("errorTitle");
 %>
@@ -37,4 +39,8 @@
     </table>
     </form>
   </body>
+  <head>
+        <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+  </head>
 </html>
