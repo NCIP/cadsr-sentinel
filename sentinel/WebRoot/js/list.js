@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.3 2008-06-20 20:44:30 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.4 2008-11-25 21:17:00 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -13,7 +13,7 @@
     {
         disableButs();
         stripeTable();
-        var obj1 = theList;
+        var obj1 = document.getElementById("theList");
         var obj2 = obj1.children[1];
         var obj3 = obj2.children[0];
         var obj4 = obj3.children[1];
@@ -37,7 +37,7 @@
     {
         var delCount = 0;
         var delNames = "";
-        var obj1 = theList;
+        var obj1 = document.getElementById("theList");
         var obj2 = obj1.children[1];
         for (var indx2 = 1; indx2 < obj2.children.length; ++indx2)
         {
@@ -78,7 +78,7 @@
 
     function stripeTable()
     {
-        var obj1 = theList;
+        var obj1 = document.getElementById("theList");
         var obj2 = obj1.children[1];
         var obj3 = obj2.children[0];
         obj3.style.backgroundColor = "#dddddd";
@@ -91,7 +91,7 @@
 
     function setAllChecks()
     {
-        var obj1 = theList;
+        var obj1 = document.getElementById("theList");
         var obj2 = obj1.children[1];
         var obj3 = obj2.children[0];
         var obj4 = obj3.children[0];
@@ -136,7 +136,7 @@
         {
             --checkCount;
         }
-        var obj1 = theList;
+        var obj1 = document.getElementById("theList");
         var obj2 = obj1.children[1];
         var obj3 = obj2.children[0];
         var obj4 = obj3.children[0];
@@ -157,7 +157,7 @@
     {
         disableButs();
 
-        var obj1 = theList;
+        var obj1 = document.getElementById("theList");
         var obj2 = obj1.children[1];
         for (var indx2 = 1; indx2 < obj2.children.length; ++indx2)
         {
@@ -189,7 +189,7 @@
 
     function sortTextA(col)
     {
-        var obj1 = theList;
+        var obj1 = document.getElementById("theList");
         var obj2 = obj1.children[1];
         var maxcnt = obj2.children.length - 1;
         var loop = true;
@@ -216,7 +216,7 @@
 
     function sortTextD(col)
     {
-        var obj1 = theList;
+        var obj1 = document.getElementById("theList");
         var obj2 = obj1.children[1];
         var maxcnt = obj2.children.length - 1;
         var loop = true;
