@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.4 2008-11-25 21:17:00 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.5 2008-11-25 23:06:02 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -111,6 +111,9 @@
     function disableButs()
     {
         var flags = [false, true, true, false, true];
+        var cmdButsTop = document.getElementById("cmdButsTop");
+        var cmdButsBtm = document.getElementById("cmdButsBtm");
+        var index = 0;
         if (checkCount === 0)
         {
             flags[3] = true;
@@ -119,10 +122,23 @@
         {
             flags = [false, false, false, false, false];
         }
-        for (var index = 0; index < flags.length; ++index)
+        if (cmdButsTop.children)
         {
-            cmdButsTop.children[index].disabled = flags[index];
-            cmdButsBtm.children[index].disabled = flags[index];
+            for (index = 0; index < flags.length; ++index)
+            {
+                cmdButsTop.children[index].disabled = flags[index];
+                cmdButsBtm.children[index].disabled = flags[index];
+            }
+        }
+        else
+        {
+            var nodesButsTop = cmdButsTop.getElementsByTagName("input");
+            var nodesButsBtm = cmdButsBtm.getElementsByTagName("input");
+            for (index = 0; index < flags.length; ++index)
+            {
+                nodesButsTop[index].disabled = flags[index];
+                nodesButsBtm[index].disabled = flags[index];
+            }
         }
     }
 

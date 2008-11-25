@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.7 2008-11-25 18:26:26 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.8 2008-11-25 23:06:01 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ taglib uri="/tags/struts-bean" prefix="bean" %>
@@ -25,7 +25,9 @@
     <script language="javascript">
         function cmdLogon()
         {
+            var msg = document.getElementById("msg");
             msg.innerText = <bean:message key="logon.msg" />;
+            msg.textContent = <bean:message key="logon.msg" />;
         }
         function cmdHelp()
         {
