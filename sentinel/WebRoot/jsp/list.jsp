@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/list.jsp,v 1.3 2008-11-25 18:26:26 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/list.jsp,v 1.4 2008-12-01 20:57:46 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ page contentType="text/html;charset=WINDOWS-1252"%>
@@ -37,11 +37,11 @@
         <table class="table3" style="margin-bottom: 0.1in">
         <colgroup><col style="text-align: left" /><col style="text-align: right" /></colgroup><tbody class="secttbody" /><tr>
             <td id="cmdButsTop">
-                    <html:button styleClass="but1" property="c1" onclick="cmdCreate();"><bean:message key="all.create" /></html:button>
-                    <html:button styleClass="but1" property="e1" onclick="cmdEdit();"><bean:message key="all.edit" /></html:button>
-                    <html:button styleClass="but1a" property="u1" onclick="cmdNewFrom();"><bean:message key="all.createusing" /></html:button>
-                    <html:button styleClass="but1" property="d1" onclick="cmdDelete();"><bean:message key="all.delete" /></html:button>
-                    <html:button styleClass="but2" property="r1" onclick="cmdRun();"><bean:message key="all.run" /></html:button>
+                    <input type="button" class="but1" name="c1" onclick="cmdCreate();" value="<bean:message key='all.create'/>" />
+                    <input type="button" class="but1" name="e1" onclick="cmdEdit();" cstTestSingle="true" value="<bean:message key='all.edit'/>" />
+                    <input type="button" class="but1a" name="u1" onclick="cmdNewFrom();" cstTestSingle="true" value="<bean:message key='all.createusing'/>" />
+                    <input type="button" class="but1" name="d1" onclick="cmdDelete();" cstTestMulti="true" value="<bean:message key='all.delete'/>" />
+                    <input type="button" class="but2" name="r1" onclick="cmdRun();" cstTestSingle="true" value="<bean:message key='all.run'/>" />
             </td><td>
                 <dtags:list section="button" />
                 <html:button property="logout1" styleClass="but1" onclick="cmdLogout();"><bean:message key="all.logout" /></html:button>
@@ -49,6 +49,7 @@
             </td>
         </tr></table>
 
+        <div id="debugText" style="display: none"></div>
         <dtags:list section="table" />
         <dtags:list section="info" />
 
@@ -56,11 +57,11 @@
         <colgroup><col style="text-align: left" /><col style="text-align: right" /></colgroup><tbody class="secttbody" /><tr>
             <tr>
                 <td id="cmdButsBtm">
-                    <html:button styleClass="but1" property="c2" onclick="cmdCreate();"><bean:message key="all.create" /></html:button>
-                    <html:button styleClass="but1" property="e2" onclick="cmdEdit();"><bean:message key="all.edit" /></html:button>
-                    <html:button styleClass="but1a" property="u2" onclick="cmdNewFrom();"><bean:message key="all.createusing" /></html:button>
-                    <html:button styleClass="but1" property="d2" onclick="cmdDelete();"><bean:message key="all.delete" /></html:button>
-                    <html:button styleClass="but2" property="r2" onclick="cmdRun();"><bean:message key="all.run" /></html:button>
+                    <input type="button" class="but1" name="c2" onclick="cmdCreate();" value="<bean:message key='all.create'/>" />
+                    <input type="button" class="but1" name="e2" onclick="cmdEdit();" cstTestSingle="true" value="<bean:message key='all.edit'/>" />
+                    <input type="button" class="but1a" name="u2" onclick="cmdNewFrom();" cstTestSingle="true" value="<bean:message key='all.createusing'/>" />
+                    <input type="button" class="but1" name="d2" onclick="cmdDelete();" cstTestMulti="true" value="<bean:message key='all.delete'/>" />
+                    <input type="button" class="but2" name="r2" onclick="cmdRun();" cstTestSingle="true" value="<bean:message key='all.run'/>" />
                 </td><td>
                     <dtags:list section="button" />
                     <html:button property="logout2" styleClass="but1" onclick="cmdLogout();"><bean:message key="all.logout" /></html:button>

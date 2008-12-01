@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.5 2008-11-25 23:06:02 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.6 2008-12-01 20:57:38 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -9,15 +9,50 @@
     var sortChar = "";
     var lastSortOrder = true;
 
+    function showDebug(obj)
+    {
+        var d1 = document.getElementById("debugText");
+        d1.style.display = "block";
+        d1.textContent = showObjTree(obj);
+    }
+
+    function showObjTree(obj)
+    {
+        var txt = "";
+        for (var indx=0; indx < obj.childNodes.length; ++indx)
+        {
+            txt = txt + showObjTree(obj.childNodes[indx]);
+        }
+        if (obj.nodeValue !== null)
+        {
+            txt = obj.nodeValue + " " + txt;
+        }
+        return "<" + obj.nodeName + ">" + txt + "</" + obj.nodeName + ">";
+    }
+
     function loaded()
     {
         disableButs();
         stripeTable();
         var obj1 = document.getElementById("theList");
-        var obj2 = obj1.children[1];
-        var obj3 = obj2.children[0];
-        var obj4 = obj3.children[1];
-        var obj5 = obj4.children[1];
+        var obj2;
+        var obj3;
+        var obj4;
+        var obj5;
+        if (obj1.children)
+        {
+            obj2 = obj1.children[1];
+            obj3 = obj2.children[0];
+            obj4 = obj3.children[1];
+            obj5 = obj4.children[1];
+        }
+        else
+        {
+            obj2 = obj1.childNodes[2];
+            obj3 = obj2.childNodes[0];
+            obj4 = obj3.childNodes[3];
+            obj5 = obj4.childNodes[1];
+        }
         sortCol(obj5, 1);
         saved();
     }
@@ -38,17 +73,41 @@
         var delCount = 0;
         var delNames = "";
         var obj1 = document.getElementById("theList");
-        var obj2 = obj1.children[1];
-        for (var indx2 = 1; indx2 < obj2.children.length; ++indx2)
+        var obj2;
+        var obj3;
+        var obj4;
+        var obj5;
+        var indx2;
+        if (obj1.children)
         {
-            var obj3 = obj2.children[indx2];
-            var obj4 = obj3.children[0];
-            var obj5 = obj4.children[0];
-            if (obj5.checked === true)
+            obj2 = obj1.children[1];
+            for (indx2 = 1; indx2 < obj2.children.length; ++indx2)
             {
-                obj5 = obj3.children[1];
-                ++delCount;
-                delNames = delNames + ', "' + obj5.innerText + '"';
+                obj3 = obj2.children[indx2];
+                obj4 = obj3.children[0];
+                obj5 = obj4.children[0];
+                if (obj5.checked === true)
+                {
+                    obj5 = obj3.children[1];
+                    ++delCount;
+                    delNames = delNames + ', "' + obj5.innerText + '"';
+                }
+            }
+        }
+        else
+        {
+            obj2 = obj1.childNodes[1];
+            for (indx2 = 1; indx2 < obj2.childNodes.length; ++indx2)
+            {
+                obj3 = obj2.childNodes[indx2];
+                obj4 = obj3.childNodes[0];
+                obj5 = obj4.childNodes[0];
+                if (obj5.checked === true)
+                {
+                    obj5 = obj3.childNodes[1];
+                    ++delCount;
+                    delNames = delNames + ', "' + obj5.textContent + '"';
+                }
             }
         }
         if (window.confirm("Are you sure you wish to delete the " + delCount + " sentinels " + delNames.substr(2) + "?"))
@@ -79,66 +138,115 @@
     function stripeTable()
     {
         var obj1 = document.getElementById("theList");
-        var obj2 = obj1.children[1];
-        var obj3 = obj2.children[0];
-        obj3.style.backgroundColor = "#dddddd";
-        for (var indx2 = 1; indx2 < obj2.children.length; ++indx2)
+        var obj2;
+        var obj3;
+        var indx2;
+        var scolor;
+        var flip;
+
+        if (obj1.children)
         {
-            obj3 = obj2.children[indx2];
-            obj3.style.backgroundColor = ((indx2 % 2) === 0) ? "#e0f0ff" : "#ffffff";
+            obj2 = obj1.children[1];
+            scolor = "#dddddd";
+            flip = false;
+            for (indx2 = 0; indx2 < obj2.children.length; ++indx2)
+            {
+                obj3 = obj2.children[indx2];
+                obj3.style.backgroundColor = scolor;
+                scolor = (flip) ? "#e0f0ff" : "#ffffff";
+                flip = !flip;
+            }
+        }
+        else
+        {
+            obj2 = obj1.childNodes[2];
+            scolor = "#dddddd";
+            flip = false;
+            for (indx2 = 0; indx2 < obj2.childNodes.length; ++indx2)
+            {
+                obj3 = obj2.childNodes[indx2];
+                if (obj3.innerHTML)
+                {
+                    obj3.style.backgroundColor = scolor;
+                    scolor = (flip) ? "#e0f0ff" : "#ffffff";
+                    flip = !flip;
+                }
+            }
         }
     }
 
     function setAllChecks()
     {
         var obj1 = document.getElementById("theList");
-        var obj2 = obj1.children[1];
-        var obj3 = obj2.children[0];
-        var obj4 = obj3.children[0];
-        var obj5 = obj4.children[0];
-        var flag = obj5.checked;
-        for (var indx2 = 1; indx2 < obj2.children.length; ++indx2)
+        var obj2;
+        var obj3;
+        var obj4;
+        var obj5;
+        var flag;
+        var indx2;
+        
+        if (obj1.children)
         {
-            obj3 = obj2.children[indx2];
+            obj2 = obj1.children[1];
+            obj3 = obj2.children[0];
             obj4 = obj3.children[0];
             obj5 = obj4.children[0];
-            obj5.checked = flag;
+            flag = obj5.checked;
+            for (indx2 = 1; indx2 < obj2.children.length; ++indx2)
+            {
+                obj3 = obj2.children[indx2];
+                obj4 = obj3.children[0];
+                obj5 = obj4.children[0];
+                obj5.checked = flag;
+            }
+        }
+        else
+        {
+            obj2 = obj1.childNodes[1];
+            obj3 = obj2.childNodes[0];
+            obj4 = obj3.childNodes[0];
+            obj5 = obj4.childNodes[0];
+            flag = obj5.checked;
+            for (indx2 = 1; indx2 < obj2.childNodes.length; ++indx2)
+            {
+                obj3 = obj2.childNodes[indx2];
+                obj4 = obj3.childNodes[0];
+                obj5 = obj4.childNodes[0];
+                obj5.checked = flag;
+            }
         }
         checkCount = (flag) ? indx2 - 1 : 0;
         fixButs2();
     }
 
-    function disableButs()
+    function setDisabled(butObj)
     {
-        var flags = [false, true, true, false, true];
-        var cmdButsTop = document.getElementById("cmdButsTop");
-        var cmdButsBtm = document.getElementById("cmdButsBtm");
-        var index = 0;
-        if (checkCount === 0)
+        if (butObj.nodeName != "INPUT")
         {
-            flags[3] = true;
+            return;
         }
-        else if (checkCount == 1)
+        else if (butObj.getAttribute("cstTestSingle") !== null)
         {
-            flags = [false, false, false, false, false];
+            butObj.disabled = (checkCount == 1) ? false : true;
         }
-        if (cmdButsTop.children)
+        else if (butObj.getAttribute("cstTestMulti") !== null)
         {
-            for (index = 0; index < flags.length; ++index)
-            {
-                cmdButsTop.children[index].disabled = flags[index];
-                cmdButsBtm.children[index].disabled = flags[index];
-            }
+            butObj.disabled = (checkCount === 0) ? true : false;
         }
         else
         {
-            var nodesButsTop = cmdButsTop.getElementsByTagName("input");
-            var nodesButsBtm = cmdButsBtm.getElementsByTagName("input");
-            for (index = 0; index < flags.length; ++index)
-            {
-                nodesButsTop[index].disabled = flags[index];
-                nodesButsBtm[index].disabled = flags[index];
-            }
+            butObj.disabled = false;
+        }
+    }
+
+    function disableButs()
+    {
+        var cmdButsTop = document.getElementById("cmdButsTop");
+        var cmdButsBtm = document.getElementById("cmdButsBtm");
+        for (var index = 0; index < cmdButsTop.childNodes.length; ++index)
+        {
+            setDisabled(cmdButsTop.childNodes[index]);
+            setDisabled(cmdButsBtm.childNodes[index]);
         }
     }
 
@@ -153,15 +261,33 @@
             --checkCount;
         }
         var obj1 = document.getElementById("theList");
-        var obj2 = obj1.children[1];
-        var obj3 = obj2.children[0];
-        var obj4 = obj3.children[0];
-        var obj5 = obj4.children[0];
+        var obj2;
+        var obj3;
+        var obj4;
+        var obj5;
+        var obj2Len;
+
+        if (obj1.children)
+        {
+            obj2 = obj1.children[1];
+            obj3 = obj2.children[0];
+            obj4 = obj3.children[0];
+            obj5 = obj4.children[0];
+            obj2Len = obj2.children.length;
+        }
+        else
+        {
+            obj2 = obj1.childNodes[2];
+            obj3 = obj2.childNodes[0];
+            obj4 = obj3.childNodes[1];
+            obj5 = obj4.childNodes[0];
+            obj2Len = obj2.childNodes.length;
+        }
         if (checkCount === 0)
         {
 	        obj5.checked = false;
         }
-        else if (checkCount == (obj2.children.length - 1))
+        else if (checkCount == (obj2Len - 1))
         {
             obj5.checked = true;
         }
@@ -174,57 +300,137 @@
         disableButs();
 
         var obj1 = document.getElementById("theList");
-        var obj2 = obj1.children[1];
-        for (var indx2 = 1; indx2 < obj2.children.length; ++indx2)
+        var obj2;
+        var obj3;
+        var obj4;
+        var obj5;
+        var indx2;
+        if (obj1.children)
         {
-            var obj3 = obj2.children[indx2];
-            var obj4 = obj3.children[0];
-            var obj5 = obj4.children[0];
-            if (obj5.checked === true &&
-                obj3.children[6].innerText != Muserid && Madmin === false)
+            obj2 = obj1.children[1];
+            for (indx2 = 1; indx2 < obj2.children.length; ++indx2)
             {
-                cmdButsTop.children[1].disabled = true;
-                cmdButsBtm.children[1].disabled = true;
-                cmdButsTop.children[3].disabled = true;
-                cmdButsBtm.children[3].disabled = true;
-                cmdButsTop.children[4].disabled = true;
-                cmdButsBtm.children[4].disabled = true;
+                obj3 = obj2.children[indx2];
+                obj4 = obj3.children[0];
+                obj5 = obj4.children[0];
+                if (obj5.checked === true &&
+                    obj3.children[6].innerText != Muserid && Madmin === false)
+                {
+                    cmdButsTop.children[1].disabled = true;
+                    cmdButsBtm.children[1].disabled = true;
+                    cmdButsTop.children[3].disabled = true;
+                    cmdButsBtm.children[3].disabled = true;
+                    cmdButsTop.children[4].disabled = true;
+                    cmdButsBtm.children[4].disabled = true;
+                }
+            }
+        }
+        else
+        {
+            obj2 = obj1.childNodes[2].getElementsByTagName("TR");
+            for (indx2 = 1; indx2 < obj2.length; ++indx2)
+            {
+                obj3 = obj2[indx2];
+                obj4 = obj3.childNodes[1];
+                obj5 = obj4.childNodes[0];
+                if (obj5.checked === true &&
+                    obj3.childNodes[13].textContent != Muserid && Madmin === false)
+                {
+                    cmdButsTop.childNodes[3].disabled = true;
+                    cmdButsBtm.childNodes[3].disabled = true;
+                    cmdButsTop.childNodes[7].disabled = true;
+                    cmdButsBtm.childNodes[7].disabled = true;
+                    cmdButsTop.childNodes[9].disabled = true;
+                    cmdButsBtm.childNodes[9].disabled = true;
+                }
             }
         }
     }
 
     function swapCols(obja, objb)
     {
-        for (var index = 0; index < obja.children.length; ++index)
+        var index;
+        var temp;
+        if (obja.childre)
         {
-            var temp = obja.children[index].innerHTML;
-            obja.children[index].innerHTML = objb.children[index].innerHTML;
-            objb.children[index].innerHTML = temp;
+            for (index = 0; index < obja.children.length; ++index)
+            {
+                temp = obja.children[index].innerHTML;
+                obja.children[index].innerHTML = objb.children[index].innerHTML;
+                objb.children[index].innerHTML = temp;
+            }
+        }
+        else
+        {
+            for (index = 0; index < obja.childNodes.length; ++index)
+            {
+                temp = obja.childNodes[index].innerHTML;
+                obja.childNodes[index].innerHTML = objb.childNodes[index].innerHTML;
+                objb.childNodes[index].innerHTML = temp;
+            }
         }
     }
 
     function sortTextA(col)
     {
         var obj1 = document.getElementById("theList");
-        var obj2 = obj1.children[1];
-        var maxcnt = obj2.children.length - 1;
-        var loop = true;
-        while (loop)
+        var obj2;
+        var maxcnt;
+        var loop;
+        var indx2;
+        var obj3a;
+        var obj4a;
+        var texta;
+        var obj3b;
+        var obj4b;
+        var textb;
+        if (obj1.children)
         {
-            loop = false;
-            for (var indx2 = 1; indx2 < maxcnt; ++indx2)
+            obj2 = obj1.children[1];
+            maxcnt = obj2.children.length - 1;
+            loop = true;
+            while (loop)
             {
-                var obj3a = obj2.children[indx2];
-                var obj4a = obj3a.children[col];
-                var texta = obj4a.innerText;
-                var obj3b = obj2.children[indx2 + 1];
-                var obj4b = obj3b.children[col];
-                var textb = obj4b.innerText;
-
-                if (texta.toUpperCase() > textb.toUpperCase())
+                loop = false;
+                for (indx2 = 1; indx2 < maxcnt; ++indx2)
                 {
-                    loop = true;
-                    swapCols(obj3a, obj3b);
+                    obj3a = obj2.children[indx2];
+                    obj4a = obj3a.children[col];
+                    texta = obj4a.innerText;
+                    obj3b = obj2.children[indx2 + 1];
+                    obj4b = obj3b.children[col];
+                    textb = obj4b.innerText;
+    
+                    if (texta.toUpperCase() > textb.toUpperCase())
+                    {
+                        loop = true;
+                        swapCols(obj3a, obj3b);
+                    }
+                }
+            }
+        }
+        else
+        {
+            obj2 = obj1.childNodes[1];
+            maxcnt = obj2.childNodes.length - 1;
+            loop = true;
+            while (loop)
+            {
+                loop = false;
+                for (indx2 = 1; indx2 < maxcnt; ++indx2)
+                {
+                    obj3a = obj2.childNodes[indx2];
+                    obj4a = obj3a.childNodes[col];
+                    texta = obj4a.textContent;
+                    obj3b = obj2.childNodes[indx2 + 1];
+                    obj4b = obj3b.childNodes[col];
+                    textb = obj4b.textContent;
+    
+                    if (texta.toUpperCase() > textb.toUpperCase())
+                    {
+                        loop = true;
+                        swapCols(obj3a, obj3b);
+                    }
                 }
             }
         }
@@ -233,25 +439,63 @@
     function sortTextD(col)
     {
         var obj1 = document.getElementById("theList");
-        var obj2 = obj1.children[1];
-        var maxcnt = obj2.children.length - 1;
-        var loop = true;
-        while (loop)
+        var obj2;
+        var maxcnt;
+        var loop;
+        var indx2;
+        var obj3a;
+        var obj4a;
+        var texta;
+        var obj3b;
+        var obj4b;
+        var textb;
+        if (obj1.children)
         {
-            loop = false;
-            for (var indx2 = 1; indx2 < maxcnt; ++indx2)
+            obj2 = obj1.children[1];
+            maxcnt = obj2.children.length - 1;
+            loop = true;
+            while (loop)
             {
-                var obj3a = obj2.children[indx2];
-                var obj4a = obj3a.children[col];
-                var texta = obj4a.innerText;
-                var obj3b = obj2.children[indx2 + 1];
-                var obj4b = obj3b.children[col];
-                var textb = obj4b.innerText;
-
-                if (texta.toUpperCase() < textb.toUpperCase())
+                loop = false;
+                for (indx2 = 1; indx2 < maxcnt; ++indx2)
                 {
-                    loop = true;
-                    swapCols(obj3a, obj3b);
+                    obj3a = obj2.children[indx2];
+                    obj4a = obj3a.children[col];
+                    texta = obj4a.innerText;
+                    obj3b = obj2.children[indx2 + 1];
+                    obj4b = obj3b.children[col];
+                    textb = obj4b.innerText;
+    
+                    if (texta.toUpperCase() < textb.toUpperCase())
+                    {
+                        loop = true;
+                        swapCols(obj3a, obj3b);
+                    }
+                }
+            }
+        }
+        else
+        {
+            obj2 = obj1.childNodes[1];
+            maxcnt = obj2.childNodes.length - 1;
+            loop = true;
+            while (loop)
+            {
+                loop = false;
+                for (indx2 = 1; indx2 < maxcnt; ++indx2)
+                {
+                    obj3a = obj2.childNodes[indx2];
+                    obj4a = obj3a.childNodes[col];
+                    texta = obj4a.textContent;
+                    obj3b = obj2.childNodes[indx2 + 1];
+                    obj4b = obj3b.childNodes[col];
+                    textb = obj4b.textContent;
+    
+                    if (texta.toUpperCase() < textb.toUpperCase())
+                    {
+                        loop = true;
+                        swapCols(obj3a, obj3b);
+                    }
                 }
             }
         }
