@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.7 2008-12-03 00:16:27 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.8 2008-12-03 21:27:03 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -256,9 +256,8 @@
         }
     }
     
-    function orderList(col, order, sType)
+    function orderList(table, col, order)
     {
-        var table = document.getElementById("theList");
         var trs = table.getElementsByTagName("TR");
         var tds;
         var trsNdx = new Array();
@@ -269,22 +268,34 @@
         var newTxt;
         var found;
         var cnt;
-        var img;
+        var kCnt;
+        var bin;
         var tTable = new Array();
+
+        tds = trs[0].getElementsByTagName("TH");
+        var sType = (tds[col].getAttribute("cstSortKey") === null);
         
         for (cnt = 1; cnt < trs.length; ++cnt)
         {
             tds = trs[cnt].getElementsByTagName("TD");
             tTable[cnt] = copyRow(tds);
 
-            if (sType == "txt")
+            if (sType)
             {
                 newTxt = (tds[col].innerText) ? tds[col].innerText : tds[col].textContent;
             }
             else
             {
-                img = tds[col].getElementsByTagName("IMG");
-                newTxt = img[0].getAttribute("cstSortKey");
+                newTxt = null;
+                for (kCnt = 0; kCnt < tds[col].childNodes.length; ++kCnt)
+                {
+                    bin = tds[col].childNodes[kCnt];
+                    newTxt = bin.getAttribute("cstSortKey");
+                    if (newTxt !== null)
+                    {
+                        break;
+                    }
+                }
             }
             newTxt = newTxt.toLowerCase();
             
@@ -345,14 +356,35 @@
         }
     }
 
+    function setSortHeadImg(obj, flag)
+    {
+        if (obj.nodeName == "TH" || obj.nodeName == "TD")
+        {
+            if (flag === true)
+            {
+                obj.style.backgroundImage = "url('../images/" + sortChar + ".gif')";
+                obj.style.backgroundPosition = "right bottom";
+                obj.style.backgroundRepeat = "no-repeat";
+            }
+            else
+            {
+                obj.style.backgroundImage = "";
+            }
+            return;
+        }
+        setSortHeadImg(obj.parentNode, flag);
+    }
+
     function setSortHeading(obj)
     {
         if (lastSort !== null)
         {
             lastSort.src = "../images/blank.gif";
+//            setSortHeadImg(lastSort, false);
         }
         lastSort = obj;
         lastSort.src = "../images/" + sortChar + ".gif";
+//        setSortHeadImg(lastSort, true);
     }
     
     function setSortGlyph(col)
@@ -378,13 +410,22 @@
         lastSortCol = col;
     }
 
+    function findSortTable(obj)
+    {
+        if (obj.nodeName == "TABLE")
+        {
+            return obj;
+        }
+        return findSortTable(obj.parentNode);
+    }
+
     function sortCol(obj, col)
     {
-        var sortType = (obj.id == "cStatus") ? "img" : "txt";
+        var table = findSortTable(obj);
 
         setSortGlyph(col);
         
-        orderList(col, (lastSortOrder) ? 1 : -1, sortType);
+        orderList(table, col, (lastSortOrder) ? 1 : -1);
         
         setSortHeading(obj);
     }

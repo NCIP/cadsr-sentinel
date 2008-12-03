@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/ListTag.java,v 1.2 2008-12-03 00:16:26 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/ListTag.java,v 1.3 2008-12-03 21:27:03 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tags;
@@ -235,7 +235,7 @@ public class ListTag extends AlertRootTag
             + "onclick=\"sortCol(cFreq, 3);\" title=\"" + msgs.getMessage("list.freqtitle") + "\">" + msgs.getMessage("list.freq") + "</span><img id=\"cFreq\" src=\"../images/blank.gif\" /></th>\n"
             + "<th id=\"t4\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
             + "onclick=\"sortCol(cLast, 4);\" title=\"" + msgs.getMessage("list.runtitle") + "\">" + msgs.getMessage("list.run") + "</span><img id=\"cLast\" src=\"../images/blank.gif\" /></th>\n"
-            + "<th id=\"t5\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
+            + "<th id=\"t5\" cstSortKey=\"true\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
             + "onclick=\"sortCol(cStatus, 5);\" title=\"" + msgs.getMessage("list.statustitle") + "\">" + msgs.getMessage("list.status") + "</span><img id=\"cStatus\" src=\"../images/blank.gif\" /></th>\n"
             + "<th id=\"t6\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
             + "onclick=\"sortCol(cCreator, 6);\" title=\"" + msgs.getMessage("list.creatortitle") + "\">" + msgs.getMessage("list.creator") + "</span><img id=\"cCreator\" src=\"../images/blank.gif\" /></th>\n"
