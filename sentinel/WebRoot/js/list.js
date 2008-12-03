@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.6 2008-12-01 20:57:38 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.7 2008-12-03 00:16:27 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -34,26 +34,8 @@
     {
         disableButs();
         stripeTable();
-        var obj1 = document.getElementById("theList");
-        var obj2;
-        var obj3;
-        var obj4;
-        var obj5;
-        if (obj1.children)
-        {
-            obj2 = obj1.children[1];
-            obj3 = obj2.children[0];
-            obj4 = obj3.children[1];
-            obj5 = obj4.children[1];
-        }
-        else
-        {
-            obj2 = obj1.childNodes[2];
-            obj3 = obj2.childNodes[0];
-            obj4 = obj3.childNodes[3];
-            obj5 = obj4.childNodes[1];
-        }
-        sortCol(obj5, 1);
+        var sObj = document.getElementById("cName");
+        sortCol(sObj, 1);
         saved();
     }
 
@@ -64,168 +46,104 @@
 
     function cmdCreate()
     {
-        listForm.nextScreen.value = "create";
-        listForm.submit();
+        var fld = document.getElementsByName("nextScreen");
+        fld[0].value = "create";
+        fld = document.getElementsByName("listForm");
+        fld[0].submit();
     }
 
     function cmdDelete()
     {
         var delCount = 0;
         var delNames = "";
-        var obj1 = document.getElementById("theList");
-        var obj2;
-        var obj3;
-        var obj4;
-        var obj5;
+        var cbs;
+        var tds;
+        var aName;
         var indx2;
-        if (obj1.children)
+        var table = document.getElementById("theList");
+        var trs = table.getElementsByTagName("TR");
+
+        for (indx2 = 1; indx2 < trs.length; ++indx2)
         {
-            obj2 = obj1.children[1];
-            for (indx2 = 1; indx2 < obj2.children.length; ++indx2)
+            cbs = trs[indx2].getElementsByTagName("INPUT");
+            if (cbs[0].checked === true)
             {
-                obj3 = obj2.children[indx2];
-                obj4 = obj3.children[0];
-                obj5 = obj4.children[0];
-                if (obj5.checked === true)
-                {
-                    obj5 = obj3.children[1];
-                    ++delCount;
-                    delNames = delNames + ', "' + obj5.innerText + '"';
-                }
+                tds = trs[indx2].getElementsByTagName("TD");
+                aName = (tds[1].innerText) ? tds[1].innerText : tds[1].textContent;
+                ++delCount;
+                delNames = delNames + ', "' + aName + '"';
             }
         }
-        else
-        {
-            obj2 = obj1.childNodes[1];
-            for (indx2 = 1; indx2 < obj2.childNodes.length; ++indx2)
-            {
-                obj3 = obj2.childNodes[indx2];
-                obj4 = obj3.childNodes[0];
-                obj5 = obj4.childNodes[0];
-                if (obj5.checked === true)
-                {
-                    obj5 = obj3.childNodes[1];
-                    ++delCount;
-                    delNames = delNames + ', "' + obj5.textContent + '"';
-                }
-            }
-        }
+        
         if (window.confirm("Are you sure you wish to delete the " + delCount + " sentinels " + delNames.substr(2) + "?"))
         {
-            listForm.nextScreen.value = "delete";
-            listForm.submit();
+            tds = document.getElementsByName("nextScreen");
+            tds[0].value = "delete";
+            tds = document.getElementsByName("listForm");
+            tds[0].submit();
         }
     }
 
     function cmdRun()
     {
-        listForm.nextScreen.value = "run";
-        listForm.submit();
+        var fld = document.getElementsByName("nextScreen");
+        fld[0].value = "run";
+        fld = document.getElementsByName("listForm");
+        fld[0].submit();
     }
 
     function cmdEdit()
     {
-        listForm.nextScreen.value = "edit";
-        listForm.submit();
+        var fld = document.getElementsByName("nextScreen");
+        fld[0].value = "edit";
+        fld = document.getElementsByName("listForm");
+        fld[0].submit();
     }
 
     function cmdNewFrom()
     {
-        listForm.nextScreen.value = "newfrom";
-        listForm.submit();
+        var fld = document.getElementsByName("nextScreen");
+        fld[0].value = "newfrom";
+        fld = document.getElementsByName("listForm");
+        fld[0].submit();
     }
 
     function stripeTable()
     {
-        var obj1 = document.getElementById("theList");
-        var obj2;
-        var obj3;
-        var indx2;
-        var scolor;
-        var flip;
+        var table = document.getElementById("theList");
+        var trs = table.getElementsByTagName("TR");
+        var scolor = "#dddddd";
+        var flip = false;
 
-        if (obj1.children)
+        for (var indx2 = 0; indx2 < trs.length; ++indx2)
         {
-            obj2 = obj1.children[1];
-            scolor = "#dddddd";
-            flip = false;
-            for (indx2 = 0; indx2 < obj2.children.length; ++indx2)
-            {
-                obj3 = obj2.children[indx2];
-                obj3.style.backgroundColor = scolor;
-                scolor = (flip) ? "#e0f0ff" : "#ffffff";
-                flip = !flip;
-            }
-        }
-        else
-        {
-            obj2 = obj1.childNodes[2];
-            scolor = "#dddddd";
-            flip = false;
-            for (indx2 = 0; indx2 < obj2.childNodes.length; ++indx2)
-            {
-                obj3 = obj2.childNodes[indx2];
-                if (obj3.innerHTML)
-                {
-                    obj3.style.backgroundColor = scolor;
-                    scolor = (flip) ? "#e0f0ff" : "#ffffff";
-                    flip = !flip;
-                }
-            }
+            trs[indx2].style.backgroundColor = scolor;
+            scolor = (flip) ? "#e0f0ff" : "#ffffff";
+            flip = !flip;
         }
     }
 
     function setAllChecks()
     {
-        var obj1 = document.getElementById("theList");
-        var obj2;
-        var obj3;
-        var obj4;
-        var obj5;
-        var flag;
-        var indx2;
-        
-        if (obj1.children)
+        var table = document.getElementById("theList");
+        var trs = table.getElementsByTagName("TR");
+        var masterCB = trs[0].getElementsByTagName("INPUT");
+        var masterFlag = masterCB[0].checked;
+        var oneCB;
+        var cnt;
+
+        for (cnt = 1; cnt < trs.length; ++cnt)
         {
-            obj2 = obj1.children[1];
-            obj3 = obj2.children[0];
-            obj4 = obj3.children[0];
-            obj5 = obj4.children[0];
-            flag = obj5.checked;
-            for (indx2 = 1; indx2 < obj2.children.length; ++indx2)
-            {
-                obj3 = obj2.children[indx2];
-                obj4 = obj3.children[0];
-                obj5 = obj4.children[0];
-                obj5.checked = flag;
-            }
+            oneCB = trs[cnt].getElementsByTagName("INPUT");
+            oneCB[0].checked = masterFlag;
         }
-        else
-        {
-            obj2 = obj1.childNodes[1];
-            obj3 = obj2.childNodes[0];
-            obj4 = obj3.childNodes[0];
-            obj5 = obj4.childNodes[0];
-            flag = obj5.checked;
-            for (indx2 = 1; indx2 < obj2.childNodes.length; ++indx2)
-            {
-                obj3 = obj2.childNodes[indx2];
-                obj4 = obj3.childNodes[0];
-                obj5 = obj4.childNodes[0];
-                obj5.checked = flag;
-            }
-        }
-        checkCount = (flag) ? indx2 - 1 : 0;
+        checkCount = (masterFlag) ? cnt - 1 : 0;
         fixButs2();
     }
 
     function setDisabled(butObj)
     {
-        if (butObj.nodeName != "INPUT")
-        {
-            return;
-        }
-        else if (butObj.getAttribute("cstTestSingle") !== null)
+        if (butObj.getAttribute("cstTestSingle") !== null)
         {
             butObj.disabled = (checkCount == 1) ? false : true;
         }
@@ -241,12 +159,14 @@
 
     function disableButs()
     {
-        var cmdButsTop = document.getElementById("cmdButsTop");
-        var cmdButsBtm = document.getElementById("cmdButsBtm");
-        for (var index = 0; index < cmdButsTop.childNodes.length; ++index)
+        var table = document.getElementById("cmdButsTop");
+        var cmdButsTop = table.getElementsByTagName("INPUT");
+        table = document.getElementById("cmdButsBtm");
+        var cmdButsBtm = table.getElementsByTagName("INPUT");
+        for (var index = 0; index < cmdButsTop.length; ++index)
         {
-            setDisabled(cmdButsTop.childNodes[index]);
-            setDisabled(cmdButsBtm.childNodes[index]);
+            setDisabled(cmdButsTop[index]);
+            setDisabled(cmdButsBtm[index]);
         }
     }
 
@@ -254,44 +174,32 @@
     {
         if (butObj.checked === true)
         {
+            // Increment check count
             ++checkCount;
         }
         else
         {
+            // Decrement check count
             --checkCount;
         }
-        var obj1 = document.getElementById("theList");
-        var obj2;
-        var obj3;
-        var obj4;
-        var obj5;
-        var obj2Len;
-
-        if (obj1.children)
-        {
-            obj2 = obj1.children[1];
-            obj3 = obj2.children[0];
-            obj4 = obj3.children[0];
-            obj5 = obj4.children[0];
-            obj2Len = obj2.children.length;
-        }
-        else
-        {
-            obj2 = obj1.childNodes[2];
-            obj3 = obj2.childNodes[0];
-            obj4 = obj3.childNodes[1];
-            obj5 = obj4.childNodes[0];
-            obj2Len = obj2.childNodes.length;
-        }
+        
+        var table = document.getElementById("theList");
+        var trs = table.getElementsByTagName("TR");
+        var cbs = trs[0].getElementsByTagName("INPUT");
+        
         if (checkCount === 0)
         {
-	        obj5.checked = false;
+            // If the check count is zero be sure the global check box is off
+            cbs[0].checked = false;
         }
-        else if (checkCount == (obj2Len - 1))
+        else if (checkCount == (trs.length - 1))
         {
-            obj5.checked = true;
+            // If the check count is the same as the number of data rows be sure
+            // the global check box is on
+            cbs[0].checked = true;
         }
-            
+
+        // Fix the button enable/disable based on the check count            
         fixButs2();
     }
 
@@ -299,247 +207,185 @@
     {
         disableButs();
 
-        var obj1 = document.getElementById("theList");
-        var obj2;
-        var obj3;
-        var obj4;
-        var obj5;
-        var indx2;
-        if (obj1.children)
+        var table;
+        
+        table = document.getElementById("cmdButsTop");
+        var cmdButsTop = table.getElementsByTagName("INPUT");
+        table = document.getElementById("cmdButsBtm");
+        var cmdButsBtm = table.getElementsByTagName("INPUT");
+
+        table = document.getElementById("theList");
+        var trs = table.getElementsByTagName("TR");
+        var cbs;
+        var tds;
+        var aName;
+        for (var cnt = 1; cnt < trs.length; ++cnt)
         {
-            obj2 = obj1.children[1];
-            for (indx2 = 1; indx2 < obj2.children.length; ++indx2)
+            tds = trs[cnt].getElementsByTagName("TD");
+            aName = (tds[6].innerText) ? tds[6].innerText : tds[6].textContent;
+            cbs = trs[cnt].getElementsByTagName("INPUT");
+            if (cbs[0].checked === true && aName != Muserid && Madmin === false)
             {
-                obj3 = obj2.children[indx2];
-                obj4 = obj3.children[0];
-                obj5 = obj4.children[0];
-                if (obj5.checked === true &&
-                    obj3.children[6].innerText != Muserid && Madmin === false)
-                {
-                    cmdButsTop.children[1].disabled = true;
-                    cmdButsBtm.children[1].disabled = true;
-                    cmdButsTop.children[3].disabled = true;
-                    cmdButsBtm.children[3].disabled = true;
-                    cmdButsTop.children[4].disabled = true;
-                    cmdButsBtm.children[4].disabled = true;
-                }
-            }
-        }
-        else
-        {
-            obj2 = obj1.childNodes[2].getElementsByTagName("TR");
-            for (indx2 = 1; indx2 < obj2.length; ++indx2)
-            {
-                obj3 = obj2[indx2];
-                obj4 = obj3.childNodes[1];
-                obj5 = obj4.childNodes[0];
-                if (obj5.checked === true &&
-                    obj3.childNodes[13].textContent != Muserid && Madmin === false)
-                {
-                    cmdButsTop.childNodes[3].disabled = true;
-                    cmdButsBtm.childNodes[3].disabled = true;
-                    cmdButsTop.childNodes[7].disabled = true;
-                    cmdButsBtm.childNodes[7].disabled = true;
-                    cmdButsTop.childNodes[9].disabled = true;
-                    cmdButsBtm.childNodes[9].disabled = true;
-                }
+                cmdButsTop[1].disabled = true;
+                cmdButsTop[3].disabled = true;
+                cmdButsTop[4].disabled = true;
+
+                cmdButsBtm[1].disabled = true;
+                cmdButsBtm[3].disabled = true;
+                cmdButsBtm[4].disabled = true;
             }
         }
     }
-
-    function swapCols(obja, objb)
+    
+    function copyRow(cols)
     {
-        var index;
-        var temp;
-        if (obja.childre)
+        var tCols = new Array();
+        for (var cnt = 0; cnt < cols.length; ++cnt)
         {
-            for (index = 0; index < obja.children.length; ++index)
-            {
-                temp = obja.children[index].innerHTML;
-                obja.children[index].innerHTML = objb.children[index].innerHTML;
-                objb.children[index].innerHTML = temp;
-            }
+            tCols[cnt] = cols[cnt].innerHTML;
         }
-        else
+
+        return tCols;
+    }
+    
+    function pasteRow(cols, tCols)
+    {
+        for (var cnt = 0; cnt < cols.length; ++cnt)
         {
-            for (index = 0; index < obja.childNodes.length; ++index)
-            {
-                temp = obja.childNodes[index].innerHTML;
-                obja.childNodes[index].innerHTML = objb.childNodes[index].innerHTML;
-                objb.childNodes[index].innerHTML = temp;
-            }
+            cols[cnt].innerHTML = tCols[cnt];
         }
     }
-
-    function sortTextA(col)
+    
+    function orderList(col, order, sType)
     {
-        var obj1 = document.getElementById("theList");
-        var obj2;
-        var maxcnt;
-        var loop;
-        var indx2;
-        var obj3a;
-        var obj4a;
-        var texta;
-        var obj3b;
-        var obj4b;
-        var textb;
-        if (obj1.children)
+        var table = document.getElementById("theList");
+        var trs = table.getElementsByTagName("TR");
+        var tds;
+        var trsNdx = new Array();
+        var trsTxt = new Array();
+        var mn;
+        var mx;
+        var mp;
+        var newTxt;
+        var found;
+        var cnt;
+        var img;
+        var tTable = new Array();
+        
+        for (cnt = 1; cnt < trs.length; ++cnt)
         {
-            obj2 = obj1.children[1];
-            maxcnt = obj2.children.length - 1;
-            loop = true;
-            while (loop)
-            {
-                loop = false;
-                for (indx2 = 1; indx2 < maxcnt; ++indx2)
-                {
-                    obj3a = obj2.children[indx2];
-                    obj4a = obj3a.children[col];
-                    texta = obj4a.innerText;
-                    obj3b = obj2.children[indx2 + 1];
-                    obj4b = obj3b.children[col];
-                    textb = obj4b.innerText;
-    
-                    if (texta.toUpperCase() > textb.toUpperCase())
-                    {
-                        loop = true;
-                        swapCols(obj3a, obj3b);
-                    }
-                }
-            }
-        }
-        else
-        {
-            obj2 = obj1.childNodes[1];
-            maxcnt = obj2.childNodes.length - 1;
-            loop = true;
-            while (loop)
-            {
-                loop = false;
-                for (indx2 = 1; indx2 < maxcnt; ++indx2)
-                {
-                    obj3a = obj2.childNodes[indx2];
-                    obj4a = obj3a.childNodes[col];
-                    texta = obj4a.textContent;
-                    obj3b = obj2.childNodes[indx2 + 1];
-                    obj4b = obj3b.childNodes[col];
-                    textb = obj4b.textContent;
-    
-                    if (texta.toUpperCase() > textb.toUpperCase())
-                    {
-                        loop = true;
-                        swapCols(obj3a, obj3b);
-                    }
-                }
-            }
-        }
-    }
+            tds = trs[cnt].getElementsByTagName("TD");
+            tTable[cnt] = copyRow(tds);
 
-    function sortTextD(col)
-    {
-        var obj1 = document.getElementById("theList");
-        var obj2;
-        var maxcnt;
-        var loop;
-        var indx2;
-        var obj3a;
-        var obj4a;
-        var texta;
-        var obj3b;
-        var obj4b;
-        var textb;
-        if (obj1.children)
-        {
-            obj2 = obj1.children[1];
-            maxcnt = obj2.children.length - 1;
-            loop = true;
-            while (loop)
+            if (sType == "txt")
             {
-                loop = false;
-                for (indx2 = 1; indx2 < maxcnt; ++indx2)
-                {
-                    obj3a = obj2.children[indx2];
-                    obj4a = obj3a.children[col];
-                    texta = obj4a.innerText;
-                    obj3b = obj2.children[indx2 + 1];
-                    obj4b = obj3b.children[col];
-                    textb = obj4b.innerText;
-    
-                    if (texta.toUpperCase() < textb.toUpperCase())
-                    {
-                        loop = true;
-                        swapCols(obj3a, obj3b);
-                    }
-                }
-            }
-        }
-        else
-        {
-            obj2 = obj1.childNodes[1];
-            maxcnt = obj2.childNodes.length - 1;
-            loop = true;
-            while (loop)
-            {
-                loop = false;
-                for (indx2 = 1; indx2 < maxcnt; ++indx2)
-                {
-                    obj3a = obj2.childNodes[indx2];
-                    obj4a = obj3a.childNodes[col];
-                    texta = obj4a.textContent;
-                    obj3b = obj2.childNodes[indx2 + 1];
-                    obj4b = obj3b.childNodes[col];
-                    textb = obj4b.textContent;
-    
-                    if (texta.toUpperCase() < textb.toUpperCase())
-                    {
-                        loop = true;
-                        swapCols(obj3a, obj3b);
-                    }
-                }
-            }
-        }
-    }
-
-    function sortText(col)
-    {
-        if (col == lastSortCol)
-        {
-            if (lastSortOrder === true)
-            {
-                sortTextD(col);
-                sortChar = "&#217;";
-                lastSortOrder = false;
+                newTxt = (tds[col].innerText) ? tds[col].innerText : tds[col].textContent;
             }
             else
             {
-                sortTextA(col);
-                sortChar = "&#218;";
-                lastSortOrder = true;
+                img = tds[col].getElementsByTagName("IMG");
+                newTxt = img[0].getAttribute("cstSortKey");
+            }
+            newTxt = newTxt.toLowerCase();
+            
+            if (trsNdx.length === 0)
+            {
+                trsTxt[0] = newTxt;
+                trsNdx[0] = cnt;
+                continue;
+            }
+            
+            mn = 0;
+            mx = trsNdx.length;
+            while (true)
+            {
+                mp = Math.floor((mn + mx) / 2);
+                
+                found = order * newTxt.localeCompare(trsTxt[mp]);
+
+                if (found === 0)
+                {
+                    break;
+                }                
+                else if (found > 0)
+                {
+                    if (mn == mp)
+                    {
+                        if (order > 0)
+                        {
+                            ++mp;
+                        }
+                        break;
+                    }
+                    mn = mp;
+                }
+                else
+                {
+                    if (mx == mp)
+                    {
+                        break;
+                    }
+                    mx = mp;
+                }
+            }
+            
+            trsNdx.splice(mp, 0, cnt);
+            trsTxt.splice(mp, 0, newTxt);
+        }
+        
+        for (cnt = 0; cnt < trsNdx.length; ++cnt)
+        {
+            mn = cnt + 1;
+            mx = trsNdx[cnt];
+            if (mn != mx)
+            {
+                tds = trs[mn].getElementsByTagName("TD");
+                pasteRow(tds, tTable[mx]);
             }
         }
-        else
-        {
-            sortTextA(col);
-            sortChar = "&#218;";
-            lastSortOrder = true;
-        }
-        lastSortCol = col;
     }
 
     function setSortHeading(obj)
     {
         if (lastSort !== null)
         {
-            lastSort.innerHTML = "";
+            lastSort.src = "../images/blank.gif";
         }
-        obj.innerHTML = sortChar;
         lastSort = obj;
+        lastSort.src = "../images/" + sortChar + ".gif";
+    }
+    
+    function setSortGlyph(col)
+    {
+        if (col == lastSortCol)
+        {
+            if (lastSortOrder === true)
+            {
+                sortChar = "arrow_16_down";
+                lastSortOrder = false;
+            }
+            else
+            {
+                sortChar = "arrow_16_up";
+                lastSortOrder = true;
+            }
+        }
+        else
+        {
+            sortChar = "arrow_16_up";
+            lastSortOrder = true;
+        }
+        lastSortCol = col;
     }
 
     function sortCol(obj, col)
     {
-        sortText(col);
+        var sortType = (obj.id == "cStatus") ? "img" : "txt";
+
+        setSortGlyph(col);
+        
+        orderList(col, (lastSortOrder) ? 1 : -1, sortType);
+        
         setSortHeading(obj);
     }
 
@@ -550,6 +396,7 @@
 
     function cmdLogout()
     {
-        listForm.action = "/cadsrsentinel/do/logout";
-        listForm.submit();
+        var form = document.getElementsByName("listForm");
+        form[0].action = "/cadsrsentinel/do/logout";
+        form[0].submit();
     }
