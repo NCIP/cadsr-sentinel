@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.18 2008-11-03 18:41:48 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.19 2008-12-18 14:46:15 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -64,7 +64,7 @@ MERGE INTO sbrext.tool_options_view_ext s
    USING (SELECT hits.tool_name, hits.property, hits.VALUE, hits.ua_name, hits.description
             FROM (SELECT 'SENTINEL' AS tool_name, 'ADMIN.00' AS property, '01' AS VALUE, 'HEBELL' AS ua_name, 'An account given full Sentinel Administrator privileges.' AS description, 'ALL' AS tier FROM DUAL
                   UNION
-                  SELECT 'SENTINEL', 'ADMIN.01', '2', 'ALREDS', 'An account to receive the caDSR Audit Report.', 'ALL' FROM DUAL
+                  SELECT 'SENTINEL', 'ADMIN.01', '2', 'AZIEN', 'An account to receive the caDSR Audit Report.', 'ALL' FROM DUAL
                   UNION
                   SELECT 'SENTINEL', 'ADMIN.02', '2', 'DWARZEL', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
                   UNION
@@ -77,8 +77,6 @@ MERGE INTO sbrext.tool_options_view_ext s
                   SELECT 'SENTINEL', 'ADMIN.04', '2', 'HAUD', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
                   UNION
                   SELECT 'SENTINEL', 'ADMIN.05', '2', 'CURTIST', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
-                  UNION
-                  SELECT 'SENTINEL', 'ADMIN.06', '2', 'AZIEN', 'An account to receive the caDSR Audit Report.', 'PROD' FROM DUAL
                   ) hits
            WHERE hits.tier IN ('ALL', '@TIER.UPPER@')) t
    ON (s.tool_name = t.tool_name AND s.property = t.property)
