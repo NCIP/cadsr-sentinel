@@ -1,6 +1,6 @@
 // Copyright (c) 2008 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertRootForm.java,v 1.2 2008-05-21 20:18:23 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertRootForm.java,v 1.3 2008-12-18 21:22:16 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -93,6 +93,13 @@ public class AlertRootForm extends ActionForm
         ActionErrors errors = new ActionErrors();
 
         HttpSession session = request_.getSession();
+        if (session == null)
+        {
+            _logger.info("No session exists. [" + this.getClass().getName() + "]");
+            errors.add("bean", new ActionMessage("error.nobean"));
+            return errors;
+        }
+
         AlertBean ub = (AlertBean) session.getAttribute(AlertBean._SESSIONNAME);
         if (ub == null)
         {
@@ -100,13 +107,15 @@ public class AlertRootForm extends ActionForm
             errors.add("bean", new ActionMessage("error.nobean"));
             return errors;
         }
-        else if (!ub.getKey().equals(_sessionKey))
+
+        if (!ub.getKey().equals(_sessionKey))
         {
             _logger.error("Sessionkeys do not match. [" + ub.getUser() + "] [" + this.getClass().getName() + "] [Page " + _sessionKey + "] [Bean " + ub.getKey() + "]");
             errors.add("bean", new ActionMessage("error.nobean"));
             return errors;
         }
-        else if (!ub.checkHost(request_.getRemoteHost()))
+
+        if (!ub.checkHost(request_.getRemoteHost()))
         {
             _logger.error("Request is made from a host other than the creator. [" + ub.getUser() + "] [" + this.getClass().getName() + "] [Creator " + ub.getRemoteHost() + "] [Requestor " + request_.getRemoteHost() + "]");
             errors.add("bean", new ActionMessage("error.nobean"));
