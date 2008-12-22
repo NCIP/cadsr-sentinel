@@ -1,12 +1,14 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.11 2008-12-18 14:46:16 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.12 2008-12-22 13:12:26 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
 
    This script updates the Tool Options table with URL's for the @TIER.NAME@ tier.
 */
+whenever sqlerror exit sql.sqlcode rollback;
+
 set scan off;
 
 update sbrext.tool_options_view_ext
