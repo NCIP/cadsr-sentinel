@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.20 2008-12-22 14:18:14 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.load_options.sql,v 1.21 2008-12-22 17:05:47 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -96,7 +96,7 @@ MERGE INTO sbrext.tool_options_view_ext s
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
 values ('SENTINEL', 'URL', 'https://cadsrsentinel@TIER@.nci.nih.gov',
-'The URL for the Sentinel Tool connected this caDSR database.');
+'Deprecated, please use URN.');
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
 values ('SENTINEL', 'URN', 'https://cadsrsentinel@TIER@.nci.nih.gov/cadsrsentinel/',
