@@ -1,6 +1,6 @@
 /* Copyright ScenPro, Inc, 2005
 
-   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.12 2008-12-22 13:12:26 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/conf/template.update_options_url.sql,v 1.13 2008-12-22 13:14:11 hebell Exp $
    $Name: not supported by cvs2svn $
 
    Author: Larry Hebel
@@ -94,3 +94,5 @@ where REGEXP_LIKE(value, 'umlmodelbrowser[^/.]*\.nci\.nih\.gov');
    Commit Settings.
 */
 commit;
+
+exit
