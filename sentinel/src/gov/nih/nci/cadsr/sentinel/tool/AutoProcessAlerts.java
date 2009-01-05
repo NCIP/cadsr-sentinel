@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.31 2008-05-23 15:40:29 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts.java,v 1.32 2009-01-05 20:52:41 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tool;
@@ -1996,6 +1996,7 @@ public class AutoProcessAlerts
             // run.
             message.setSubject(subject_);
             message.setFrom(new InternetAddress(_emailAddr, _adminName));
+            message.setSentDate(new Timestamp(System.currentTimeMillis()));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(
                 toEmail_, toName_));
 
