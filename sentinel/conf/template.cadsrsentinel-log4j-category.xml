@@ -4,6 +4,6 @@
     <!-- ============================ -->
 
     <category name="gov.nih.nci.cadsr.sentinel" additivity="false">
-        <priority value="DEBUG" />
+        <priority value="@logCategory@" />
         <appender-ref ref="CADSRSENTINEL_FILE" />
     </category>
