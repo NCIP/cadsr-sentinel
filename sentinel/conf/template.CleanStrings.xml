@@ -1,6 +1,6 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 
-<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.CleanStrings.xml,v 1.7 2009-02-11 12:46:53 hebell Exp $
+<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.CleanStrings.xml,v 1.8 2009-02-11 13:13:28 hebell Exp $
        $Name: not supported by cvs2svn $
  -->
 
@@ -31,8 +31,8 @@
         <entry key="table.csitem">sbr.cs_items_view long_name preferred_definition change_note</entry>
         <entry key="table.cd"    >sbr.conceptual_domains_view long_name preferred_definition change_note</entry>
         <entry key="table.pv"    >sbr.permissible_values_view meaning_description value</entry>
-        <entry key="table.con"   >sbrext.concepts_ext_view long_name preferred_definition change_note</entry>
-        <entry key="table.pro"   >sbrext.protocols_ext_view long_name preferred_definition change_note</entry>
-        <entry key="table.rep"   >sbrext.representations_ext_view long_name preferred_definition change_note</entry>
+        <entry key="table.con"   >sbrext.concepts_view_ext long_name preferred_definition change_note</entry>
+        <entry key="table.pro"   >sbrext.protocols_view_ext long_name preferred_definition change_note</entry>
+        <entry key="table.rep"   >sbrext.representations_view_ext long_name preferred_definition change_note</entry>
 
 </properties>
