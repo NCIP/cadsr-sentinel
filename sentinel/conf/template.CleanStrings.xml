@@ -1,6 +1,6 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 
-<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.CleanStrings.xml,v 1.8 2009-02-11 13:13:28 hebell Exp $
+<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.CleanStrings.xml,v 1.9 2009-02-18 18:21:01 hebell Exp $
        $Name: not supported by cvs2svn $
  -->
 
@@ -16,7 +16,7 @@
         <entry key="action">update</entry>
 
         <entry key="table.ac"    >sbr.admin_components_view long_name preferred_definition</entry>
-        <entry key="table.csi"   >sbr.class_scheme_items_view description comments</entry>
+        <entry key="table.csi"   >sbr.class_scheme_items_view csi_name description comments</entry>
         <entry key="table.cs"    >sbr.classification_schemes_view long_name preferred_definition change_note</entry>
         <entry key="table.conte" >sbr.contexts_view description</entry>
         <entry key="table.de"    >sbr.data_elements_view long_name preferred_definition change_note question</entry>
