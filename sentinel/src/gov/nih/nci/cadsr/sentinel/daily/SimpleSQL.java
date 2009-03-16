@@ -1,6 +1,6 @@
 // Copyright (c) 2009 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/daily/SimpleSQL.java,v 1.1 2009-03-16 15:11:23 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/daily/SimpleSQL.java,v 1.2 2009-03-16 17:14:21 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.daily;
@@ -78,6 +78,7 @@ public class SimpleSQL
     {
         loadProp(propFile_);
         open();
+
         try
         {
             _logger.info("Do " + _sqlMVRefresh);
@@ -90,6 +91,12 @@ public class SimpleSQL
         finally
         {
             _logger.info("End " + _sqlMVRefresh);
+        }
+        
+        if (_conn != null)
+        {
+            _conn.close();
+            _conn = null;
         }
     }
 
