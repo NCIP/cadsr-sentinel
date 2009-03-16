@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Executing Auto Run for Sentinel Tool"
-echo "\$Header: /share/content/gforge/sentinel/sentinel/scripts/autorun.sh,v 1.8 2008-11-06 19:08:22 hebell Exp $"
+echo "\$Header: /share/content/gforge/sentinel/sentinel/scripts/autorun.sh,v 1.9 2009-03-16 15:11:23 hebell Exp $"
 echo "\$Name: not supported by cvs2svn $"
 
 DATE=`date +%Y%m%d`
@@ -61,6 +61,10 @@ CP=$CP:$BASE_DIR/stax-api-1.0.1.jar
 CP=$CP:$BASE_DIR/xercesImpl.jar
 
 export CP
+
+echo $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.daily.SimpleSQL $BASE_DIR/log4j.xml $BASE_DIR/SimpleSQL.xml
+
+$JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.daily.SimpleSQL $BASE_DIR/log4j.xml $BASE_DIR/SimpleSQL.xml
 
 echo $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.daily.CleanStrings $BASE_DIR/log4j.xml $BASE_DIR/CleanStrings.xml
 

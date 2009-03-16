@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.152 2009-01-07 16:58:04 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.153 2009-03-16 15:11:22 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -9,7 +9,7 @@
     <!-- set global properties for this build -->
     <tstamp/>
     
-    <property name="appl.release" value="4.0.0.1" />
+    <property name="appl.release" value="4.0.0.2" />
     <property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}"/>
 
     <property name="PROP.FILE" location="build.properties" />
@@ -214,6 +214,9 @@
         </copy>
         <copy tofile="${artifacts.dir}/bin/CleanStrings.xml" filtering="true">
             <fileset file="conf/template.CleanStrings.xml" />
+        </copy>
+        <copy tofile="${artifacts.dir}/bin/SimpleSQL.xml" filtering="true">
+            <fileset file="conf/template.SimpleSQL.xml" />
         </copy>
         <copy tofile="${artifacts.dir}/bin/log4j.xml" filtering="true">
             <fileset file="conf/template.log4j-autorun.xml" />
