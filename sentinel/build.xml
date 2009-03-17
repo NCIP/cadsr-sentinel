@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.154 2009-03-17 13:15:18 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.155 2009-03-17 14:41:06 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -461,7 +461,7 @@
             <doctitle>caDSR Sentinel Tool</doctitle>
             <bottom>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</bottom>
             <tag name="todo" scope="all" description="To do:" />
-            <group title="Source Package" packages="gov.nih.nci.cadsr.sentinel.tool;gov.nih.nci.cadsr.sentinel.tool.Test;gov.nih.nci.cadsr.sentinel.tool.audits;gov.nih.nci.cadsr.sentinel.tool.database;gov.nih.nci.cadsr.sentinel.tool.ui;gov.nih.nci.cadsr.sentinel.tool.util" />
+            <group title="Source Package" packages="gov.nih.nci.cadsr.sentinel.tool;gov.nih.nci.cadsr.sentinel.test;gov.nih.nci.cadsr.sentinel.audits;gov.nih.nci.cadsr.sentinel.database;gov.nih.nci.cadsr.sentinel.ui;gov.nih.nci.cadsr.sentinel.util;gov.nih.nci.cadsr.sentinel.tags;gov.nih.nci.cadsr.sentinel.daily" />
             <link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="${temp.dir}" />
         </javadoc>
         <zip destfile="${artifacts.dir}/gforge/sentinel_doc.zip">
