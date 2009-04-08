@@ -1,17 +1,22 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/create.js,v 1.3 2008-06-20 20:44:30 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/create.js,v 1.4 2009-04-08 17:56:19 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
     function loaded()
     {
-        createForm.propDesc.value = Mdesc[1];
-        myName.innerText = Muserid;
-        for (var ndx = 0; ndx < createForm.initial.length; ++ndx)
+        var objs = document.getElementsByName("propDesc");
+        objs[0].value = Mdesc[1];
+        var obj = document.getElementById("myName");
+        obj.innerText = Muserid;
+        obj.textContent = Muserid;
+        objs = document.getElementsByName("initial");
+        obj = objs[0];
+        for (var ndx = 0; ndx < obj.length; ++ndx)
         {
-            if (createForm.initial[ndx].checked)
+            if (obj[ndx].checked)
             {
-                setBlank(createForm.initial[ndx].value);
+                setBlank(ndx, obj[ndx].value);
                 break;
             }
         }
@@ -25,51 +30,66 @@
 
     function cmdEdit()
     {
-        createForm.nextScreen.value = "edit";
-        createForm.submit();
+        var objs = document.getElementsByName("nextScreen");
+        objs[0].value = "edit";
+        document.forms["createForm"].submit();
     }
     
     function cmdCancel()
     {
-        createForm.nextScreen.value = "list";
-        createForm.submit();
+        var objs = document.getElementsByName("nextScreen");
+        objs[0].value = "list";
+        document.forms["createForm"].submit();
     }
     
     function cmdLogout()
     {
-        createForm.action = "/cadsrsentinel/do/logout";
-        createForm.submit();
+        document.forms["createForm"].action = "/cadsrsentinel/do/logout";
+        document.forms["createForm"].submit();
     }
     
     function cmdSave()
     {
-        createForm.save1.disabled = true;
-        createForm.save2.disabled = true;
-        createForm.submit();
+        var objs = document.getElementsByName("save1");
+        objs[0].disabled = true;
+        objs = document.getElementsByName("save2");
+        objs[0].disabled = true;
+        document.forms["createForm"].submit();
     }
     
-    function setBlank(val)
+    function setBlank(ndx, val)
     {
-        createForm.initial.value = val;
+        var objs = document.getElementsByName("initial");
+        objs[ndx].checked = true;
+        objs[ndx].value = val;
+        objs = document.getElementsByName("save1");
+        var s1 = objs[0];
+        objs = document.getElementsByName("save2");
+        var s2 = objs[0];
         if (val == "0")
         {
-            createForm.save1.disabled = true;
-            createForm.save2.disabled = true;
+            s1.disabled = true;
+            s2.disabled = true;
         }
         else
         {
-            createForm.save1.disabled = false;
-            createForm.save2.disabled = false;
+            s1.disabled = false;
+            s2.disabled = false;
         }
-        createForm.propDesc.value = Mdesc[val];
+        objs = document.getElementsByName("propDesc");
+        objs[0].value = Mdesc[val];
     }
 
     function saved(val)
     {
+        var objs = document.getElementsByName("save1");
+        var s1 = objs[0];
+        objs = document.getElementsByName("save2");
+        var s2 = objs[0];
         if (val === "")
         {
-            createForm.save1.disabled = false;
-            createForm.save2.disabled = false;
+            s1.disabled = false;
+            s2.disabled = false;
             return;
         }
         else if (val == "Y")
@@ -79,8 +99,8 @@
         }
         else
         {
-            createForm.save1.disabled = false;
-            createForm.save2.disabled = false;
+            s1.disabled = false;
+            s2.disabled = false;
             alert(val);
         }
     }

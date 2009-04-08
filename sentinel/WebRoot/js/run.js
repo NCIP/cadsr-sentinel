@@ -1,12 +1,13 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/run.js,v 1.3 2008-06-20 20:44:30 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/run.js,v 1.4 2009-04-08 17:56:19 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
     function cmdCancel()
     {
-        runForm.nextScreen.value = "back";
-        runForm.submit();
+        var objs = document.getElementsByName("nextScreen");
+        objs[0].value = "back";
+        documents.forms["runForm"].submit();
     }
 
     function cmdHelp()
@@ -16,14 +17,18 @@
     
     function cmdLogout()
     {
-        runForm.action = "/cadsrsentinel/do/logout";
-        runForm.submit();
+        documents.forms["runForm"].action = "/cadsrsentinel/do/logout";
+        documents.forms["runForm"].submit();
     }
 
     function cmdSubmit()
     {
-        var start = Date.parse(runForm.startDate.value);
-        var end = Date.parse(runForm.endDate.value);
+        var objs = document.getElementsByName("startDate");
+        var sdate = objs[0];
+        objs = document.getElementsByName("endDate");
+        var edate = objs[0];
+        var start = Date.parse(sdate.value);
+        var end = Date.parse(edate.value);
         var temp = start;
         if (start > end)
         {
@@ -34,26 +39,28 @@
         temp = new Date(start);
         if (isNaN(temp.getMonth()) ||
         	isNaN(temp.getDate()) ||
-        	isNaN(temp.getYear()))
+        	isNaN(temp.getFullYear()))
         {
         	window.alert("Please correct the Start Date.");
-            runForm.startDate.focus();
+            sdate.focus();
         	return;
         }
-        runForm.startDate.value = (temp.getMonth() + 1) + "/" + temp.getDate() + "/" + temp.getYear();
+        sdate.value = (temp.getMonth() + 1) + "/" + temp.getDate() + "/" + temp.getFullYear();
         temp = new Date(end);
         if (isNaN(temp.getMonth()) ||
         	isNaN(temp.getDate()) ||
-        	isNaN(temp.getYear()))
+        	isNaN(temp.getFullYear()))
         {
         	window.alert("Please correct the End Date.");
-            runForm.endDate.focus();
+            edate.focus();
         	return;
         }
-        runForm.endDate.value = (temp.getMonth() + 1) + "/" + temp.getDate() + "/" + temp.getYear();
-        runForm.save1.disabled = true;
-        runForm.save2.disabled = true;
-        runForm.submit();
+        edate.value = (temp.getMonth() + 1) + "/" + temp.getDate() + "/" + temp.getFullYear();
+        objs = document.getElementsByName("save1");
+        objs[0].disabled = true;
+        objs = document.getElementsByName("save2");
+        objs[0].disabled = true;
+        document.forms["runForm"].submit();
     }
 
 	var defStart = null;
@@ -61,36 +68,40 @@
 
     function setDates(offset)
     {
+        var objs = document.getElementsByName("startDate");
+        var sdate = objs[0];
+        objs = document.getElementsByName("endDate");
+        var edate = objs[0];
         var start = new Date();
         var end = new Date();
         var temp = new Date();
         var mDay = 0;
     	if (defStart === null)
     	{
-    		defStart = runForm.startDate.value;
-    		defEnd = runForm.endDate.value;
+    		defStart = sdate.value;
+    		defEnd = edate.value;
     	}
     	switch (offset)
     	{
     		case 0:
-    			runForm.startDate.value = defStart;
-    			runForm.endDate.value = defEnd;
+    			sdate.value = defStart;
+    			edate.value = defEnd;
     			break;
     		case 1:
 		    	temp = new Date();
 		    	mDay = 24 * 60 * 60 * 1000;
 		    	start = new Date(temp.getTime());
 		    	end = new Date(start.getTime() + mDay);
-		    	runForm.startDate.value = (start.getMonth() + 1) + "/" + start.getDate() + "/" + start.getYear();
-		    	runForm.endDate.value = (end.getMonth() + 1) + "/" + end.getDate() + "/" + end.getYear();
+		    	sdate.value = (start.getMonth() + 1) + "/" + start.getDate() + "/" + start.getFullYear();
+		    	edate.value = (end.getMonth() + 1) + "/" + end.getDate() + "/" + end.getFullYear();
 		    	break;
     		case 2:
 		    	temp = new Date();
 		    	mDay = 24 * 60 * 60 * 1000;
 		    	start = new Date(temp.getTime() - mDay);
 		    	end = new Date(start.getTime() + mDay);
-		    	runForm.startDate.value = (start.getMonth() + 1) + "/" + start.getDate() + "/" + start.getYear();
-		    	runForm.endDate.value = (end.getMonth() + 1) + "/" + end.getDate() + "/" + end.getYear();
+		    	sdate.value = (start.getMonth() + 1) + "/" + start.getDate() + "/" + start.getFullYear();
+		    	edate.value = (end.getMonth() + 1) + "/" + end.getDate() + "/" + end.getFullYear();
 		    	break;
 		}
     }

@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/EditTag.java,v 1.1 2008-11-07 14:11:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/EditTag.java,v 1.2 2009-04-08 17:56:19 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tags;
@@ -304,14 +304,14 @@ public class EditTag extends AlertRootTag
             {
                 if (vals_[ndx].equals(selected_[ndx2]))
                 {
-                    temp = temp + "editForm." + lname_ + ".options[" + ndx
+                    temp = temp + "objs = document.getElementsByName(\"" + lname_ + "\");\nobjs[0].options[" + ndx
                         + "].selected = true;\n";
                     break;
                 }
             }
         }
         if (flag_ && temp.length() == 0)
-            temp = "editForm." + lname_ + ".options[0].selected = true;\n";
+            temp = "objs = document.getElementsByName(\"" + lname_ + "\");\nobjs[0].options[0].selected = true;\n";
         return temp;
     }
 
@@ -452,13 +452,13 @@ public class EditTag extends AlertRootTag
             temp[tspot++] = "";
         else if (_namesExempt.length() > 256)
             temp[tspot++] =
-                "exemptlist.innerHTML = \"The following users only receive Alert "
+                "var elist = document.getElementById(\"exemptlist\");\nelist.innerHTML = \"The following users only receive Alert "
                 + "Broadcasts when added as specific Recipients.<br>\\\n<textarea class=\\\"sstd100\\\" rows=\\\"3\\\" readonly>"
                 + _namesExempt
                 + "</textarea>\";\n";
         else
             temp[tspot++] = 
-                "exemptlist.innerHTML = \"The following users only receive Alert "
+                "var elist = document.getElementById(\"exemptlist\");\nelist.innerHTML = \"The following users only receive Alert "
                 + "Broadcasts when added as specific Recipients.<br>"
                 + _namesExempt + "\";\n";
 
@@ -467,81 +467,104 @@ public class EditTag extends AlertRootTag
         // fields from the form bean. Actually, I couldn't find a way to have
         // the form bean access the
         // database on the outbound page.
-        temp[tspot++] = "editForm.propName.value = \""
+        temp[tspot++] = "var objs;\nobjs = document.getElementsByName(\"propName\");\n" 
+            + "objs[0].value = \""
             + _ub.getWorking().getName() + "\";\n";
-        temp[tspot++] = "editForm.propDesc.value = \""
+        temp[tspot++] = "objs = document.getElementsByName(\"propDesc\");\n"
+            + "objs[0].value = \""
             + _ub.getWorking().getSummary(true) + "\";\n";
-        temp[tspot++] = "editForm.propCreator.value = \""
+        temp[tspot++] = "objs = document.getElementsByName(\"propCreator\");\n"
+            + "objs[0].value = \""
             + _ub.getWorking().getCreator() + "\";\n";
-        temp[tspot++] = "editForm.propCreateDate.value = \""
+        temp[tspot++] = "objs = document.getElementsByName(\"propCreateDate\");\n"
+            + "objs[0].value = \""
             + _ub.getWorking().getCDate() + "\";\n";
-        temp[tspot++] = "editForm.propLastRunDate.value = \""
+        temp[tspot++] = "objs = document.getElementsByName(\"propLastRunDate\");\n"
+            + "objs[0].value = \""
             + _ub.getWorking().getADate() + "\";\n";
-        temp[tspot++] = "editForm.propModifyDate.value = \""
+        temp[tspot++] = "objs = document.getElementsByName(\"propModifyDate\");\n"
+            + "objs[0].value = \""
             + _ub.getWorking().getMDate() + "\";\n";
         if (_ub.getWorking().getIncPropSect())
-            temp[tspot++] = "editForm.repIncProp.checked = true;\n";
+            temp[tspot++] = "objs = document.getElementsByName(\"repIncProp\");\n"
+                + "objs[0].checked = true;\n";
         else
             temp[tspot++] = "";
 
-        temp[tspot++] = "editForm.infoAssocLvl.value = \"" + _ub.getWorking().getIAssocLvl()
+        temp[tspot++] = "objs = document.getElementsByName(\"infoAssocLvl\");\n"
+            + "objs[0].value = \""
+            + _ub.getWorking().getIAssocLvl()
             + "\";\n"
-            + "editForm.infoAssocLvl.options[" + _ub.getWorking().getIAssocLvl() + "].selected = true;\n";
+            + "objs[0].options[" + _ub.getWorking().getIAssocLvl() + "].selected = true;\n";
         
         if (_ub.getWorking().getIntro(false) == null)
-            temp[tspot++] = "editForm.propIntro.value = \""
+            temp[tspot++] = "objs = document.getElementsByName(\"propIntro\");\n"
+                + "objs[0].value = \""
                 + msgs.getMessage("edit.static") + "\";\n";
         else
-            temp[tspot++] = "editForm.propIntro.value = \""
+            temp[tspot++] = "objs = document.getElementsByName(\"propIntro\");\n"
+                + "objs[0].value = \""
                 + _ub.getWorking().getIntro(true) + "\";\n";
 
         if (_ub.getWorking().isFreqDay())
         {
-            temp[tspot++] = "editForm.freqUnit[0].checked = true;\n";
+            temp[tspot++] = "objs = document.getElementsByName(\"freqUnit\");\n"
+                + "objs[0].checked = true;\n";
         }
         else if (_ub.getWorking().isFreqWeek())
         {
             ndx = _ub.getWorking().getDay() - 1;
-            temp[tspot++] = "editForm.freqUnit[1].checked = true;\n"
-                + "editForm.freqWeekly.disabled = false;\n"
-                + "editForm.freqWeekly.options[" + ndx + "].selected = true;\n";
+            temp[tspot++] = "objs = document.getElementsByName(\"freqUnit\");\n"
+                + "objs[1].checked = true;\n"
+                + "objs = document.getElementsByName(\"freqWeekly\");\n"
+                + "objs[0].disabled = false;\n"
+                + "objs[0].options[" + ndx + "].selected = true;\n";
         }
         else if (_ub.getWorking().isFreqMonth())
         {
             ndx = _ub.getWorking().getDay() - 1;
-            temp[tspot++] = "editForm.freqUnit[2].checked = true;\n"
-                + "editForm.freqMonthly.disabled = false;\n"
-                + "editForm.freqMonthly.options[" + ndx
-                + "].selected = true;\n";
+            temp[tspot++] = "objs = document.getElementsByName(\"freqUnit\");\n"
+                + "objs[2].checked = true;\n"
+                + "objs = document.getElementsByName(\"freqMonthly\");\n"
+                + "objs[0].disabled = false;\n"
+                + "objs[0].options[" + ndx + "].selected = true;\n";
         }
         else
             temp[tspot++] = "";
 
         if (_ub.getWorking().isActive())
         {
-            temp[tspot++] = "editForm.propStatus[0].checked = true;\n"
-                + "editForm.propStatusReason.value = \""
+            temp[tspot++] = "objs = document.getElementsByName(\"propStatus\");\n"
+                + "objs[0].checked = true;\n"
+                + "objs = document.getElementsByName(\"propStatusReason\");\n"
+                + "objs[0].value = \""
                 + msgs.getMessage("edit.statusi2") + "\";\n";
             temp[tspot++] = "";
         }
         else if (_ub.getWorking().isActiveOnce())
         {
-            temp[tspot++] = "editForm.propStatus[1].checked = true;\n"
-                + "editForm.propStatusReason.value = \""
+            temp[tspot++] = "objs = document.getElementsByName(\"propStatus\");\n"
+                + "objs[1].checked = true;\n"
+                + "objs = document.getElementsByName(\"propStatusReason\");\n"
+                + "objs[0].value = \""
                 + msgs.getMessage("edit.statusi2") + "\";\n";
             temp[tspot++] = "";
         }
         else if (_ub.getWorking().isActiveDates())
         {
-            temp[tspot++] = "editForm.propStatus[2].checked = true;\n"
-                + "editForm.propStatusReason.value = \""
+            temp[tspot++] = "objs = document.getElementsByName(\"propStatus\");\n"
+                + "objs[2].checked = true;\n"
+                + "objs = document.getElementsByName(\"propStatusReason\");\n"
+                + "objs[0].value = \""
                 + msgs.getMessage("edit.statusi2") + "\";\n";
             temp[tspot++] = "";
         }
         else
         {
-            temp[tspot++] = "editForm.propStatus[3].checked = true;\n"
-                + "editForm.propStatusReason.value = \"";
+            temp[tspot++] = "objs = document.getElementsByName(\"propStatus\");\n"
+                + "objs[3].checked = true;\n"
+                + "objs = document.getElementsByName(\"propStatusReason\");\n"
+                + "objs[0].value = \"";
             if (_ub.getWorking().getInactiveReason(false) == null)
             {
                 temp[tspot++] = msgs.getMessage("edit.explain") + "\";\n";
@@ -554,9 +577,11 @@ public class EditTag extends AlertRootTag
         }
 
         if (_ub.getWorking().isSendEmptyReport())
-            temp[tspot++] = "editForm.freqEmpty[1].checked = true;\n";
+            temp[tspot++] = "objs = document.getElementsByName(\"freqEmpty\");\n"
+                + "objs[1].checked = true;\n";
         else
-            temp[tspot++] = "editForm.freqEmpty[0].checked = true;\n";
+            temp[tspot++] = "objs = document.getElementsByName(\"freqEmpty\");\n"
+                + "objs[0].checked = true;\n";
 
         temp[tspot++] = selectFromList("actWorkflowStatus", _workflowVals, _ub
                 .getWorking().getAWorkflow(), true);
@@ -575,25 +600,33 @@ public class EditTag extends AlertRootTag
         temp[tspot++] = selectFromList("infoContext", _contextVals, _ub.getWorking()
                 .getContexts(), true);
         temp[tspot++] = "changedContext();\n";
-        temp[tspot++] = "setSelected(editForm.infoForms, RecForms);\n";
-        temp[tspot++] = "setSelected(editForm.infoSchemes, RecSchemes);\n";
-        temp[tspot++] = "setSelected(editForm.infoProtos, RecProtos);\n";
+        temp[tspot++] = "objs = document.getElementsByName(\"infoForms\");\n"
+            + "setSelected(objs[0], RecForms);\n";
+        temp[tspot++] = "objs = document.getElementsByName(\"infoSchemes\");\n"
+            + "setSelected(objs[0], RecSchemes);\n";
+        temp[tspot++] = "objs = document.getElementsByName(\"infoProtos\");\n"
+            + "setSelected(objs[0], RecProtos);\n";
         temp[tspot++] = "changedCS();\n";
-        temp[tspot++] = "setSelected(editForm.infoSchemeItems, RecSchemeItems);\n";
+        temp[tspot++] = "objs = document.getElementsByName(\"infoSchemeItems\");\n"
+            + "setSelected(objs[0], RecSchemeItems);\n";
 
         switch (_ub.getWorking().getAVersion())
         {
             case DBAlert._VERANYCHG:
-                temp[tspot++] = "editForm.actVersion[0].checked = true;\n";
+                temp[tspot++] = "objs = document.getElementsByName(\"actVersion\");\n"
+                    + "objs[0].checked = true;\n";
                 break;
             case DBAlert._VERMAJCHG:
-                temp[tspot++] = "editForm.actVersion[1].checked = true;\n";
+                temp[tspot++] = "objs = document.getElementsByName(\"actVersion\");\n"
+                    + "objs[1].checked = true;\n";
                 break;
             case DBAlert._VERIGNCHG:
-                temp[tspot++] = "editForm.actVersion[2].checked = true;\n";
+                temp[tspot++] = "objs = document.getElementsByName(\"actVersion\");\n"
+                    + "objs[2].checked = true;\n";
                 break;
             case DBAlert._VERSPECHG:
-                temp[tspot++] = "editForm.actVersion[3].checked = true;\n";
+                temp[tspot++] = "objs = document.getElementsByName(\"actVersion\");\n"
+                    + "objs[3].checked = true;\n";
                 break;
             default:
                 temp[tspot++] = "";
@@ -603,24 +636,29 @@ public class EditTag extends AlertRootTag
         switch (_ub.getWorking().getDateFilter())
         {
             case DBAlert._DATECONLY:
-                temp[tspot++] = "editForm.infoDateFilter.options[2].selected = true;\n";
+                temp[tspot++] = "objs = document.getElementsByName(\"infoDateFilter\");\n"
+                    + "objs[0].options[2].selected = true;\n";
                 break;
             case DBAlert._DATEMONLY:
-                temp[tspot++] = "editForm.infoDateFilter.options[1].selected = true;\n";
+                temp[tspot++] = "objs = document.getElementsByName(\"infoDateFilter\");\n"
+                    + "objs[0].options[1].selected = true;\n";
                 break;
             case DBAlert._DATECM: 
             default:
-                temp[tspot++] = "editForm.infoDateFilter.options[0].selected = true;\n";
+                temp[tspot++] = "objs = document.getElementsByName(\"infoDateFilter\");\n"
+                    + "objs[0].options[0].selected = true;\n";
                 break;
         }
 
         if (_ub.getWorking().getStart() != null)
-            temp[tspot++] = "editForm.propBeginDate.value = \""
+            temp[tspot++] = "objs = document.getElementsByName(\"propBeginDate\");\n"
+                + "objs[0].value = \""
                 + _ub.getWorking().getSDate() + "\";\n";
         else
             temp[tspot++] = "";
         if (_ub.getWorking().getEnd() != null)
-            temp[tspot++] = "editForm.propEndDate.value = \""
+            temp[tspot++] = "objs = document.getElementsByName(\"propEndDate\");\n"
+                + "objs[0].value = \""
                 + _ub.getWorking().getEDate() + "\";\n";
         else
             temp[tspot++] = "";
@@ -633,7 +671,9 @@ public class EditTag extends AlertRootTag
             temp[tspot++] = "alert(\"Alert named '" + run
                 + "' has been submitted.\");\n";
 
-        temp[tspot++] = "if (MmainTab == tabMain1)\neditForm.propName.focus();\n}\n";
+        temp[tspot++] = "if (MmainTab == document.getElementById(\"tabMain1\"))\n"
+            + "objs = document.getElementsByName(\"propName\");\n"
+            + "objs[0].focus();\n}\n";
 
         temp[tspot++] = "function saveCheck() {\n";
         String saved = (String) pageContext.getRequest().getAttribute(

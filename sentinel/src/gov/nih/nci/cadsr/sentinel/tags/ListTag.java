@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/ListTag.java,v 1.3 2008-12-03 21:27:03 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/ListTag.java,v 1.4 2009-04-08 17:56:19 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tags;
@@ -131,8 +131,9 @@ public class ListTag extends AlertRootTag
             + "var Madmin = " + _ub.isAdmin() + ";\n"
             + "\nfunction cmdList() { "
             + "checkCount = 0; "
-            + "listForm.listShow.value = (listForm.listShow.value == \"" + AlertBean._SHOWPRIV + "\") ? \"" + AlertBean._SHOWALL + "\" : \"" + AlertBean._SHOWPRIV + "\"; "
-            + "listForm.submit(); }";
+            + "var lshow = document.getElementsByName(\"listShow\");"
+            + "lshow[0].value = (lshow[0].value == \"" + AlertBean._SHOWPRIV + "\") ? \"" + AlertBean._SHOWALL + "\" : \"" + AlertBean._SHOWPRIV + "\"; "
+            + "document.forms[\"listForm\"].submit(); }";
 
         if (temp == null)
         {

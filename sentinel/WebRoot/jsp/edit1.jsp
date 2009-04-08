@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/edit1.jsp,v 1.2 2007-09-25 14:26:46 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/edit1.jsp,v 1.3 2009-04-08 17:56:18 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ page contentType="text/html;charset=WINDOWS-1252"%>
@@ -8,6 +8,7 @@
 <%@ taglib uri="/tags/dsralert" prefix="dtags" %>
 <%@ page import="java.util.*" %>
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
         <title><bean:message key="edit.title" /></title>

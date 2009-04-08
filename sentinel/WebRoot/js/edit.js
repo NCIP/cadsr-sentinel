@@ -1,12 +1,16 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/edit.js,v 1.4 2008-06-20 20:44:29 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/edit.js,v 1.5 2009-04-08 17:56:19 hebell Exp $
    $Name: not supported by cvs2svn $
 */
+
+   var MusersTab = null;
+   var MmainTab = null;
+   var MtabGroup1;
 
    function setNameList(selObj)
     {
         selObj.length = 0;
-        for (index = 0; index < DBnamesList.length; ++index)
+        for (var index = 0; index < DBnamesList.length; ++index)
         {
             selObj.options[index] = new Option(DBnamesList[index], DBnamesVals[index]);
         }
@@ -14,8 +18,11 @@
 
     function setGroupList()
     {
-        editForm.propUsers.length = 0;
-        for (indx2 = 0; indx2 < DBgroupsList.length; ++indx2)
+        var objs = document.getElementsByName("propUsers");
+        var pusers = objs[0];
+        pusers.options.length = 0;
+        var gText;
+        for (var indx2 = 0; indx2 < DBgroupsList.length; ++indx2)
         {
             if (DBgroupsVals[indx2].charAt(0) == "/")
             {
@@ -25,19 +32,21 @@
             {
                 gText = "        " + DBgroupsList[indx2];
             }
-            editForm.propUsers.options[indx2] = new Option(gText, DBgroupsVals[indx2]);
+            pusers.options[indx2] = new Option(gText, DBgroupsVals[indx2]);
         }
     }
 
     function setEmailList()
     {
-        setNameList(editForm.propUsers);
-        editForm.propUsers.options[0] = null;
+        var objs = document.getElementsByName("propUsers");
+        var pusers = objs[0];
+        setNameList(pusers);
+        pusers.options[0] = null;
     }
 
     function initLists(objOpt, objText, objVal)
     {
-        for (index = 0; index < objText.length; ++index)
+        for (var index = 0; index < objText.length; ++index)
         {
             objOpt.options[index] = new Option(objText[index], objVal[index]);
         }
@@ -45,26 +54,27 @@
 
     function initSearchFor()
     {
-//        initLists(editForm.infoSearchFor, DBsearchList, DBsearchVals);
     }
 
     function initSearchIn()
     {
-//        initLists(editForm.infoSearchIn, DBsearchInList, DBsearchInVals);
     }
 
     function initSearchAttrs()
     {
-        vFlags = DBsearchAttrsDef;
-        for (index = 0; index < DBsearchAttrsDef.length; ++index)
+        var vFlags = DBsearchAttrsDef;
+        for (var index = 0; index < DBsearchAttrsDef.length; ++index)
         {
             vFlags[index] = 1;
         }
 
-        vAttrs = null;
-        for (index = 0; index < editForm.infoSearchFor.options.length; ++index)
+        var vAttrs = null;
+        var indx2;
+        var objs = document.getElementsByName("infoSearchFor");
+        var search = objs[0];
+        for (index = 0; index < search.options.length; ++index)
         {
-            if (editForm.infoSearchFor.options[index].selected === true)
+            if (search.options[index].selected === true)
             {
                 if (vAttrs === null)
                 {
@@ -84,88 +94,98 @@
                 }
             }
         }
+
         indx2 = 0;
+        objs = document.getElementsByName("infoSearchIn");
+        search = objs[0];
         for (index = 0; index < vFlags.length; ++index)
         {
             if (vFlags[index] == 1)
             {
-                editForm.infoSearchIn.options[indx2] = new Option(DBsearchInList[index], DBsearchInVals[index]);
+                search.options[indx2] = new Option(DBsearchInList[index], DBsearchInVals[index]);
                 ++indx2;
             }
         }
-        for (index = editForm.infoSearchIn.options.length - 1; index >= indx2 ; --index)
+        for (index = search.options.length - 1; index >= indx2 ; --index)
         {
-            editForm.infoSearchIn.options[index] = null;
+            search.options[index] = null;
         }
     }
 
     function initContexts()
     {
-        initLists(editForm.infoContext, DBcontextList, DBcontextVals);
+        var objs = document.getElementsByName("infoContext");
+        initLists(objs[0], DBcontextList, DBcontextVals);
     }
 
     function initACTypes()
     {
-        initLists(editForm.infoACTypes, DBactypesList, DBactypesVals);
+        var objs = document.getElementsByName("infoACTypes");
+        initLists(objs[0], DBactypesList, DBactypesVals);
     }
 
     function initActWorkflow()
     {
-        initLists(editForm.actWorkflowStatus, DBworkflowList, DBworkflowVals);
+        var objs = document.getElementsByName("actWorkflowStatus");
+        initLists(objs[0], DBworkflowList, DBworkflowVals);
     }
 
     function initInfoWorkflow()
     {
-        initLists(editForm.infoWorkflow, DBcworkflowList, DBcworkflowVals);
+        var objs = document.getElementsByName("infoWorkflow");
+        initLists(objs[0], DBcworkflowList, DBcworkflowVals);
     }
 
     function initActRegStatus()
     {
-        initLists(editForm.actRegStatus, DBregStatusList, DBregStatusVals);
+        var objs = document.getElementsByName("actRegStatus");
+        initLists(objs[0], DBregStatusList, DBregStatusVals);
     }
 
     function initInfoRegStatus()
     {
-        initLists(editForm.infoRegStatus, DBregCStatusList, DBregCStatusVals);
+        var objs = document.getElementsByName("infoRegStatus");
+        initLists(objs[0], DBregCStatusList, DBregCStatusVals);
     }
 
     function initRepAttributes()
     {
-//        initLists(editForm.repAttributes, DBdisplayList, DBdisplayVals);
     }
 
     function sortDisplayList()
     {
-        loop = true;
+        var objs = document.getElementsByName("repAttributes");
+        var attrs = objs[0];
+        var loop = true;
         while (loop)
         {
             loop = false;
-            for (index = 1; index < (DBdisplayList.length - 1); ++index)
+            for (var index = 1; index < (DBdisplayList.length - 1); ++index)
             {
                 if (DBdisplayList[index] > DBdisplayList[index + 1])
                 {
-                    tList = DBdisplayList[index];
+                    var tList = DBdisplayList[index];
                     DBdisplayList[index] = DBdisplayList[index + 1];
                     DBdisplayList[index + 1] = tList;
-                    tVals = DBdisplayVals[index];
+                    var tVals = DBdisplayVals[index];
                     DBdisplayVals[index] = DBdisplayVals[index + 1];
                     DBdisplayVals[index + 1] = tVals;
 
-                    rsel0 = editForm.repAttributes.options[index].selected;
-                    rsel1 = editForm.repAttributes.options[index + 1].selected;
-                    tList = editForm.repAttributes.options[index].text;
-                    editForm.repAttributes.options[index].text = editForm.repAttributes.options[index + 1].text;
-                    editForm.repAttributes.options[index + 1].text = tList;
-                    tVals = editForm.repAttributes.options[index].value;
-                    editForm.repAttributes.options[index].value = editForm.repAttributes.options[index + 1].value;
-                    editForm.repAttributes.options[index + 1].value = tVals;
-                    editForm.repAttributes.options[index].selected = rsel1;
-                    editForm.repAttributes.options[index + 1].selected = rsel0;
+                    var rsel0 = attrs.options[index].selected;
+                    var rsel1 = attrs.options[index + 1].selected;
+                    tList = attrs.options[index].text;
+                    attrs.options[index].text = attrs.options[index + 1].text;
+                    attrs.options[index + 1].text = tList;
+                    tVals = attrs.options[index].value;
+                    attrs.options[index].value = attrs.options[index + 1].value;
+                    attrs.options[index + 1].value = tVals;
+                    attrs.options[index].selected = rsel1;
+                    attrs.options[index + 1].selected = rsel0;
 
-                    for (indx2 = 0; indx2 < DBdisplayAttrs.length; ++indx2)
+                    for (var indx2 = 0; indx2 < DBdisplayAttrs.length; ++indx2)
                     {
-                        vAttrs = DBdisplayAttrs[indx2];
-                        tAttrs = vAttrs[index];
+                        var vAttrs = DBdisplayAttrs[indx2];
+                        var tAttrs = vAttrs[index];
                         vAttrs[index] = vAttrs[index + 1];
                         vAttrs[index + 1] = tAttrs;
                     }
@@ -177,16 +197,19 @@
 
     function initDisplayAttrs()
     {
-        vFlags = DBdisplayAttrsDef;
-        for (index = 0; index < DBdisplayAttrsDef.length; ++index)
+        var vFlags = DBdisplayAttrsDef;
+        for (var index = 0; index < DBdisplayAttrsDef.length; ++index)
         {
             vFlags[index] = 1;
         }
 
-        vAttrs = null;
-        for (index = 0; index < editForm.infoSearchFor.options.length; ++index)
+        var objs = document.getElementsByName("infoSearchFor");
+        var sel = objs[0];
+        var vAttrs = null;
+        var indx2;
+        for (index = 0; index < sel.options.length; ++index)
         {
-            if (editForm.infoSearchFor.options[index].selected === true)
+            if (sel.options[index].selected === true)
             {
                 if (vAttrs === null)
                 {
@@ -207,56 +230,65 @@
             }
         }
         indx2 = 0;
+        objs = document.getElementsByName("repAttributes");
+        sel = objs[0];
         for (index = 0; index < vFlags.length; ++index)
         {
             if (vFlags[index] == 1)
             {
-                editForm.repAttributes.options[indx2] = new Option(DBdisplayList[index], DBdisplayVals[index]);
+                sel.options[indx2] = new Option(DBdisplayList[index], DBdisplayVals[index]);
                 ++indx2;
             }
         }
-        for (index = editForm.repAttributes.options.length - 1; index >= indx2 ; --index)
+        for (index = sel.options.length - 1; index >= indx2 ; --index)
         {
-            editForm.repAttributes.options[index] = null;
+            sel.options[index] = null;
         }
-        editForm.repAttributes.options[0].selected = true;
+        sel.options[0].selected = true;
     }
 
     function initSchemes()
     {
-        initLists(editForm.infoSchemes, DBschemeList, DBschemeVals);
+        var objs = document.getElementsByName("infoSchemes");
+        initLists(objs[0], DBschemeList, DBschemeVals);
     }
 
     function initProtos()
     {
-        initLists(editForm.infoProtos, DBprotoList, DBprotoVals);
+        var objs = document.getElementsByName("infoProtos");
+        initLists(objs[0], DBprotoList, DBprotoVals);
     }
 
     function initSchemeItems()
     {
-        initLists(editForm.infoSchemeItems, DBschemeItemList, DBschemeItemVals);
+        var objs = document.getElementsByName("infoSchemeItems");
+        initLists(objs[0], DBschemeItemList, DBschemeItemVals);
     }
 
     function initForms()
     {
-        initLists(editForm.infoForms, DBformsList, DBformsVals);
+        var objs = document.getElementsByName("infoForms");
+        initLists(objs[0], DBformsList, DBformsVals);
     }
 
     function initConceptDomain()
     {
-//        initLists(editForm.infoConceptDomain, DBconceptList, DBconceptVals);
     }
 
     function initRecipients()
     {
-        ndx3 = 0;
-        editForm.propRecipients.options.length = 0;
-        for (ndx = 0; ndx < DBrecipients.length; ++ndx)
+        var objs = document.getElementsByName("propRecipients");
+        var recips = objs[0];
+        var ndx3 = 0;
+        var ndx2;
+        var gText;
+        recips.options.length = 0;
+        for (var ndx = 0; ndx < DBrecipients.length; ++ndx)
         {
             // Allow for freeform Email and URL entries
             if ((DBrecipients[ndx].indexOf("@") > -1) || (DBrecipients[ndx].indexOf("https://") > -1) || (DBrecipients[ndx].indexOf("http://") > -1))
             {
-                editForm.propRecipients.options[ndx3] = new Option(DBrecipients[ndx], DBrecipients[ndx]);
+                recips.options[ndx3] = new Option(DBrecipients[ndx], DBrecipients[ndx]);
                 ++ndx3;
             }
 
@@ -268,7 +300,7 @@
                     if (DBrecipients[ndx] == DBgroupsVals[ndx2])
                     {
                         gText = DBgroupsList[ndx2] + " Context Curators";
-                        editForm.propRecipients.options[ndx3] = new Option(gText, DBgroupsVals[ndx2]);
+                        recips.options[ndx3] = new Option(gText, DBgroupsVals[ndx2]);
                         ++ndx3;
                         break;
                     }
@@ -282,7 +314,7 @@
                 {
                     if (DBrecipients[ndx] == DBnamesVals[ndx2])
                     {
-                        editForm.propRecipients.options[ndx3] = new Option(DBnamesList[ndx2], DBnamesVals[ndx2]);
+                        recips.options[ndx3] = new Option(DBnamesList[ndx2], DBnamesVals[ndx2]);
                         ++ndx3;
                         break;
                     }
@@ -293,38 +325,44 @@
 
     function loaded()
     {
+        var tProp = document.getElementById("tabProp");
+        var tReport = document.getElementById("tabReport");
+        var tQual = document.getElementById("tabQual");
+        var tMon = document.getElementById("tabMon");
         MtabGroup1 = [
-            [tabMain1, tabProp],
-            [tabMain2, tabReport],
-            [tabMain3, tabQual],
-            [tabMain4, tabMon]
+            [document.getElementById("tabMain1"), tProp],
+            [document.getElementById("tabMain2"), tReport],
+            [document.getElementById("tabMain3"), tQual],
+            [document.getElementById("tabMain4"), tMon]
         ];
 
-        tabProp.style.position = "absolute";
-        tabProp.style.visibility = "visible";
-        tabMon.style.position = "absolute";
-        tabMon.style.top = tabProp.style.top;
-        tabMon.style.left = tabProp.style.left;
-        tabMon.style.visibility = "hidden";
-        tabReport.style.position = "absolute";
-        tabReport.style.top = tabProp.style.top;
-        tabReport.style.left = tabProp.style.left;
-        tabReport.style.visibility = "hidden";
-        tabQual.style.visibility = "hidden";
+        tProp.style.position = "absolute";
+        tProp.style.visibility = "visible";
+        tMon.style.position = "absolute";
+        tMon.style.top = tProp.style.top;
+        tMon.style.left = tProp.style.left;
+        tMon.style.visibility = "hidden";
+        tReport.style.position = "absolute";
+        tReport.style.top = tProp.style.top;
+        tReport.style.left = tProp.style.left;
+        tReport.style.visibility = "hidden";
+        tQual.style.visibility = "hidden";
 
-        MusersTab = propUList;
-        if (editForm.usersTab.value != "0")
+        MusersTab = document.getElementById("propUList");
+        var objs = document.getElementsByName("usersTab");
+        if (objs[0].value != "0")
         {
-            selectTab0(propGList);
+            selectTab0(document.getElementById("propGList"));
         }
         else
         {
             setEmailList();
         }
-        MmainTab = tabMain1;
-        if (editForm.mainTab.value != "0")
+        MmainTab = document.getElementById("tabMain1");
+        objs = document.getElementsByName("mainTab");
+        if (objs[0].value != "0")
         {
-            selectTab1(MtabGroup1[editForm.mainTab.value][0]);
+            selectTab1(MtabGroup1[objs[0].value][0]);
         }
         initContexts();
         initActWorkflow();
@@ -332,117 +370,140 @@
         initInfoRegStatus();
         initInfoWorkflow();
         initACTypes();
-        setNameList(editForm.infoCreator);
-        setNameList(editForm.infoModifier);
+        objs = document.getElementsByName("infoCreator");
+        setNameList(objs[0]);
+        objs = document.getElementsByName("infoModifier");
+        setNameList(objs[0]);
         initRecipients();
         loaded0();
-        editForm.actWorkflowStatus.options[0] = null;
-        editForm.actRegStatus.options[0] = null;
+        objs = document.getElementsByName("actWorkflowStatus");
+        objs[0].options[0] = null;
+        objs = document.getElementsByName("actRegStatus");
+        objs[0].options[0] = null;
 
-        if (editForm.actVersion[3].checked)
+        objs = document.getElementsByName("actVersion");
+        if (objs[3].checked)
         {
-            editForm.actVerNum.value = DBactVerNum;
-            editForm.actVerNum.disabled = false;
+            objs = document.getElementsByName("actVerNum");
+            objs[0].value = DBactVerNum;
+            objs[0].disabled = false;
         }
         else
         {
-            editForm.actVerNum.value = "";
+            objs = document.getElementsByName("actVerNum");
+            objs[0].value = "";
         }
 
         // Update the sample display.
         setToSample();
-        nameChanged(editForm.propName.value);
-        editForm.save1.disabled = false;
-        editForm.save2.disabled = false;
+        objs = document.getElementsByName("propName");
+        nameChanged(objs[0].value);
+        objs = document.getElementsByName("save1");
+        objs[0].disabled = false;
+        objs = document.getElementsByName("save2");
+        objs[0].disabled = false;
         saveCheck();
     }
 
     function setActVerNum(value)
     {
+        var objs = document.getElementsByName("actVerNum");
+        var vn = objs[0];
         if (value == "S")
         {
-            editForm.actVerNum.disabled = false;
-            editForm.actVerNum.value = DBactVerNum;
+            vn.disabled = false;
+            vn.value = DBactVerNum;
         }
         else
         {
-            if (editForm.actVerNum.value !== "")
+            if (vn.value !== "")
             {
-                DBactVerNum = editForm.actVerNum.value;
+                DBactVerNum = vn.value;
             }
-            editForm.actVerNum.value = "";
-            editForm.actVerNum.disabled = true;
+            vn.value = "";
+            vn.disabled = true;
         }
     }
 
     function setFreq(value)
     {
+        var objs = document.getElementsByName("freqWeekly");
+        var fw = objs[0];
+        objs = document.getElementsByName("freqMonthly");
+        var fm = objs[0];
         if (value == "D")
         {
-            editForm.freqWeekly.disabled = true;
-            editForm.freqMonthly.disabled = true;
+            fw.disabled = true;
+            fm.disabled = true;
         }
         else if (value == "W")
         {
-            editForm.freqWeekly.disabled = false;
-            editForm.freqMonthly.disabled = true;
+            fw.disabled = false;
+            fm.disabled = true;
         }
         else
         {
-            editForm.freqWeekly.disabled = true;
-            editForm.freqMonthly.disabled = false;
+            fw.disabled = true;
+            fm.disabled = false;
         }
     }
 
     function nameChanged(value)
     {
-/*        sampleName.innerText = (value == null || value == "") ?
-            "&nbsp;" : value; */
     }
 
     function addFEmail()
     {
-        if (editForm.propEmail.value !== null && editForm.propEmail.value !== "")
+        var objs = document.getElementsByName("propEmail");
+        var pemail = objs[0];
+        if (pemail.value !== null && pemail.value !== "")
         {
-            if ((editForm.propEmail.value.indexOf("@") == -1) && (editForm.propEmail.value.indexOf("https://") !== 0 && editForm.propEmail.value.indexOf("http://") !== 0))
+            if ((pemail.value.indexOf("@") == -1) && (pemail.value.indexOf("https://") !== 0 && pemail.value.indexOf("http://") !== 0))
             {
                 window.alert("The email address or URL is not correctly formed, add '@', 'https://' or 'http://' as desired. The URL prefix is case sensitive.");
-                editForm.propEmail.focus();
+                pemail.focus();
                 return;
             }
-            if (findChosenText(editForm.propEmail.value) === false)
+            if (findChosenText(pemail.value) === false)
             {
-                index = editForm.propRecipients.options.length;
-                editForm.propRecipients.options[index] = new Option(editForm.propEmail.value, editForm.propEmail.value);
+                objs = document.getElementsByName("propRecipients");
+                var index = objs[0].options.length;
+                objs[0].options[index] = new Option(pemail.value, pemail.value);
                 setToSample();
             }
-            editForm.propEmail.value = "";
-            editForm.propEmail.focus();
+            pemail.value = "";
+            pemail.focus();
         }
     }
 
     function setToSample()
     {
-        if (editForm.propRecipients.options.length > 0)
+        var objs = document.getElementsByName("propRecipients");
+        var recips = objs[0];
+        var cstr;
+        if (recips.options.length > 0)
         {
-            cstr = editForm.propRecipients.options[0].text;
-            for (index = 1; index < editForm.propRecipients.options.length; ++index)
+            cstr = recips.options[0].text;
+            for (var index = 1; index < recips.options.length; ++index)
             {
-                cstr = cstr + ", " + editForm.propRecipients.options[index].text;
+                cstr = cstr + ", " + recips.options[index].text;
             }
         }
         else
         {
             cstr = "";
         }
-        sampleAddr.innerText = cstr;
+        var addr = document.getElementById("sampleAddr");
+        addr.innerText = cstr;
+        addr.textContent = cstr;
     }
 
     function findChosenText(value)
     {
-        for (indx2 = 0; indx2 < editForm.propRecipients.options.length; ++indx2)
+        var objs = document.getElementsByName("propRecipients");
+        for (var indx2 = 0; indx2 < objs[0].options.length; ++indx2)
         {
-            if (editForm.propRecipients.options[indx2].text == value)
+            if (objs[0].options[indx2].text == value)
             {
                 return true;
             }
@@ -452,11 +513,12 @@
 
     function findChosenValue(value)
     {
-        for (indx2 = 0; indx2 < editForm.propRecipients.options.length; ++indx2)
+        var objs = document.getElementsByName("propRecipients");
+        for (var indx2 = 0; indx2 < objs[0].options.length; ++indx2)
         {
-            if (editForm.propRecipients.options[indx2].value == value)
+            if (objs[0].options[indx2].value == value)
             {
-                return editForm.propRecipients.options[indx2].text;
+                return objs[0].options[indx2].text;
             }
         }
         return null;
@@ -469,16 +531,20 @@
 
     function addToEmailUsers()
     {
-        insert = editForm.propRecipients.options.length;
-        for (index = 0; index < editForm.propUsers.options.length; ++index)
+        var objs = document.getElementsByName("propRecipients");
+        var recips = objs[0];
+        objs = document.getElementsByName("propUsers");
+        var users = objs[0];
+        var insert = recips.options.length;
+        for (var index = 0; index < users.options.length; ++index)
         {
-            if (editForm.propUsers.options[index].selected === true)
+            if (users.options[index].selected === true)
             {
-                editForm.propUsers.options[index].selected = false;
-                if (findChosenValue(editForm.propUsers.options[index].value) === null)
+                users.options[index].selected = false;
+                if (findChosenValue(users.options[index].value) === null)
                 {
-                    pObj = editForm.propUsers.options[index];
-                    editForm.propRecipients.options[insert] = new Option(pObj.text, pObj.value);
+                    var pObj = users.options[index];
+                    recips.options[insert] = new Option(pObj.text, pObj.value);
                     ++insert;
                 }
             }
@@ -488,18 +554,21 @@
 
     function removeFromEmail()
     {
-        for (index = editForm.propRecipients.options.length - 1; index >= 0; --index)
+        var objs = document.getElementsByName("propRecipients");
+        var recips = objs[0];
+        for (var index = recips.options.length - 1; index >= 0; --index)
         {
-            if (editForm.propRecipients.options[index].selected === true)
+            if (recips.options[index].selected === true)
             {
-                if (editForm.creatorID.value == editForm.propRecipients.options[index].value)
+                objs = document.getElementsByName("creatorID");
+                if (objs[0].value == recips.options[index].value)
                 {
                     alert("The Creator can not be removed from the recipient list.");
-                    editForm.propRecipients.options[index].selected = false;
+                    recips.options[index].selected = false;
                 }
                 else
                 {
-                    editForm.propRecipients.options[index] = null;
+                    recips.options[index] = null;
                 }
             }
         }
@@ -508,7 +577,7 @@
 
     function clearSelected(selObj)
     {
-        for (index = 0; index < selObj.options.length; ++index)
+        for (var index = 0; index < selObj.options.length; ++index)
         {
             selObj.options[index].selected = false;
         }
@@ -517,9 +586,9 @@
     function setSelected(sobj, vals)
     {
         sobj.options[0].selected = false;
-        for (index = 0; index < sobj.options.length; ++index)
+        for (var index = 0; index < sobj.options.length; ++index)
         {
-            for (index2 = 0; index2 < vals.length; ++index2)
+            for (var index2 = 0; index2 < vals.length; ++index2)
             {
                 if (sobj.options[index].value == vals[index2])
                 {
@@ -538,7 +607,7 @@
     {
         var selCnt = 0;
         var selVals = new Array();
-        for (index = 1; index < field.options.length; ++index)
+        for (var index = 1; index < field.options.length; ++index)
         {
             if (field.options[index].selected === true)
             {
@@ -546,9 +615,9 @@
             }
         }
         tobj.options.length = 0;
-        index3 = 0;
+        var index3 = 0;
         tobj.options[index3] = new Option(list[0], vals[0]);
-        for (index2 = 1; index2 < cvals.length; ++index2)
+        for (var index2 = 1; index2 < cvals.length; ++index2)
         {
             for (index = 0; index < selVals.length; ++index)
             {
@@ -565,37 +634,49 @@
 
     function changedCS()
     {
-        if (editForm.infoSchemes.options[0].selected === true)
+        var objs = document.getElementsByName("infoSchemes");
+        var schemes = objs[0];
+        objs = document.getElementsByName("infoSchemeItems");
+        var items = objs[0];
+        if (schemes.options[0].selected === true)
         {
             initSchemeItems();
-            editForm.infoSchemeItems.options[0].selected = true;
+            items.options[0].selected = true;
         }
         else
         {
-            setDependant(editForm.infoSchemes, editForm.infoSchemeItems, DBschemeItemList, DBschemeItemVals, DBschemeItemSchemes);
+            setDependant(schemes, items, DBschemeItemList, DBschemeItemVals, DBschemeItemSchemes);
         }
     }
 
     function changedContext()
     {
-        if (editForm.infoContext.options[0].selected === true)
+        var objs = document.getElementsByName("infoContext");
+        var cont = objs[0];
+        objs = document.getElementsByName("infoSchemes");
+        var schemes = objs[0];
+        objs = document.getElementsByName("infoForms");
+        var forms = objs[0];
+        objs = document.getElementsByName("infoProtos");
+        var protos = objs[0];
+        if (cont.options[0].selected === true)
         {
             initConceptDomain();
             initSchemes();
             initProtos();
             initForms();
 //            editForm.infoConceptDomain.options[0].selected = true;
-            editForm.infoSchemes.options[0].selected = true;
-            editForm.infoForms.options[0].selected = true;
-            editForm.infoProtos.options[0].selected = true;
+            schemes.options[0].selected = true;
+            forms.options[0].selected = true;
+            protos.options[0].selected = true;
             changedCS();
         }
         else
         {
-//            setDependant(editForm.infoContext, editForm.infoConceptDomain, DBconceptList, DBconceptVals, DBconceptContexts);
-            setDependant(editForm.infoContext, editForm.infoSchemes, DBschemeList, DBschemeVals, DBschemeContexts);
-            setDependant(editForm.infoContext, editForm.infoProtos, DBprotoList, DBprotoVals, DBprotoContexts);
-            setDependant(editForm.infoContext, editForm.infoForms, DBformsList, DBformsVals, DBformsContexts);
+//            setDependant(cont, editForm.infoConceptDomain, DBconceptList, DBconceptVals, DBconceptContexts);
+            setDependant(cont, schemes, DBschemeList, DBschemeVals, DBschemeContexts);
+            setDependant(cont, protos, DBprotoList, DBprotoVals, DBprotoContexts);
+            setDependant(cont, forms, DBformsList, DBformsVals, DBformsContexts);
             changedCS();
         }
     }
@@ -608,6 +689,7 @@
 
     function fixListAll(selObj)
     {
+        var objs;
         if (selObj.selectedIndex == -1)
         {
             selObj.options[0].selected = true;
@@ -620,11 +702,13 @@
         {
             if (selObj.name == "infoRegStatus")
             {
-                fixListAllSpecials(editForm.actRegStatus, 0);
+                objs = document.getElementsByName("actRegStatus");
+                fixListAllSpecials(objs[0], 0);
             }
             else if (selObj.name == "infoWorkflow")
             {
-                fixListAllSpecials(editForm.actWorkflowStatus, 0);
+                objs = document.getElementsByName("actWorkflowStatus");
+                fixListAllSpecials(objs[0], 0);
             }
         }
         if (selObj.name == "infoSearchFor")
@@ -643,6 +727,7 @@
 
     function fixXStatus(selObj)
     {
+        var objs;
         if (selObj.selectedIndex == -1)
         {
             selObj.options[0].selected = true;
@@ -659,102 +744,79 @@
         {
             if (selObj.name == "actRegStatus")
             {
-                fixListAllSpecials(editForm.infoRegStatus, 0);
+                objs = document.getElementsByName("infoRegStatus");
+                fixListAllSpecials(objs[0], 0);
             }
             else if (selObj.name == "actWorkflowStatus")
             {
-                fixListAllSpecials(editForm.infoWorkflow, 0);
+                objs = document.getElementsByName("infoWorkflow");
+                fixListAllSpecials(objs[0], 0);
             }
         }
     }
 
     function disableInfoWorkflowStatus(flag, vis)
     {
-//        editForm.infoWorkflowStatus.disabled = flag;
-//        editForm.actWorkflowStatus.disabled = flag;
     }
 
     function disableInfoRegStatus(flag, vis)
     {
-//        editForm.infoRegStatus.disabled = flag;
-//        editForm.actRegStatus.disabled = flag;
     }
 
     function disableInfoSchemes(flag, vis)
     {
-        editForm.infoSchemes.disabled = flag;
+        var objs = document.getElementsByName("infoSchemes");
+        objs[0].disabled = flag;
     }
 
     function disableInfoVDT(flag, vis)
-    {/*
-        editForm.infoVDTE.disabled = flag;
-        editForm.infoVDTN.disabled = flag;
-        editForm.actVDT[0].disabled = flag;
-        editForm.actVDT[1].disabled = flag;
-        editForm.actVDT[2].disabled = flag;
-        editForm.actVDT[3].disabled = flag;
-   */}
+    {
+    }
 
     function disableInfoCreator(flag, vis)
     {
-        editForm.infoCreator.disabled = flag;
+        var objs = document.getElementsByName("infoCreator");
+        objs[0].disabled = flag;
     }
 
     function disableInfoModifier(flag, vis)
     {
-        editForm.infoModifier.disabled = flag;
+        var objs = document.getElementsByName("infoModifier");
+        objs[0].disabled = flag;
     }
 
     function disableInfoVersion(flag, vis)
-    {/*
-        editForm.infoVersion[0].disabled = flag;
-        editForm.infoVersion[1].disabled = flag;
-        editForm.infoVersion[2].disabled = flag;
+    {
+        var objs = document.getElementsByName("actVersion");
+        objs[0].disabled = flag;
+        objs[1].disabled = flag;
+        objs[2].disabled = flag;
+        objs[3].disabled = flag;
         if (flag)
         {
-            editForm.infoVerNum.disabled = true;
+            objs = document.getElementsByName("actVerNum");
+            objs[0].disabled = true;
         }
         else
         {
-            if (editForm.infoVersion[2].checked == true)
-                editForm.infoVerNum.disabled = false;
-        }
-*/
-        editForm.actVersion[0].disabled = flag;
-        editForm.actVersion[1].disabled = flag;
-        editForm.actVersion[2].disabled = flag;
-        editForm.actVersion[3].disabled = flag;
-        if (flag)
-        {
-            editForm.actVerNum.disabled = true;
-        }
-        else
-        {
-            if (editForm.actVersion[3].checked === true)
+            if (objs[3].checked === true)
             {
-                editForm.actVerNum.disabled = false;
+                objs = document.getElementsByName("actVerNum");
+                objs[0].disabled = false;
             }
         }
     }
 
     function disableInfoContextUse(flag, vis)
-    {/*
-        editForm.infoContextUse[0].disabled = flag;
-        editForm.infoContextUse[1].disabled = flag;
-        editForm.infoContextUse[2].disabled = flag;
-        editForm.actContextUse[0].disabled = flag;
-        editForm.actContextUse[1].disabled = flag;
-  */}
+    {
+    }
 
     function disableInfoSearchIn(flag, vis)
     {
-//        editForm.infoSearchIn.disabled = flag;
-//        editForm.infoSearchTerm.disabled = flag;
     }
 
     function disableInfoConceptDomain(flag, vis)
     {
-//        editForm.infoConceptDomain.disabled = flag;
     }
 
     var funcTable = [disableInfoWorkflowStatus, disableInfoRegStatus, disableInfoSchemes,
@@ -776,23 +838,26 @@
 
     function enableFunctions(flagVector)
     {
-        for (indx2 = 0; indx2 < funcTable.length; ++indx2)
+        for (var indx2 = 0; indx2 < funcTable.length; ++indx2)
         {
-            bDisable = (flagVector[indx2] == 1) ? true : false;
-            tVisible = (bDisable) ? "hidden" : "visible";
+            var bDisable = (flagVector[indx2] == 1) ? true : false;
+            var tVisible = (bDisable) ? "hidden" : "visible";
             funcTable[indx2](bDisable, tVisible);
         }
     }
 
     function changedAC2()
     {
-        flagVector = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        tVect = null;
-        if (editForm.infoSearchFor.options[0].selected === false)
+        var flagVector = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        var tVect = null;
+        var objs = document.getElementsByName("infoSearchFor");
+        var sel = objs[0];
+        var indx2;
+        if (sel.options[0].selected === false)
         {
-            for (index = 1; index < editForm.infoSearchFor.options.length; ++index)
+            for (var index = 1; index < sel.options.length; ++index)
             {
-                if (editForm.infoSearchFor.options[index].selected === true)
+                if (sel.options[index].selected === true)
                 {
                     if (tVect === null)
                     {
@@ -819,12 +884,7 @@
     function changedAC()
     {
         changedAC2();
-//        initSearchAttrs();
-//        initDisplayAttrs();
     }
-
-    var MusersTab = null;
-    var MmainTab = null;
 
     function tabMouseOut(obj)
     {
@@ -841,15 +901,16 @@
         obj.className = "tab0";
         MusersTab.className = "tab1";
         MusersTab = obj;
-        if (obj == propUList)
+        var objs = document.getElementsByName("usersTab");
+        if (obj == document.getElementById("propUList"))
         {
             setEmailList();
-            editForm.usersTab.value = "0";
+            objs[0].value = "0";
         }
         else
         {
             setGroupList();
-            editForm.usersTab.value = "1";
+            objs[0].value = "1";
         }
     }
 
@@ -857,9 +918,9 @@
     {
         MmainTab.className = "tab1";
         obj.className = "tab0";
-        for (ndx = 0; ndx < MtabGroup1.length; ++ndx)
+        for (var ndx = 0; ndx < MtabGroup1.length; ++ndx)
         {
-            tab = MtabGroup1[ndx];
+            var tab = MtabGroup1[ndx];
             if (tab[0] == MmainTab)
             {
                 tab[1].style.visibility = "hidden";
@@ -873,7 +934,8 @@
             if (tab[0] == MmainTab)
             {
                 tab[1].style.visibility = "visible";
-                editForm.mainTab.value = ndx;
+                var objs = document.getElementsByName("mainTab");
+                objs[0].value = ndx;
                 break;
             }
         }
@@ -886,106 +948,135 @@
 
     function cmdSave()
     {
-        beginDate = Date.parse(editForm.propBeginDate.value);
-        endDate = Date.parse(editForm.propEndDate.value);
+        var objs;
+        objs = document.getElementsByName("propBeginDate");
+        var bdate = objs[0];
+        var beginDate = Date.parse(bdate.value);
+        objs = document.getElementsByName("propEndDate");
+        var edate = objs[0];
+        var endDate = Date.parse(edate.value);
 
-		if (editForm.actVerNum.value.search(/[^0-9.]/g) > -1)
+        var tmain = document.getElementById("tabMain1");
+        objs = document.getElementsByName("actVerNum");
+        var vnum = objs[0];
+        objs = document.getElementsByName("propName");
+        var pnam = objs[0];
+        objs = document.getElementsByName("propStatus");
+        var psta = objs[0];
+        objs = document.getElementsByName("propStatusReason");
+        var pstr = objs[0];
+        objs = document.getElementsByName("infoForms");
+        var forms = objs[0];
+        objs = document.getElementsByName("infoSchemes");
+        var schemes = objs[0];
+        objs = document.getElementsByName("infoSchemeItems");
+        var items = objs[0];
+		if (vnum.value.search(/[^0-9.]/g) > -1)
 		{
-            selectTab1(tabMain4);
-            editForm.actVerNum.focus();
+            selectTab1(document.getElementById("tabMain4"));
+            vnum.focus();
             alert("A Version number can only contain digits and a period.");
 		}
-        else if (editForm.propName.value === "")
+        else if (pnam.value === "")
         {
-            selectTab1(tabMain1);
-            editForm.propName.focus();
+            selectTab1(tmain);
+            pnam.focus();
             alert("A Sentinel Name must be provided.");
         }
-        else if (editForm.propStatus[3].checked === true && MstatusReason === false)
+        else if (psta[3].checked === true && MstatusReason === false)
         {
-            selectTab1(tabMain1);
-            editForm.propStatusReason.value = "(please explain why this is inactive)";
-            editForm.propStatusReason.focus();
+            selectTab1(tmain);
+            pstr.value = "(please explain why this is inactive)";
+            pstr.focus();
             alert("A reason must be given when the Status is set to Inactive.");
         }
-        else if (editForm.propStatus[2].checked === true && editForm.propBeginDate.value === "" &&
-            editForm.propEndDate.value === "")
+        else if (psta[2].checked === true && bdate.value === "" && edate.value === "")
         {
-            selectTab1(tabMain1);
-            editForm.propBeginDate.focus();
+            selectTab1(tmain);
+            bdate.focus();
             alert("A begin and/or end date must be given when the Status is set to Active with Dates.");
         }
-        else if (editForm.propBeginDate.value !== "" && isNaN(beginDate) === true)
+        else if (bdate.value !== "" && isNaN(beginDate) === true)
         {
-            selectTab1(tabMain1);
-            editForm.propBeginDate.focus();
+            selectTab1(tmain);
+            bdate.focus();
             alert("The begin date is incorrect.");
         }
-        else if (editForm.propEndDate.value !== "" && isNaN(endDate) === true)
+        else if (edate.value !== "" && isNaN(endDate) === true)
         {
-            selectTab1(tabMain1);
-            editForm.propEndDate.focus();
+            selectTab1(tmain);
+            edate.focus();
             alert("The end date is incorrect.");
         }
         else if (isNaN(beginDate) === false && isNaN(endDate) === false && endDate < beginDate)
         {
-            selectTab1(tabMain1);
-            editForm.propBeginDate.focus();
+            selectTab1(tmain);
+            bdate.focus();
             alert("The begin date must preceed the end date.");
         }
-        else if (editForm.infoForms.options[0].selected === false &&
-            (editForm.infoSchemes.options[0].selected === false || editForm.infoSchemeItems.options[0].selected === false))
+        else if (forms.options[0].selected === false &&
+            (schemes.options[0].selected === false || items.options[0].selected === false))
         {
-            selectTab1(tabMain3);
+            selectTab1(document.getElementById("tabMain3"));
             alert("Classification Schemes/Items and Forms can not both be selected for criteria.  Please change one or both to (All).");
         }
         else // We think the form is good to go.
         {
-            for (ndx = 0; ndx < editForm.propRecipients.options.length; ++ndx)
+            objs = document.getElementsByName("propRecipients");
+            var recips = objs[0];
+            for (var ndx = 0; ndx < recips.options.length; ++ndx)
             {
-                editForm.propRecipients.options[ndx].selected = true;
+                recips.options[ndx].selected = true;
             }
-            editForm.nextScreen.value = "save";
-            editForm.save1.disabled = true;
-            editForm.save2.disabled = true;
-            editForm.submit();
+            objs = document.getElementsByName("nextScreen");
+            objs[0].value = "save";
+            objs = document.getElementsByName("save1");
+            objs[0].disabled = true;
+            objs = document.getElementsByName("save2");
+            objs[0].disabled = true;
+            document.forms["editForm"].submit();
         }
     }
 
     function cmdClear()
     {
-        editForm.submit();
+        document.forms["editForm"].submit();
     }
 
     function cmdRun()
     {
-		if (editForm.actVerNum.value.search(/[^0-9.]/g) > -1)
+        var objs = document.getElementsByName("actVerNum");
+		if (objs[0].value.search(/[^0-9.]/g) > -1)
 		{
-            selectTab1(tabMain4);
-            editForm.actVerNum.focus();
+            selectTab1(document.getElementById("tabMain4"));
+            objs[0].focus();
             alert("A Version number can only contain digits and a period.");
 		}
 		else
 		{
-	        for (ndx = 0; ndx < editForm.propRecipients.options.length; ++ndx)
+            objs = document.getElementsByName("propRecipients");
+            var recips = objs[0];
+	        for (var ndx = 0; ndx < recips.options.length; ++ndx)
             {
-	            editForm.propRecipients.options[ndx].selected = true;
+	            recips.options[ndx].selected = true;
             }
-	        editForm.nextScreen.value = "run";
-	        editForm.submit();
+            objs = document.getElementsByName("nextScreen");
+	        objs[0].value = "run";
+	        document.forms["editForm"].submit();
 	    }
     }
 
     function cmdBack()
     {
-        editForm.nextScreen.value = "back";
-        editForm.submit();
+        var objs = document.getElementsByName("nextScreen");
+        objs[0].value = "back";
+        document.forms["editForm"].submit();
     }
 
     function cmdLogout()
     {
-        editForm.action = "/cadsrsentinel/do/logout";
-        editForm.submit();
+        document.forms["editForm"].action = "/cadsrsentinel/do/logout";
+        document.forms["editForm"].submit();
     }
 
     function saved(val)
@@ -993,8 +1084,9 @@
         if (val == "Y")
         {
             alert("Successful save.");
-            editForm.nextScreen.value = "list";
-            editForm.submit();
+            var objs = document.getElementsByName("nextScreen");
+            objs[0].value = "list";
+            document.forms["editForm"].submit();
         }
         else
         {
@@ -1009,6 +1101,7 @@
 
     function highlightReason()
     {
-        editForm.propStatusReason.select();
+        var objs = document.getElementsByName("propStatusReason");
+        objs[0].select();
     }
     

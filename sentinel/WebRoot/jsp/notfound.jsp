@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/notfound.jsp,v 1.2 2008-11-25 18:26:26 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/notfound.jsp,v 1.3 2009-04-08 17:56:18 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ taglib uri="/tags/struts-bean" prefix="bean" %>
@@ -9,6 +9,7 @@
 <%@ page import="gov.nih.nci.cadsr.sentinel.ui.AlertPlugIn" %>
 <%@ page import="gov.nih.nci.cadsr.sentinel.database.DBAlert" %>
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
         <title><bean:message key="logon.title" /></title>
@@ -25,7 +26,9 @@
     <script language="javascript">
         function cmdLogon()
         {
-            msg.innerText = <bean:message key="logon.msg" />;
+            var msgTxt = document.getElementById("msg");
+            msgTxt.innerText = <bean:message key="logon.msg" />;
+            msgTxt.textContent = <bean:message key="logon.msg" />;
         }
         function cmdHelp()
         {

@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/RunTag.java,v 1.1 2008-11-07 14:11:10 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/tags/RunTag.java,v 1.2 2009-04-08 17:56:19 hebell Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.tags;
@@ -100,8 +100,10 @@ public class RunTag extends AlertRootTag
         String temp =
             "var helpUrl = \"" + api.getHelpUrl() + "\";\n\n"
             + "function loaded()\n{\n"
-            + "\trunForm.startDate.value = \"" + sdate + "\";\n"
-            + "\trunForm.endDate.value = \"" + snow + "\";\n" + "}\n";
+            + "\tvar obj = document.getElementsByName(\"startDate\");"
+            + "\tobj[0].value = \"" + sdate + "\";\n"
+            + "\tobj = document.getElementsByName(\"endDate\");"
+            + "\tobj[0].value = \"" + snow + "\";\n" + "}\n";
         return temp;
     }
 }
