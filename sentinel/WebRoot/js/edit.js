@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/edit.js,v 1.5 2009-04-08 17:56:19 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/edit.js,v 1.6 2009-04-08 18:24:12 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -962,7 +962,7 @@
         objs = document.getElementsByName("propName");
         var pnam = objs[0];
         objs = document.getElementsByName("propStatus");
-        var psta = objs[0];
+        var psta = objs;
         objs = document.getElementsByName("propStatusReason");
         var pstr = objs[0];
         objs = document.getElementsByName("infoForms");
