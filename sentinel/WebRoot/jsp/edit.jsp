@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/edit.jsp,v 1.4 2009-04-08 17:56:18 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/edit.jsp,v 1.5 2009-04-17 12:11:30 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ page contentType="text/html;charset=WINDOWS-1252"%>
@@ -54,21 +54,21 @@
         </tr></table><br/>
 
         <table class="tabtable"><colgroup><col /><col /><col /><col /><col /></colgroup><tbody class="tabtbody" /><tr>
-            <td width="15%" class="tabtd"><span class="tab0" id="tabMain1" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
-                onclick="selectTab1(this);" title=<bean:message key="edit.propertytitle" />><bean:message key="edit.properties" /></span></td>
-            <td width="15%" class="tabtd"><span class="tab1" id="tabMain2" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
-                onclick="selectTab1(this);" title=<bean:message key="edit.reporttitle" />><bean:message key="edit.reports" /></span></td>
-            <td width="15%" class="tabtd"><span class="tab1" id="tabMain3" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
-                onclick="selectTab1(this);" title=<bean:message key="edit.criteriatitle" />><bean:message key="edit.search" /></span></td>
-            <td width="15%" class="tabtd"><span class="tab1" id="tabMain4" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
-                onclick="selectTab1(this);" title=<bean:message key="edit.monitortitle" />><bean:message key="edit.monitors" /></span></td>
-            <td width="40%" class="tabtd"><span class="tabend">&nbsp;</span></td>
+            <td width="15%" class="tabtd"><p class="tab0" id="tabMain1" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
+                onclick="selectTab1(this);" title=<bean:message key="edit.propertytitle" />><bean:message key="edit.properties" /></p></td>
+            <td width="15%" class="tabtd"><p class="tab1" id="tabMain2" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
+                onclick="selectTab1(this);" title=<bean:message key="edit.reporttitle" />><bean:message key="edit.reports" /></p></td>
+            <td width="15%" class="tabtd"><p class="tab1" id="tabMain3" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
+                onclick="selectTab1(this);" title=<bean:message key="edit.criteriatitle" />><bean:message key="edit.search" /></p></td>
+            <td width="15%" class="tabtd"><p class="tab1" id="tabMain4" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
+                onclick="selectTab1(this);" title=<bean:message key="edit.monitortitle" />><bean:message key="edit.monitors" /></p></td>
+            <td width="40%" class="tabtd"><p class="tabend">&nbsp;</p></td>
         </tr></table>
 
         <table style="border: 1px solid black; border-top: 0px solid black; width: 100%; border-spacing: 0px; border-collapse: collapse">
         <colgroup></colgroup><tbody class="secttbody" /><tr><td>
         <div id="tabProp"><table class="table1" cellpadding="7"><tr><td>
-            <p class="bstd6"><span class="rstd">&#119;</span><bean:message key="edit.name" /><br><html:text styleClass="std"
+            <p class="bstd6"><span class="rstd">*</span><bean:message key="edit.name" /><br><html:text styleClass="std"
                 property="propName" size="70" maxlength="30" onchange="nameChanged(this.value);" /></p>
             <p class="bstd6" style="color: #888888"><bean:message key="edit.summary" /><br><html:textarea styleClass="sstd100"
                 property="propDesc" rows="8" style="color: #888888" readonly="true"></html:textarea></p>
@@ -246,8 +246,8 @@
                 </tr><tr>
                     <td class="std">
                         <html:select styleClass="sstd100" property="propUsers" size="6" multiple="true"><html:option value="0">xxxx</html:option></html:select>
-                    </td><td align="center"><button class="but3" type="button" onclick="addToEmail();"><bean:message key="edit.emaila" />&nbsp;<span class="wd2">&#232;</span></button><br>
-                        <br><button class="but3" type="button" onclick="removeFromEmail();"><span class="wd2">&#231;</span>&nbsp;<bean:message key="edit.emailr" /></button>
+                    </td><td align="center"><button class="but3" type="button" onclick="addToEmail();"><bean:message key="edit.emaila" />&nbsp;<img src="/cadsrsentinel/images/arrow_16_right.gif"></button><br>
+                        <br><button class="but3" type="button" onclick="removeFromEmail();"><img src="/cadsrsentinel/images/arrow_16_left.gif">&nbsp;<bean:message key="edit.emailr" /></button>
                     </td><td class="td1"><html:select styleClass="std" property="propRecipients" size="6" multiple="true"><html:option value="0">xxx</html:option></html:select></td>
                 </tr><tr>
                     <td colspan="3"><p class="bstd12"><bean:message key="edit.emailz" /><br><html:text property="propEmail" size="50" maxlength="255" styleClass="std" />

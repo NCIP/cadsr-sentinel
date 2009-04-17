@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/css/sentinel.css,v 1.1 2007-07-19 15:26:45 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/css/sentinel.css,v 1.2 2009-04-17 12:11:30 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -174,7 +174,6 @@ th {
 }
 
 .rstd {
-    font-family: wingdings;
     color: red
 }
 
