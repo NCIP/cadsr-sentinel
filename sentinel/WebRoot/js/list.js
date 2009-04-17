@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.8 2008-12-03 21:27:03 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/list.js,v 1.9 2009-04-17 17:58:25 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -432,7 +432,7 @@
 
     function setCursor(obj, cursor)
     {
-        obj.style.cursor = cursor;
+        obj.style.cursor = (cursor == "default") ? "pointer" : cursor;
     }
 
     function cmdLogout()
