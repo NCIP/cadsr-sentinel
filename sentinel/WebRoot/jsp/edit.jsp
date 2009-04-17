@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/edit.jsp,v 1.5 2009-04-17 12:11:30 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/edit.jsp,v 1.6 2009-04-17 12:24:28 hebell Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ page contentType="text/html;charset=WINDOWS-1252"%>
@@ -235,11 +235,11 @@
                 </tr><tr>
                     <td><table class="tabtable" style="margin-top: 4pt">
                         <colgroup><col /><col /><col /></colgroup><tbody class="tabtbody" /><tr>
-                        <td class="tabtd" width="10"><p><span id="propUList" class="tab0" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
-                            onclick="selectTab0(this);" title=<bean:message key="edit.userstitle" />><bean:message key="edit.users" /></span></p></td>
-                        <td class="tabtd" width="10"><p><span id="propGList" class="tab1" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
-                            onclick="selectTab0(this);" title=<bean:message key="edit.groupstitle" />><bean:message key="edit.groups" /></span></p></td>
-                        <td class="tabtd"><p><span class="tabend">&nbsp;</span></p></td></tr></table>
+                        <td class="tabtd" width="10"><p id="propUList" class="tab0" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
+                            onclick="selectTab0(this);" title=<bean:message key="edit.userstitle" />><bean:message key="edit.users" /></p></td>
+                        <td class="tabtd" width="10"><p id="propGList" class="tab1" onmouseover="tabMouseOver(this);" onmouseout="tabMouseOut(this);"
+                            onclick="selectTab0(this);" title=<bean:message key="edit.groupstitle" />><bean:message key="edit.groups" /></p></td>
+                        <td class="tabtd"><p class="tabend">&nbsp;</p></td></tr></table>
                     </td>
                     <td align="center">&nbsp;</td>
                     <td><p class="bstd6"><bean:message key="edit.recipients" /></p></td>
