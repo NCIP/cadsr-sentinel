@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/run.js,v 1.4 2009-04-08 17:56:19 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/run.js,v 1.5 2009-04-17 19:30:08 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -7,7 +7,7 @@
     {
         var objs = document.getElementsByName("nextScreen");
         objs[0].value = "back";
-        documents.forms["runForm"].submit();
+        document.forms["runForm"].submit();
     }
 
     function cmdHelp()
@@ -17,8 +17,8 @@
     
     function cmdLogout()
     {
-        documents.forms["runForm"].action = "/cadsrsentinel/do/logout";
-        documents.forms["runForm"].submit();
+        document.forms["runForm"].action = "/cadsrsentinel/do/logout";
+        document.forms["runForm"].submit();
     }
 
     function cmdSubmit()
