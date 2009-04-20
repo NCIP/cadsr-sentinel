@@ -1,5 +1,5 @@
 /* Copyright ScenPro, Inc. 2005
-   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/create.js,v 1.4 2009-04-08 17:56:19 hebell Exp $
+   $Header: /share/content/gforge/sentinel/sentinel/WebRoot/js/create.js,v 1.5 2009-04-20 19:28:39 hebell Exp $
    $Name: not supported by cvs2svn $
 */
 
@@ -11,12 +11,11 @@
         obj.innerText = Muserid;
         obj.textContent = Muserid;
         objs = document.getElementsByName("initial");
-        obj = objs[0];
-        for (var ndx = 0; ndx < obj.length; ++ndx)
+        for (var ndx = 0; ndx < objs.length; ++ndx)
         {
-            if (obj[ndx].checked)
+            if (objs[ndx].checked)
             {
-                setBlank(ndx, obj[ndx].value);
+                setBlank(ndx, objs[ndx].value);
                 break;
             }
         }
