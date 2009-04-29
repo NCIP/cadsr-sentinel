@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.157 2009-04-17 12:24:28 hebell Exp $
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.158 2009-04-29 13:11:24 hebell Exp $
     $Name: not supported by cvs2svn $
 -->
 <project name="caDSR Sentinel Alert Tool" default="init" basedir=".">
@@ -203,7 +203,7 @@
             <fileset file="conf/template.cadsrsentinel-log4j-category.xml" />
         </copy>
         <copy todir="${artifacts.dir}/dtd" filtering="true">
-            <fileset dir="${dtd.dir}" includes="**/*.dtd" />
+            <fileset dir="${dtd.dir}" includes="**/*.*" />
         </copy>
         <copy todir="${artifacts.dir}/bin" filtering="true">
             <fileset file="scripts/autorun.sh" />
@@ -259,7 +259,7 @@
             <fileset file="${lib.dir}/xercesImpl.jar" />
             <fileset dir="sdkapi" includes="**/*" />
         </copy>
-        <fixcrlf srcdir="${artifacts.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties, **/*.dtd" />
+        <fixcrlf srcdir="${artifacts.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties, **/*.dtd, **/*.html" />
     </target>
 
     <target name="-cjsp" depends="-assemble,-prop-check" description="Compiles the project JSP files to verify syntax.">
@@ -495,7 +495,7 @@
     <target name="-deploy-binaries-local" depends="-prop-check" unless="remote.deploy" description="Deploys the executable product binaries.">
         <echo>Deploying binaries to local file system ...</echo>
         <copy todir="${toolDtd.dir}">
-            <fileset dir="dtd" includes="**/*.dtd"/>
+            <fileset dir="dtd" includes="**/*.*"/>
         </copy>
         <copy todir="${toolBin.dir}">
             <fileset dir="bin" />
