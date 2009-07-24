@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.8 2008-07-14 14:52:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlert.java,v 1.9 2009-07-24 15:32:49 davet Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -1831,6 +1831,13 @@ public interface DBAlert
      * @return The reserved CS id or null if the CSI is not reserved.
      */
     public String selectCSfromReservedCSI(String idseq_);
+    
+    /**
+     * Return the Privacy Notice URL from the tool options.
+     *
+     * @return The Privacy Notice URL.
+     */
+    public String selectPrivacyNoticeUrl();
     
     /**
      * Retrieve the row counts for all the tables used by the Alert Report.

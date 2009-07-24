@@ -1,6 +1,6 @@
 // Copyright (c) 2004 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.21 2008-07-23 14:08:48 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.22 2009-07-24 15:33:33 davet Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.database;
@@ -8313,6 +8313,20 @@ public class DBAlertOracle implements DBAlert
             + "sbr.cs_csi_view ci "
             + "where ci.csi_idseq = '" + idseq_ + "' and cs.cs_idseq = ci.cs_idseq and opt.value = cs.cs_idseq and "
             + "opt.tool_name = 'SENTINEL' and opt.property = 'RSVD.CS.CS_IDSEQ'";
+
+        String[] list = getBasicData0(select);
+
+        return (list != null) ? list[0] : null;
+    }
+    
+    /**
+     * Return the Privacy Notice URL from the tool options.
+     *
+     * @return The Privacy Notice URL.
+     */
+    public String selectPrivacyNoticeUrl()
+    {
+        String select = "select value from sbrext.tool_options_view_ext where tool_name = 'caDSR' and property = 'PRIVACY.URL'";
 
         String[] list = getBasicData0(select);
 

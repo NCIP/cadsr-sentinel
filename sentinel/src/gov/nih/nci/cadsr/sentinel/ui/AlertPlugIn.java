@@ -1,6 +1,6 @@
 // Copyright (c) 2006 ScenPro, Inc.
 
-// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.11 2008-07-14 14:52:45 hebell Exp $
+// $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/AlertPlugIn.java,v 1.12 2009-07-24 15:35:37 davet Exp $
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.sentinel.ui;
@@ -41,9 +41,10 @@ public class AlertPlugIn implements PlugIn
     private String _dataSource;
     private String _authenticate;
     private String _helpUrl = "/cadsrsentinel/html/help.html";
-    private String _helpUrlRoot = "/cadsrsentinel/html/";
+    private String _helpUrlRoot = "/cadsrsentinel/html/";    
+    private String _privacyUrl = null;
     private static boolean _printFirstRequest = true;
-
+    
     private static final String _helpRoot = "HELP.ROOT";
     private static final String _helpHome = "HELP.HOME";
     private static final Logger _logger = Logger.getLogger(AlertPlugIn.class.getName());
@@ -147,6 +148,26 @@ public class AlertPlugIn implements PlugIn
     public String getHelpUrl()
     {
         return _helpUrl;
+    }
+    
+    /**
+     * Set the Privacy URL 
+     * 
+     */
+    public void setPrivacyUrl(String privacyUrl_)
+    {
+    	_privacyUrl = privacyUrl_;
+    	return;
+    }
+    
+    /**
+     * Get the Privacy URL
+     * 
+     * @return the Privacy URL
+     */
+    public String getPrivacyUrl()
+    {
+        return _privacyUrl;
     }
     
     private DataSource getDataSource(String jndi_)
