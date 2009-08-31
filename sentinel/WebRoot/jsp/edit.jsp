@@ -1,5 +1,5 @@
 <!-- Copyright ScenPro, Inc. 2005
-     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/edit.jsp,v 1.6 2009-04-17 12:24:28 hebell Exp $
+     $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/edit.jsp,v 1.7 2009-08-31 19:12:18 davet Exp $
      $Name: not supported by cvs2svn $
 -->
 <%@ page contentType="text/html;charset=WINDOWS-1252"%>
@@ -333,8 +333,16 @@
             </tr>
         </table></div>
 
-        </td></tr></table>
+		<div id="blankSpaces" style="visibility: hidden">
+			<table><tr><td>
+				<p><br/>&nbsp;&nbsp;<br/></p>
+				<p><br/>&nbsp;&nbsp;<br/></p>
+				<p><br/>&nbsp;&nbsp;<br/></p>				
+			</td></tr></table>
+		</div>
 
+        </td></tr></table>		
+		
         <div id="btmButs">
         <table class="table3">
         <colgroup><col style="text-align: left" /><col style="text-align: right" /></colgroup><tbody class="secttbody" /><tr>
