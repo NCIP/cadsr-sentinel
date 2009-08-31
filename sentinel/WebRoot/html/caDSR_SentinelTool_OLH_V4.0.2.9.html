@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <!-- MOTW-DISABLED saved from url=(0014)about:internet -->
+    <title>Properties Tab</title>
+    <link rel="StyleSheet" href="css/caDSR_SentinelTool_OLH_V4.0.css" type="text/css" media="all" />
+    <link rel="StyleSheet" href="css/webworks.css" type="text/css" media="all" />
+    <script type="text/javascript" language="JavaScript1.2" src="wwhdata/common/context.js"></script>
+    <script type="text/javascript" language="JavaScript1.2" src="wwhdata/common/towwhdir.js"></script>
+    <script type="text/javascript" language="JavaScript1.2" src="wwhdata/common/wwhpagef.js"></script>
+    <script type="text/javascript" language="JavaScript1.2">
+      <!--
+        var  WebWorksRootPath = "";
+      // -->
+    </script>
+    <script type="text/javascript" language="JavaScript1.2">
+      <!--
+        // Set reference to top level help frame
+        //
+        var  WWHFrame = WWHGetWWHFrame("", true);
+      // -->
+    </script>
+    <script type="text/javascript" language="JavaScript1.2" src="scripts/expand.js"></script>
+  </head>
+  <body style="" onLoad="WWHUpdate();" onUnload="WWHUnload();" onKeyDown="WWHHandleKeyDown((document.all||document.getElementById||document.layers)?event:null);" onKeyPress="WWHHandleKeyPress((document.all||document.getElementById||document.layers)?event:null);" onKeyUp="WWHHandleKeyUp((document.all||document.getElementById||document.layers)?event:null);">
+    <br />
+    <div class="WebWorks_Breadcrumbs" style="text-align: left;">
+      <a class="WebWorks_Breadcrumb_Link" href="caDSR_SentinelTool_OLH_V4.0.2.1.html#1111092">Using the caDSR Sentinel Tool</a> &gt; Properties Tab </div>
+    <hr align="left" />
+    <blockquote>
+      <div class="Heading1"><a name="1111092">Properties Tab </a></div>
+      <div class="Body_Text"><a name="1111093">The Properties Tab contains the basic Alert Definition properties. <img id="1111105" class="Default" src="images/edit2.jpg" width="328" height="291" style="display: block; float: none; left: 0.0; text-align: left; top: 0.0;" /></a></div>
+      <div class="Run-In"><a name="1111094">Alert Name </a></div>
+      <div class="Body_Text"><a name="1107758">The Alert Definition identification used both in the notification e-mail and </a>the report body. Use names to briefly describe the function or purpose of the Alert, for example, "Changes to CCR" and "Watch for Retired Records". </div>
+      <div class="Run-In"><a name="1107759">Summary </a></div>
+      <div class="Body_Text"><a name="1107760">Provides an overview of the Criteria and Monitors. Any reports generated, </a>based on the current report definition, will only include information that meets the description shown. </div>
+      <div class="Run-In"><a name="1107761">Auto Run Options </a></div>
+      <div class="Body_Text"><a name="1107762">Control the Alert Definition eligibilty in the Automated Report </a>Generation Process by Frequency and Status. Running the Alert manually ignores both Frequency and Status. </div>
+      <div class="Run-In"><a name="1107763">Frequency </a></div>
+      <div class="Body_Text"><a name="1107764">The execution cycle in the Automated Report Generation Process. The </a>process runs daily at a time determined by the System Administrator. Alerts marked "Daily" are evaluated with each run. Those marked "Weekly" are evaluated only on the specific day of the week selected. Alerts marked "Monthly" are evaluated only on the specific day of the month selected. To indicate the first day of the month, select "1". To indicate the last day of the month, select "31". The Alert may be run manually at anytime via the Run button. </div>
+      <div class="Run-In"><a name="1107765">Status </a></div>
+      <div class="Body_Text"><a name="1107766">Controls the Auto Run Frequency application in the Automated Report </a>Generation Process. </div>
+      <div class="Run-In"><a name="1107767">Active, no end date </a></div>
+      <div class="Body_Text"><a name="1107768">The Alert Definition is processed according to the Frequency. </a></div>
+      <div class="Run-In"><a name="1107769">Active until the first report … </a></div>
+      <div class="Body_Text"><a name="1107770">After sending a report containing some activity, the </a>status automatically changes to Inactive. </div>
+      <div class="Run-In"><a name="1107771">Active only from … </a></div>
+      <div class="Body_Text"><a name="1107772">The Alert Definition is processed only within the dates </a>specified. When the begin date is blank, the Alert Definition creation date is used. When the end date is blank and after reaching the begin date, the effect is the same as "Active, no end date". </div>
+      <div class="Note_Main_Body_outer" style="margin-left: 13px;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1108621">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Note_Main_Body_inner" style="width: 15px; white-space: nowrap;">
+                <span style="left: -20px; position: relative; top: 23px;">
+                  <img src="Lightbulb.gif" alt="*" id="bullet1108621" border="0" width="30" height="30" />
+                </span>
+              </div>
+            </td>
+            <td width="100%">
+              <div class="Note_Main_Body_inner"><a name="1108621">Midnight is used for all comparisons, e.g. 03/01/2006 to 03/02/2006 is the 24 hour period </a>beginning midnight 03/01/2006. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Run-In"><a name="1107773">Inactive </a></div>
+      <div class="Body_Text"><a name="1107774">The Alert Definition is retained in the caDSR and not processed by the </a>Automated Report Generation. A brief description is required. </div>
+      <script type="text/javascript" language="JavaScript1.2">
+        <!--
+          // Clear related topics
+          //
+          WWHClearRelatedTopics();
+
+          document.writeln(WWHRelatedTopicsInlineHTML());
+        // -->
+      </script>
+    </blockquote>
+    <script type="text/javascript" language="JavaScript1.2">
+      <!--
+        document.write(WWHRelatedTopicsDivTag() + WWHPopupDivTag() + WWHALinksDivTag());
+      // -->
+    </script>
+  </body>
+</html>
