@@ -1,0 +1,93 @@
+                          Release Notes
+    
+                           Sentinel Tool
+                          Version 3.2.0.2
+                          August 28, 2007
+
+       National Cancer Institute Center for Bioinformatics
+
+
+================================================================
+                            Contents
+================================================================
+
+
+    1.0 Release History
+    2.0 New Features and Updates
+    3.0 Bugs Fixed Since Last Release
+    4.0 Known Issues
+
+
+
+----------------------------------------------------------------
+    1.0 Release History
+----------------------------------------------------------------
+
+    3.2.0.2
+
+    -- 28 August 2007
+
+    3.2.0.1
+
+    -- 2 February 2007
+
+    3.2
+
+    -- 22 December 2006
+
+    3.1
+
+    --  27 March 2006
+
+    3.0.1.1
+
+    --  30 August 2005
+
+    3.0.1
+
+    --  22 July 2005
+
+    3.0
+
+    --  31 March 2005    
+
+
+
+----------------------------------------------------------------
+    2.0 New Features and Updates
+----------------------------------------------------------------
+
+    --  Request JBoss version information from JBoss and not the
+        operating system. (GF 4258)
+
+    --  Changed caDSR Database access to use a "tool" account
+        for efficient use of the JBoss connection pool.
+        (GF 4277)
+
+    --  Created a new Audit Report section for Object Classes
+        not owned by caBIG. (GF 5974)
+
+    --  Upgraded to Struts 1.3.5 (GF 6333)
+
+    --  Add Concept Codes to all Audit Report sections where
+        Concepts are shown (GF 6359)
+
+    --  Ignore Workflow Status RETIRED items appearing on the
+        Audit Report (GF 6365)
+
+
+----------------------------------------------------------------
+    3.0 Bugs Fixed Since Last Release
+----------------------------------------------------------------
+
+    --  None
+
+
+----------------------------------------------------------------
+    4.0 Known Issues
+----------------------------------------------------------------
+
+    --  None
+
+
+//end
