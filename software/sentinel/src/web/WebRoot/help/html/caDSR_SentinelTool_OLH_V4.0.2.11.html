@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <!-- MOTW-DISABLED saved from url=(0014)about:internet -->
+    <title>Monitors Tab</title>
+    <link rel="StyleSheet" href="css/caDSR_SentinelTool_OLH_V4.0.css" type="text/css" media="all" />
+    <link rel="StyleSheet" href="css/webworks.css" type="text/css" media="all" />
+    <script type="text/javascript" language="JavaScript1.2" src="wwhdata/common/context.js"></script>
+    <script type="text/javascript" language="JavaScript1.2" src="wwhdata/common/towwhdir.js"></script>
+    <script type="text/javascript" language="JavaScript1.2" src="wwhdata/common/wwhpagef.js"></script>
+    <script type="text/javascript" language="JavaScript1.2">
+      <!--
+        var  WebWorksRootPath = "";
+      // -->
+    </script>
+    <script type="text/javascript" language="JavaScript1.2">
+      <!--
+        // Set reference to top level help frame
+        //
+        var  WWHFrame = WWHGetWWHFrame("", true);
+      // -->
+    </script>
+    <script type="text/javascript" language="JavaScript1.2" src="scripts/expand.js"></script>
+  </head>
+  <body style="" onLoad="WWHUpdate();" onUnload="WWHUnload();" onKeyDown="WWHHandleKeyDown((document.all||document.getElementById||document.layers)?event:null);" onKeyPress="WWHHandleKeyPress((document.all||document.getElementById||document.layers)?event:null);" onKeyUp="WWHHandleKeyUp((document.all||document.getElementById||document.layers)?event:null);">
+    <br />
+    <div class="WebWorks_Breadcrumbs" style="text-align: left;">
+      <a class="WebWorks_Breadcrumb_Link" href="caDSR_SentinelTool_OLH_V4.0.2.1.html#1107844">Using the caDSR Sentinel Tool</a> &gt; Monitors Tab </div>
+    <hr align="left" />
+    <blockquote>
+      <div class="Heading1"><a name="1107844">Monitors Tab </a></div>
+      <div class="Body_Text"><a name="1107849">The Monitors tab contains selections that control the triggers for the alert report. <img id="1111303" class="Default" src="images/Edit-MonitorTab.gif" width="640" height="417" style="display: block; float: none; left: 0.0; text-align: left; top: 0.0;" /></a></div>
+      <div class="Body_Text"><a name="1116975">The selection combination on the Monitors tab triggers the alert report creation by </a>interrogating the data activities. When the selections are set to <span class="Bold">Any Change</span>, all activity within the scope defined on the Criteria tab will trigger creation of the report. This is the default setting for all new Alert Definitions. </div>
+      <div class="Body_Text"><a name="1116992">Selecting specific values for one or more of the statuses significantly limits the data </a>activities triggering report creation because a specific activity matching the selected value(s) must be found in the caDSR history for the reporting dates. For example, selecting the Workflow Status “RELEASED” will only trigger a report when this specific change is found in the history - other changes would not trigger a report creation. </div>
+      <div class="Body_Text"><a name="1116967">The lists on this page support multiple selections using the standard </a><span class="Keypress">Ctrl+Select</span> or <span class="Keypress">Shift+Select</span> method. </div>
+      <div class="Run-In"><a name="1107850">Workflow Status(es) </a></div>
+      <div class="Body_Text"><a name="1107851">Trigger an alert report when the Workflow Status is changed to </a>one of the selections, or any change if that option is selected. Selecting <span class="Bold">Ignore</span> causes the monitor to ignore any changes to this field as a trigger for the report.</div>
+      <div class="Run-In"><a name="1107852">Registration Status(es) </a></div>
+      <div class="Body_Text"><a name="1107853">Trigger an alert report when the Registration Status is </a>changed to one of the selections, or any change if that option is selected. Selecting <span class="Bold">Ignore</span> causes the monitor to ignore any changes to this field as a trigger for the report. </div>
+      <div class="Run-In"><a name="1107854">Version </a></div>
+      <div class="Body_Text"><a name="1108240">Trigger an alert report when the Version is changed in a way that meets the </a>selected version trigger: </div>
+      <div class="Bullet_outer" style="margin-left: 18pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1108242">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_inner"><span class="Bold"><a name="1108242">Any Change:</a></span> Triggers a report for any and all value changes to the record property. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Bullet_outer" style="margin-left: 18pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107859">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_inner"><span class="Bold"><a name="1107859">Ignore: </a></span>Disables triggers for alert report creation for the record property. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Bullet_outer" style="margin-left: 18pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107861">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_inner"><span class="Bold"><a name="1107861">Whole Number Change: </a></span>Applies to Version number changes only, triggers a report when the record whole number part changes, decimal number part changes are ignored. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Bullet_outer" style="margin-left: 18pt;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107863">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Bullet_inner" style="width: 18pt; white-space: nowrap;">•</div>
+            </td>
+            <td width="100%">
+              <div class="Bullet_inner"><span class="Bold"><a name="1107863">Specific:</a></span> Applies to Version number changes only, used to indicate a specific version number to trigger the report creation. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Note_Main_Body_outer" style="margin-left: 13px;">
+        <table border="0" cellspacing="0" cellpadding="0" id="SummaryNotRequired_np1107866">
+          <tr style="vertical-align: baseline;">
+            <td>
+              <div class="Note_Main_Body_inner" style="width: 15px; white-space: nowrap;">
+                <span style="left: -20px; position: relative; top: 23px;">
+                  <img src="Lightbulb.gif" alt="*" id="bullet1107866" border="0" width="30" height="30" />
+                </span>
+              </div>
+            </td>
+            <td width="100%">
+              <div class="Note_Main_Body_inner"><a name="1107866">Some data is not logged in the caDSR history and will appear as “Details not available” </a>on an alert report. </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="Body_Text"><a name="1107867">See </a><span class="Emphasis" style="color: #515186;"><a href="javascript:WWHClickedPopup('caDSR_Sentinel_Tool_Help', 'caDSR_SentinelTool_OLH_V4.0.2.13.html#1114006', '');">Report Output</a></span> for more details. </div>
+      <script type="text/javascript" language="JavaScript1.2">
+        <!--
+          // Clear related topics
+          //
+          WWHClearRelatedTopics();
+
+          document.writeln(WWHRelatedTopicsInlineHTML());
+        // -->
+      </script>
+    </blockquote>
+    <script type="text/javascript" language="JavaScript1.2">
+      <!--
+        document.write(WWHRelatedTopicsDivTag() + WWHPopupDivTag() + WWHALinksDivTag());
+      // -->
+    </script>
+  </body>
+</html>

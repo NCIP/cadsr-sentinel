@@ -1,0 +1,9 @@
+
+    <!-- ============================ -->
+    <!-- Setup the sentinel category debug-->
+    <!-- ============================ -->
+
+    <category name="gov.nih.nci.cadsr.sentinel" additivity="false">
+        <priority value="@logCategory@" />
+        <appender-ref ref="CADSRSENTINEL_FILE" />
+    </category>
