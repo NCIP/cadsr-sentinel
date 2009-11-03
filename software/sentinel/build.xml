@@ -12,7 +12,7 @@
     <property name="appl.release" value="4.0.2" />
     <property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}"/>
 
-    <property name="PROP.FILE" location="template.build.properties" />
+    <property name="PROP.FILE" location="local.build.properties" />
     <property file="${PROP.FILE}" />
     <echo>
         PROP.FILE = ${PROP.FILE}
