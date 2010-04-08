@@ -7,21 +7,28 @@ package gov.nih.nci.cadsr.sentinel.audits;
 
 import gov.nih.nci.cadsr.sentinel.database.DBProperty;
 import gov.nih.nci.cadsr.sentinel.tool.ConceptItem;
-import gov.nih.nci.evs.domain.Definition;
-import gov.nih.nci.evs.domain.Property;
-import gov.nih.nci.evs.domain.DescLogicConcept;
-import gov.nih.nci.evs.domain.MetaThesaurusConcept;
-import gov.nih.nci.evs.domain.Source;
-import gov.nih.nci.evs.query.EVSQuery;
-import gov.nih.nci.evs.query.EVSQueryImpl;
-import gov.nih.nci.evs.security.SecurityToken;
 import gov.nih.nci.system.applicationservice.ApplicationException;
-import gov.nih.nci.system.applicationservice.EVSApplicationService;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
+import org.LexGrid.LexBIG.Exceptions.LBParameterException;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.Utility.Constructors;
+import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
+import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
+import org.LexGrid.commonTypes.Property;
+import org.LexGrid.concepts.Definition;
+import org.LexGrid.concepts.Entity;
+import org.LexGrid.concepts.Presentation;
 import org.apache.log4j.Logger;
 
 /**
@@ -269,7 +276,7 @@ public class AuditConceptToEVS extends AuditReport
          * 
          * @param query_ the EVSQuery defined by the caCORE API
          */
-        abstract public void search(EVSQuery query_);
+        abstract public CodedNodeSet search(LexBIGService service_);
 
         /**
          * Validate the Concept Code, Concept Name and Concept Definition.
@@ -320,58 +327,62 @@ public class AuditConceptToEVS extends AuditReport
         }
 
         @Override
-        public void search(EVSQuery query_)
+        public CodedNodeSet search(LexBIGService service_)
         {
-            query_.searchMetaThesaurus(_rec._preferredName);
+        	CodedNodeSet cns = null;
+        	try {
+				cns = service_.getNodeSet("NCI Metathesaurus", null, null);
+				cns = cns.restrictToMatchingProperties(
+								Constructors.createLocalNameList("conceptCode"), 
+								null, 
+								_rec._preferredName, 
+								MatchAlgorithms.exactMatch.name(), 
+								null
+							);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return cns;
         }
 
         @Override
         public String recommendName()
         {
-            MetaThesaurusConcept obj = (MetaThesaurusConcept) _cons.get(0);
-            return obj.getName();
+        	EVSConcept obj = (EVSConcept) _cons.get(0);
+        	if (obj != null) {
+        		return obj.preferredName;
+        	}
+            return "";
         }
 
         @Override
         public void validate()
         {
-            try
+        	// The search returns a list of results so process all.
+            for (int i = 0; i < _cons.size(); ++i)
             {
-                // The search returns a list of results so process all.
-                for (int i = 0; i < _cons.size(); ++i)
-                {
-                    // The objects are Meta Thesaurus
-                    MetaThesaurusConcept temp = (MetaThesaurusConcept) _cons.get(i);
-                    
-                    // Check the default name.
-                    if (_rec._longName.compareToIgnoreCase(temp.getName()) == 0)
-                    {
-                        _flag = false;
-                        break;
-                    }
-                    
-                    // Check the synonyms if the default name didn't match.
-                    ArrayList value = temp.getSynonymCollection();
-                    if (value.indexOf(_rec._longName) > -1)
-                    {
-                        _flag = false;
-                        break;
-                    }
-                }
-                // We didn't find a name so recommend one.
-                if (_flag)
-                    _name = recommendName();
-            }
-            catch (ClassCastException ex)
-            {
-                // Mislabeled as a MetaThesaurus Concept
-                _msg += formatMsg(_MSG001);
-                _flag = false;
-                _logger.warn(ex.toString());
+                // The objects are Meta Thesaurus
+            	EVSConcept temp = (EVSConcept) _cons.get(i);
                 
-                // Can't check anything else when this exception happens.
-                return;
+                // Check the default name.
+                if (_rec._longName.compareToIgnoreCase(temp.preferredName) == 0)
+                {
+                    _flag = false;
+                    break;
+                }
+                
+                // Check the synonyms if the default name didn't match.
+                List value = temp.synonyms;
+                if (value.indexOf(_rec._longName) > -1)
+                {
+                    _flag = false;
+                    break;
+                }
             }
+            // We didn't find a name so recommend one.
+            if (_flag)
+                _name = recommendName();
 
             // Must have a definition source to proceed.
             if (_rec._definitionSource == null || _rec._definitionSource.length() == 0)
@@ -380,9 +391,9 @@ public class AuditConceptToEVS extends AuditReport
                 for (int i = 0; i < _cons.size(); ++i)
                 {
                     // Need definitions.
-                    MetaThesaurusConcept temp = (MetaThesaurusConcept) _cons.get(i);
-                    ArrayList<Definition> defs = temp.getDefinitionCollection();
-                    if (defs != null && defs.size() > 0)
+                    EVSConcept temp = (EVSConcept) _cons.get(i);
+                    Definition[] defs = temp.definitions;
+                    if (defs != null && defs.length > 0)
                     {
                         defFlag = true;
                         break;
@@ -407,9 +418,9 @@ public class AuditConceptToEVS extends AuditReport
                 for (int i = 0; i < _cons.size() && full < 3 && srcFlag && defFlag; ++i)
                 {
                     // Need definitions.
-                    MetaThesaurusConcept temp = (MetaThesaurusConcept) _cons.get(i);
-                    ArrayList<Definition> defs = temp.getDefinitionCollection();
-                    if (defs != null && defs.size() > 0)
+                    EVSConcept temp = (EVSConcept) _cons.get(i);
+                    Definition[] defs = temp.definitions;
+                    if (defs != null && defs.length > 0)
                     {
                         defCol = false;
 
@@ -417,21 +428,24 @@ public class AuditConceptToEVS extends AuditReport
                         for (Definition def : defs)
                         {
                             full = 0;
-                            Source defsor = def.getSource();
-                            if (defsor != null && defsor.getAbbreviation().equals(_rec._definitionSource))
-                            {
-                                srcFlag = false;
-                                full += 1;
+                            org.LexGrid.commonTypes.Source[] defsors = def.getSource();
+                            for (org.LexGrid.commonTypes.Source defsor: defsors) {
+                            	if (defsor != null && defsor.getContent().equals(_rec._definitionSource))
+                                {
+                                    srcFlag = false;
+                                    full += 1;
+                                }
+                            	
+                            	if (def.getValue().getContent().equals(_rec._preferredDefinition))
+                                {
+                                    if (defsor != null)
+                                        defSource = defsor.getContent();
+                                    defFlag = false;
+                                    full += 2;
+                                }
+                                if (full == 3)
+                                    break;
                             }
-                            if (def.getDefinition().equals(_rec._preferredDefinition))
-                            {
-                                if (defsor != null)
-                                    defSource = defsor.getAbbreviation();
-                                defFlag = false;
-                                full += 2;
-                            }
-                            if (full == 3)
-                                break;
                         }
                     }
                 }
@@ -486,55 +500,33 @@ public class AuditConceptToEVS extends AuditReport
         }
 
         @Override
-        public void search(EVSQuery query_)
+        public CodedNodeSet search(LexBIGService service_)
         {
-            if (_vocab._access != null)
-            {
-                SecurityToken token = new gov.nih.nci.evs.security.SecurityToken();
-                token.setAccessToken(_vocab._access);
-                try
-                {
-                    query_.addSecurityToken(_vocab._vocab, token);
-                }
-                catch (Exception ex)
-                {
-                    _logger.error(ex);
-                }
-            }
-            query_.getDescLogicConcept(_vocab._vocab, _rec._preferredName);
+        	CodedNodeSet cns = null;
+            try {
+				cns = service_.getNodeSet(_vocab._vocab, null, null);
+				cns = cns.restrictToMatchingProperties(
+								Constructors.createLocalNameList("conceptCode"), 
+								null, 
+								_rec._preferredName, 
+								MatchAlgorithms.exactMatch.name(), 
+								null
+							);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return cns;
         }
 
         @Override
         public String recommendName()
         {
-            DescLogicConcept obj = (DescLogicConcept) _cons.get(0);
+            EVSConcept obj = (EVSConcept) _cons.get(0);
 
-            if (_vocab._preferredNameProp == null)
-                return obj.getName();
+            if (obj.preferredName != null)
+                return obj.preferredName;
             
-            String name = "no recommendations available";
-            
-            Vector<Property> collection = obj.getPropertyCollection();
-            if (collection == null || collection.size() == 0)
-            {
-                String temp = obj.getName();
-                if (temp != null && temp.length() > 0)
-                    name = temp;
-            }
-            else
-            {
-                for (Property prop : collection)
-                {
-                    if (preferredName.equals(prop.getName()) ||
-                                    prop.getName().equals(_vocab._preferredNameProp))
-                    {
-                        name = prop.getValue();
-                        break;
-                    }
-                }
-            }
-            
-            return name;
+            return "no recommendations available";
         }
 
         @Override
@@ -544,52 +536,32 @@ public class AuditConceptToEVS extends AuditReport
             {
                 for (int i = 0; i < _cons.size(); ++i)
                 {
-                    Vector collection = null;
-                    Property prop = null;
-                    DescLogicConcept temp = (DescLogicConcept) _cons.get(i);
-                    if (_vocab._preferredNameProp == null)
+                    List collection = null;
+                    EVSConcept temp = (EVSConcept) _cons.get(i);
+                    if (temp.preferredName.compareToIgnoreCase(_rec._longName) == 0)
                     {
-                        if (temp.getName().compareToIgnoreCase(_rec._longName) == 0)
-                        {
-                            _flag = false;
-                            break;
-                        }
-                        collection = temp.getPropertyCollection();
-                    }
-                    else
-                    {
-                        collection = temp.getPropertyCollection();
-    
-                        // Searching a Vector class is best using the Vector.contains() method. Depending
-                        // on the vocabulary different attribute names must be used to match the name. This
-                        // information is also stored in the tool_options table for the Curation Tool.
-                        prop = new Property();
-                        prop.setName(_vocab._preferredNameProp);
-                        prop.setValue(_rec._longName);
-                        if (collection.contains(prop))
-                        {
-                            _flag = false;
-                            break;
-                        }
+                        _flag = false;
+                        break;
                     }
                         
                     // In the off chance none of the current defined attributes contain the name, perhaps
                     //  an attribute was removed from the Curation Tool options after a concept was
                     // copied from EVS.
+                    collection = temp.properties;
                     for (int n = 0; n < collection.size(); ++n)
                     {
-                        prop = (Property) collection.get(n);
-                        if (_rec._longName.compareToIgnoreCase(prop.getValue()) == 0)
+                        org.LexGrid.commonTypes.Property prop = (org.LexGrid.commonTypes.Property) collection.get(n);
+                        if (_rec._longName.compareToIgnoreCase(prop.getValue().getContent()) == 0)
                         {
                             // The collection.contains() test above doesn't always catch matching property names because of case.
-                            if (preferredName.equals(prop.getName()) || _vocab._preferredNameProp.compareToIgnoreCase(prop.getName()) == 0)
+                            if (preferredName.equals(prop.getPropertyName()) || _vocab._preferredNameProp.compareToIgnoreCase(prop.getPropertyName()) == 0)
                             {
                                 _flag = false;
                                 break;
                             }
 
                             // Name matches on property {0} but expected to match on property {1}
-                            _msg += formatMsg(_MSG010, prop.getName(),  ((_vocab._preferredNameProp == null) ? "(default)" : _vocab._preferredNameProp));
+                            _msg += formatMsg(_MSG010, prop.getPropertyName(),  ((_vocab._preferredNameProp == null) ? "(default)" : _vocab._preferredNameProp));
                             _flag = false;
                             break;
                         }
@@ -613,63 +585,39 @@ public class AuditConceptToEVS extends AuditReport
             boolean defFlag = true;
             for (int i = 0; i < _cons.size() && srcFlag && defFlag; ++i)
             {
-                DescLogicConcept temp = (DescLogicConcept) _cons.get(i);
-                Vector<Property> props = temp.getPropertyCollection();
-                for (Property prop : props)
+            	EVSConcept temp = (EVSConcept) _cons.get(i);
+                Definition[] definitions = temp.definitions;
+                for (Definition def : definitions)
                 {
-                    if (prop.getName().equals(_vocab._preferredDefinitionProp))
-                    {
-                        srcFlag = false;
-                        int pDefSrc;
-                        int tDefSrc;
-                        
-                        pDefSrc = prop.getValue().indexOf("<def-source>");
-                        if (pDefSrc >= 0)
-                        {
-                            pDefSrc += "<def-source>".length();
-                            String text = prop.getValue().substring(pDefSrc);
-                            tDefSrc = text.indexOf("</def-source>");
-                            text = text.substring(0, tDefSrc);
-                            if (text.length() == 0)
-                            {
-                                // The EVS definition source is missing, caDSR is [{0}]
-                                if  (_rec._definitionSource != null && _rec._definitionSource.length() > 0)
-                                    _msg += formatMsg(_MSG012, _rec._definitionSource);
-                            }
+                	if (def.isIsPreferred()) {
+                		org.LexGrid.commonTypes.Source[] sources = def.getSource();
+                		if (sources == null || sources.length == 0) {
+                			if  (_rec._definitionSource != null && _rec._definitionSource.length() > 0)
+                                _msg += formatMsg(_MSG012, _rec._definitionSource);
+                		}
+                		else {
+                			if  (_rec._definitionSource == null || _rec._definitionSource.length() == 0)
+                                _msg += formatMsg(_MSG013, sources[0].getContent());
                             else
                             {
-                                // The caDSR definition source is missing, EVS is [{0}]
-                                if  (_rec._definitionSource == null || _rec._definitionSource.length() == 0)
-                                    _msg += formatMsg(_MSG013, text);
-                                else
-                                {
-                                    // The caDSR definition source [{0}] does not match EVS. [{1}]
-                                    if (!text.equals(_rec._definitionSource))
-                                        _msg += formatMsg(_MSG014, _rec._definitionSource, text);
-                                }
+                            	boolean srcExists = false;
+                            	for (org.LexGrid.commonTypes.Source src: sources) {
+                            		if (src.getContent().equals(_rec._definitionSource)) {
+                            			srcExists = true;
+                            			break;
+                            		}
+                            	}
+                            	
+                            	if (!srcExists) {
+                            		_msg += formatMsg(_MSG014, _rec._definitionSource, sources[0].getContent());
+                            	}   
                             }
-                        }
-                        
-                        pDefSrc = prop.getValue().indexOf("<def-definition>");
-                        if (pDefSrc < 0)
-                        {
-                            if (prop.getValue().equals(_rec._preferredDefinition))
-                            {
-                                defFlag = false;
-                            }
-                        }
-                        else
-                        {
-                            pDefSrc += "<def-definition>".length();
-                            String text = prop.getValue().substring(pDefSrc);
-                            tDefSrc = text.indexOf("</def-definition>");
-                            if (text.substring(0, tDefSrc).equals(_rec._preferredDefinition))
-                            {
-                                defFlag = false;
-                            }
-                        }
-                        break;
-                    }
+                		}
+                		
+                		if (def.getValue().getContent().equalsIgnoreCase(_rec._preferredDefinition)) {
+                			defFlag = false;
+                		}
+                	}
                 }
             }
             if (srcFlag)
@@ -691,6 +639,14 @@ public class AuditConceptToEVS extends AuditReport
         }
     }
     
+    private class EVSConcept  {
+    	  public String preferredName;
+    	  public String code;
+    	  public List synonyms;
+    	  public List<org.LexGrid.commonTypes.Property> properties;
+    	  public Definition[] definitions;
+    }
+    
     /**
      * Validate the caDSR Concepts against EVS
      * 
@@ -709,10 +665,10 @@ public class AuditConceptToEVS extends AuditReport
         // Get the EVS URL and establish the application service.
         String evsURL = _db.selectEvsUrl();
         
-        EVSApplicationService evsApi;
+        LexBIGService service;
         try
         {
-            evsApi = (EVSApplicationService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
+        	service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
         }
         catch (Exception ex)
         {
@@ -741,7 +697,7 @@ public class AuditConceptToEVS extends AuditReport
             }
             ++count;
 
-            EVSVocab vocab = null;;
+            EVSVocab vocab = null;
             while (true)
             {
                 // Missing EVS Source
@@ -786,13 +742,12 @@ public class AuditConceptToEVS extends AuditReport
                 ed.reset();
                 ed._rec = rec;
 
-                EVSQuery query = new EVSQueryImpl();
-                ed.search(query);
+                CodedNodeSet cns = ed.search(service);
                 
                 try
                 {
-                    // Get the attributes for the concept code.
-                    ed._cons = evsApi.evsSearch(query);
+                    // Get the attributes for the concept code. 
+                    ed._cons = resolveNodeSet(cns, true);
                 }
                 catch (ApplicationException ex)
                 {
@@ -886,6 +841,70 @@ public class AuditConceptToEVS extends AuditReport
         // Return all the messages, the validation processing is complete.
         return msgs;
     }
+    
+    public List<EVSConcept> resolveNodeSet(CodedNodeSet cns, boolean includeRetiredConcepts) throws Exception {
+		
+		if (!includeRetiredConcepts) {
+			cns.restrictToStatus(CodedNodeSet.ActiveOption.ACTIVE_ONLY, null);
+		}
+		CodedNodeSet.PropertyType propTypes[] = new CodedNodeSet.PropertyType[2];
+		propTypes[0] = CodedNodeSet.PropertyType.PRESENTATION;
+		propTypes[1] = CodedNodeSet.PropertyType.DEFINITION;
+		
+		SortOptionList sortCriteria = Constructors.createSortOptionList(new String[]{"matchToQuery"});
+		
+		ResolvedConceptReferencesIterator results = cns.resolve(sortCriteria, null,new LocalNameList(), propTypes, true);
+		
+		return getEVSConcepts(results);
+	}
+    
+    private List<EVSConcept> getEVSConcepts(ResolvedConceptReferencesIterator rcRefIter) throws Exception {
+    	List<EVSConcept> evsConcepts = new ArrayList<EVSConcept>();
+    	if (rcRefIter != null) {
+    		while (rcRefIter.hasNext()) {
+    			evsConcepts.add(getEVSConcept(rcRefIter.next()));
+    		}
+    	}
+    	return evsConcepts;
+    }
+    
+    private EVSConcept getEVSConcept(ResolvedConceptReference rcRef) {
+		EVSConcept evsConcept = new EVSConcept();
+		evsConcept.code = rcRef.getCode();
+		
+		Entity entity = rcRef.getEntity();
+		evsConcept.preferredName = rcRef.getEntityDescription().getContent();
+		evsConcept.definitions = entity.getDefinition();
+		setPropsAndSyns(evsConcept, entity);
+		
+		return evsConcept;
+	}
+	
+	private void setPropsAndSyns(EVSConcept evsConcept, Entity entity) {
+		List<Property> properties = new ArrayList<Property>();
+		List<String> synonyms = new ArrayList<String>();
+		
+		if (entity != null) {
+			org.LexGrid.commonTypes.Property[] entityProps = entity.getAllProperties();
+			for (org.LexGrid.commonTypes.Property entityProp: entityProps) {
+				
+				if (entityProp instanceof Presentation) {
+					properties.add(entityProp);
+				}
+				else {
+					String propName = entityProp.getPropertyName();
+					String propValue = entityProp.getValue().getContent();
+					
+					if (propName.equalsIgnoreCase("FULL_SYN") || propName.equalsIgnoreCase("Synonym")) {
+						synonyms.add(propValue);
+					}
+				}
+			}
+		}
+		
+		evsConcept.properties = properties;
+		evsConcept.synonyms = synonyms;
+	}
     
     private static String formatMsg(String msg_, String ... subs_)
     {
