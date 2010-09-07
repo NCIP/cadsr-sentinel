@@ -596,13 +596,27 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 	</target>
 
 	<target name="install:jboss:sentinel-webapp:re-configure" description="Update contents of artifacts if not all properties have been externalized, by extracting artifact, modify it as needed and re-archive it." unless="exclude.jboss"  depends="common:init">
-		<copy file="${sentinel-webapp.dir.dist}/${sentinel-webapp.war.file}" todir="${jboss.home}/server/${jboss.server.name}/deploy" overwrite="true" />
+		
+		<delete dir="${sentinel-webapp.dir.dist}/tmp"/>
+		<unzip src="${sentinel-webapp.dir.dist}/${sentinel-webapp.war.file}" dest="${sentinel-webapp.dir.dist}/tmp"/>
+        <copy file="${sentinel-webapp.dir.dist}/DSRAlert.properties" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/DSRAlert.properties" overwrite="true" filtering="true" />
+		<copy file="${sentinel-webapp.dir.dist}/DSRAlertTest.properties" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/DSRAlertTest.properties" overwrite="true" filtering="true" />
+		<copy file="${sentinel-webapp.dir.dist}/web.xml" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/web.xml" overwrite="true" filtering="true" />
+		
+        <war destfile="${sentinel-webapp.dir.dist}/${sentinel-webapp.war.file}" compress="false" webxml="${sentinel-webapp.dir.dist}/tmp/WEB-INF/web.xml" >
+            <fileset dir="${sentinel-webapp.dir.dist}/tmp/exploded">
+                <include name="*/**" />
+            </fileset>
+        </war>
+		
+		
+		<copy file="${sentinel-webapp.dir.dist}/tmp/${sentinel-webapp.war.file}" todir="${jboss.home}/server/${jboss.server.name}/deploy" overwrite="true" />
 		<if>
 			<equals arg1="${jar-signing.execution.time}" arg2="install"/>
 			<then>
 				<echo message="jar-signing.execution.time set to install, signing jars"/>
 				<sign-jars
-					jars.archive.file="${sentinel-webapp.dir.dist}/${sentinel-webapp.war.file}"
+					jars.archive.file="${sentinel-webapp.dir.dist}/tmp/${sentinel-webapp.war.file}"
 					jars.archive.relative.dir="WEB-INF/lib"
 					/>
 			</then>
