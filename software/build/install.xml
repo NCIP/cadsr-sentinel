@@ -610,13 +610,13 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
         </war>
 		
 		
-		<copy file="${sentinel-webapp.dir.dist}/tmp/${sentinel-webapp.war.file}" todir="${jboss.home}/server/${jboss.server.name}/deploy" overwrite="true" />
+		<copy file="${sentinel-webapp.dir.dist}/${sentinel-webapp.war.file}" todir="${jboss.home}/server/${jboss.server.name}/deploy" overwrite="true" />
 		<if>
 			<equals arg1="${jar-signing.execution.time}" arg2="install"/>
 			<then>
 				<echo message="jar-signing.execution.time set to install, signing jars"/>
 				<sign-jars
-					jars.archive.file="${sentinel-webapp.dir.dist}/tmp/${sentinel-webapp.war.file}"
+					jars.archive.file="${sentinel-webapp.dir.dist}/${sentinel-webapp.war.file}"
 					jars.archive.relative.dir="WEB-INF/lib"
 					/>
 			</then>
