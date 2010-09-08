@@ -599,9 +599,15 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 		
 		<delete dir="${sentinel-webapp.dir.dist}/tmp"/>
 		<unzip src="${sentinel-webapp.dir.dist}/${sentinel-webapp.war.file}" dest="${sentinel-webapp.dir.dist}/tmp"/>
-        <copy file="${sentinel-webapp.dir.dist}/../DSRAlert.properties" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/DSRAlert.properties" overwrite="true" filtering="true" />
-		<copy file="${sentinel-webapp.dir.dist}/../test/DSRAlertTest.properties" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/test/DSRAlertTest.properties" overwrite="true" filtering="true" />
-		<copy file="${sentinel-webapp.dir.dist}/../web.xml" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/web.xml" overwrite="true" filtering="true" />
+        <copy file="${sentinel-webapp.dir.dist}/../DSRAlert.properties" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/DSRAlert.properties" overwrite="true" filtering="true" >
+        	<filterset refid="embedded.filterset" />
+        </copy>
+		<copy file="${sentinel-webapp.dir.dist}/../test/DSRAlertTest.properties" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/test/DSRAlertTest.properties" overwrite="true" filtering="true" >
+			<filterset refid="embedded.filterset" />
+        </copy>
+		<copy file="${sentinel-webapp.dir.dist}/../web.xml" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/web.xml" overwrite="true" filtering="true" >
+			<filterset refid="embedded.filterset" />
+		</copy>		
 		
         <war destfile="${sentinel-webapp.dir.dist}/${sentinel-webapp.war.file}" compress="false" webxml="${sentinel-webapp.dir.dist}/tmp/WEB-INF/web.xml" >
             <fileset dir="${sentinel-webapp.dir.dist}/tmp">
