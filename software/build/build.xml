@@ -951,8 +951,8 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 		<!-- Call macro to deploy files on desired server -->
 		<echoproperties prefix="ssh"/>
 		<deploy-files dist.file="${sentinel-webapp.upgrade.zip.file}" />
-		<override-properties-prep override.properties="${database.password}"
-		                        override.properties.string.property.name="database.password" />
+		<override-properties-prep override.properties="${override.properties}"
+		                        override.properties.string.property.name="override.properties.string" />
 
 		<!-- SSH to machine ant run ant command line to install application -->
 		<remote-ssh remotesshcommand=". .bash_profile;cd ${ssh.dir.temp}; ant -Dproperties.file=${properties.file.name} -Dforce.reinstall=true ${upgrade.target}" />
