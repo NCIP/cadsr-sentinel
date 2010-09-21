@@ -68,7 +68,7 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 	
 	<!-- *-ds.xml and WAR -->
 	<property name="sentinel-webapp.dir.dist" location="${basedir}/${sentinel-webapp.dist.relative.dir}" />
-	<property name="sentinel-webapp.ds.file" value="sentinel-ds.xml" />
+	<property name="sentinel-webapp.ds.file" value="sentinel-oracle-ds.xml" />
 	<property name="sentinel-webapp.name" value="cadsrsentinel" />
 	<property name="sentinel-webapp.war.file" value="${sentinel-webapp.name}.war" />
 	<!-- Added to make sure that it works with both absolute and relative paths, this property is handed to sub-project scripts in absolute format. -->
