@@ -13,7 +13,7 @@
 
 <datasources>
     <local-tx-datasource>
-        <jndi-name>@application.context.name@</jndi-name>
+        <jndi-name>jdbc/sentinel</jndi-name>
         <use-java-context>false</use-java-context>
         <connection-url>@database.url@</connection-url>
         <user-name>@database.user@</user-name>
