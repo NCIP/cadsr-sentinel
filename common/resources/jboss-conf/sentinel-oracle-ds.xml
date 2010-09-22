@@ -14,7 +14,7 @@
 <datasources>
     <local-tx-datasource>
         <jndi-name>jdbc/sentinel</jndi-name>
-        <use-java-context>false</use-java-context>
+        <use-java-context>true</use-java-context>
         <connection-url>@database.url@</connection-url>
         <user-name>@database.user@</user-name>
 		<password>@database.password@</password>
