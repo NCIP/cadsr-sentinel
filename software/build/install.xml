@@ -613,11 +613,13 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 				<include name="*/**" />
 			</fileset>
 		</copy>
+		<chmod file="${tool.root.dir}/bin/autorun.sh" perm="ugo+rx" />
 		<copy todir="${tool.root.dir}/htdocs/dtd">
 			<fileset dir="${sentinel-webapp.dir.dist}/dtd">
 				<include name="*/**" />
 			</fileset>
 		</copy>
+		<chmod file="${tool.root.dir}/htdocs/dtd" perm="+r" />
 	</target>
 
 	<target name="install:jboss:sentinel-webapp:re-configure" description="Update contents of artifacts if not all properties have been externalized, by extracting artifact, modify it as needed and re-archive it." unless="exclude.jboss"  depends="common:init">
