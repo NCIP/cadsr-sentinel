@@ -612,12 +612,14 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 			<fileset dir="${sentinel-webapp.dir.dist}/bin">
 				<include name="*/**" />
 			</fileset>
-			<filterset>
-				<filter token="database.url" value="${database.url}"/>
-        		<filter token="database.user" value="${database.user}"/>
-				<filter token="database.password" value="${database.password}"/>
-        	</filterset>
 		</copy>
+		
+		<replace dir="${tool.root.dir}/bin">
+			<replacefilter token="database.url" property="database.url"/>
+    		<replacefilter token="database.user" property="database.user"/>
+			<replacefilter token="database.password" property="database.password"/>
+		</replace>
+		
 		<chmod file="${tool.root.dir}/bin/autorun.sh" perm="ugo+rx" />
 		<copy todir="${tool.root.dir}/htdocs/dtd" filtering="true" >
 			<fileset dir="${sentinel-webapp.dir.dist}/dtd">
