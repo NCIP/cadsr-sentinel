@@ -588,7 +588,6 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
  		install:jboss:validation:pre-install:ports,
  		install:common:clean,
  		upgrade:database,
-		install:binaries:local,
  		install:jboss,
  		install:common:post,
  		install:jboss:start,
