@@ -588,11 +588,36 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
  		install:jboss:validation:pre-install:ports,
  		install:common:clean,
  		upgrade:database,
+		install:binaries:local,
  		install:jboss,
  		install:common:post,
  		install:jboss:start,
  		install:common:validation:post-install
 		">
+	</target>
+	
+	<target name="install:binaries:local">
+		<delete>
+			<fileset dir="${tool.root.dir}/bin">
+			    <include name="*/**"/>
+			</fileset>
+		</delete>
+		<delete>
+			<fileset dir="${tool.root.dir}/htdocs/dtd">
+			    <include name="*/**"/>
+			</fileset>
+		</delete>
+
+		<copy todir="${tool.root.dir}/bin">
+			<fileset dir="${sentinel-webapp.dir.dist}/bin">
+				<include name="*/**" />
+			</fileset>
+		</copy>
+		<copy todir="${tool.root.dir}/htdocs/dtd">
+			<fileset dir="${sentinel-webapp.dir.dist}/dtd">
+				<include name="*/**" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="install:jboss:sentinel-webapp:re-configure" description="Update contents of artifacts if not all properties have been externalized, by extracting artifact, modify it as needed and re-archive it." unless="exclude.jboss"  depends="common:init">
