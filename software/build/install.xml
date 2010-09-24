@@ -608,13 +608,13 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 			</fileset>
 		</delete>
 
-		<copy todir="${tool.root.dir}/bin">
+		<copy todir="${tool.root.dir}/bin" filtering="true" >
 			<fileset dir="${sentinel-webapp.dir.dist}/bin">
 				<include name="*/**" />
 			</fileset>
 		</copy>
 		<chmod file="${tool.root.dir}/bin/autorun.sh" perm="ugo+rx" />
-		<copy todir="${tool.root.dir}/htdocs/dtd">
+		<copy todir="${tool.root.dir}/htdocs/dtd" filtering="true" >
 			<fileset dir="${sentinel-webapp.dir.dist}/dtd">
 				<include name="*/**" />
 			</fileset>
