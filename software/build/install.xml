@@ -588,6 +588,7 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
  		install:jboss:validation:pre-install:ports,
  		install:common:clean,
  		upgrade:database,
+		install:binaries:local,
  		install:jboss,
  		install:common:post,
  		install:jboss:start,
@@ -614,7 +615,17 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 		</copy>
 		
 		<echo message="Replacing database tokens for database [${database.url}] [${database.user}] [${database.password}]" />
-		<replace dir="${tool.root.dir}/bin">
+		<replace file="${tool.root.dir}/bin/CleanStrings.xml">
+			<replacefilter token="@database.url@" property="database.url"/>
+    		<replacefilter token="@database.user@" property="database.user"/>
+			<replacefilter token="@database.password@" property="database.password"/>
+		</replace>
+		<replace file="${tool.root.dir}/bin/CleanOCR.xml">
+			<replacefilter token="@database.url@" property="database.url"/>
+    		<replacefilter token="@database.user@" property="database.user"/>
+			<replacefilter token="@database.password@" property="database.password"/>
+		</replace>
+		<replace file="${tool.root.dir}/bin/SimpleSQL.xml">
 			<replacefilter token="@database.url@" property="database.url"/>
     		<replacefilter token="@database.user@" property="database.user"/>
 			<replacefilter token="@database.password@" property="database.password"/>
