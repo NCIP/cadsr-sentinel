@@ -248,6 +248,8 @@
             <fileset file="${lib.dir}/spring.jar" />
             <fileset file="${wlib.dir}/stax-api-1.0.1.jar" />
             <fileset file="${lib.dir}/xercesImpl.jar" />
+        	<fileset file="${lib.dir}/caGrid-CQL-cql.1.0-1.2.jar" />
+        	<fileset file="${lib.dir}/cog-jglobus.jar" />
             <fileset dir="${basedir}/src/resources/sdkapi" includes="**/*" />
         </copy>
         <fixcrlf srcdir="${artifacts.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties, **/*.dtd, **/*.html" />
