@@ -616,7 +616,7 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 		<echo message="Replacing tokens for ${database.url}, ${database.user} and ${database.password}"></echo>
 		<replace dir="${tool.root.dir}/bin">
 			<include name="*.xml" />
-			<replacefilter token="@database.url@" value="${database.url}"/>
+			<replacefilter token="@database.url@" value="${database.server}:${database.port}:${database.name}"/>
 			<replacefilter token="@database.user@" value="${database.user}"/>
 			<replacefilter token="@database.password@" value="${database.password}"/>
 		</replace>
