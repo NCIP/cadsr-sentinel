@@ -616,24 +616,7 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 				<include name="*/**" />
 			</fileset>
 		</copy>
-		
-		<echo message="Replacing database tokens for database [${database.url}] [${database.user}] [${database.password}]" />
-		<replace file="${tool.root.dir}/bin/CleanStrings.xml">
-			<replacefilter token="@database.url@" property="database.url"/>
-    		<replacefilter token="@database.user@" property="database.user"/>
-			<replacefilter token="@database.password@" property="database.password"/>
-		</replace>
-		<replace file="${tool.root.dir}/bin/CleanOCR.xml">
-			<replacefilter token="@database.url@" property="database.url"/>
-    		<replacefilter token="@database.user@" property="database.user"/>
-			<replacefilter token="@database.password@" property="database.password"/>
-		</replace>
-		<replace file="${tool.root.dir}/bin/SimpleSQL.xml">
-			<replacefilter token="@database.url@" property="database.url"/>
-    		<replacefilter token="@database.user@" property="database.user"/>
-			<replacefilter token="@database.password@" property="database.password"/>
-		</replace>
-		
+				
 		<chmod file="${tool.root.dir}/bin/autorun.sh" perm="ugo+rx" />
 		<copy todir="${tool.root.dir}/htdocs/dtd" filtering="true" >
 			<fileset dir="${sentinel-webapp.dir.dist}/dtd">
