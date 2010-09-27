@@ -597,17 +597,21 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 	</target>
 	
 	<target name="install:binaries:local">
+		<echo message="In install:binaries:local [${database.url}] [${database.user}] [${database.password}]" />
+		<echo message="Deleting files in${tool.root.dir}/bin" />
 		<delete>
 			<fileset dir="${tool.root.dir}/bin">
 			    <include name="*/**"/>
 			</fileset>
 		</delete>
+		<echo message="Deleting files in ${tool.root.dir}/htdocs/dtd" />
 		<delete>
 			<fileset dir="${tool.root.dir}/htdocs/dtd">
 			    <include name="*/**"/>
 			</fileset>
 		</delete>
 
+		<echo message="Copying to dir ${tool.root.dir}/bin" />
 		<copy todir="${tool.root.dir}/bin" filtering="true" >
 			<fileset dir="${sentinel-webapp.dir.dist}/bin">
 				<include name="*/**" />
