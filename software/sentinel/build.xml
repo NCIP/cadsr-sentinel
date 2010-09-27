@@ -222,34 +222,9 @@
             <fileset file="${basedir}/src/resources/conf/template.log4j-autorun.xml" />
         </copy>
         <copy todir="${artifacts.dir}/bin">
-            <fileset file="${lib.dir}/acegi-security-1.0.4.jar" />
-            <fileset file="${lib.dir}/activation.jar" />
-            <fileset file="${lib.dir}/asm.jar" />
-            <fileset file="${lib.dir}/castor-1.0.2.jar" />
-            <fileset file="${lib.dir}/cglib-2.1.3.jar" />
-            <fileset file="${lib.dir}/commons-collections-3.2.jar" />
-            <fileset file="${wlib.dir}/commons-lang-2.4.jar" />
-            <fileset file="${lib.dir}/commons-logging-1.1.jar" />
-            <fileset file="${lib.dir}/commons-pool-1.3.jar" />
-            <fileset file="${lib.dir}/dlbadapter.jar" />
-            <fileset file="${lib.dir}/lexbig.jar" />
-        	<fileset file="${lib.dir}/lexevsapi51-client.jar" />
-        	<fileset file="${lib.dir}/lexevsapi51-framework.jar" />
-        	<fileset file="${lib.dir}/LexEVSSecurity.jar" />
-            <fileset file="${lib.dir}/hibernate3.jar" />
-            <fileset file="${lib.dir}/jdom-1.0.jar" />
-            <fileset file="${lib.dir}/log4j-1.2.14.jar" />
-            <fileset file="${lib.dir}/lucene-core-2.0.0.jar" />
-            <fileset file="${lib.dir}/lucene-regex-10-9-06-nightly.jar" />
-            <fileset file="${lib.dir}/lucene-snowball-9-26-06-nightly.jar" />
-            <fileset file="${lib.dir}/mail.jar" />
-            <fileset file="${lib.dir}/ojdbc14.jar" />
-            <fileset file="${lib.dir}/sdk-client-framework.jar" />
-            <fileset file="${lib.dir}/spring.jar" />
-            <fileset file="${wlib.dir}/stax-api-1.0.1.jar" />
-            <fileset file="${lib.dir}/xercesImpl.jar" />
-        	<fileset file="${lib.dir}/caGrid-CQL-cql.1.0-1.2.jar" />
-        	<fileset file="${lib.dir}/cog-jglobus.jar" />
+            <fileset dir="${lib.dir}" >
+            	<include name="**/*.jar" />
+            </fileset>
             <fileset dir="${basedir}/src/resources/sdkapi" includes="**/*" />
         </copy>
         <fixcrlf srcdir="${artifacts.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties, **/*.dtd, **/*.html" />
