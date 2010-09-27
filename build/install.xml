@@ -588,7 +588,6 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
  		install:jboss:validation:pre-install:ports,
  		install:common:clean,
  		upgrade:database,
-		install:binaries:local,
  		install:jboss,
  		install:common:post,
  		install:jboss:start,
@@ -708,7 +707,7 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 	
 	</target>
 
-	<target name="upgrade" description="Upgrades JBoss and Database" depends="upgrade:common:init,common:init,upgrade-ncm">
+	<target name="upgrade" description="Upgrades JBoss and Database" depends="upgrade:common:init,common:init,upgrade-ncm,install:binaries:local">
 	</target>
 
 	<target name="upgrade-with-dbinstall" description="Upgrades JBoss and Database" depends="upgrade:common:init,common:init,upgrade-ncm:with-dbinstall">
