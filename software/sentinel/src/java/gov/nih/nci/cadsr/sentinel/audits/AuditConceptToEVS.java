@@ -590,6 +590,7 @@ public class AuditConceptToEVS extends AuditReport
                 for (Definition def : definitions)
                 {
                 	if (def.isIsPreferred()) {
+                		srcFlag = false;
                 		org.LexGrid.commonTypes.Source[] sources = def.getSource();
                 		if (sources == null || sources.length == 0) {
                 			if  (_rec._definitionSource != null && _rec._definitionSource.length() > 0)
