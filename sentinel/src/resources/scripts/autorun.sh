@@ -23,42 +23,12 @@ echo "Executing on `date`"
 
 find $BASE_DIR/../reports -mtime +20 -exec rm {} \;
 
-CP=$BASE_DIR/acegi-security-1.0.4.jar
-CP=$CP:$BASE_DIR/activation.jar
-CP=$CP:$BASE_DIR/asm.jar
-CP=$CP:$BASE_DIR/cadsrsentinel.jar
-CP=$CP:$BASE_DIR/castor-1.0.2.jar
-CP=$CP:$BASE_DIR/cglib-2.1.3.jar
-CP=$CP:$BASE_DIR/commons-collections-3.2.jar
-CP=$CP:$BASE_DIR/commons-lang-2.4.jar
-CP=$CP:$BASE_DIR/commons-logging-1.1.jar
-CP=$CP:$BASE_DIR/commons-pool-1.3.jar
-CP=$CP:$BASE_DIR/dlbadapter.jar
-CP=$CP:$BASE_DIR/evsapi41-beans.jar
-CP=$CP:$BASE_DIR/evsapi41-framework.jar
-CP=$CP:$BASE_DIR/hibernate3.jar
-CP=$CP:$BASE_DIR/jdom-1.0.jar
-CP=$CP:$BASE_DIR/lbAdmin.jar
-CP=$CP:$BASE_DIR/lbImpl.jar
-CP=$CP:$BASE_DIR/lbInterfaces.jar
-CP=$CP:$BASE_DIR/lbModel.jar
-CP=$CP:$BASE_DIR/lgConverter.jar
-CP=$CP:$BASE_DIR/lgIndexer.jar
-CP=$CP:$BASE_DIR/lgModel.emf.jar
-CP=$CP:$BASE_DIR/lgModel.jar
-CP=$CP:$BASE_DIR/lgRDFConverter.jar
-CP=$CP:$BASE_DIR/lgResourceReader.jar
-CP=$CP:$BASE_DIR/lgUtility.jar
-CP=$CP:$BASE_DIR/log4j-1.2.14.jar
-CP=$CP:$BASE_DIR/lucene-core-2.0.0.jar
-CP=$CP:$BASE_DIR/lucene-regex-10-9-06-nightly.jar
-CP=$CP:$BASE_DIR/lucene-snowball-9-26-06-nightly.jar
-CP=$CP:$BASE_DIR/mail.jar
-CP=$CP:$BASE_DIR/ojdbc14.jar
-CP=$CP:$BASE_DIR/sdk-client-framework.jar
-CP=$CP:$BASE_DIR/spring.jar
-CP=$CP:$BASE_DIR/stax-api-1.0.1.jar
-CP=$CP:$BASE_DIR/xercesImpl.jar
+for x in $BASE_DIR/*.jar
+do
+
+CP=$CP:$x
+
+done
 
 export CP
 
@@ -77,5 +47,6 @@ $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cad
 echo $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts $BASE_DIR/log4j.xml true $BASE_DIR/cadsrsentinel.xml
 
 $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts $BASE_DIR/log4j.xml true $BASE_DIR/cadsrsentinel.xml
+
 
 

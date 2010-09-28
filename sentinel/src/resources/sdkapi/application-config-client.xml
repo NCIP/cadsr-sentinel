@@ -38,7 +38,11 @@
 	</bean>     
 	
 	<bean id="AppService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean" singleton="false">
-		
+		<property name="serviceUrl" value="http://lexevsapi51.nci.nih.gov/lexevsapi51/http/applicationService"/>
+		<property name="serviceInterface" value="org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService"/>
+		<property name="httpInvokerRequestExecutor">
+			<bean class="org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor"/>
+		</property>
 	</bean>
 	
 	<bean id="EvsAuthenticationProvider" class="org.acegisecurity.providers.rcp.RemoteAuthenticationProvider">
