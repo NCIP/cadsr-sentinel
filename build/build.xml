@@ -504,15 +504,6 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 			delete.property.list=""
 			/>
 		<replaceregexp file="${dist.exploded.dir}/build.xml" byline="true" match="(&lt;property name=&quot;properties.file&quot;\s+value=&quot;).*(&quot;\s*\/&gt;)" replace="\1upgrade.properties\2" />
-		<copy tofile="${dist.exploded.dir}/DSRAlert.properties">
-            <fileset file="${basedir}/../sentinel/src/resources/conf/template.DSRAlert.properties" />
-        </copy>
-        <copy tofile="${dist.exploded.dir}/test/DSRAlertTest.properties" >
-            <fileset file="${basedir}/../sentinel/src/resources/conf/template.DSRAlertTest.properties" />
-        </copy>
-        <copy tofile="${dist.exploded.dir}/web.xml">
-            <fileset file="${basedir}/../sentinel/src/resources/conf/template.web.xml" />
-        </copy>
 		<zip destfile="${dist.dir}/${sentinel-webapp.upgrade.zip.file}" basedir="${dist.exploded.dir}" />
 
 	</target>
