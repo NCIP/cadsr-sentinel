@@ -635,26 +635,21 @@ $HeadURL: http://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-build-
 		
 		<delete dir="${sentinel-webapp.dir.dist}/tmp"/>
 		<unzip src="${sentinel-webapp.dir.dist}/${sentinel-webapp.war.file}" dest="${sentinel-webapp.dir.dist}/tmp"/>
-        <copy file="${sentinel-webapp.dir.dist}/../DSRAlert.properties" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/DSRAlert.properties" overwrite="true" filtering="true" >
-        	<filterset>
-        		<filter token="database.url" value="${database.url}"/>
-        		<filter token="database.user" value="${database.user}"/>
-				<filter token="database.password" value="${database.password}"/>
-        	</filterset>
-        </copy>
-		<copy file="${sentinel-webapp.dir.dist}/../test/DSRAlertTest.properties" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/test/DSRAlertTest.properties" overwrite="true" filtering="true" >
-			<filterset>
-				<filter token="database.url" value="${database.url}"/>
-        		<filter token="database.user" value="${database.user}"/>
-				<filter token="database.password" value="${database.password}"/>
-        	</filterset>
-        </copy>
-		<copy file="${sentinel-webapp.dir.dist}/../web.xml" tofile="${sentinel-webapp.dir.dist}/tmp/WEB-INF/web.xml" overwrite="true" filtering="true" >
-			<filterset>
-        		<filter token="database.user" value="${database.user}"/>
-				<filter token="database.password" value="${database.password}"/>
-        	</filterset>
-		</copy>		
+		
+        <replace file="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/DSRAlert.properties" >
+			<replacefilter token="@database.url@" value="${database.url}"/>
+			<replacefilter token="@database.user@" value="${database.user}"/>
+			<replacefilter token="@database.password@" value="${database.password}"/>
+        </replace>
+		<replace file="${sentinel-webapp.dir.dist}/tmp/WEB-INF/classes/gov/nih/nci/cadsr/sentinel/test/DSRAlertTest.properties" >
+			<replacefilter token="@database.url@" value="${database.url}"/>
+			<replacefilter token="@database.user@" value="${database.user}"/>
+			<replacefilter token="@database.password@" value="${database.password}"/>
+        </replace>
+		<replace file="${sentinel-webapp.dir.dist}/tmp/WEB-INF/web.xml" >
+			<replacefilter token="@database.user@" value="${database.user}"/>
+			<replacefilter token="@database.password@" value="${database.password}"/>
+        </replace>
 		
         <war destfile="${sentinel-webapp.dir.dist}/${sentinel-webapp.war.file}" compress="false" webxml="${sentinel-webapp.dir.dist}/tmp/WEB-INF/web.xml" >
             <fileset dir="${sentinel-webapp.dir.dist}/tmp">
