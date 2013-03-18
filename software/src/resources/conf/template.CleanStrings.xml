@@ -1,0 +1,38 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.CleanStrings.xml,v 1.9 2009-02-18 18:21:01 hebell Exp $
+       $Name: not supported by cvs2svn $
+ -->
+
+<properties>
+    
+        <!-- Specify the caDSR database being used by the Sentinel Tool.
+        -->
+        <entry key="DSurl">@database.url@</entry>
+        <entry key="DSusername">@database.user@</entry>
+        <entry key="DSpassword">@database.password@</entry>
+        
+        <!-- Use "select" to see the records that will be updated, use "update" to clean up the data -->
+        <entry key="action">update</entry>
+
+        <entry key="table.ac"    >sbr.admin_components_view long_name preferred_definition</entry>
+        <entry key="table.csi"   >sbr.class_scheme_items_view csi_name description comments</entry>
+        <entry key="table.cs"    >sbr.classification_schemes_view long_name preferred_definition change_note</entry>
+        <entry key="table.conte" >sbr.contexts_view description</entry>
+        <entry key="table.de"    >sbr.data_elements_view long_name preferred_definition change_note question</entry>
+        <entry key="table.dec"   >sbr.data_element_concepts_view long_name preferred_definition change_note</entry>
+        <entry key="table.defs"  >sbr.definitions_view definition</entry>
+        <entry key="table.des"   >sbr.designations_view name</entry>
+        <entry key="table.vd"    >sbr.value_domains_view long_name preferred_definition change_note</entry>
+        <entry key="table.vm"    >sbr.value_meanings_view long_name description comments preferred_definition change_note definition_source</entry>
+        <entry key="table.oc"    >sbrext.object_classes_view_ext long_name preferred_definition change_note</entry>
+        <entry key="table.prop"  >sbrext.properties_view_ext long_name preferred_definition change_note</entry>
+        <entry key="table.quest" >sbrext.quest_contents_view_ext preferred_definition preferred_name change_note</entry>
+        <entry key="table.csitem">sbr.cs_items_view long_name preferred_definition change_note</entry>
+        <entry key="table.cd"    >sbr.conceptual_domains_view long_name preferred_definition change_note</entry>
+        <entry key="table.pv"    >sbr.permissible_values_view meaning_description value</entry>
+        <entry key="table.con"   >sbrext.concepts_view_ext long_name preferred_definition change_note</entry>
+        <entry key="table.pro"   >sbrext.protocols_view_ext long_name preferred_definition change_note</entry>
+        <entry key="table.rep"   >sbrext.representations_view_ext long_name preferred_definition change_note</entry>
+
+</properties>
