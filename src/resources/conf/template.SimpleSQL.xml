@@ -1,0 +1,15 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.SimpleSQL.xml,v 1.1 2009-03-16 15:11:23 hebell Exp $
+       $Name: not supported by cvs2svn $
+ -->
+
+<properties>
+    
+        <!-- Specify the caDSR database being used by the Sentinel Tool.
+        -->
+        <entry key="DSurl">@database.url@</entry>
+        <entry key="DSusername">@database.user@</entry>
+        <entry key="DSpassword">@database.password@</entry>
+
+</properties>
