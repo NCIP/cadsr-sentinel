@@ -27,11 +27,11 @@
     </init-param>
     <init-param>
       <param-name>DSusername</param-name>
-      <param-value>@database.user@</param-value>
+      <param-value>@CADSR.DS.USER@</param-value>
     </init-param>
     <init-param>
       <param-name>DSpassword</param-name>
-      <param-value>@database.password@</param-value>
+      <param-value>@CADSR.DS.PSWD@</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
