@@ -1,0 +1,15 @@
+
+    <!-- ============================ -->
+    <!-- Setup the sentinel  Appender -->
+    <!-- ============================ -->
+
+    <appender name="CADSRSENTINEL_FILE" class="org.jboss.logging.appender.RollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler" />
+        <param name="File" value="C:/apps/jboss-5.1.0.GA/server/default/log/cadsrsentinel_log.txt" />
+        <param name="Append" value="true" />
+        <param name="MaxFileSize" value="200KB" />
+        <param name="MaxBackupIndex" value="3" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c : %L] %m%n" />
+        </layout>
+    </appender>
