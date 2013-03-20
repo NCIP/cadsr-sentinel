@@ -85,7 +85,7 @@
             <equals arg1="${TIER.UPPER}" arg2="SANDBOX"/>
         </condition>	
     <condition property="TIER.NAME" value="PRODUCTION" >
-        <equals arg1="${TIER.UPPER}" arg2="PRODUCTION"/>
+        <equals arg1="${TIER.UPPER}" arg2="PROD"/>
     </condition>	
 	
     <echo>
