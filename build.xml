@@ -56,10 +56,12 @@
 	<upper string="${tiername}" to="TIER.UPPER" />
 	<property name="TIER" value="-${tiername}" />
 	
+	<property name="CADSR.DS.URL" value="${CADSR.DS.TNS.HOST}:${CADSR.DS.TNS.PORT}:${CADSR.DS.TNS.SID}" />
+	<property name="CADSR.DS.FULLURL" value="${CADSR.DS.TNS.HOST}:${CADSR.DS.TNS.PORT}:${CADSR.DS.TNS.FULLSID}" />
+	
 	<property name="TOOL.ROOT.DIR" value="${TOOL.BASE.DIR}/cadsrsentinel" />
 	<property name="TOOL.LOG.DIR" value="${TOOL.BASE.DIR}/autorun_log" />
 		
-	<property name="JBOSS.SERVER.DIR" value="${JBOSS.HOME.DIR}/server/default" />
 	<property name="JBOSS.CONF.DIR" value="${JBOSS.SERVER.DIR}/conf" />
 	<property name="JBOSS.DEPLOY.DIR" value="${JBOSS.SERVER.DIR}/deploy" />
 	<property name="JBOSS.LOG.DIR" value="${JBOSS.SERVER.DIR}/log" />
@@ -94,7 +96,6 @@
         CADSR.DS.URL = ${CADSR.DS.URL}
         CADSR.DS.USER = ${CADSR.DS.USER}
         CADSR.DS.PSWD = ${CADSR.DS.PSWD}
-        JBOSS.HOME.DIR = ${JBOSS.HOME.DIR}
         JBOSS.SERVER.DIR = ${JBOSS.SERVER.DIR}
         JBOSS.CONF.DIR = ${JBOSS.CONF.DIR}
         JBOSS.DEPLOY.DIR = ${JBOSS.DEPLOY.DIR}
@@ -120,7 +121,6 @@
             <isset property="TIER" />
             <isset property="TIER.UPPER" />
             <isset property="TIER.NAME" />
-            <isset property="JBOSS.HOME.DIR" />
             <isset property="JBOSS.SERVER.DIR" />
             <isset property="JBOSS.CONF.DIR" />
             <isset property="JBOSS.DEPLOY.DIR" />
