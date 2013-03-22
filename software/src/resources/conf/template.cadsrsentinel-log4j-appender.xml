@@ -5,7 +5,7 @@
 
     <appender name="CADSRSENTINEL_FILE" class="org.jboss.logging.appender.RollingFileAppender">
         <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler" />
-        <param name="File" value="@JBOSS.LOG.DIR@/cadsrsentinel_log.txt" />
+        <param name="File" value="@TOOL.LOG.DIR@/cadsrsentinel_log.txt" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="200KB" />
         <param name="MaxBackupIndex" value="3" />
