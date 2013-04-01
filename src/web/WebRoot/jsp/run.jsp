@@ -12,6 +12,13 @@
 <html>
     <head>
         <title><bean:message key="run.title" /></title>
+        
+        <div style="position:absolute;">
+ 			<a href="#skip">
+  			<img src="/cadsrsentinel/images/skipnav.gif" border="0" height="1" width="1" alt="Skip Navigation" title="Skip Navigation" />
+	 		</a>
+		</div>
+                
         <html:base />
         <meta http-equiv="Content-Language" content="en-us">
         <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
@@ -27,6 +34,8 @@
     </script>
     <script language="javascript" src="/cadsrsentinel/js/run.js"></script>
 
+	<a name="skip" id="skip"></a>
+	
     <html:form method="post" action="/run" focus="startDate">
     <html:hidden property="nextScreen" />
     <dtags:run section="field"/>
@@ -61,12 +70,12 @@
 		</table><br/>
         <table style="margin-left: 0.5in; text-align: left">
             <colgroup><col/><col/></colgroup><tbody/>
-            <tr><td valign="middle"><bean:message key="run.start" /></td>
-                <td valign="middle"><html:text styleClass="std" style="text-align: center" size="10" property="startDate" /></td></tr>
-            <tr><td valign="middle"><bean:message key="run.end" /></td>
-                <td valign="middle"><html:text styleClass="std" style="text-align: center" size="10" property="endDate" /></td></tr>
-            <tr><td valign="middle" colspan="2"><p class="bstd12"><html:radio property="recipients" value="C" /><bean:message key="run.creator" /></p></td></tr>
-            <tr><td valign="middle" colspan="2"><p class="bstd"><html:radio property="recipients" value="A" /><bean:message key="run.recipients" /></p></td></tr>
+            <tr><td valign="middle"><label for="textStart"><bean:message key="run.start" /></label></td>
+                <td valign="middle"><html:text styleId="textStart" styleClass="std" style="text-align: center" size="10" property="startDate" /></td></tr>
+            <tr><td valign="middle"><label for="textEnd"><bean:message key="run.end" /></label></td>
+                <td valign="middle"><html:text styleId="textEnd" styleClass="std" style="text-align: center" size="10" property="endDate" /></td></tr>
+            <tr><td valign="middle" colspan="2"><p class="bstd12"><label for="radioRecipient"/><html:radio styleId="radioRecipient" property="recipients" value="C" /><bean:message key="run.creator" /></p></td></tr>
+            <tr><td valign="middle" colspan="2"><p class="bstd"><html:radio styleId="radioRecipient" property="recipients" value="A" /><bean:message key="run.recipients" /></p></td></tr>
         </table>
         <br/>
 

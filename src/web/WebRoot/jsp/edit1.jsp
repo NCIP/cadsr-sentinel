@@ -12,6 +12,13 @@
 <html>
     <head>
         <title><bean:message key="edit.title" /></title>
+        
+        <div style="position:absolute;">
+ 			<a href="#skip">
+  			<img src="/cadsrsentinel/images/skipnav.gif" border="0" height="1" width="1" alt="Skip Navigation" title="Skip Navigation" />
+	 		</a>
+		</div>
+        
         <html:base />
         <meta http-equiv="Content-Language" content="en-us">
         <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
@@ -28,6 +35,8 @@
     <SCRIPT LANGUAGE="JavaScript">
         <dtags:edit section="script" />
     </script>
+
+	<a name="skip" id="skip"></a>
 
     <html:form method="post" action="/edit1">
     <html:hidden property="nextScreen" />
