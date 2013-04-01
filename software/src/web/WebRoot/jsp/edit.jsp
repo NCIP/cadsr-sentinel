@@ -12,6 +12,13 @@
 <html>
     <head>
         <title><bean:message key="edit.title" /></title>
+        
+        <div style="position:absolute;">
+ 			<a href="#skip">
+  			<img src="/cadsrsentinel/images/skipnav.gif" border="0" height="1" width="1" alt="Skip Navigation" title="Skip Navigation" />
+	 		</a>
+		</div>
+		        
         <html:base />
         <meta http-equiv="Content-Language" content="en-us">
         <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
@@ -31,6 +38,8 @@
         <dtags:edit section="script" />
     </script>
 
+	<a name="skip" id="skip"></a>
+	
     <html:form method="post" action="/edit">
     <html:hidden property="nextScreen" />
     <dtags:edit section="field" />
@@ -68,18 +77,18 @@
         <table style="border: 1px solid black; border-top: 0px solid black; width: 100%; border-spacing: 0px; border-collapse: collapse">
         <colgroup></colgroup><tbody class="secttbody" /><tr><td>
         <div id="tabProp"><table class="table1" cellpadding="7"><tr><td>
-            <p class="bstd6"><span class="rstd">*</span><bean:message key="edit.name" /><br><html:text styleClass="std"
+            <p class="bstd6"><span class="rstd">*</span><label for="AlName"><bean:message key="edit.name" /></label><br><html:text styleId="AlName" styleClass="std"
                 property="propName" size="70" maxlength="30" onchange="nameChanged(this.value);" /></p>
-            <p class="bstd6" style="color: #888888"><bean:message key="edit.summary" /><br><html:textarea styleClass="sstd100"
+            <p class="bstd6" style="color: #888888"><label for="AlSummary"><bean:message key="edit.summary" /></label><br><html:textarea styleId="AlSummary" styleClass="sstd100"
                 property="propDesc" rows="8" style="color: #888888" readonly="true"></html:textarea></p>
 
             <p class="bstd6"><bean:message key="edit.runoptions" /></p>
             <p class="bstd12" style="margin-left: 0.2in"><bean:message key="edit.freq" /></p>
             <table style="margin-left: 0.2in">
                 <colgroup><col/><col/><col/></colgroup><tbody/><tr>
-                <td class="td1" align="left" width="33%"><p><html:radio property="freqUnit" value="D" onclick="setFreq(this.value);"/><span class="std" title=<bean:message key="edit.fudtitle" />><bean:message key="edit.daily" /></span></p></td>
-                <td class="td1" align="center" width="34%"><p><html:radio property="freqUnit" value="W" onclick="setFreq(this.value);" /><span class="std" title=<bean:message key="edit.fuwtitle" />><bean:message key="edit.weekly" /></span>&nbsp;
-                    <html:select property="freqWeekly" styleClass="std" disabled="true" size="1">
+                <td class="td1" align="left" width="33%"><label for="freDaily"/><p><html:radio styleId="freDaily" property="freqUnit" value="D" onclick="setFreq(this.value);"/><span class="std" title=<bean:message key="edit.fudtitle" />><bean:message key="edit.daily" /></span></p></td>
+                <td class="td1" align="center" width="34%"><p><label for="freWeekly"/><html:radio styleId="freWeekly" property="freqUnit" value="W" onclick="setFreq(this.value);" /><span class="std" title=<bean:message key="edit.fuwtitle" />><label for="freDropdownWeek"><bean:message key="edit.weekly" /></label></span>&nbsp;                    
+                    <html:select styleId="freDropdownWeek" property="freqWeekly" styleClass="std" disabled="true" size="1">
                         <html:option value="1" key="edit.wsun"></html:option>
                         <html:option value="2" key="edit.wmon"></html:option>
                         <html:option value="3" key="edit.wtue"></html:option>
@@ -89,8 +98,8 @@
                         <html:option value="7" key="edit.wsat"></html:option>
                     </html:select></p>
                 </td>
-                <td class="td1" align="right" width="33%"><p><html:radio property="freqUnit" value="M" onclick="setFreq(this.value);" /><span class="std" title=<bean:message key="edit.fumtitle" />><bean:message key="edit.monthly" /></span>&nbsp;
-                    <html:select property="freqMonthly" styleClass="std" disabled="true" size="1">
+                <td class="td1" align="right" width="33%"><p><label for="freMonthly"/><html:radio styleId="freMonthly" property="freqUnit" value="M" onclick="setFreq(this.value);" /><span class="std" title=<bean:message key="edit.fumtitle" />><label for="freDropdownMonth"><bean:message key="edit.monthly" /></label></span>&nbsp;                    
+                    <html:select styleId="freDropdownMonth" property="freqMonthly" styleClass="std" disabled="true" size="1">
                     <html:option value="1">1st</html:option>
                     <html:option value="2">2nd</html:option>
                     <html:option value="3">3rd</html:option>
@@ -126,23 +135,23 @@
                 </td>
             </tr></table><br/>
             <p class="bstd12" style="margin-left: 0.2in"><bean:message key="edit.status" /></p>
-            <p class="std0" style="margin-left: 0.2in"><html:radio property="propStatus" value="A" /><bean:message key="edit.statusa" /></p>
-            <p class="std0" style="margin-left: 0.2in"><html:radio property="propStatus" value="F" /><bean:message key="edit.statusf" /></p>
-            <p class="std0" style="margin-left: 0.2in"><html:radio property="propStatus" value="D" /><bean:message key="edit.statusd1" />
-                <html:text style="text-align: center" size="10" property="propBeginDate" /><bean:message key="edit.statusd2" />
-                <html:text style="text-align: center" size="10" property="propEndDate" /><span style="color: <%=color%>"><bean:message key="edit.statusd3" /></span></p>
-            <p class="std0" style="margin-left: 0.2in"><html:radio property="propStatus" value="I" onclick="highlightReason();" /><bean:message key="edit.statusi1" />
-                <html:text styleClass="std" size="50" maxlength="2000" property="propStatusReason" onchange="checkReason(value);" /></p>
+            <p class="std0" style="margin-left: 0.2in"><label for="statusA"/><html:radio styleId="statusA" property="propStatus" value="A" /><bean:message key="edit.statusa" /></p>
+            <p class="std0" style="margin-left: 0.2in"><label for="statusF"/><html:radio styleId="statusF" property="propStatus" value="F" /><bean:message key="edit.statusf" /></p>
+            <p class="std0" style="margin-left: 0.2in"><label for="statusD"/><html:radio styleId="statusD" property="propStatus" value="D" /><label for="statusDFrom"><bean:message key="edit.statusd1" /></label>                
+                <html:text styleId="statusDFrom" style="text-align: center" size="10" property="propBeginDate" /><label for="statusDTo"><bean:message key="edit.statusd2" /></label>                
+                <html:text styleId="statusDTo" style="text-align: center" size="10" property="propEndDate" /><span style="color: <%=color%>"><bean:message key="edit.statusd3" /></span></p>
+            <p class="std0" style="margin-left: 0.2in"><label for="statusI"/><html:radio styleId="statusI" property="propStatus" value="I" onclick="highlightReason();" /><label for="statusIReason"><bean:message key="edit.statusi1" /></label>                
+                <html:text styleId="statusIReason" styleClass="std" size="50" maxlength="2000" property="propStatusReason" onchange="checkReason(value);" /></p>
 
             <hr class="hrs"><table cellspacing="0" cellpadding="0" width="100%"><tr>
-                <td width="50%"><p class="bstd12" style="color: <%=color%>"><bean:message key="edit.creator" /><br><html:text styleClass="std"
+                <td width="50%"><p class="bstd12" style="color: <%=color%>"><label for="creatorText"><bean:message key="edit.creator" /></label><br><html:text styleId="creatorText" styleClass="std"
                     property="propCreator" disabled="true" size="30" /></p></td>
-                <td><p class="bstd12" style="color: <%=color%>"><bean:message key="edit.created" /><br><html:text styleClass="std" style="text-align: center"
+                <td><p class="bstd12" style="color: <%=color%>"><label for="createDate"><bean:message key="edit.created" /></label><br><html:text styleId="createDate" styleClass="std" style="text-align: center"
                     property="propCreateDate" disabled="true" size="25" /></p></td>
                 </tr><tr>
-                <td><p class="bstd12" style="color: <%=color%>"><bean:message key="edit.lastrun" /><br><html:text styleClass="std" style="text-align: center"
+                <td><p class="bstd12" style="color: <%=color%>"><label for="lastAutoRunDate"><bean:message key="edit.lastrun" /></label><br><html:text styleId="lastAutoRunDate" styleClass="std" style="text-align: center"
                     property="propLastRunDate" disabled="true" size="25" /></p></td>
-                <td><p class="bstd12" style="color: <%=color%>"><bean:message key="edit.modified" /><br><html:text styleClass="std" style="text-align: center"
+                <td><p class="bstd12" style="color: <%=color%>"><label for="ModifyDate"><bean:message key="edit.modified" /></label><br><html:text styleId="ModifyDate" styleClass="std" style="text-align: center"
                     property="propModifyDate" disabled="true" size="25" /></p></td>
             </tr></table>
         </td></tr></table></div>
@@ -156,18 +165,18 @@
             </colgroup>
             <tbody />
             <tr>
-                <td class="td1"><p class="bstd6"><bean:message key="edit.mwfs" /><br>
-                    <html:select styleClass="sstd100" property="actWorkflowStatus" size="6" multiple="true" onchange="fixXStatus(this);">
+                <td class="td1"><p class="bstd6"><label for="selectMonitorWorkflowStatus"><bean:message key="edit.mwfs" /></label><br>
+                    <html:select styleId="selectMonitorWorkflowStatus" styleClass="sstd100" property="actWorkflowStatus" size="6" multiple="true" onchange="fixXStatus(this);">
                         <html:option value="0">xxx</html:option></html:select></p>
-                </td><td class="td1"><p class="bstd6"><bean:message key="edit.mrs" /><br>
-                    <html:select styleClass="sstd100" property="actRegStatus" size="6" multiple="true" onchange="fixXStatus(this);">
+                </td><td class="td1"><p class="bstd6"><label for="selectMonitorRegStatus"><bean:message key="edit.mrs" /></label><br>
+                    <html:select styleId="selectMonitorRegStatus" styleClass="sstd100" property="actRegStatus" size="6" multiple="true" onchange="fixXStatus(this);">
                         <html:option value="0">xxx</html:option></html:select></p>
-                </td><td class="td1"><p class="bstd6"><bean:message key="edit.mver" /><br><span class="std">
-                    <html:radio property="actVersion" value="C" onclick="setActVerNum(this.value);" /><bean:message key="edit.mvera" /><br>
-                    <html:radio property="actVersion" value="M" onclick="setActVerNum(this.value);" /><bean:message key="edit.mverm" /><br>
-                    <html:radio property="actVersion" value="I" onclick="setActVerNum(this.value);" /><bean:message key="edit.mveri" /><br>
-                    <html:radio property="actVersion" value="S" onclick="setActVerNum(this.value);" /><bean:message key="edit.mvers" />
-                    <html:text styleClass="std" property="actVerNum" disabled="true" size="6" />
+                </td><td class="td1"><p class="bstd6"><label for="MonitorVersion"><bean:message key="edit.mver" /></label><br><span class="std">
+                    <html:radio styleId="MonitorVersion" property="actVersion" value="C" onclick="setActVerNum(this.value);" /><bean:message key="edit.mvera" /><br>
+                    <html:radio styleId="MonitorVersion" property="actVersion" value="M" onclick="setActVerNum(this.value);" /><bean:message key="edit.mverm" /><br>
+                    <html:radio styleId="MonitorVersion" property="actVersion" value="I" onclick="setActVerNum(this.value);" /><bean:message key="edit.mveri" /><br>
+                    <html:radio styleId="MonitorVersion" property="actVersion" value="S" onclick="setActVerNum(this.value);" /><label for="textSpecific"><bean:message key="edit.mvers" /></label>
+                    <html:text styleId="textSpecific" styleClass="std" property="actVerNum" disabled="true" size="6" />
                     </span></p>
                 </td>
             </tr><tr>
@@ -191,12 +200,12 @@
                     <td><p class="bstd6"><bean:message key="edit.content" /></p>
                     </td>
                 </tr><tr>
-                    <td class="td1"><p class="std"><html:checkbox property="repIncProp" value="Y" /><bean:message key="edit.incprop" />
+                    <td class="td1"><p class="std"><label for="chboxIncludeInfo"/><html:checkbox styleId="chboxIncludeInfo" property="repIncProp" value="Y" /><bean:message key="edit.incprop" />
                         <!--<br><br>
                             <html:radio property="repStyle" value="A" /><bean:message key="edit.stylea" /><br>
                             <html:radio property="repStyle" value="S" /><bean:message key="edit.styles" /> -->
                         </p>
-                        <p class="std"><bean:message key="edit.incassoc" /><html:select styleClass="std" property="infoAssocLvl" size="1">
+                        <p class="std"><label for="dropdownAssoc"><bean:message key="edit.incassoc" /></label><html:select styleId="dropdownAssoc" styleClass="std" property="infoAssocLvl" size="1">
                                 <html:option value="0">0 - Do not show Associated To</html:option>
                                 <html:option value="1">1</html:option>
                                 <html:option value="2">2</html:option>
@@ -214,8 +223,8 @@
                     <td class="td1"><hr class="hrs"><p align="left" class="bstd6"><bean:message key="edit.distrib" /></p>
                     </td>
                 </tr><tr>
-                    <td class="td1"><p class="std"><html:radio property="freqEmpty" value="N" /><bean:message key="edit.distriba" /><br>
-                        <html:radio property="freqEmpty" value="Y" /><bean:message key="edit.distribe" /></p>
+                    <td class="td1"><p class="std"><label for="sendOnlyActivity"/><html:radio styleId="sendOnlyActivity" property="freqEmpty" value="N" /><bean:message key="edit.distriba" /><br>
+                        <html:radio styleId="sendOnlyActivity" property="freqEmpty" value="Y" /><bean:message key="edit.distribe" /></p>
 <!--                    </td><td>&nbsp;
                     </td><td class="td1"><p class="std"><html:radio property="freqAck" value="N" /><bean:message key="edit.distribo" /><br>
                         <html:radio property="freqAck" value="Y" /><bean:message key="edit.distribr" /></p>
@@ -245,12 +254,13 @@
                     <td><p class="bstd6"><bean:message key="edit.recipients" /></p></td>
                 </tr><tr>
                     <td class="std">
-                        <html:select styleClass="sstd100" property="propUsers" size="6" multiple="true"><html:option value="0">xxxx</html:option></html:select>
-                    </td><td align="center"><button class="but3" type="button" onclick="addToEmail();"><bean:message key="edit.emaila" />&nbsp;<img src="/cadsrsentinel/images/arrow_16_right.gif"></button><br>
-                        <br><button class="but3" type="button" onclick="removeFromEmail();"><img src="/cadsrsentinel/images/arrow_16_left.gif">&nbsp;<bean:message key="edit.emailr" /></button>
-                    </td><td class="td1"><html:select styleClass="std" property="propRecipients" size="6" multiple="true"><html:option value="0">xxx</html:option></html:select></td>
+                    	<label for="selectPropUser" />
+                        <html:select styleId="selectPropUser" styleClass="sstd100" property="propUsers" size="6" multiple="true"><html:option value="0">xxxx</html:option></html:select>
+                    </td><td align="center"><button class="but3" type="button" onclick="addToEmail();"><bean:message key="edit.emaila" />&nbsp;<img src="/cadsrsentinel/images/arrow_16_right.gif" alt="arrowRight"></button><br>
+                        <br><button class="but3" type="button" onclick="removeFromEmail();"><img src="/cadsrsentinel/images/arrow_16_left.gif" alt="arrowLeft">&nbsp;<bean:message key="edit.emailr" /></button>
+                    </td><td class="td1"><label for="selectPropRecipient" /><html:select styleId="selectPropRecipient" styleClass="std" property="propRecipients" size="6" multiple="true"><html:option value="0">xxx</html:option></html:select></td>
                 </tr><tr>
-                    <td colspan="3"><p class="bstd12"><bean:message key="edit.emailz" /><br><html:text property="propEmail" size="50" maxlength="255" styleClass="std" />
+                    <td colspan="3"><p class="bstd12"><label for="AdditionalEmail"><bean:message key="edit.emailz" /></label><br><html:text styleId="AdditionalEmail" property="propEmail" size="50" maxlength="255" styleClass="std" />
                         <button type="button" class="but3" value="Add" onclick="addFEmail();"><bean:message key="edit.emaila" /></button></p>
                     </td>
                 </tr><tr>
@@ -267,7 +277,7 @@
                     <td class="td1"><p class="std"><dtags:edit section="subject" /></p></td>
                 </tr><tr>
                     <td class="td1"><p class="bstd">&nbsp;</p></td>
-                    <td class="td1"><html:textarea styleClass="std" property="propIntro" rows="6" cols="80"></html:textarea></td>
+                    <td class="td1"><label for="SubjectTextArea" /><html:textarea styleId="SubjectTextArea" styleClass="std" property="propIntro" rows="6" cols="80"></html:textarea></td>
                 </tr><tr>
                     <td>&nbsp;</td>
                     <td class="td1"><p><a target="_blank" href="/cadsrsentinel/html/samples.html"><bean:message key="edit.emailx" /></a></p></td>
@@ -283,51 +293,51 @@
             </colgroup>
             <tbody />
             <tr>
-                <td colspan="2" class="td1"><p class="bstd6"><bean:message key="edit.scon" /><br>
-                    <html:select styleClass="sstd100" property="infoContext" size="5" multiple="true" onchange="fixListAll(this);">
+                <td colspan="2" class="td1"><p class="bstd6"><label for="selectContext"><bean:message key="edit.scon" /></label><br>
+                    <html:select styleId="selectContext" styleClass="sstd100" property="infoContext" size="5" multiple="true" onchange="fixListAll(this);">
                         <html:option value="0">xxx</html:option></html:select></p>
                 </td>
             </tr><tr>
-                <td><p class="bstd6"><bean:message key="edit.sproto" /><br>
-                    <html:select styleClass="sstd100" property="infoProtos" size="5" multiple="true" onchange="fixListAll(this);">
+                <td><p class="bstd6"><label for="selectProtocol"><bean:message key="edit.sproto" /></label><br>
+                    <html:select styleId="selectProtocol" styleClass="sstd100" property="infoProtos" size="5" multiple="true" onchange="fixListAll(this);">
                         <html:option value="0">xxx</html:option></html:select></p>
-                </td><td><p class="bstd6"><bean:message key="edit.sform" /><br>
-                    <html:select styleClass="sstd100" property="infoForms" size="5" multiple="true" onchange="fixListAll(this);">
-                        <html:option value="0">xxx</html:option></html:select></p>
-                </td>
-            </tr><tr>
-                <td><p class="bstd6"><bean:message key="edit.scs" /><br>
-                    <html:select styleClass="sstd100" property="infoSchemes" size="5" multiple="true" onchange="fixListAll(this);">
-                        <html:option value="0">xxx</html:option></html:select></p>
-                </td><td><p class="bstd6"><bean:message key="edit.scsi" /><br>
-                    <html:select styleClass="sstd100" property="infoSchemeItems" size="5" multiple="true" onchange="fixListAll(this);">
+                </td><td><p class="bstd6"><label for="selectFormTemplate"><bean:message key="edit.sform" /></label><br>
+                    <html:select styleId="selectFormTemplate" styleClass="sstd100" property="infoForms" size="5" multiple="true" onchange="fixListAll(this);">
                         <html:option value="0">xxx</html:option></html:select></p>
                 </td>
             </tr><tr>
-                <td class="td1"><p class="bstd6"><bean:message key="edit.actypes" /><br>
-                    <html:select styleClass="sstd100" property="infoACTypes" size="5" multiple="true" onchange="fixListAll(this);">
+                <td><p class="bstd6"><label for="selectClassSchema"><bean:message key="edit.scs" /></label><br>
+                    <html:select styleId="selectClassSchema" styleClass="sstd100" property="infoSchemes" size="5" multiple="true" onchange="fixListAll(this);">
                         <html:option value="0">xxx</html:option></html:select></p>
-                </td><td class="td1"><p class="bstd6"><bean:message key="edit.dfi" /><br>
-                    <html:select styleClass="sstd100" property="infoDateFilter">
+                </td><td><p class="bstd6"><label for="selectClassSchemaItem"><bean:message key="edit.scsi" /></label><br>
+                    <html:select styleId="selectClassSchemaItem" styleClass="sstd100" property="infoSchemeItems" size="5" multiple="true" onchange="fixListAll(this);">
+                        <html:option value="0">xxx</html:option></html:select></p>
+                </td>
+            </tr><tr>
+                <td class="td1"><p class="bstd6"><label for="selectAdminCompType"><bean:message key="edit.actypes" /></label><br>
+                    <html:select styleId="selectAdminCompType" styleClass="sstd100" property="infoACTypes" size="5" multiple="true" onchange="fixListAll(this);">
+                        <html:option value="0">xxx</html:option></html:select></p>
+                </td><td class="td1"><p class="bstd6"><label for="selectReportDate"><bean:message key="edit.dfi" /></label><br>
+                    <html:select styleId="selectReportDate" styleClass="sstd100" property="infoDateFilter">
                         <html:option value="2"><bean:message key="edit.dfboth" /></html:option>
                         <html:option value="1"><bean:message key="edit.dfmod" /></html:option>
                         <html:option value="0"><bean:message key="edit.dfcre" /></html:option>
                     </html:select></p>
                 </td>
             </tr><tr>
-                <td class="td1"><p class="bstd6"><bean:message key="edit.wflows" /><br>
-                    <html:select styleClass="sstd100" property="infoWorkflow" size="5" multiple="true" onchange="fixListAll(this);">
+                <td class="td1"><p class="bstd6"><label for="selectWorkflowStatus"><bean:message key="edit.wflows" /></label><br>
+                    <html:select styleId="selectWorkflowStatus" styleClass="sstd100" property="infoWorkflow" size="5" multiple="true" onchange="fixListAll(this);">
                         <html:option value="0">xxx</html:option></html:select></p>
-                </td><td class="td1"><p class="bstd6"><bean:message key="edit.regs" /><br>
-                    <html:select styleClass="sstd100" property="infoRegStatus" size="5" multiple="true" onchange="fixListAll(this);">
+                </td><td class="td1"><p class="bstd6"><label for="selectRegStatus"><bean:message key="edit.regs" /></label><br>
+                    <html:select styleId="selectRegStatus" styleClass="sstd100" property="infoRegStatus" size="5" multiple="true" onchange="fixListAll(this);">
                         <html:option value="0">xxx</html:option></html:select></p>
                 </td>
             </tr><tr>
-                <td class="td1"><p class="bstd6"><bean:message key="edit.sc" /><br>
-                    <html:select styleClass="sstd100" property="infoCreator" size="5" multiple="true" onchange="fixListAll(this);">
+                <td class="td1"><p class="bstd6"><label for="selectCreatedBy"><bean:message key="edit.sc" /></label><br>
+                    <html:select styleId="selectCreatedBy" styleClass="sstd100" property="infoCreator" size="5" multiple="true" onchange="fixListAll(this);">
                         <html:option value="0">xxx</html:option></html:select></p>
-                </td><td class="td1"><p class="bstd6"><bean:message key="edit.sm" /><br>
-                    <html:select styleClass="sstd100" property="infoModifier" size="5" multiple="true" onchange="fixListAll(this);">
+                </td><td class="td1"><p class="bstd6"><label for="selectModifiedBy"><bean:message key="edit.sm" /></label><br>
+                    <html:select styleId="selectModifiedBy" styleClass="sstd100" property="infoModifier" size="5" multiple="true" onchange="fixListAll(this);">
                         <html:option value="0">xxx</html:option></html:select></p>
                 </td>
             </tr>

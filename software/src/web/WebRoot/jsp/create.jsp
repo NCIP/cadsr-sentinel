@@ -12,6 +12,13 @@
 <html>
     <head>
         <title><bean:message key="create.title" /></title>
+        
+        <div style="position:absolute;">
+ 			<a href="#skip">
+  			<img src="/cadsrsentinel/images/skipnav.gif" border="0" height="1" width="1" alt="Skip Navigation" title="Skip Navigation" />
+	 		</a>
+		</div>
+        
         <html:base />
         <meta http-equiv="Content-Language" content="en-us">
         <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
@@ -27,6 +34,8 @@
     </script>
     <script language="javascript" src="/cadsrsentinel/js/create.js"></script>
 
+	<a name="skip" id="skip"></a>
+	
     <html:form method="post" action="/create" focus="propName">
     <dtags:create section="field" />
     <html:hidden property="nextScreen" />
@@ -48,14 +57,14 @@
         </tr></table>
 
         <p class="std12" align="left"><bean:message key="create.line1" /></p>
-        <p class="bstd" style="text-align: left; margin-left: 0.5in"><bean:message key="create.line2" /><br><html:text property="propName" styleClass="std" size="70" maxlength="30" /></p>
-        <p class="std12" align="left"><br><bean:message key="create.line3" /></p>
-        <p class="std05"><html:radio property="initial" value="1" onclick="setBlank(0, this.value)" />&nbsp;<bean:message key="create.line4" /></p>
-        <p class="std05"><html:radio property="initial" value="6" onclick="setBlank(1, this.value)" />&nbsp;<bean:message key="create.line9" /></p>
-        <p class="std05"><br><html:radio property="initial" value="0" onclick="setBlank(2, this.value)" />&nbsp;<bean:message key="create.line10" /></p>
+        <p class="bstd" style="text-align: left; margin-left: 0.5in"><label for="AlertName"><bean:message key="create.line2" /></label><br><html:text styleId="AlertName" property="propName" styleClass="std" size="70" maxlength="30" /></p>
+        <p class="std12" align="left"><br><label for="AlertSetting"><bean:message key="create.line3" /></label></p>
+        <p class="std05"><html:radio styleId="AlertSetting" property="initial" value="1" onclick="setBlank(0, this.value)" />&nbsp;<bean:message key="create.line4" /></p>
+        <p class="std05"><html:radio styleId="AlertSetting" property="initial" value="6" onclick="setBlank(1, this.value)" />&nbsp;<bean:message key="create.line9" /></p>
+        <p class="std05"><br><html:radio styleId="AlertSetting" property="initial" value="0" onclick="setBlank(2, this.value)" />&nbsp;<bean:message key="create.line10" /></p>
 
         <p class="bstd" style="text-align: left; margin-left: 0.5in; color: #888888"
-            >Summary:<br><html:textarea styleClass="std" property="propDesc" cols="90" rows="5" style="color: #888888" readonly="true"></html:textarea></p>
+            ><label for="textareaSummary">Summary:</label><br><html:textarea styleId="textareaSummary" styleClass="std" property="propDesc" cols="90" rows="5" style="color: #888888" readonly="true"></html:textarea></p>
 
         <table class="table3">
         <colgroup><col style="text-align: left" /><col style="text-align: right" /></colgroup><tbody class="secttbody" /><tr>
