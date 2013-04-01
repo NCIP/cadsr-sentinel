@@ -228,18 +228,18 @@ public class ListTag extends AlertRootTag
         temp = temp
             + "<table id=\"theList\" class=\"table4\" summary=\"" + msgs.getMessage("list.table") + "\">\n"
             + "<colgroup></colgroup><tbody style=\"padding: 0.1in 0.1in 0.1in 0.1in\" /><tr>\n"
-            + "<th id=\"t0\"><input type=\"checkbox\" value=\"Y\" onclick=\"setAllChecks();\"></th>\n"
+            + "<th id=\"t0\"><label for=\"chbox\"/><input id=\"chbox\" type=\"checkbox\" value=\"Y\" onclick=\"setAllChecks();\"></th>\n"
             + "<th id=\"t1\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
-            + "onclick=\"sortCol(cName, 1);\" title=\"" + msgs.getMessage("list.nametitle") + "\">" + msgs.getMessage("list.name") + "</span><img id=\"cName\" src=\"../images/blank.gif\"/></th>\n"
+            + "onclick=\"sortCol(cName, 1);\" title=\"" + msgs.getMessage("list.nametitle") + "\">" + msgs.getMessage("list.name") + "</span><img id=\"cName\" src=\"../images/blank.gif\" alt=\"blank\"/></th>\n"
             + "<th id=\"t2\">" + msgs.getMessage("list.summary") + "</th>\n"
             + "<th id=\"t3\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
-            + "onclick=\"sortCol(cFreq, 3);\" title=\"" + msgs.getMessage("list.freqtitle") + "\">" + msgs.getMessage("list.freq") + "</span><img id=\"cFreq\" src=\"../images/blank.gif\" /></th>\n"
+            + "onclick=\"sortCol(cFreq, 3);\" title=\"" + msgs.getMessage("list.freqtitle") + "\">" + msgs.getMessage("list.freq") + "</span><img id=\"cFreq\" src=\"../images/blank.gif\" alt=\"blank\"/></th>\n"
             + "<th id=\"t4\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
-            + "onclick=\"sortCol(cLast, 4);\" title=\"" + msgs.getMessage("list.runtitle") + "\">" + msgs.getMessage("list.run") + "</span><img id=\"cLast\" src=\"../images/blank.gif\" /></th>\n"
+            + "onclick=\"sortCol(cLast, 4);\" title=\"" + msgs.getMessage("list.runtitle") + "\">" + msgs.getMessage("list.run") + "</span><img id=\"cLast\" src=\"../images/blank.gif\" alt=\"blank\"/></th>\n"
             + "<th id=\"t5\" cstSortKey=\"true\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
-            + "onclick=\"sortCol(cStatus, 5);\" title=\"" + msgs.getMessage("list.statustitle") + "\">" + msgs.getMessage("list.status") + "</span><img id=\"cStatus\" src=\"../images/blank.gif\" /></th>\n"
+            + "onclick=\"sortCol(cStatus, 5);\" title=\"" + msgs.getMessage("list.statustitle") + "\">" + msgs.getMessage("list.status") + "</span><img id=\"cStatus\" src=\"../images/blank.gif\" alt=\"blank\"/></th>\n"
             + "<th id=\"t6\"><span class=\"link1\" onmouseover=\"setCursor(this, 'default');\" onmouseout=\"setCursor(this, 'auto');\"\n"
-            + "onclick=\"sortCol(cCreator, 6);\" title=\"" + msgs.getMessage("list.creatortitle") + "\">" + msgs.getMessage("list.creator") + "</span><img id=\"cCreator\" src=\"../images/blank.gif\" /></th>\n"
+            + "onclick=\"sortCol(cCreator, 6);\" title=\"" + msgs.getMessage("list.creatortitle") + "\">" + msgs.getMessage("list.creator") + "</span><img id=\"cCreator\" src=\"../images/blank.gif\" alt=\"blank\"/></th>\n"
             + "</tr>";
 
         if (list != null)
@@ -251,7 +251,7 @@ public class ListTag extends AlertRootTag
                     aDate = "(not yet run)";
                 temp = temp
                     + "<tr>\n"
-                    + "<td headers=\"t0\" class=td1a><input type=checkbox value=\"" + list[ndx].getAlertRecNum() + "\" name=\"cb"
+                    + "<td headers=\"t0\" class=td1a><label for=\"chbox"+ndx+"\"/><input id=\"chbox"+ndx+"\" type=checkbox value=\"" + list[ndx].getAlertRecNum() + "\" name=\"cb"
                     + ndx + "\" onclick=\"fixButs(this);\"></td>\n"
                     + "<td headers=\"t1\" class=td1b>" + list[ndx].getName()
                     + "</td>\n" + "<td headers=\"t2\" class=td1b>"
@@ -263,10 +263,10 @@ public class ListTag extends AlertRootTag
 
                 if (list[ndx].isInactive())
                     temp = temp
-                        + "<td headers=\"t5\" class=\"td1a\"><img src=\"../images/delete.gif\" cstSortKey=\"Z\" /></td>\n";
+                        + "<td headers=\"t5\" class=\"td1a\"><img src=\"../images/delete.gif\" alt=\"delete\" cstSortKey=\"Z\" /></td>\n";
                 else
                     temp = temp
-                        + "<td headers=\"t5\" class=\"td1a\"><img src=\"../images/check.gif\" cstSortKey=\"A\" /></td>\n";
+                        + "<td headers=\"t5\" class=\"td1a\"><img src=\"../images/check.gif\" alt=\"check\" cstSortKey=\"A\" /></td>\n";
                 temp = temp + "<td headers=\"t6\" class=td1a>"
                     + list[ndx].getCreator() + "</td>\n</tr>\n";
             }

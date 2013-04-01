@@ -453,7 +453,7 @@ public class EditTag extends AlertRootTag
         else if (_namesExempt.length() > 256)
             temp[tspot++] =
                 "var elist = document.getElementById(\"exemptlist\");\nelist.innerHTML = \"The following users only receive Alert "
-                + "Broadcasts when added as specific Recipients.<br>\\\n<textarea class=\\\"sstd100\\\" rows=\\\"3\\\" readonly>"
+                + "Broadcasts when added as specific Recipients.<br>\\\n<label for=\\\"broadcastRecipient\\\" /><textarea id=\\\"broadcastRecipient\\\" class=\\\"sstd100\\\" rows=\\\"3\\\" readonly>"
                 + _namesExempt
                 + "</textarea>\";\n";
         else
