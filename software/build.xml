@@ -260,7 +260,10 @@
         </copy>
 		<copy todir="${artifacts.dir}/jboss">
 			<fileset file="${lib.dir}/ojdbc14.jar" />
-		</copy>    	
+		</copy>
+        <copy tofile="${classes.dir}/project.properties" filtering="true">
+            <fileset file="project.properties" />
+        </copy>    	
         <fixcrlf srcdir="${artifacts.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties, **/*.dtd, **/*.html" />
     </target>
 
