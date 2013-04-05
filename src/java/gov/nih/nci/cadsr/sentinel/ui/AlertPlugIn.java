@@ -11,6 +11,8 @@ import java.util.HashMap;
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
 import gov.nih.nci.cadsr.sentinel.tool.Constants;
+import gov.nih.nci.cadsr.sentinel.util.SentinelToolProperties;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
@@ -124,13 +126,14 @@ public class AlertPlugIn implements PlugIn
                     _logger.info("Using JBoss datasource configuration. " + _dataSource);
                 }
                 
-                DBAlert db = DBAlertUtil.factory();
+/*                DBAlert db = DBAlertUtil.factory();
                 
                 HashMap<String, String> props = db.getHelpProps(ds);
                 _helpUrlRoot = props.get(_helpRoot);
                 if (_helpUrlRoot == null || _helpUrlRoot.length() == 0)
                     _helpUrlRoot = "/cadsrsentinel/html/";
                 _helpUrl = _helpUrlRoot + props.get(_helpHome);
+*/                
             }
         }
         catch (Exception ex) 
@@ -138,6 +141,8 @@ public class AlertPlugIn implements PlugIn
             String stErr = "Error retrieving datasource [" + _dataSource + "] from JBoss [" + ex.getMessage() + "].";
             _logger.error(stErr, ex);
         }
+
+    	_helpUrl = SentinelToolProperties.getFactory().getProperty("help.url");
     }
     
     /**
