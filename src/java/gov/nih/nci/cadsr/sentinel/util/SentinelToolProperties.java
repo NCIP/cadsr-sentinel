@@ -8,7 +8,7 @@ import java.util.Properties;
 /**
  * class to read a properties file
  * 
- * @author myu
+ * @author yuma
  */
 public class SentinelToolProperties implements Serializable {
 
