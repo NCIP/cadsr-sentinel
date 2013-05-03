@@ -7965,7 +7965,7 @@ public class DBAlertOracle implements DBAlert
         String select = "select value from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' and property = 'URL' and value is not null";
         select = testDB2(select);
-        if (select == null)
+/*        if (select == null)
             results += "Missing the Sentinel Tool URL setting.\n\n";
         else if (url_ != null)
         {
@@ -7981,7 +7981,7 @@ public class DBAlertOracle implements DBAlert
             else
                 results += "Sentinel Tool URL \"" + url_ + "\"does not match configuration value \"" + select + "\".\n\n";
         }
-
+*/
         select = "select tool_idseq from sbrext.tool_options_view_ext "
             + "where tool_name = 'SENTINEL' AND property LIKE 'ADMIN.%' and value like '%0%'";
         rows = testDB(select);
