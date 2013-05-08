@@ -2,7 +2,7 @@
     $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.160 2009-07-24 15:48:49 davet Exp $
     $Name: not supported by cvs2svn $
 -->
-<project name="caDSR Sentinel Alert Tool" default="build-all" basedir=".">
+<project name="caDSR Sentinel Alert Tool" default="build-product" basedir=".">
     <description>
         Build and deploy the caDSR Sentinel Alert Tool
     </description>
@@ -191,6 +191,10 @@
         </copy>
     </target>
 
+    <condition property="unix.os">
+        <os family="unix" />
+    </condition>
+	
     <target name="-assemble" depends="-compile,-prop-check" description="Assembles the deployment parts into the artifacts folders.">
         <echo>Assembling artifacts ...</echo>
         <delete>
@@ -265,6 +269,12 @@
             <fileset file="project.properties" />
         </copy>    	
         <fixcrlf srcdir="${artifacts.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties, **/*.dtd, **/*.html" />
+    	<if>
+    		<equals arg1="${unix.os}" arg2="true"/>
+    		<then>
+    			<chmod file="${artifacts.dir}/bin/autorun.sh" perm="ugo+rx" />
+    		</then>
+    	</if>    	
     </target>
 
     <target name="-cjsp" depends="-assemble,-prop-check" description="Compiles the project JSP files to verify syntax.">
@@ -476,10 +486,6 @@
         <!--<delete dir="${doc.dir}" /> -->
     </target>
 
-    <condition property="unix.os">
-        <os family="unix" />
-    </condition>
-
     <target name="build-all" depends="build-product" description="Deploy Cron Job file to running directory.">
         <echo>Automated deploy CronJob files deployment to file system...</echo>
         <copy todir="${toolDtd.dir}">
@@ -497,8 +503,15 @@
         
     </target>
 	
-    <target name="deploy-local" depends="build-all" description="Deploys the executable product binaries.">
-        <echo>Deploying war files to web server ...</echo>
+    <target name="deploy-local" depends="build-product" description="Deploys the executable product binaries.">
+        <echo>Automated deploy CronJob files deployment to file system...</echo>
+        <copy todir="${toolDtd.dir}">
+            <fileset dir="${artifacts.dir}/dtd" includes="**/*.*"/>
+        </copy>
+        <copy todir="${toolBin.dir}">
+            <fileset dir="${artifacts.dir}/bin" includes="**/*.*" />
+        </copy>
+    	<echo>Deploying war files to web server ...</echo>
         <copy tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz">
             <fileset file="${artifacts.dir}/cadsrsentinel.war" />
         </copy>
