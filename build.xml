@@ -64,9 +64,9 @@
 	<property name="TOOL.ROOT.DIR" value="${TOOL.BASE.DIR}/cadsrsentinel" />
 	<property name="TOOL.LOG.DIR" value="${TOOL.BASE.DIR}/autorun_log" />
 		
-<!--	<property name="JBOSS.CONF.DIR" value="${JBOSS.SERVER.DIR}/conf" />
+	<property name="JBOSS.CONF.DIR" value="${JBOSS.SERVER.DIR}/conf" />
 	<property name="JBOSS.DEPLOY.DIR" value="${JBOSS.SERVER.DIR}/deploy" />
-	<property name="JBOSS.LOG.DIR" value="${JBOSS.SERVER.DIR}/log" />  -->
+	<property name="JBOSS.LOG.DIR" value="${JBOSS.SERVER.DIR}/log" />  
 
 	<property name="TEST.VALID.USER" value="valid" />
 	<property name="TEST.VALID.PSWD" value="valid" />
@@ -124,7 +124,7 @@
             <isset property="TIER.UPPER" />
             <isset property="TIER.NAME" />
             <isset property="TOOL.LOG.DIR" />
-            <isset property="TOOL.ROOT.DIR" />
+            <isset property="TOOL.ROOT.DIR" />  
             <isset property="TEST" />
             <isset property="TEST.VALID.USER" />
             <isset property="TEST.VALID.PSWD" />
@@ -162,8 +162,6 @@
         <delete dir="${classes.dir}" />
         <delete dir="${artifacts.dir}" />
         <delete file="${web.dir}/web.xml" />
-    	<delete dir="${TOOL.ROOT.DIR}" />
-    	<delete dir="${TOOL.LOG.DIR}" />
         <mkdir dir="${classes.dir}" />
        	<mkdir dir="${classes.dir}/jsp" />
         <mkdir dir="${artifacts.dir}" />
@@ -173,10 +171,6 @@
         <mkdir dir="${artifacts.dir}/jboss" />
         <mkdir dir="${artifacts.dir}/sql" />
         <mkdir dir="${tr.dir}" />
-    	<mkdir dir="${TOOL.ROOT.DIR}" />
-    	<mkdir dir="${TOOL.ROOT.DIR}/bin" />
-    	<mkdir dir="${TOOL.ROOT.DIR}/reports" />
-    	<mkdir dir="${TOOL.LOG.DIR}" />
     </target>
 
     <target name="-compile" depends="clean,-prop-check" description="Compiles the project source.">
@@ -505,6 +499,12 @@
 	
     <target name="deploy-local" depends="build-product" description="Deploys the executable product binaries.">
         <echo>Automated deploy CronJob files deployment to file system...</echo>
+    	<delete dir="${TOOL.ROOT.DIR}" />
+    	<delete dir="${TOOL.LOG.DIR}" />
+    	<mkdir dir="${TOOL.ROOT.DIR}" />
+    	<mkdir dir="${TOOL.ROOT.DIR}/bin" />
+    	<mkdir dir="${TOOL.ROOT.DIR}/reports" />
+    	<mkdir dir="${TOOL.LOG.DIR}" />    	
         <copy todir="${toolDtd.dir}">
             <fileset dir="${artifacts.dir}/dtd" includes="**/*.*"/>
         </copy>
