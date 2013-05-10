@@ -23,7 +23,7 @@
    <!-- A time/date based rolling appender -->
    <appender name="FILE" class="org.jboss.logging.appender.DailyRollingFileAppender">
       <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
-      <param name="File" value="${jboss.server.log.dir}/server.log"/>
+      <param name="File" value="@JBOSS.LOG.DIR@/server.log"/>
       <param name="Append" value="true"/>
       <!-- In AS 5.0.x the server log threshold was set by a system
            property. In 5.1 and later we are instead using the system
@@ -179,7 +179,7 @@
 
     <appender name="CADSRSENTINEL_FILE" class="org.jboss.logging.appender.RollingFileAppender">
         <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler" />
-        <param name="File" value="@TOOL.LOG.DIR@/cadsrsentinel_log.txt" />
+        <param name="File" value="@JBOSS.LOG.DIR@/cadsrsentinel_log.txt" />
         <param name="Append" value="true" />
         <param name="MaxFileSize" value="200KB" />
         <param name="MaxBackupIndex" value="3" />
