@@ -5,7 +5,7 @@ echo "\$Header: /share/content/gforge/sentinel/sentinel/scripts/autorun.sh,v 1.1
 echo "\$Name: not supported by cvs2svn $"
 
 DATE=`date +%Y%m%d`
-JAVA_HOME=/usr/jdk1.5.0_10
+JAVA_HOME=/usr/jdk1.6.0_33
 BASE_DIR=/local/content/cadsrsentinel/bin
 
 export JAVA_HOME BASE_DIR
