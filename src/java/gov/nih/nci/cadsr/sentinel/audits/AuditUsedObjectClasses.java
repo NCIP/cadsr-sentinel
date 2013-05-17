@@ -6,6 +6,7 @@
 package gov.nih.nci.cadsr.sentinel.audits;
 
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
+import gov.nih.nci.cadsr.common.Constants;
 
 /**
  * @author lhebel
@@ -35,7 +36,7 @@ public class AuditUsedObjectClasses extends AuditReport
     @Override
     public String getTitle()
     {
-        return "Object Classes not owned by caBIG";
+        return "Object Classes not owned by " + Constants.DEFAULT_CONTEXT;
     }
 
     /* (non-Javadoc)
