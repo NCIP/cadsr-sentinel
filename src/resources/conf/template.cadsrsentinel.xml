@@ -15,7 +15,7 @@
         <entry key="audit.0.title">Table Row Counts</entry>
         <entry key="audit.0.class">gov.nih.nci.cadsr.sentinel.audits.AuditSummary</entry>
 
-        <entry key="audit.1.title">Object Classes not owned by caBIG</entry>
+        <entry key="audit.1.title">Object Classes not owned by NCIP</entry>
         <entry key="audit.1.class">gov.nih.nci.cadsr.sentinel.audits.AuditUsedObjectClasses</entry>
 
         <entry key="audit.2.title">Unused Object Classes</entry>
