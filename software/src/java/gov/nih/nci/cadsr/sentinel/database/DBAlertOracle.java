@@ -8491,7 +8491,7 @@ public class DBAlertOracle implements DBAlert
     }
 
     /**
-     * Get the used (referenced) RELEASED object classes not owned by caBIG
+     * Get the used (referenced) RELEASED object classes not owned by default context
      *
      * @return the list of object classes
      */
