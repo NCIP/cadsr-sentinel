@@ -62,6 +62,9 @@ public class AuditConceptToEVS extends AuditReport
         {
             rows[i] = msgs.get(i);
         }
+        
+        _logger.debug("Rows count in getReportRows(): " + rows.length);
+        
         return rows;
     }
 
@@ -329,6 +332,8 @@ public class AuditConceptToEVS extends AuditReport
         @Override
         public CodedNodeSet search(LexBIGService service_)
         {
+        	_logger.debug("service in MetaTh->EVSData->search(): " + service_);
+        	
         	CodedNodeSet cns = null;
         	try {
 				cns = service_.getNodeSet("NCI Metathesaurus", null, null);
@@ -343,6 +348,8 @@ public class AuditConceptToEVS extends AuditReport
 				e.printStackTrace();
 			}
 			
+        	_logger.debug("cns in MetaTh->EVSData->search(): " + cns);
+        	
 			return cns;
         }
 
@@ -502,6 +509,8 @@ public class AuditConceptToEVS extends AuditReport
         @Override
         public CodedNodeSet search(LexBIGService service_)
         {
+        	_logger.debug("service in NonMetaTh->EVSData->search(): " + service_);
+        	
         	CodedNodeSet cns = null;
             try {
 				cns = service_.getNodeSet(_vocab._vocab, null, null);
@@ -515,6 +524,8 @@ public class AuditConceptToEVS extends AuditReport
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+            _logger.debug("cns in NonMetaTh->EVSData->search(): " + cns);
+            
 			return cns;
         }
 
@@ -679,7 +690,10 @@ public class AuditConceptToEVS extends AuditReport
                 msgs.add(list[i].toString());
             return msgs;
         }
-
+        
+        _logger.debug("service in EVSConcept->validate(): " + service);
+        _logger.debug("no. of concepts in EVSConcept->validate(): " + concepts.size());
+        
         // Check each concept with EVS.
         String msg = null;
         String name = null;
@@ -744,6 +758,7 @@ public class AuditConceptToEVS extends AuditReport
                 ed._rec = rec;
 
                 CodedNodeSet cns = ed.search(service);
+                _logger.debug("cns in EVSConcept->validate(): " + cns);
                 
                 try
                 {
@@ -844,7 +859,9 @@ public class AuditConceptToEVS extends AuditReport
     }
     
     public List<EVSConcept> resolveNodeSet(CodedNodeSet cns, boolean includeRetiredConcepts) throws Exception {
-		
+    	_logger.debug("cns in resolveNodeSet(): " + cns);
+    	_logger.debug("includeRetiredConcepts in resolveNodeSet(): " + includeRetiredConcepts);
+    			
 		if (!includeRetiredConcepts) {
 			cns.restrictToStatus(CodedNodeSet.ActiveOption.ACTIVE_ONLY, null);
 		}
