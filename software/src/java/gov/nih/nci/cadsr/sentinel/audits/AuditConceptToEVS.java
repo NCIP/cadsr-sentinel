@@ -21,7 +21,7 @@ import org.LexGrid.LexBIG.Exceptions.LBException;
 import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
 import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+//import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
@@ -280,7 +280,7 @@ public class AuditConceptToEVS extends AuditReport
          * 
          * @param query_ the EVSQuery defined by the caCORE API
          */
-        abstract public CodedNodeSet search(LexBIGService service_);
+        abstract public CodedNodeSet search(LexEVSService service_);
 
         /**
          * Validate the Concept Code, Concept Name and Concept Definition.
@@ -331,7 +331,7 @@ public class AuditConceptToEVS extends AuditReport
         }
 
         @Override
-        public CodedNodeSet search(LexBIGService service_)
+        public CodedNodeSet search(LexEVSService service_)
         {
         	_logger.debug("service in MetaTh->EVSData->search(): " + service_);
         	
@@ -510,7 +510,7 @@ public class AuditConceptToEVS extends AuditReport
         }
 
         @Override
-        public CodedNodeSet search(LexBIGService service_)
+        public CodedNodeSet search(LexEVSService service_)
         {
         	_logger.debug("service in NonMetaTh->EVSData->search(): " + service_);
         	
@@ -685,7 +685,7 @@ public class AuditConceptToEVS extends AuditReport
         String evsURL = _db.selectEvsUrl();
         _logger.debug("evsURL in EVSConcept->validate(): " + evsURL);
         
-        LexBIGService service;
+        LexEVSService service;
         try
         {
         	//service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
