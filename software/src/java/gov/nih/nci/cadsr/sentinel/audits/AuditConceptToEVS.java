@@ -338,6 +338,7 @@ public class AuditConceptToEVS extends AuditReport
         	CodedNodeSet cns = null;
         	try {
 				cns = service_.getNodeSet("NCI Metathesaurus", null, null);
+				_logger.debug("1. cns in MetaTh->EVSData->search(): " + cns);
 				cns = cns.restrictToMatchingProperties(
 								Constructors.createLocalNameList("conceptCode"), 
 								null, 
@@ -345,11 +346,12 @@ public class AuditConceptToEVS extends AuditReport
 								MatchAlgorithms.exactMatch.name(), 
 								null
 							);
+				_logger.debug("2. cns in MetaTh->EVSData->search(): " + cns);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
-        	_logger.debug("cns in MetaTh->EVSData->search(): " + cns);
+        	_logger.debug("3. cns in MetaTh->EVSData->search(): " + cns);
         	
 			return cns;
         }
@@ -515,6 +517,7 @@ public class AuditConceptToEVS extends AuditReport
         	CodedNodeSet cns = null;
             try {
 				cns = service_.getNodeSet(_vocab._vocab, null, null);
+				_logger.debug("1. cns in MetaTh->NonEVSData->search(): " + cns);
 				cns = cns.restrictToMatchingProperties(
 								Constructors.createLocalNameList("conceptCode"), 
 								null, 
@@ -522,9 +525,11 @@ public class AuditConceptToEVS extends AuditReport
 								MatchAlgorithms.exactMatch.name(), 
 								null
 							);
+				_logger.debug("2. cns in NonMetaTh->EVSData->search(): " + cns);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+            
             _logger.debug("cns in NonMetaTh->EVSData->search(): " + cns);
             
 			return cns;
