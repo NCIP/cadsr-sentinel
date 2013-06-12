@@ -21,8 +21,8 @@ import org.LexGrid.LexBIG.Exceptions.LBException;
 import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
 import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
-//import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
+import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+//import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
@@ -64,7 +64,7 @@ public class AuditConceptToEVS extends AuditReport
             rows[i] = msgs.get(i);
         }
         
-        _logger.debug("Rows count in getReportRows(): " + rows.length);
+        _logger.debug(rows[rows.length-1] + ": Rows count in getReportRows(): " + rows.length);
         
         return rows;
     }
@@ -280,7 +280,7 @@ public class AuditConceptToEVS extends AuditReport
          * 
          * @param query_ the EVSQuery defined by the caCORE API
          */
-        abstract public CodedNodeSet search(LexEVSService service_);
+        abstract public CodedNodeSet search(LexBIGService service_);
 
         /**
          * Validate the Concept Code, Concept Name and Concept Definition.
@@ -331,9 +331,9 @@ public class AuditConceptToEVS extends AuditReport
         }
 
         @Override
-        public CodedNodeSet search(LexEVSService service_)
+        public CodedNodeSet search(LexBIGService service_)
         {
-        	_logger.debug("service in MetaTh->EVSData->search(): " + service_);
+        	_logger.debug("Service in MetaTh->EVSData->search(): " + service_);
         	
         	CodedNodeSet cns = null;
         	try {
@@ -510,14 +510,14 @@ public class AuditConceptToEVS extends AuditReport
         }
 
         @Override
-        public CodedNodeSet search(LexEVSService service_)
+        public CodedNodeSet search(LexBIGService service_)
         {
         	_logger.debug("service in NonMetaTh->EVSData->search(): " + service_);
         	
         	CodedNodeSet cns = null;
             try {
 				cns = service_.getNodeSet(_vocab._vocab, null, null);
-				_logger.debug("1. cns in MetaTh->NonEVSData->search(): " + cns);
+				_logger.debug("1. cns in NonMetaTh->NonEVSData->search(): " + cns);
 				cns = cns.restrictToMatchingProperties(
 								Constructors.createLocalNameList("conceptCode"), 
 								null, 
@@ -530,7 +530,7 @@ public class AuditConceptToEVS extends AuditReport
 				e.printStackTrace();
 			}
             
-            _logger.debug("cns in NonMetaTh->EVSData->search(): " + cns);
+            _logger.debug("3. cns in NonMetaTh->EVSData->search(): " + cns);
             
 			return cns;
         }
@@ -684,13 +684,14 @@ public class AuditConceptToEVS extends AuditReport
         // Get the EVS URL and establish the application service.
         String evsURL = _db.selectEvsUrl();
         _logger.debug("evsURL in EVSConcept->validate(): " + evsURL);
+        _logger.debug("no. of concepts in EVSConcept->validate(): " + concepts.size());
         
-        LexEVSService service;
+        LexBIGService service;
         try
         {
-        	//service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
-        	service = (LexEVSService) ApplicationServiceProvider
-                    .getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
+        	service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
+        	//service = (LexEVSService) ApplicationServiceProvider
+            //        .getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
         }
         catch (Exception ex)
         {
@@ -701,8 +702,10 @@ public class AuditConceptToEVS extends AuditReport
             return msgs;
         }
         
-        _logger.debug("1. service in EVSConcept->validate(): " + service);
-        _logger.debug("no. of concepts in EVSConcept->validate(): " + concepts.size());
+        if(service != null) 
+        	_logger.debug("Service in EVSConcept->validate() after service creation: " + service);
+        else 
+        	_logger.debug("Service in EVSConcept->validate() is null");
         
         // Check each concept with EVS.
         String msg = null;
@@ -767,9 +770,9 @@ public class AuditConceptToEVS extends AuditReport
                 ed.reset();
                 ed._rec = rec;
                 
-                _logger.debug("2. service in EVSConcept->validate(): " + service);
+                _logger.debug("Service in EVSConcept->validate() before search(): " + service);
                 CodedNodeSet cns = ed.search(service);
-                _logger.debug("cns in EVSConcept->validate(): " + cns);
+                _logger.debug("cns in EVSConcept->validate() after search(): " + cns);
                 
                 try
                 {
