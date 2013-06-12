@@ -887,10 +887,15 @@ public class AuditConceptToEVS extends AuditReport
 		
 		ResolvedConceptReferencesIterator results = cns.resolve(sortCriteria, null,new LocalNameList(), propTypes, true);
 		
+		_logger.debug("results in resolveNodeSet(): " + results.numberRemaining());
+		
 		return getEVSConcepts(results);
 	}
     
     private List<EVSConcept> getEVSConcepts(ResolvedConceptReferencesIterator rcRefIter) throws Exception {
+    	
+    	_logger.debug("results in getEVSConcepts(): " + rcRefIter.numberRemaining());
+    	
     	List<EVSConcept> evsConcepts = new ArrayList<EVSConcept>();
     	if (rcRefIter != null) {
     		while (rcRefIter.hasNext()) {
@@ -903,6 +908,7 @@ public class AuditConceptToEVS extends AuditReport
     private EVSConcept getEVSConcept(ResolvedConceptReference rcRef) {
 		EVSConcept evsConcept = new EVSConcept();
 		evsConcept.code = rcRef.getCode();
+		_logger.debug("evsConcept in getEVSConcept(): " + evsConcept.code);
 		
 		Entity entity = rcRef.getEntity();
 		evsConcept.preferredName = rcRef.getEntityDescription().getContent();
