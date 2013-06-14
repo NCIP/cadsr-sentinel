@@ -1,4 +1,8 @@
-To build and deploy:
+To build the cron job:
+
+ant
+
+To build and deploy JBoss app:
 
 ant deploy-local
 
