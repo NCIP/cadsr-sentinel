@@ -1,0 +1,72 @@
+2013-06-17 12:23:41,766 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
+
+Loading properties...
+
+
+2013-06-17 12:23:41,782 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:120)
+	at java.io.FileInputStream.<init>(FileInputStream.java:79)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
+2013-06-17 12:24:22,042 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
+
+Loading properties...
+
+
+2013-06-17 12:24:22,058 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:120)
+	at java.io.FileInputStream.<init>(FileInputStream.java:79)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
+2013-06-17 12:26:07,865 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
+
+Loading properties...
+
+
+2013-06-17 12:26:07,865 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:120)
+	at java.io.FileInputStream.<init>(FileInputStream.java:79)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
+2013-06-17 12:26:28,364 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
+
+Loading properties...
+
+
+2013-06-17 12:26:28,364 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:120)
+	at java.io.FileInputStream.<init>(FileInputStream.java:79)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
+2013-06-17 12:31:29,158 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
+
+Loading properties...
+
+
+2013-06-17 12:31:29,174 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:120)
+	at java.io.FileInputStream.<init>(FileInputStream.java:79)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
+2013-06-17 13:21:37,337 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
+
+Loading properties...
+
+
+2013-06-17 13:21:37,368 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:120)
+	at java.io.FileInputStream.<init>(FileInputStream.java:79)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
