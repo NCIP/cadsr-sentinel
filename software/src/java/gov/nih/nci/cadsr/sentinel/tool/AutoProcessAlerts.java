@@ -2443,8 +2443,11 @@ public class AutoProcessAlerts
 
     private String _xmlFile;
 
-    private static final Logger _logger = Logger.getLogger(AutoProcessAlerts.class.getName());
+    private static final Logger _logger;	// = Logger.getLogger(AutoProcessAlerts.class.getName());
 
+    static {
+    	_logger = Logger.getLogger(AutoProcessAlerts.class.getName());
+    }
     private static final String _RESOURCES       = "gov.nih.nci.cadsr.sentinel.DSRAlert";
 
     /**
