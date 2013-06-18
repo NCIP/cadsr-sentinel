@@ -4,7 +4,7 @@
 and make sure that it is properly populated in cadsrsentinel.xml.
 
 2. For dev, change TOOL.BASE.DIR in local.build.properties too. Create the directory manually if you have to
-e.g. mkdir -p \local\content\cadsrsentinel\reports.
+e.g. mkdir -p \local\content\cadsrsentinel\reports or sudo mkdir -p /local/content/cadsrsentinel/reports.
 
 3. To generate the report, please make sure TOOL.BASE.DIR is set properly in [tier].property
 
