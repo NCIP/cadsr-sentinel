@@ -291,14 +291,17 @@ public class AlertOutput
            writeText("</body></html>");
 
            // Close the file and make it permanent.
-           _log.flush();
-           _log.close();
-           _log = null;
+           if(_log != null) {
+	           _log.flush();
+	           _log.close();
+	           _log = null;
+           }
            _logger.info("Closed log: " + _today.toString() + ": "
                + _logFile);
        }
-       catch (IOException ex)
+       catch (Exception ex)
        {
+    	   ex.printStackTrace();
            _logger.error(ex.toString());
        }
    }
