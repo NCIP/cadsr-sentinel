@@ -18,7 +18,7 @@ JAVA_PARMS='-Xms512m -Xmx512m -XX:PermSize=64m'
 
 export JAVA_PARMS ORACLE_HOME TNS_ADMIN PATH LD_LIBRARY_PATH
 
-echo "Executing job as `id`"
+echo "Executing new job as `id`"
 echo "Executing on `date`"
 
 find $BASE_DIR/../reports -mtime +20 -exec rm {} \;
