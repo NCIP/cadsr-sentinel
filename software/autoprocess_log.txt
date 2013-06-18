@@ -70,3 +70,278 @@ java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the fil
 	at java.io.FileInputStream.<init>(FileInputStream.java:79)
 	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
 	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
+2013-06-18 14:57:28,633 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 167] 
+
+Loading properties...
+
+
+2013-06-18 14:57:28,649 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 150] java.io.FileNotFoundException: cadsrsentinel.xml (No such file or directory)
+java.io.FileNotFoundException: cadsrsentinel.xml (No such file or directory)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:120)
+	at java.io.FileInputStream.<init>(FileInputStream.java:79)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:168)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:143)
+2013-06-18 14:57:54,349 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 167] 
+
+Loading properties...
+
+
+2013-06-18 14:57:54,355 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 150] java.io.FileNotFoundException: cadsrsentinel.xml (No such file or directory)
+java.io.FileNotFoundException: cadsrsentinel.xml (No such file or directory)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:120)
+	at java.io.FileInputStream.<init>(FileInputStream.java:79)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:168)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:143)
+2013-06-18 14:58:57,137 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 167] 
+
+Loading properties...
+
+
+2013-06-18 14:59:52,765 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 167] 
+
+Loading properties...
+
+
+2013-06-18 14:59:52,775 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 150] java.io.FileNotFoundException: /Users/ag/demo/sentinel.orig/cadsrsentinel.xml (No such file or directory)
+java.io.FileNotFoundException: /Users/ag/demo/sentinel.orig/cadsrsentinel.xml (No such file or directory)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:120)
+	at java.io.FileInputStream.<init>(FileInputStream.java:79)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:168)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:143)
+2013-06-18 15:00:31,343 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
+
+Loading properties...
+
+
+2013-06-18 15:00:31,349 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: /Users/ag/demo/sentinel.orig/cadsrsentinel.xml (No such file or directory)
+java.io.FileNotFoundException: /Users/ag/demo/sentinel.orig/cadsrsentinel.xml (No such file or directory)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:120)
+	at java.io.FileInputStream.<init>(FileInputStream.java:79)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:165)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:143)
+2013-06-18 15:01:46,145 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
+
+Loading properties...
+
+
+2013-06-18 15:01:46,161 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
+java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
+2013-06-18 15:01:46,163 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
+2013-06-18 15:01:49,208 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618150149207.html (Permission denied)
+2013-06-18 15:01:49,209 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150149208.html (Permission denied)
+2013-06-18 15:02:08,925 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150149208.html (Permission denied)
+2013-06-18 15:02:13,142 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150149208.html (Permission denied)
+2013-06-18 15:02:47,968 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150149208.html (Permission denied)
+2013-06-18 15:03:05,802 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
+
+Loading properties...
+
+
+2013-06-18 15:03:31,039 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
+
+Loading properties...
+
+
+2013-06-18 15:03:40,884 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
+java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
+2013-06-18 15:03:40,889 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
+2013-06-18 15:03:44,723 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618150344721.html (Permission denied)
+2013-06-18 15:03:44,725 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150344722.html (Permission denied)
+2013-06-18 15:04:13,201 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
+
+Loading properties...
+
+
+2013-06-18 15:04:13,213 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
+java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
+2013-06-18 15:04:13,215 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
+2013-06-18 15:04:18,227 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618150418226.html (Permission denied)
+2013-06-18 15:04:18,228 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150418227.html (Permission denied)
+2013-06-18 15:04:23,138 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
+
+Loading properties...
+
+
+2013-06-18 15:04:28,528 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
+java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
+2013-06-18 15:04:28,529 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
+2013-06-18 15:05:29,407 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618150511923.html (Permission denied)
+2013-06-18 15:05:30,263 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150526138.html (Permission denied)
+2013-06-18 15:06:10,127 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
+
+Loading properties...
+
+
+2013-06-18 15:06:17,857 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
+java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
+2013-06-18 15:06:17,859 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
+2013-06-18 15:06:25,586 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618150625585.html (Permission denied)
+2013-06-18 15:06:25,587 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150625585.html (Permission denied)
+2013-06-18 15:10:29,974 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150625585.html (Permission denied)
+2013-06-18 15:10:56,176 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150625585.html (Permission denied)
+2013-06-18 15:12:03,643 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
+java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
+2013-06-18 15:12:03,664 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
+2013-06-18 15:12:03,665 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:03,666 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:03,666 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:16,064 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:16,068 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:16,069 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:16,070 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:16,070 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:16,071 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:16,071 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:16,072 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:16,073 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
+2013-06-18 15:12:53,114 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
+
+Loading properties...
+
+
+2013-06-18 15:12:53,139 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
+java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
+2013-06-18 15:12:53,140 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
+2013-06-18 15:12:58,459 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
+2013-06-18 15:12:58,459 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
+2013-06-18 15:12:58,460 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
+2013-06-18 15:12:58,483 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
+2013-06-18 15:12:58,484 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
+2013-06-18 15:12:58,485 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
+2013-06-18 15:12:58,812 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to lhebel@scenpro.com
+2013-06-18 15:13:00,186 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to davet@mail.nih.gov
+2013-06-18 15:13:00,187 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
+2013-06-18 15:13:00,188 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
+2013-06-18 15:13:00,189 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
+2013-06-18 15:13:00,189 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
+2013-06-18 15:13:00,190 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.lang.NullPointerException
+java.lang.NullPointerException
+	at gov.nih.nci.cadsr.sentinel.tool.AlertOutput.close(AlertOutput.java:294)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:633)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
+2013-06-18 15:15:33,413 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
+
+Loading properties...
+
+
+2013-06-18 15:15:33,433 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
+java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
+2013-06-18 15:15:33,434 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
+2013-06-18 15:15:40,958 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
+2013-06-18 15:15:40,959 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
+2013-06-18 15:15:40,959 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
+2013-06-18 15:15:41,007 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
+2013-06-18 15:15:41,008 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
+2013-06-18 15:15:41,009 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
+2013-06-18 15:15:41,471 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to lhebel@scenpro.com
+2013-06-18 15:15:41,813 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to davet@mail.nih.gov
+2013-06-18 15:15:41,814 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
+2013-06-18 15:15:41,815 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
+2013-06-18 15:15:41,815 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
+2013-06-18 15:15:41,816 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
+2013-06-18 15:15:41,817 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 303] java.lang.NullPointerException
+2013-06-18 15:16:21,306 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
+
+Loading properties...
+
+
+2013-06-18 15:16:21,319 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
+java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
+2013-06-18 15:16:21,321 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
+2013-06-18 15:16:26,147 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
+2013-06-18 15:16:26,148 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
+2013-06-18 15:16:26,148 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
+2013-06-18 15:16:26,171 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
+2013-06-18 15:16:26,172 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
+2013-06-18 15:16:26,172 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
+2013-06-18 15:16:26,579 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to lhebel@scenpro.com
+2013-06-18 15:16:26,834 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to davet@mail.nih.gov
+2013-06-18 15:16:26,836 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
+2013-06-18 15:16:26,836 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
+2013-06-18 15:16:26,837 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
+2013-06-18 15:16:26,838 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
+2013-06-18 15:16:26,838 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 299] Closed log: 2013-06-18 15:16:26.111: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html
+2013-06-18 15:18:56,351 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 165] 
+
+Loading properties...
+
+
+2013-06-18 15:18:56,373 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1835] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
+java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1812)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:610)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:147)
+2013-06-18 15:18:56,375 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1841] Version unknown
+2013-06-18 15:19:00,090 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151900089.html (Permission denied)
+2013-06-18 15:19:00,091 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
+2013-06-18 15:19:25,618 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
+2013-06-18 15:19:30,447 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
+2013-06-18 15:20:04,888 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
+2013-06-18 15:20:46,409 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
+2013-06-18 15:23:32,134 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
+2013-06-18 15:23:36,745 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
+2013-06-18 15:23:38,458 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
+2013-06-18 15:23:38,580 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
+2013-06-18 15:25:13,227 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 686] evsURL in EVSConcept->validate(): http://lexevsapi60.nci.nih.gov/lexevsapi60
+2013-06-18 15:25:13,247 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 687] no. of concepts in EVSConcept->validate(): 20309

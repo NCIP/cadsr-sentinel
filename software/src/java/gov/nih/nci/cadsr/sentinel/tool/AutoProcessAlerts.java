@@ -121,8 +121,8 @@ public class AutoProcessAlerts
      * LAN proximity not WAN). The amount of database access is extremely high
      * even with the computed date ranges used in the SQL selects.
      *
-     * @param args_
-     *        None at this time.
+     * @param /Users/ag/demo/sentinel.orig/lib/log4j.xml true /Users/ag/demo/sentinel.orig/cadsrsentinel.xml
+     * Notes: search for "DEV - comment this out for testing" and comment it out to test
      */
     public static void main(String[] args_)
     {
@@ -148,10 +148,7 @@ public class AutoProcessAlerts
         }
         catch (Exception ex)
         {
-            _logger.error(ex.toString(), ex);
-        }
-        catch (Error ex)
-        {
+        	ex.printStackTrace();
             _logger.error(ex.toString(), ex);
         }
     }
@@ -618,7 +615,7 @@ public class AutoProcessAlerts
         _logSummary.writeParagraph1("Working folder prefix = " + _work);
 
         // Process the Alerts.
-        autoRun2();
+//        autoRun2();	//DEV - comment this out for testing (TBD)
 
         // Done with the database.
         if (_db != null)
@@ -1887,10 +1884,11 @@ public class AutoProcessAlerts
         }
 
         _logSummary = new AlertOutput(_work, _http, "RunLog_" + _id.replaceAll("[ .:\\-]", "_"), _version);
-        if (errMsg != null)
+        if (errMsg != null) {
             _logSummary.writeError(errMsg);
-        else
-            createAuditReports();
+        } else {
+            createAuditReports();	//DEV - comment this out for testing (still has issue here)
+        }
 
         return 0;
     }
