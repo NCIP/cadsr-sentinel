@@ -899,7 +899,10 @@ public class AuditConceptToEVS extends AuditReport
     	List<EVSConcept> evsConcepts = new ArrayList<EVSConcept>();
     	if (rcRefIter != null) {
     		while (rcRefIter.hasNext()) {
-    			evsConcepts.add(getEVSConcept(rcRefIter.next()));
+    			ResolvedConceptReference next = rcRefIter.next();
+    			if(next != null) {
+    				evsConcepts.add(getEVSConcept(next));
+    			}
     		}
     	}
     	return evsConcepts;
