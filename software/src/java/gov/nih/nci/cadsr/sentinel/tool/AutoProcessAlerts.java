@@ -162,7 +162,7 @@ public class AutoProcessAlerts
     {
         Properties prop = new Properties();
 
-        _logger.info("\n\nLoading properties...\n\n");
+        _logger.info("\n\nLoading properties ...\n\n");
         FileInputStream in = new FileInputStream(propFile_);
         prop.loadFromXML(in);
         in.close();
@@ -614,8 +614,9 @@ public class AutoProcessAlerts
         _logSummary.writeParagraph1("Database = " + _dbname + " (" + _dsurl + ")");
         _logSummary.writeParagraph1("Working folder prefix = " + _work);
 
+        _logger.info("\nExecuting autoRun2() ...\n\n");        
         // Process the Alerts.
-//        autoRun2();	//DEV - comment this out for testing (TBD)
+        autoRun2();	//DEV - comment this out for testing (TBD)
 
         // Done with the database.
         if (_db != null)
@@ -1887,6 +1888,7 @@ public class AutoProcessAlerts
         if (errMsg != null) {
             _logSummary.writeError(errMsg);
         } else {
+            _logger.info("\nExecuting createAuditReports() ...\n\n");        	
             createAuditReports();	//DEV - comment this out for testing (still has issue here)
         }
 
