@@ -315,7 +315,7 @@ public class CleanStrings
     {
         _propList = new Properties();
 
-        _logger.info("\n\nLoading properties...\n\n");
+        _logger.info("\n\nLoading properties " + gov.nih.nci.cadsr.common.Constants.BUILD_TAG + " ...\n\n");
         
         try
         {

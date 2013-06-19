@@ -121,8 +121,10 @@ public class AutoProcessAlerts
      * LAN proximity not WAN). The amount of database access is extremely high
      * even with the computed date ranges used in the SQL selects.
      *
-     * @param /Users/ag/demo/sentinel.orig/lib/log4j.xml true /Users/ag/demo/sentinel.orig/cadsrsentinel.xml
-     * Notes: search for "DEV - comment this out for testing" and comment it out to test
+     * @param /Users/ag/demo/sentinel.orig/lib/log4j.xml true /Users/ag/demo/sentinel.orig/lib/cadsrsentinel.xml
+     * Notes: search for "DEV - comment this out for testing" and comment it out to test.
+     * To run it, add sentinel.orig/deployment-artifacts/bin into classpath (for application-config-client.xml)
+     * 
      */
     public static void main(String[] args_)
     {
@@ -162,7 +164,8 @@ public class AutoProcessAlerts
     {
         Properties prop = new Properties();
 
-        _logger.info("\n\nLoading properties b001 ...\n\n");
+        _logger.info("\n\nLoading properties " + gov.nih.nci.cadsr.common.Constants.BUILD_TAG + " ...\n\n");
+
         FileInputStream in = new FileInputStream(propFile_);
         prop.loadFromXML(in);
         in.close();
