@@ -1,656 +1,5 @@
-2013-06-17 12:23:41,766 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
-
-Loading properties...
-
-
-2013-06-17 12:23:41,782 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
-2013-06-17 12:24:22,042 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
-
-Loading properties...
-
-
-2013-06-17 12:24:22,058 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
-2013-06-17 12:26:07,865 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
-
-Loading properties...
-
-
-2013-06-17 12:26:07,865 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
-2013-06-17 12:26:28,364 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
-
-Loading properties...
-
-
-2013-06-17 12:26:28,364 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
-2013-06-17 12:31:29,158 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
-
-Loading properties...
-
-
-2013-06-17 12:31:29,174 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
-2013-06-17 13:21:37,337 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 168] 
-
-Loading properties...
-
-
-2013-06-17 13:21:37,368 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:169)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
-2013-06-18 14:57:28,633 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 167] 
-
-Loading properties...
-
-
-2013-06-18 14:57:28,649 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 150] java.io.FileNotFoundException: cadsrsentinel.xml (No such file or directory)
-java.io.FileNotFoundException: cadsrsentinel.xml (No such file or directory)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:168)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:143)
-2013-06-18 14:57:54,349 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 167] 
-
-Loading properties...
-
-
-2013-06-18 14:57:54,355 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 150] java.io.FileNotFoundException: cadsrsentinel.xml (No such file or directory)
-java.io.FileNotFoundException: cadsrsentinel.xml (No such file or directory)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:168)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:143)
-2013-06-18 14:58:57,137 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 167] 
-
-Loading properties...
-
-
-2013-06-18 14:59:52,765 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 167] 
-
-Loading properties...
-
-
-2013-06-18 14:59:52,775 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 150] java.io.FileNotFoundException: /Users/ag/demo/sentinel.orig/cadsrsentinel.xml (No such file or directory)
-java.io.FileNotFoundException: /Users/ag/demo/sentinel.orig/cadsrsentinel.xml (No such file or directory)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:168)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:143)
-2013-06-18 15:00:31,343 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
-
-Loading properties...
-
-
-2013-06-18 15:00:31,349 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.io.FileNotFoundException: /Users/ag/demo/sentinel.orig/cadsrsentinel.xml (No such file or directory)
-java.io.FileNotFoundException: /Users/ag/demo/sentinel.orig/cadsrsentinel.xml (No such file or directory)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:165)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:143)
-2013-06-18 15:01:46,145 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
-
-Loading properties...
-
-
-2013-06-18 15:01:46,161 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
-2013-06-18 15:01:46,163 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
-2013-06-18 15:01:49,208 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618150149207.html (Permission denied)
-2013-06-18 15:01:49,209 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150149208.html (Permission denied)
-2013-06-18 15:02:08,925 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150149208.html (Permission denied)
-2013-06-18 15:02:13,142 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150149208.html (Permission denied)
-2013-06-18 15:02:47,968 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150149208.html (Permission denied)
-2013-06-18 15:03:05,802 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
-
-Loading properties...
-
-
-2013-06-18 15:03:31,039 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
-
-Loading properties...
-
-
-2013-06-18 15:03:40,884 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
-2013-06-18 15:03:40,889 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
-2013-06-18 15:03:44,723 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618150344721.html (Permission denied)
-2013-06-18 15:03:44,725 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150344722.html (Permission denied)
-2013-06-18 15:04:13,201 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
-
-Loading properties...
-
-
-2013-06-18 15:04:13,213 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
-2013-06-18 15:04:13,215 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
-2013-06-18 15:04:18,227 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618150418226.html (Permission denied)
-2013-06-18 15:04:18,228 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150418227.html (Permission denied)
-2013-06-18 15:04:23,138 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
-
-Loading properties...
-
-
-2013-06-18 15:04:28,528 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
-2013-06-18 15:04:28,529 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
-2013-06-18 15:05:29,407 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618150511923.html (Permission denied)
-2013-06-18 15:05:30,263 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150526138.html (Permission denied)
-2013-06-18 15:06:10,127 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
-
-Loading properties...
-
-
-2013-06-18 15:06:17,857 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
-2013-06-18 15:06:17,859 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
-2013-06-18 15:06:25,586 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618150625585.html (Permission denied)
-2013-06-18 15:06:25,587 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150625585.html (Permission denied)
-2013-06-18 15:10:29,974 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150625585.html (Permission denied)
-2013-06-18 15:10:56,176 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618150625585.html (Permission denied)
-2013-06-18 15:12:03,643 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
-2013-06-18 15:12:03,664 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
-2013-06-18 15:12:03,665 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:03,666 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:03,666 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:16,064 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:16,068 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:16,069 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:16,070 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:16,070 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:16,071 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:16,071 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:16,072 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:16,073 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151203665.html (Permission denied)
-2013-06-18 15:12:53,114 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
-
-Loading properties...
-
-
-2013-06-18 15:12:53,139 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
-2013-06-18 15:12:53,140 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
-2013-06-18 15:12:58,459 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
-2013-06-18 15:12:58,459 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
-2013-06-18 15:12:58,460 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
-2013-06-18 15:12:58,483 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
-2013-06-18 15:12:58,484 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
-2013-06-18 15:12:58,485 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
-2013-06-18 15:12:58,812 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to lhebel@scenpro.com
-2013-06-18 15:13:00,186 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to davet@mail.nih.gov
-2013-06-18 15:13:00,187 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
-2013-06-18 15:13:00,188 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
-2013-06-18 15:13:00,189 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
-2013-06-18 15:13:00,189 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151258458.html (Permission denied)
-2013-06-18 15:13:00,190 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 151] java.lang.NullPointerException
-java.lang.NullPointerException
-	at gov.nih.nci.cadsr.sentinel.tool.AlertOutput.close(AlertOutput.java:294)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:633)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
-2013-06-18 15:15:33,413 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
-
-Loading properties...
-
-
-2013-06-18 15:15:33,433 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
-2013-06-18 15:15:33,434 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
-2013-06-18 15:15:40,958 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
-2013-06-18 15:15:40,959 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
-2013-06-18 15:15:40,959 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
-2013-06-18 15:15:41,007 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
-2013-06-18 15:15:41,008 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
-2013-06-18 15:15:41,009 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
-2013-06-18 15:15:41,471 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to lhebel@scenpro.com
-2013-06-18 15:15:41,813 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to davet@mail.nih.gov
-2013-06-18 15:15:41,814 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
-2013-06-18 15:15:41,815 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
-2013-06-18 15:15:41,815 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
-2013-06-18 15:15:41,816 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151540945.html (Permission denied)
-2013-06-18 15:15:41,817 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 303] java.lang.NullPointerException
-2013-06-18 15:16:21,306 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 164] 
-
-Loading properties...
-
-
-2013-06-18 15:16:21,319 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1834] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1811)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:609)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:146)
-2013-06-18 15:16:21,321 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1840] Version unknown
-2013-06-18 15:16:26,147 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
-2013-06-18 15:16:26,148 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
-2013-06-18 15:16:26,148 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
-2013-06-18 15:16:26,171 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
-2013-06-18 15:16:26,172 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
-2013-06-18 15:16:26,172 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
-2013-06-18 15:16:26,579 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to lhebel@scenpro.com
-2013-06-18 15:16:26,834 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1945] Sent admin report to davet@mail.nih.gov
-2013-06-18 15:16:26,836 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
-2013-06-18 15:16:26,836 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
-2013-06-18 15:16:26,837 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
-2013-06-18 15:16:26,838 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html (Permission denied)
-2013-06-18 15:16:26,838 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 299] Closed log: 2013-06-18 15:16:26.111: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151626111.html
-2013-06-18 15:18:56,351 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 165] 
-
-Loading properties...
-
-
-2013-06-18 15:18:56,373 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1835] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1812)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:610)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:147)
-2013-06-18 15:18:56,375 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1841] Version unknown
-2013-06-18 15:19:00,090 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/RunLog_Auto_20130618151900089.html (Permission denied)
-2013-06-18 15:19:00,091 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
-2013-06-18 15:19:25,618 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
-2013-06-18 15:19:30,447 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
-2013-06-18 15:20:04,888 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
-2013-06-18 15:20:46,409 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
-2013-06-18 15:23:32,134 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
-2013-06-18 15:23:36,745 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
-2013-06-18 15:23:38,458 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
-2013-06-18 15:23:38,580 ERROR [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 178] java.io.FileNotFoundException: /local/content/cadsrsentinel/reports/Audits_20130618151900089.html (Permission denied)
-2013-06-18 15:25:13,227 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 686] evsURL in EVSConcept->validate(): http://lexevsapi60.nci.nih.gov/lexevsapi60
-2013-06-18 15:25:13,247 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 687] no. of concepts in EVSConcept->validate(): 20309
-2013-06-19 13:13:26,876 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 165] 
-
-Loading properties b001 ...
-
-
-2013-06-19 13:13:26,923 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 152] java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-java.io.FileNotFoundException: cadsrsentinel.xml (The system cannot find the file specified)
-	at java.io.FileInputStream.open(Native Method)
-	at java.io.FileInputStream.<init>(FileInputStream.java:120)
-	at java.io.FileInputStream.<init>(FileInputStream.java:79)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.loadProp(AutoProcessAlerts.java:166)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:144)
-2013-06-19 13:13:59,656 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 165] 
-
-Loading properties b001 ...
-
-
-2013-06-19 13:14:08,689 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1836] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1813)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:610)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:147)
-2013-06-19 13:14:08,689 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1842] Version unknown
-2013-06-19 13:14:09,719 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1891] 
-Executing createAuditReports() ...
-
-
-2013-06-19 13:14:09,734 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 140] Opened log: 2013-06-19 13:14:09.719: /local/content/cadsrsentinel/reports/RunLog_Auto_20130619131409719.html
-2013-06-19 13:14:09,734 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 140] Opened log: 2013-06-19 13:14:09.734: /local/content/cadsrsentinel/reports/Audits_20130619131409734.html
-2013-06-19 13:17:48,670 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 686] evsURL in EVSConcept->validate(): http://lexevsapi60.nci.nih.gov/lexevsapi60
-2013-06-19 13:17:48,670 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 687] no. of concepts in EVSConcept->validate(): 20309
-2013-06-19 13:17:48,795 INFO  [org.springframework.context.support.ClassPathXmlApplicationContext : 456] Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@81ad8f: startup date [Wed Jun 19 13:17:48 EDT 2013]; root of context hierarchy
-2013-06-19 13:17:48,920 INFO  [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 315] Loading XML bean definitions from class path resource [application-config-client.xml]
-2013-06-19 13:20:14,080 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 165] 
-
-Loading properties b001 ...
-
-
-2013-06-19 13:20:14,096 ERROR [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1836] Can not find properties resource gov.nih.nci.cadsr.sentinel.DSRAlert
-java.util.MissingResourceException: Can't find bundle for base name gov.nih.nci.cadsr.sentinel.DSRAlert, locale en_US
-	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
-	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
-	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1813)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:610)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:147)
-2013-06-19 13:20:14,096 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1842] Version unknown
-2013-06-19 13:20:14,534 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1891] 
-Executing createAuditReports() ...
-
-
-2013-06-19 13:20:14,534 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 140] Opened log: 2013-06-19 13:20:14.534: /local/content/cadsrsentinel/reports/RunLog_Auto_20130619132014534.html
-2013-06-19 13:20:14,534 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 140] Opened log: 2013-06-19 13:20:14.534: /local/content/cadsrsentinel/reports/Audits_20130619132014534.html
-2013-06-19 13:23:54,934 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 686] evsURL in EVSConcept->validate(): http://lexevsapi60.nci.nih.gov/lexevsapi60
-2013-06-19 13:23:54,934 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 687] no. of concepts in EVSConcept->validate(): 20309
-2013-06-19 13:23:55,090 INFO  [org.springframework.context.support.ClassPathXmlApplicationContext : 456] Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@1dac551: startup date [Wed Jun 19 13:23:55 EDT 2013]; root of context hierarchy
-2013-06-19 13:23:55,153 INFO  [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 315] Loading XML bean definitions from class path resource [application-config-client.xml]
-2013-06-19 13:23:55,153 DEBUG [org.springframework.beans.factory.xml.DefaultDocumentLoader : 72] Using JAXP provider [org.apache.xerces.jaxp.DocumentBuilderFactoryImpl]
-2013-06-19 13:23:55,153 DEBUG [org.springframework.beans.factory.xml.BeansDtdResolver : 73] Found beans DTD [http://www.springframework.org/dtd/spring-beans.dtd] in classpath: spring-beans.dtd
-2013-06-19 13:23:55,168 DEBUG [org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader : 87] Loading bean definitions
-2013-06-19 13:23:55,200 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor#5043d6]
-2013-06-19 13:23:55,200 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean#195a626]
-2013-06-19 13:23:55,200 DEBUG [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 185] Loaded 8 bean definitions from location pattern [application-config-client.xml]
-2013-06-19 13:23:55,200 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 470] Bean factory for org.springframework.context.support.ClassPathXmlApplicationContext@1dac551: org.springframework.beans.factory.support.DefaultListableBeanFactory@1cf1d17: defining beans [EvsServiceInfo,LexEVSInterceptor,DistributedProxyHelper,DataServiceProxyHelper,LexEVSApplicationService,AppService,EvsAuthenticationProvider,LexEVSApplicationServiceConfig]; root of factory hierarchy
-2013-06-19 13:23:55,262 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 776] Unable to locate MessageSource with name 'messageSource': using default [org.springframework.context.support.DelegatingMessageSource@1b22cc7]
-2013-06-19 13:23:55,262 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 800] Unable to locate ApplicationEventMulticaster with name 'applicationEventMulticaster': using default [org.springframework.context.event.SimpleApplicationEventMulticaster@12e67fa]
-2013-06-19 13:23:55,262 INFO  [org.springframework.beans.factory.support.DefaultListableBeanFactory : 555] Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@1cf1d17: defining beans [EvsServiceInfo,LexEVSInterceptor,DistributedProxyHelper,DataServiceProxyHelper,LexEVSApplicationService,AppService,EvsAuthenticationProvider,LexEVSApplicationServiceConfig]; root of factory hierarchy
-2013-06-19 13:23:55,262 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'LexEVSApplicationService'
-2013-06-19 13:23:55,262 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'LexEVSApplicationService'
-2013-06-19 13:23:55,309 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'LexEVSApplicationService' to allow for resolving potential circular references
-2013-06-19 13:23:55,449 DEBUG [org.springframework.aop.framework.ProxyFactoryBean : 600] Advice has changed; recaching singleton instance
-2013-06-19 13:23:55,449 DEBUG [org.springframework.aop.framework.ProxyFactoryBean : 404] Could not determine type of bean with name 'AppService' - assuming it is neither an Advisor nor an Advice
-2013-06-19 13:23:55,449 DEBUG [org.springframework.aop.framework.ProxyFactoryBean : 379] Bean with name 'AppService' concluding interceptor chain is not an advisor class: treating it as a target or TargetSource
-2013-06-19 13:23:55,449 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'LexEVSApplicationService'
-2013-06-19 13:23:55,449 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'EvsAuthenticationProvider'
-2013-06-19 13:23:55,449 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'EvsAuthenticationProvider'
-2013-06-19 13:23:55,449 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'EvsAuthenticationProvider' to allow for resolving potential circular references
-2013-06-19 13:23:55,449 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean#195a626'
-2013-06-19 13:23:55,465 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 1461] Invoking afterPropertiesSet() on bean with name 'org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean#195a626'
-2013-06-19 13:23:55,481 DEBUG [org.springframework.aop.framework.JdkDynamicAopProxy : 113] Creating JDK dynamic proxy: target source is EmptyTargetSource: no target class, static
-2013-06-19 13:23:55,512 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean#195a626'
-2013-06-19 13:23:55,512 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 1461] Invoking afterPropertiesSet() on bean with name 'EvsAuthenticationProvider'
-2013-06-19 13:23:55,512 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'EvsAuthenticationProvider'
-2013-06-19 13:23:55,512 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'LexEVSApplicationServiceConfig'
-2013-06-19 13:23:55,512 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'LexEVSApplicationServiceConfig'
-2013-06-19 13:23:55,590 DEBUG [org.springframework.beans.BeanUtils : 421] No property editor [java.lang.StringBuilderEditor] found for type java.lang.StringBuilder according to 'Editor' suffix convention
-2013-06-19 13:23:55,590 DEBUG [org.springframework.beans.BeanUtils : 421] No property editor [java.lang.StringBufferEditor] found for type java.lang.StringBuffer according to 'Editor' suffix convention
-2013-06-19 13:23:55,590 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'LexEVSApplicationServiceConfig' to allow for resolving potential circular references
-2013-06-19 13:23:55,590 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'LexEVSApplicationServiceConfig'
-2013-06-19 13:23:55,590 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 827] Unable to locate LifecycleProcessor with name 'lifecycleProcessor': using default [org.springframework.context.support.DefaultLifecycleProcessor@c7c991]
-2013-06-19 13:23:55,590 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'lifecycleProcessor'
-2013-06-19 13:23:55,590 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'EvsServiceInfo'
-2013-06-19 13:23:55,590 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'LexEVSApplicationService'
-2013-06-19 13:23:55,606 DEBUG [org.springframework.aop.framework.ProxyFactoryBean : 569] Refreshing target with name 'AppService'
-2013-06-19 13:23:55,606 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'AppService'
-2013-06-19 13:23:55,606 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor#5043d6'
-2013-06-19 13:23:55,606 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor#5043d6'
-2013-06-19 13:23:55,606 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 1461] Invoking afterPropertiesSet() on bean with name 'AppService'
-2013-06-19 13:23:55,606 DEBUG [org.springframework.aop.framework.JdkDynamicAopProxy : 113] Creating JDK dynamic proxy: target source is EmptyTargetSource: no target class, static
-2013-06-19 13:23:55,653 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'AppService'
-2013-06-19 13:23:55,653 DEBUG [org.springframework.aop.framework.ProxyFactoryBean : 482] Refreshing bean named 'LexEVSInterceptor'
-2013-06-19 13:23:55,653 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'LexEVSInterceptor'
-2013-06-19 13:23:55,653 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'DistributedProxyHelper'
-2013-06-19 13:23:55,653 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'DistributedProxyHelper'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'DataServiceProxyHelper'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'DataServiceProxyHelper'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'LexEVSInterceptor'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.aop.framework.JdkDynamicAopProxy : 113] Creating JDK dynamic proxy: target source is SingletonTargetSource for target object [com.sun.proxy.$Proxy5@15390b7]
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'EvsAuthenticationProvider'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'LexEVSApplicationServiceConfig'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'EvsServiceInfo'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'EvsServiceInfo'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'LexEVSApplicationService'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.aop.framework.ProxyFactoryBean : 569] Refreshing target with name 'AppService'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'AppService'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor#5043d6'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor#5043d6'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 1461] Invoking afterPropertiesSet() on bean with name 'AppService'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.aop.framework.JdkDynamicAopProxy : 113] Creating JDK dynamic proxy: target source is EmptyTargetSource: no target class, static
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'AppService'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.aop.framework.ProxyFactoryBean : 482] Refreshing bean named 'LexEVSInterceptor'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'LexEVSInterceptor'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'DistributedProxyHelper'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'DistributedProxyHelper'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'DataServiceProxyHelper'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'DataServiceProxyHelper'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'LexEVSInterceptor'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.aop.framework.JdkDynamicAopProxy : 113] Creating JDK dynamic proxy: target source is SingletonTargetSource for target object [com.sun.proxy.$Proxy5@16b0013]
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'EvsAuthenticationProvider'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'LexEVSApplicationServiceConfig'
-2013-06-19 13:23:55,668 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'EvsServiceInfo'
-2013-06-19 13:23:55,715 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 560
-2013-06-19 13:23:55,746 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:55,824 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 706] Service in EVSConcept->validate() after service creation: org.LexGrid.LexBIG.caCore.applicationservice.impl.LexEVSApplicationServiceImpl@4c5f955
-2013-06-19 13:23:55,824 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 724] Completed 0 out of 20309 (0%) . Message/Failure count 1 (0%)
-2013-06-19 13:23:55,824 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 560
-2013-06-19 13:23:55,824 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:55,824 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 773] Service in EVSConcept->validate() before search(): org.LexGrid.LexBIG.caCore.applicationservice.impl.LexEVSApplicationServiceImpl@4c5f955
-2013-06-19 13:23:55,824 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 560
-2013-06-19 13:23:55,824 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:55,856 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 336] Service in MetaTh->EVSData->search(): org.LexGrid.LexBIG.caCore.applicationservice.impl.LexEVSApplicationServiceImpl@4c5f955
-2013-06-19 13:23:55,902 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 721
-2013-06-19 13:23:55,902 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:56,137 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 150] Creating CGLIB2 proxy: target source is SingletonTargetSource for target object [org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet@1460a4a]
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.union(org.LexGrid.LexBIG.LexBIGService.CodedNodeSet) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.difference(org.LexGrid.LexBIG.LexBIGService.CodedNodeSet) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.intersect(org.LexGrid.LexBIG.LexBIGService.CodedNodeSet) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected void org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.doUnion(java.lang.String,java.lang.String,org.LexGrid.LexBIG.Impl.codedNodeSetOperations.Union) throws org.LexGrid.LexBIG.Exceptions.LBException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected void org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.doDifference(java.lang.String,java.lang.String,org.LexGrid.LexBIG.Impl.codedNodeSetOperations.Difference) throws org.LexGrid.LexBIG.Exceptions.LBException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected void org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.doIntersect(java.lang.String,java.lang.String,org.LexGrid.LexBIG.Impl.codedNodeSetOperations.Intersect) throws org.LexGrid.LexBIG.Exceptions.LBException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public java.lang.Object org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.clone() throws java.lang.CloneNotSupportedException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.Impl.CodedNodeSetImpl org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.clone() throws java.lang.CloneNotSupportedException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.resolve(org.LexGrid.LexBIG.DataModel.Collections.SortOptionList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[],boolean) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.resolve(org.LexGrid.LexBIG.DataModel.Collections.SortOptionList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[]) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.resolve(org.LexGrid.LexBIG.DataModel.Collections.SortOptionList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[]) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected org.LexGrid.LexBIG.Utility.logging.LgLoggerIF org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getLogger()
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.restrictToStatus(org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$ActiveOption,java.lang.String[]) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.restrictToMatchingProperties(org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[],org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList,java.lang.String,java.lang.String,java.lang.String) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.restrictToMatchingProperties(org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[],java.lang.String,java.lang.String,java.lang.String) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public java.lang.Boolean org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.isCodeInSet(org.LexGrid.LexBIG.DataModel.Core.ConceptReference) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.resolveToList(org.LexGrid.LexBIG.DataModel.Collections.SortOptionList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[],int) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.resolveToList(org.LexGrid.LexBIG.DataModel.Collections.SortOptionList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[],boolean,int) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.resolveToList(org.LexGrid.LexBIG.DataModel.Collections.SortOptionList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[],int) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.restrictToCodes(org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,168 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.restrictToMatchingDesignations(java.lang.String,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$SearchDesignationOption,java.lang.String,java.lang.String) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.restrictToMatchingDesignations(java.lang.String,boolean,java.lang.String,java.lang.String) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.restrictToProperties(org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[]) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.restrictToProperties(org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[],org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.restrictToAnonymous(org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$AnonymousOption) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected org.LexGrid.LexBIG.LexBIGService.CodedNodeSet org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.restrictToEntityTypes(org.LexGrid.LexBIG.DataModel.Collections.LocalNameList) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected org.LexGrid.LexBIG.Impl.helpers.comparator.ResultComparator org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getResultComparator(org.LexGrid.LexBIG.DataModel.Collections.SortOptionList,org.LexGrid.LexBIG.DataModel.InterfaceElements.types.SortContext,java.lang.Class) throws org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected java.lang.String org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getInternalCodeSystemName()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected java.lang.String org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getInternalVersionString()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public void org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.runPendingOps() throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getResolvedConceptReferencesIterator(org.LexGrid.LexBIG.Impl.helpers.CodeHolder,org.LexGrid.LexBIG.DataModel.Collections.LocalNameList,org.LexGrid.LexBIG.LexBIGService.CodedNodeSet$PropertyType[],org.LexGrid.LexBIG.Extensions.Query.Filter[],boolean)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.Impl.helpers.CodeHolder org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getCodeHolder() throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected void org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.clearToNodeListCodes()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected void org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.toBruteForceMode(java.lang.String,java.lang.String) throws org.LexGrid.LexBIG.Exceptions.LBInvocationException,org.LexGrid.LexBIG.Exceptions.LBParameterException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: protected void org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.optimizePendingOpsOrder()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public java.util.Set org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getCodingSchemeReferences()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public java.util.List org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getQueries()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public void org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.setQueries(java.util.List)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public java.util.List org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getFilters()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public void org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.setFilters(java.util.List)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.Impl.helpers.lazyloading.CodeHolderFactory org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getCodeHolderFactory()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public void org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.setCodeHolderFactory(org.LexGrid.LexBIG.Impl.helpers.lazyloading.CodeHolderFactory)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public void org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.setToNodeListCodes(org.LexGrid.LexBIG.Impl.helpers.CodeHolder)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public org.LexGrid.LexBIG.Impl.helpers.CodeHolder org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.getToNodeListCodes()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public void org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.setShouldCodingSchemeSpecificRestriction(boolean)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public boolean org.LexGrid.LexBIG.Impl.CodedNodeSetImpl.isShouldCodingSchemeSpecificRestriction()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 749] Found finalize() method - using NO_OVERRIDE
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 761] Found 'equals' method: public boolean java.lang.Object.equals(java.lang.Object)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 780] Must expose proxy on advised method: public java.lang.String java.lang.Object.toString()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 766] Found 'hashCode' method: public native int java.lang.Object.hashCode()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract int org.springframework.aop.framework.Advised.indexOf(org.springframework.aop.Advisor)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract int org.springframework.aop.framework.Advised.indexOf(org.aopalliance.aop.Advice)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract org.springframework.aop.Advisor[] org.springframework.aop.framework.Advised.getAdvisors()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract org.springframework.aop.TargetSource org.springframework.aop.framework.Advised.getTargetSource()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract void org.springframework.aop.framework.Advised.setTargetSource(org.springframework.aop.TargetSource)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract void org.springframework.aop.framework.Advised.addAdvice(org.aopalliance.aop.Advice) throws org.springframework.aop.framework.AopConfigException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract void org.springframework.aop.framework.Advised.addAdvice(int,org.aopalliance.aop.Advice) throws org.springframework.aop.framework.AopConfigException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract void org.springframework.aop.framework.Advised.setExposeProxy(boolean)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract java.lang.Class[] org.springframework.aop.framework.Advised.getProxiedInterfaces()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract boolean org.springframework.aop.framework.Advised.isProxyTargetClass()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract void org.springframework.aop.framework.Advised.addAdvisor(org.springframework.aop.Advisor) throws org.springframework.aop.framework.AopConfigException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract void org.springframework.aop.framework.Advised.addAdvisor(int,org.springframework.aop.Advisor) throws org.springframework.aop.framework.AopConfigException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract void org.springframework.aop.framework.Advised.setPreFiltered(boolean)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract boolean org.springframework.aop.framework.Advised.isPreFiltered()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract boolean org.springframework.aop.framework.Advised.isInterfaceProxied(java.lang.Class)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract void org.springframework.aop.framework.Advised.removeAdvisor(int) throws org.springframework.aop.framework.AopConfigException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract boolean org.springframework.aop.framework.Advised.removeAdvisor(org.springframework.aop.Advisor)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract boolean org.springframework.aop.framework.Advised.isFrozen()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract boolean org.springframework.aop.framework.Advised.replaceAdvisor(org.springframework.aop.Advisor,org.springframework.aop.Advisor) throws org.springframework.aop.framework.AopConfigException
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract boolean org.springframework.aop.framework.Advised.removeAdvice(org.aopalliance.aop.Advice)
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract java.lang.String org.springframework.aop.framework.Advised.toProxyConfigString()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract boolean org.springframework.aop.framework.Advised.isExposeProxy()
-2013-06-19 13:23:56,184 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 755] Method is declared on Advised interface: public abstract java.lang.Class org.springframework.aop.TargetClassAware.getTargetClass()
-2013-06-19 13:23:56,293 INFO  [org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl : 146] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.toString
-2013-06-19 13:23:56,293 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 2263
-2013-06-19 13:23:56,293 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:56,293 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 341] 1. cns in MetaTh->EVSData->search(): org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet@63b8ace9
-2013-06-19 13:23:56,293 INFO  [org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl : 146] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.restrictToMatchingProperties
-2013-06-19 13:23:56,293 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 2565
-2013-06-19 13:23:56,293 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:56,355 DEBUG [org.springframework.aop.framework.Cglib2AopProxy : 150] Creating CGLIB2 proxy: target source is SingletonTargetSource for target object [org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet@11ddd04]
-2013-06-19 13:23:56,355 INFO  [org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl : 146] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.toString
-2013-06-19 13:23:56,355 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 3587
-2013-06-19 13:23:56,355 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:56,371 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 349] 2. cns in MetaTh->EVSData->search(): org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet@2cdf1c96
-2013-06-19 13:23:56,371 INFO  [org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl : 146] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.toString
-2013-06-19 13:23:56,371 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 3587
-2013-06-19 13:23:56,371 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:56,387 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 354] 3. cns in MetaTh->EVSData->search(): org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet@29fd4698
-2013-06-19 13:23:56,387 INFO  [org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl : 146] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.toString
-2013-06-19 13:23:56,387 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 3587
-2013-06-19 13:23:56,387 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:56,402 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 775] cns in EVSConcept->validate() after search(): org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet@4cbe3dd5
-2013-06-19 13:23:56,402 INFO  [org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl : 146] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.toString
-2013-06-19 13:23:56,402 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 3587
-2013-06-19 13:23:56,402 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:56,418 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 876] cns in resolveNodeSet(): org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet@1ee7e145
-2013-06-19 13:23:56,418 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 877] includeRetiredConcepts in resolveNodeSet(): true
-2013-06-19 13:23:56,418 INFO  [org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl : 146] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.resolve
-2013-06-19 13:23:56,418 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 133] Sending HTTP invoker request for service at [http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService], with size 4296
-2013-06-19 13:23:56,418 DEBUG [org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor : 88] Unable to set BASIC authentication header as SecurityContext did not provide valid Authentication: null
-2013-06-19 13:23:56,636 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 890] results in resolveNodeSet(): 1
-2013-06-19 13:23:56,636 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 897] results in getEVSConcepts(): 1
-2013-06-19 13:23:56,636 INFO  [org.springframework.context.support.ClassPathXmlApplicationContext : 456] Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@ee1aeb: startup date [Wed Jun 19 13:23:56 EDT 2013]; root of context hierarchy
-2013-06-19 13:23:56,636 INFO  [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 315] Loading XML bean definitions from class path resource [lexevsDao.xml]
-2013-06-19 13:23:56,636 DEBUG [org.springframework.beans.factory.xml.DefaultDocumentLoader : 72] Using JAXP provider [org.apache.xerces.jaxp.DocumentBuilderFactoryImpl]
-2013-06-19 13:23:56,793 DEBUG [org.springframework.beans.factory.xml.PluggableSchemaResolver : 140] Loading schema mappings from [META-INF/spring.schemas]
-2013-06-19 13:23:56,793 DEBUG [org.springframework.beans.factory.xml.PluggableSchemaResolver : 146] Loaded schema mappings: {http://www.springframework.org/schema/security/spring-security-3.0.4.xsd=org/springframework/security/config/spring-security-3.0.4.xsd, http://www.springframework.org/schema/util/spring-util.xsd=org/springframework/beans/factory/xml/spring-util-3.0.xsd, http://www.springframework.org/schema/task/spring-task.xsd=org/springframework/scheduling/config/spring-task-3.0.xsd, http://www.springframework.org/schema/security/spring-security-2.0.2.xsd=org/springframework/security/config/spring-security-2.0.2.xsd, http://www.springframework.org/schema/aop/spring-aop-3.0.xsd=org/springframework/aop/config/spring-aop-3.0.xsd, http://www.springframework.org/schema/aop/spring-aop-2.0.xsd=org/springframework/aop/config/spring-aop-2.0.xsd, http://www.springframework.org/schema/tool/spring-tool-2.5.xsd=org/springframework/beans/factory/xml/spring-tool-2.5.xsd, http://www.springframework.org/schema/beans/spring-beans.xsd=org/springframework/beans/factory/xml/spring-beans-3.0.xsd, http://www.springframework.org/schema/jee/spring-jee-2.5.xsd=org/springframework/ejb/config/spring-jee-2.5.xsd, http://www.springframework.org/schema/security/spring-security-3.0.3.xsd=org/springframework/security/config/spring-security-3.0.3.xsd, http://www.springframework.org/schema/aop/spring-aop.xsd=org/springframework/aop/config/spring-aop-3.0.xsd, http://www.springframework.org/schema/beans/spring-beans-2.0.xsd=org/springframework/beans/factory/xml/spring-beans-2.0.xsd, http://www.springframework.org/schema/beans/spring-beans-3.0.xsd=org/springframework/beans/factory/xml/spring-beans-3.0.xsd, http://www.springframework.org/schema/security/spring-security-2.0.1.xsd=org/springframework/security/config/spring-security-2.0.1.xsd, http://www.springframework.org/schema/task/spring-task-3.0.xsd=org/springframework/scheduling/config/spring-task-3.0.xsd, http://www.springframework.org/schema/security/spring-security-2.0.xsd=org/springframework/security/config/spring-security-2.0.xsd, http://www.springframework.org/schema/security/spring-security-3.0.xsd=org/springframework/security/config/spring-security-3.0.xsd, http://www.springframework.org/schema/tx/spring-tx-2.5.xsd=org/springframework/transaction/config/spring-tx-2.5.xsd, http://www.compass-project.org/schema/spring-compass-core-config-2.2.xsd=org/compass/spring/config/spring-compass-core-config-2.2.xsd, http://www.springframework.org/schema/context/spring-context-2.5.xsd=org/springframework/context/config/spring-context-2.5.xsd, http://www.compass-project.org/schema/spring-compass-core-config.xsd=org/compass/spring/config/spring-compass-core-config-2.2.xsd, http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd=org/springframework/jdbc/config/spring-jdbc-3.0.xsd, http://www.springframework.org/schema/tool/spring-tool-3.0.xsd=org/springframework/beans/factory/xml/spring-tool-3.0.xsd, http://www.springframework.org/schema/tx/spring-tx.xsd=org/springframework/transaction/config/spring-tx-3.0.xsd, http://www.springframework.org/schema/tool/spring-tool-2.0.xsd=org/springframework/beans/factory/xml/spring-tool-2.0.xsd, http://www.springframework.org/schema/util/spring-util-2.5.xsd=org/springframework/beans/factory/xml/spring-util-2.5.xsd, http://www.springframework.org/schema/lang/spring-lang.xsd=org/springframework/scripting/config/spring-lang-3.0.xsd, http://www.springframework.org/schema/lang/spring-lang-2.5.xsd=org/springframework/scripting/config/spring-lang-2.5.xsd, http://www.springframework.org/schema/security/spring-security-2.0.4.xsd=org/springframework/security/config/spring-security-2.0.4.xsd, http://www.springframework.org/schema/jee/spring-jee-3.0.xsd=org/springframework/ejb/config/spring-jee-3.0.xsd, http://www.springframework.org/schema/jee/spring-jee-2.0.xsd=org/springframework/ejb/config/spring-jee-2.0.xsd, http://www.springframework.org/schema/security/spring-security.xsd=org/springframework/security/config/spring-security-3.0.4.xsd, http://www.springframework.org/schema/context/spring-context.xsd=org/springframework/context/config/spring-context-3.0.xsd, http://www.springframework.org/schema/jee/spring-jee.xsd=org/springframework/ejb/config/spring-jee-3.0.xsd, http://www.springframework.org/schema/aop/spring-aop-2.5.xsd=org/springframework/aop/config/spring-aop-2.5.xsd, http://www.springframework.org/schema/jdbc/spring-jdbc.xsd=org/springframework/jdbc/config/spring-jdbc-3.0.xsd, http://www.springframework.org/schema/tx/spring-tx-2.0.xsd=org/springframework/transaction/config/spring-tx-2.0.xsd, http://www.springframework.org/schema/tx/spring-tx-3.0.xsd=org/springframework/transaction/config/spring-tx-3.0.xsd, http://www.springframework.org/schema/context/spring-context-3.0.xsd=org/springframework/context/config/spring-context-3.0.xsd, http://www.springframework.org/schema/tool/spring-tool.xsd=org/springframework/beans/factory/xml/spring-tool-3.0.xsd, http://www.springframework.org/schema/util/spring-util-3.0.xsd=org/springframework/beans/factory/xml/spring-util-3.0.xsd, http://www.springframework.org/schema/lang/spring-lang-3.0.xsd=org/springframework/scripting/config/spring-lang-3.0.xsd, http://www.springframework.org/schema/util/spring-util-2.0.xsd=org/springframework/beans/factory/xml/spring-util-2.0.xsd, http://www.springframework.org/schema/lang/spring-lang-2.0.xsd=org/springframework/scripting/config/spring-lang-2.0.xsd, http://www.springframework.org/schema/beans/spring-beans-2.5.xsd=org/springframework/beans/factory/xml/spring-beans-2.5.xsd}
-2013-06-19 13:23:56,793 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-beans-2.0.xsd] against system root URL
-java.net.MalformedURLException: unknown protocol: classpath
-	at java.net.URL.<init>(URL.java:574)
-	at java.net.URL.<init>(URL.java:464)
-	at java.net.URL.<init>(URL.java:413)
-	at org.springframework.beans.factory.xml.ResourceEntityResolver.resolveEntity(ResourceEntityResolver.java:79)
-	at org.apache.xerces.util.EntityResolverWrapper.resolveEntity(Unknown Source)
-	at org.apache.xerces.impl.XMLEntityManager.resolveEntity(Unknown Source)
-	at org.apache.xerces.impl.xs.XMLSchemaLoader.resolveDocument(Unknown Source)
-	at org.apache.xerces.impl.xs.XMLSchemaValidator.findSchemaGrammar(Unknown Source)
-	at org.apache.xerces.impl.xs.XMLSchemaValidator.handleStartElement(Unknown Source)
-	at org.apache.xerces.impl.xs.XMLSchemaValidator.startElement(Unknown Source)
-	at org.apache.xerces.impl.XMLNSDocumentScannerImpl.scanStartElement(Unknown Source)
-	at org.apache.xerces.impl.XMLNSDocumentScannerImpl$NSContentDispatcher.scanRootElementHook(Unknown Source)
-	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
-	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
-	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
-	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
-	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
-	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
-	at org.apache.xerces.jaxp.DocumentBuilderImpl.parse(Unknown Source)
-	at org.springframework.beans.factory.xml.DefaultDocumentLoader.loadDocument(DefaultDocumentLoader.java:75)
-	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadBeanDefinitions(XmlBeanDefinitionReader.java:388)
-	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:334)
-	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:302)
-	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:143)
-	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:178)
-	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:149)
-	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:212)
-	at org.springframework.context.support.AbstractXmlApplicationContext.loadBeanDefinitions(AbstractXmlApplicationContext.java:126)
-	at org.springframework.context.support.AbstractXmlApplicationContext.loadBeanDefinitions(AbstractXmlApplicationContext.java:92)
-	at org.springframework.context.support.AbstractRefreshableApplicationContext.refreshBeanFactory(AbstractRefreshableApplicationContext.java:130)
-	at org.springframework.context.support.AbstractApplicationContext.obtainFreshBeanFactory(AbstractApplicationContext.java:467)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:397)
-	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:139)
-	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:83)
-	at org.lexevs.locator.LexEvsServiceLocator.getInstance(LexEvsServiceLocator.java:79)
-	at org.LexGrid.LexBIG.Impl.helpers.DefaultCodeToReturnResolver.doBuildResolvedConceptReference(DefaultCodeToReturnResolver.java:65)
-	at org.LexGrid.LexBIG.Impl.helpers.DefaultCodeToReturnResolver.buildResolvedConceptReference(DefaultCodeToReturnResolver.java:130)
-	at org.LexGrid.LexBIG.Impl.helpers.ResolvedConceptReferencesIteratorImpl.next(ResolvedConceptReferencesIteratorImpl.java:185)
-	at org.LexGrid.LexBIG.Impl.helpers.ResolvedConceptReferencesIteratorImpl.next(ResolvedConceptReferencesIteratorImpl.java:134)
-	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getEVSConcepts(AuditConceptToEVS.java:902)
-	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.resolveNodeSet(AuditConceptToEVS.java:892)
-	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.validate(AuditConceptToEVS.java:780)
-	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getReportRows(AuditConceptToEVS.java:60)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1216)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1892)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:610)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:147)
-2013-06-19 13:23:56,793 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-beans-2.0.xsd]: class path resource [springxsds/spring-beans-2.0.xsd]
-2013-06-19 13:23:56,871 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-tx-2.0.xsd] against system root URL
+2013-06-19 14:26:50,646 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-tx-2.0.xsd]: class path resource [springxsds/spring-tx-2.0.xsd]
+2013-06-19 14:26:50,646 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-util-2.0.xsd] against system root URL
 java.net.MalformedURLException: unknown protocol: classpath
 	at java.net.URL.<init>(URL.java:574)
 	at java.net.URL.<init>(URL.java:464)
@@ -694,64 +43,15 @@ java.net.MalformedURLException: unknown protocol: classpath
 	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.resolveNodeSet(AuditConceptToEVS.java:892)
 	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.validate(AuditConceptToEVS.java:780)
 	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getReportRows(AuditConceptToEVS.java:60)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1216)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1892)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:610)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:147)
-2013-06-19 13:23:56,871 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-tx-2.0.xsd]: class path resource [springxsds/spring-tx-2.0.xsd]
-2013-06-19 13:23:56,886 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-util-2.0.xsd] against system root URL
-java.net.MalformedURLException: unknown protocol: classpath
-	at java.net.URL.<init>(URL.java:574)
-	at java.net.URL.<init>(URL.java:464)
-	at java.net.URL.<init>(URL.java:413)
-	at org.springframework.beans.factory.xml.ResourceEntityResolver.resolveEntity(ResourceEntityResolver.java:79)
-	at org.apache.xerces.util.EntityResolverWrapper.resolveEntity(Unknown Source)
-	at org.apache.xerces.impl.XMLEntityManager.resolveEntity(Unknown Source)
-	at org.apache.xerces.impl.xs.XMLSchemaLoader.resolveDocument(Unknown Source)
-	at org.apache.xerces.impl.xs.XMLSchemaValidator.findSchemaGrammar(Unknown Source)
-	at org.apache.xerces.impl.xs.XMLSchemaValidator.handleStartElement(Unknown Source)
-	at org.apache.xerces.impl.xs.XMLSchemaValidator.emptyElement(Unknown Source)
-	at org.apache.xerces.impl.XMLNSDocumentScannerImpl.scanStartElement(Unknown Source)
-	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
-	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
-	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
-	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
-	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
-	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
-	at org.apache.xerces.jaxp.DocumentBuilderImpl.parse(Unknown Source)
-	at org.springframework.beans.factory.xml.DefaultDocumentLoader.loadDocument(DefaultDocumentLoader.java:75)
-	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadBeanDefinitions(XmlBeanDefinitionReader.java:388)
-	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:334)
-	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:302)
-	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:143)
-	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:178)
-	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:149)
-	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:212)
-	at org.springframework.context.support.AbstractXmlApplicationContext.loadBeanDefinitions(AbstractXmlApplicationContext.java:126)
-	at org.springframework.context.support.AbstractXmlApplicationContext.loadBeanDefinitions(AbstractXmlApplicationContext.java:92)
-	at org.springframework.context.support.AbstractRefreshableApplicationContext.refreshBeanFactory(AbstractRefreshableApplicationContext.java:130)
-	at org.springframework.context.support.AbstractApplicationContext.obtainFreshBeanFactory(AbstractApplicationContext.java:467)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:397)
-	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:139)
-	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:83)
-	at org.lexevs.locator.LexEvsServiceLocator.getInstance(LexEvsServiceLocator.java:79)
-	at org.LexGrid.LexBIG.Impl.helpers.DefaultCodeToReturnResolver.doBuildResolvedConceptReference(DefaultCodeToReturnResolver.java:65)
-	at org.LexGrid.LexBIG.Impl.helpers.DefaultCodeToReturnResolver.buildResolvedConceptReference(DefaultCodeToReturnResolver.java:130)
-	at org.LexGrid.LexBIG.Impl.helpers.ResolvedConceptReferencesIteratorImpl.next(ResolvedConceptReferencesIteratorImpl.java:185)
-	at org.LexGrid.LexBIG.Impl.helpers.ResolvedConceptReferencesIteratorImpl.next(ResolvedConceptReferencesIteratorImpl.java:134)
-	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getEVSConcepts(AuditConceptToEVS.java:902)
-	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.resolveNodeSet(AuditConceptToEVS.java:892)
-	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.validate(AuditConceptToEVS.java:780)
-	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getReportRows(AuditConceptToEVS.java:60)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1216)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1892)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:610)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:147)
-2013-06-19 13:23:56,886 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-util-2.0.xsd]: class path resource [springxsds/spring-util-2.0.xsd]
-2013-06-19 13:23:56,886 DEBUG [org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader : 87] Loading bean definitions
-2013-06-19 13:23:56,886 INFO  [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 315] Loading XML bean definitions from class path resource [lexevsCache.xml]
-2013-06-19 13:23:56,886 DEBUG [org.springframework.beans.factory.xml.DefaultDocumentLoader : 72] Using JAXP provider [org.apache.xerces.jaxp.DocumentBuilderFactoryImpl]
-2013-06-19 13:23:56,886 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-beans-2.0.xsd] against system root URL
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1219)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1895)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:613)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:149)
+2013-06-19 14:26:50,662 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-util-2.0.xsd]: class path resource [springxsds/spring-util-2.0.xsd]
+2013-06-19 14:26:50,662 DEBUG [org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader : 87] Loading bean definitions
+2013-06-19 14:26:50,662 INFO  [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 315] Loading XML bean definitions from class path resource [lexevsCache.xml]
+2013-06-19 14:26:50,662 DEBUG [org.springframework.beans.factory.xml.DefaultDocumentLoader : 72] Using JAXP provider [org.apache.xerces.jaxp.DocumentBuilderFactoryImpl]
+2013-06-19 14:26:50,662 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-beans-2.0.xsd] against system root URL
 java.net.MalformedURLException: unknown protocol: classpath
 	at java.net.URL.<init>(URL.java:574)
 	at java.net.URL.<init>(URL.java:464)
@@ -806,12 +106,12 @@ java.net.MalformedURLException: unknown protocol: classpath
 	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.resolveNodeSet(AuditConceptToEVS.java:892)
 	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.validate(AuditConceptToEVS.java:780)
 	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getReportRows(AuditConceptToEVS.java:60)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1216)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1892)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:610)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:147)
-2013-06-19 13:23:56,886 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-beans-2.0.xsd]: class path resource [springxsds/spring-beans-2.0.xsd]
-2013-06-19 13:23:56,902 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-aop-2.0.xsd] against system root URL
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1219)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1895)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:613)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:149)
+2013-06-19 14:26:50,662 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-beans-2.0.xsd]: class path resource [springxsds/spring-beans-2.0.xsd]
+2013-06-19 14:26:50,677 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-aop-2.0.xsd] against system root URL
 java.net.MalformedURLException: unknown protocol: classpath
 	at java.net.URL.<init>(URL.java:574)
 	at java.net.URL.<init>(URL.java:464)
@@ -865,67 +165,67 @@ java.net.MalformedURLException: unknown protocol: classpath
 	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.resolveNodeSet(AuditConceptToEVS.java:892)
 	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.validate(AuditConceptToEVS.java:780)
 	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getReportRows(AuditConceptToEVS.java:60)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1216)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1892)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:610)
-	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:147)
-2013-06-19 13:23:56,902 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-aop-2.0.xsd]: class path resource [springxsds/spring-aop-2.0.xsd]
-2013-06-19 13:23:56,902 DEBUG [org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader : 87] Loading bean definitions
-2013-06-19 13:23:56,918 DEBUG [org.springframework.beans.factory.xml.DefaultNamespaceHandlerResolver : 156] Loaded NamespaceHandler mappings: {http://www.springframework.org/schema/p=org.springframework.beans.factory.xml.SimplePropertyNamespaceHandler, http://www.compass-project.org/schema/spring-core-config=org.compass.spring.config.CompassNamespaceHandler, http://www.springframework.org/schema/util=org.springframework.beans.factory.xml.UtilNamespaceHandler, http://www.springframework.org/schema/jee=org.springframework.ejb.config.JeeNamespaceHandler, http://www.springframework.org/schema/aop=org.springframework.aop.config.AopNamespaceHandler, http://www.springframework.org/schema/jdbc=org.springframework.jdbc.config.JdbcNamespaceHandler, http://www.springframework.org/schema/security=org.springframework.security.config.SecurityNamespaceHandler, http://www.springframework.org/schema/tx=org.springframework.transaction.config.TxNamespaceHandler, http://www.springframework.org/schema/task=org.springframework.scheduling.config.TaskNamespaceHandler, http://www.springframework.org/schema/lang=org.springframework.scripting.config.LangNamespaceHandler, http://www.springframework.org/schema/context=org.springframework.context.config.ContextNamespaceHandler}
-2013-06-19 13:23:56,918 DEBUG [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 185] Loaded 7 bean definitions from location pattern [classpath:lexevsCache.xml]
-2013-06-19 13:23:56,933 DEBUG [org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader : 188] Imported 7 bean definitions from URL location [classpath:lexevsCache.xml]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityPropertyInsertListener#9e7e21]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityPropertyUpdateListener#16ac176]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityPropertyRemoveListener#1c36633]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.SystemResourceRefreshingListener#16ab8d1]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityInsertListener#18bd34e]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityUpdateListener#ddb923]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityRemoveListener#a5e9e7]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.HistoryTableReplicatingListener#9f4434]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.NullEntityNamespaceListener#36c9d5]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.NullAssociationNamespaceListener#fced38]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.InvalidPropertyLinkListener#13a19e3]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.DuplicatePropertyIdListener#179bd14]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.DefaultLanguageAddingListener#16c8672]
-2013-06-19 13:23:56,949 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.key.incrementer.RandomGuidKeyIncrementer#4534b2]
-2013-06-19 13:23:56,980 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 1397] Using generated bean name [util:constant#6fbd76] for nested custom element 'util:constant'
-2013-06-19 13:23:56,980 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 1397] Using generated bean name [util:constant#1ffba4f] for nested custom element 'util:constant'
-2013-06-19 13:23:56,980 INFO  [org.springframework.beans.factory.support.DefaultListableBeanFactory : 618] Overriding bean definition for bean 'cacheConfigLocationFactory': replacing [Generic bean: class [org.lexevs.cache.CacheConfigLocationFactory]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [lexevsCache.xml]] with [Generic bean: class [org.lexevs.cache.CacheConfigLocationFactory]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [lexevsDao.xml]]
-2013-06-19 13:23:56,980 DEBUG [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 185] Loaded 133 bean definitions from location pattern [lexevsDao.xml]
-2013-06-19 13:23:56,980 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 470] Bean factory for org.springframework.context.support.ClassPathXmlApplicationContext@ee1aeb: org.springframework.beans.factory.support.DefaultListableBeanFactory@20ba62: defining beans [org.springframework.aop.config.internalAutoProxyCreator,cacheConfigLocationFactory,ehCacheManager,methodCachingProxyAspect,cacheWrappingFactory,methodCachingInterceptor,cacheRegistry,sqlMap,defaultRootBuilder,defaultTransitivityBuilder,abstractIbatisDao,ibatisPropertyDao,ibatisCodingSchemeDao,ibatisPickListDao,ibatisPickListEntryNodeDao,ibatisValueSetDefinitionDao,ibatisVSDefinitionEntryDao,ibatisVSPropertyDao,ibatisVSEntryStateDao,abstractSqlInterfaceDao,sqlInterfaceCodingSchemeDao,sqlImplementedMethodsDao,sqlInterfaceEntityDao,daoManager,ibatisEntityDao,ibatisCodedNodeGraphDao,ibatisAssociationDao,ibatisAssociationTargetDao,ibatisAssociationDataDao,ibatisVersionsDao,ibatisSystemReleaseDao,ibatisRevisionDao,ibatisNciHistoryDao,databaseServiceManager,extensionLoadingListenerRegistry,abstractService,daoManagerDaoCallbackService,authoringService,relationService,codingSchemeService,propertyService,entityService,codedNodeGraphService,associationService,associationTargetService,associationDataService,pickListDefinitionService,pickListEntryNodeService,valueSetDefinitionService,vsDefinitionEntryService,vsPropertyService,nciHistoryService,lexEvsJdbcTemplate,sqlMapClientTemplate,abstractResourceManagerVariableFactory,transactionManager,defaultPrefixResolver,hibernateRegistryDao,unPooledDataSource,validationQueryFactory,jdbcDriverClass,dsConnectionFactory,myClassLoader,pool,poolableConnectionFactory,loggerFactory,systemVariables,abstractSystemVariableFactory,dbUrl,dbPassword,dbUser,dbDriver,dbPrefix,dbConnections,dbcpDataSource,dataSource,persistenceSchemeVersion,defaultVersion20Scheme,persistenceScheme,primaryKeyIncrementer,mysqlTableBasedBigIntKeyIncrementer,sequenceBasedBigIntKeyIncrementer,defaultLexEvsDatabaseOperations,lexevsHistoryCreateScript,lexevsValueSetHistoryCreateScript,lexevsCodingSchemeSchemaCreateScript,lexevsCodingSchemeSchemaDropScript,lexevsCommonSchemaCreateScript,lexevsValueSetsSchemaCreateScript,lexevsNciHistorySchemaCreateScript,registryXmlToDatabaseTransfer,registrySessionFactory,prefixInterceptor,databaseRegistry,xmlRegistry,registry,cyclingCharDbPrefixGenerator,resourceManager,delegatingResourceManagingService,lexEvsResourceManagingService,lexEvsSchemaInstallationSetup,defaultDatabaseUtility,lexGridSchemaCheckFactory,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,databaseTypeFactory,lexEvsServiceLocator,loggingBean,codingSchemeRegisteringListener,entityBatchingIndexCreator,defaultLexEvsIndexOperations,luceneEntityIndexService,luceneMetadataIndexService,indexServiceManager,indexDaoManager,indexerService,luceneMetadataDao,luceneMetadataIndexCreator,baseMetaDataLoader,luceneIndexEntityDao,luceneEntity2009Dao,commonIndexLoaderCodeIndexer,abstractDirectoryFactory,commonIndexDirectory,commonIndexLocation,metadataIndexDirectory,metadataIndexLocation,defaultLuceneDirectoryCreator,luceneIndexMetadataFactory,luceneEntityIndexTemplate,luceneMetadataIndexTemplate,indexRegistry]; root of factory hierarchy
-2013-06-19 13:23:57,121 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'org.springframework.aop.config.internalAutoProxyCreator'
-2013-06-19 13:23:57,121 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.springframework.aop.config.internalAutoProxyCreator'
-2013-06-19 13:23:57,136 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'org.springframework.aop.config.internalAutoProxyCreator' to allow for resolving potential circular references
-2013-06-19 13:23:57,152 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.springframework.aop.config.internalAutoProxyCreator'
-2013-06-19 13:23:57,152 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 776] Unable to locate MessageSource with name 'messageSource': using default [org.springframework.context.support.DelegatingMessageSource@18d0299]
-2013-06-19 13:23:57,152 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 800] Unable to locate ApplicationEventMulticaster with name 'applicationEventMulticaster': using default [org.springframework.context.event.SimpleApplicationEventMulticaster@a5b39c]
-2013-06-19 13:23:57,152 INFO  [org.springframework.beans.factory.support.DefaultListableBeanFactory : 555] Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@20ba62: defining beans [org.springframework.aop.config.internalAutoProxyCreator,cacheConfigLocationFactory,ehCacheManager,methodCachingProxyAspect,cacheWrappingFactory,methodCachingInterceptor,cacheRegistry,sqlMap,defaultRootBuilder,defaultTransitivityBuilder,abstractIbatisDao,ibatisPropertyDao,ibatisCodingSchemeDao,ibatisPickListDao,ibatisPickListEntryNodeDao,ibatisValueSetDefinitionDao,ibatisVSDefinitionEntryDao,ibatisVSPropertyDao,ibatisVSEntryStateDao,abstractSqlInterfaceDao,sqlInterfaceCodingSchemeDao,sqlImplementedMethodsDao,sqlInterfaceEntityDao,daoManager,ibatisEntityDao,ibatisCodedNodeGraphDao,ibatisAssociationDao,ibatisAssociationTargetDao,ibatisAssociationDataDao,ibatisVersionsDao,ibatisSystemReleaseDao,ibatisRevisionDao,ibatisNciHistoryDao,databaseServiceManager,extensionLoadingListenerRegistry,abstractService,daoManagerDaoCallbackService,authoringService,relationService,codingSchemeService,propertyService,entityService,codedNodeGraphService,associationService,associationTargetService,associationDataService,pickListDefinitionService,pickListEntryNodeService,valueSetDefinitionService,vsDefinitionEntryService,vsPropertyService,nciHistoryService,lexEvsJdbcTemplate,sqlMapClientTemplate,abstractResourceManagerVariableFactory,transactionManager,defaultPrefixResolver,hibernateRegistryDao,unPooledDataSource,validationQueryFactory,jdbcDriverClass,dsConnectionFactory,myClassLoader,pool,poolableConnectionFactory,loggerFactory,systemVariables,abstractSystemVariableFactory,dbUrl,dbPassword,dbUser,dbDriver,dbPrefix,dbConnections,dbcpDataSource,dataSource,persistenceSchemeVersion,defaultVersion20Scheme,persistenceScheme,primaryKeyIncrementer,mysqlTableBasedBigIntKeyIncrementer,sequenceBasedBigIntKeyIncrementer,defaultLexEvsDatabaseOperations,lexevsHistoryCreateScript,lexevsValueSetHistoryCreateScript,lexevsCodingSchemeSchemaCreateScript,lexevsCodingSchemeSchemaDropScript,lexevsCommonSchemaCreateScript,lexevsValueSetsSchemaCreateScript,lexevsNciHistorySchemaCreateScript,registryXmlToDatabaseTransfer,registrySessionFactory,prefixInterceptor,databaseRegistry,xmlRegistry,registry,cyclingCharDbPrefixGenerator,resourceManager,delegatingResourceManagingService,lexEvsResourceManagingService,lexEvsSchemaInstallationSetup,defaultDatabaseUtility,lexGridSchemaCheckFactory,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,databaseTypeFactory,lexEvsServiceLocator,loggingBean,codingSchemeRegisteringListener,entityBatchingIndexCreator,defaultLexEvsIndexOperations,luceneEntityIndexService,luceneMetadataIndexService,indexServiceManager,indexDaoManager,indexerService,luceneMetadataDao,luceneMetadataIndexCreator,baseMetaDataLoader,luceneIndexEntityDao,luceneEntity2009Dao,commonIndexLoaderCodeIndexer,abstractDirectoryFactory,commonIndexDirectory,commonIndexLocation,metadataIndexDirectory,metadataIndexLocation,defaultLuceneDirectoryCreator,luceneIndexMetadataFactory,luceneEntityIndexTemplate,luceneMetadataIndexTemplate,indexRegistry]; root of factory hierarchy
-2013-06-19 13:23:57,152 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'org.springframework.aop.config.internalAutoProxyCreator'
-2013-06-19 13:23:57,152 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'cacheConfigLocationFactory'
-2013-06-19 13:23:57,152 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'cacheConfigLocationFactory'
-2013-06-19 13:23:57,152 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'org.springframework.transaction.config.internalTransactionAdvisor'
-2013-06-19 13:23:57,152 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.springframework.transaction.config.internalTransactionAdvisor'
-2013-06-19 13:23:57,167 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'org.springframework.transaction.config.internalTransactionAdvisor' to allow for resolving potential circular references
-2013-06-19 13:23:57,167 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0'
-2013-06-19 13:23:57,167 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0'
-2013-06-19 13:23:57,199 DEBUG [org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory : 172] Found AspectJ method: public java.lang.Object org.lexevs.cache.MethodCachingProxy.cacheMethod(org.aspectj.lang.ProceedingJoinPoint) throws java.lang.Throwable
-2013-06-19 13:23:57,214 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0' to allow for resolving potential circular references
-2013-06-19 13:23:57,480 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0'
-2013-06-19 13:23:57,480 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.springframework.transaction.config.internalTransactionAdvisor'
-2013-06-19 13:23:57,480 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'cacheConfigLocationFactory' to allow for resolving potential circular references
-2013-06-19 13:23:57,480 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'systemVariables'
-2013-06-19 13:23:57,495 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'systemVariables'
-2013-06-19 13:23:57,495 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'org.springframework.transaction.config.internalTransactionAdvisor'
-2013-06-19 13:23:57,495 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'loggerFactory'
-2013-06-19 13:23:57,495 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'loggerFactory'
-2013-06-19 13:23:57,495 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'org.springframework.transaction.config.internalTransactionAdvisor'
-2013-06-19 13:23:57,511 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 67] gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:147): Rows count in getReportRows(): 12
-2013-06-19 13:23:57,683 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 299] Closed log: 2013-06-19 13:20:14.534: /local/content/cadsrsentinel/reports/Audits_20130619132014534.html
-2013-06-19 13:23:57,683 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 617] 
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1219)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1895)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:613)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:149)
+2013-06-19 14:26:50,677 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-aop-2.0.xsd]: class path resource [springxsds/spring-aop-2.0.xsd]
+2013-06-19 14:26:50,677 DEBUG [org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader : 87] Loading bean definitions
+2013-06-19 14:26:50,677 DEBUG [org.springframework.beans.factory.xml.DefaultNamespaceHandlerResolver : 156] Loaded NamespaceHandler mappings: {http://www.springframework.org/schema/p=org.springframework.beans.factory.xml.SimplePropertyNamespaceHandler, http://www.compass-project.org/schema/spring-core-config=org.compass.spring.config.CompassNamespaceHandler, http://www.springframework.org/schema/util=org.springframework.beans.factory.xml.UtilNamespaceHandler, http://www.springframework.org/schema/jee=org.springframework.ejb.config.JeeNamespaceHandler, http://www.springframework.org/schema/aop=org.springframework.aop.config.AopNamespaceHandler, http://www.springframework.org/schema/jdbc=org.springframework.jdbc.config.JdbcNamespaceHandler, http://www.springframework.org/schema/security=org.springframework.security.config.SecurityNamespaceHandler, http://www.springframework.org/schema/tx=org.springframework.transaction.config.TxNamespaceHandler, http://www.springframework.org/schema/task=org.springframework.scheduling.config.TaskNamespaceHandler, http://www.springframework.org/schema/lang=org.springframework.scripting.config.LangNamespaceHandler, http://www.springframework.org/schema/context=org.springframework.context.config.ContextNamespaceHandler}
+2013-06-19 14:26:50,709 DEBUG [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 185] Loaded 7 bean definitions from location pattern [classpath:lexevsCache.xml]
+2013-06-19 14:26:50,709 DEBUG [org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader : 188] Imported 7 bean definitions from URL location [classpath:lexevsCache.xml]
+2013-06-19 14:26:50,709 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityPropertyInsertListener#1eb59b1]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityPropertyUpdateListener#4dabd7]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityPropertyRemoveListener#14cecee]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.SystemResourceRefreshingListener#1573137]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityInsertListener#16020ed]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityUpdateListener#11cc36]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityRemoveListener#762acf]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.HistoryTableReplicatingListener#1f4a968]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.NullEntityNamespaceListener#19e0684]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.NullAssociationNamespaceListener#1bdedf8]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.InvalidPropertyLinkListener#5264dc]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.DuplicatePropertyIdListener#15bd8eb]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.DefaultLanguageAddingListener#fe4dd2]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.key.incrementer.RandomGuidKeyIncrementer#572554]
+2013-06-19 14:26:50,756 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 1397] Using generated bean name [util:constant#148ff04] for nested custom element 'util:constant'
+2013-06-19 14:26:50,756 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 1397] Using generated bean name [util:constant#15e7f0b] for nested custom element 'util:constant'
+2013-06-19 14:26:50,756 INFO  [org.springframework.beans.factory.support.DefaultListableBeanFactory : 618] Overriding bean definition for bean 'cacheConfigLocationFactory': replacing [Generic bean: class [org.lexevs.cache.CacheConfigLocationFactory]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [lexevsCache.xml]] with [Generic bean: class [org.lexevs.cache.CacheConfigLocationFactory]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [lexevsDao.xml]]
+2013-06-19 14:26:50,756 DEBUG [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 185] Loaded 133 bean definitions from location pattern [lexevsDao.xml]
+2013-06-19 14:26:50,756 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 470] Bean factory for org.springframework.context.support.ClassPathXmlApplicationContext@7ee722: org.springframework.beans.factory.support.DefaultListableBeanFactory@e6ace7: defining beans [org.springframework.aop.config.internalAutoProxyCreator,cacheConfigLocationFactory,ehCacheManager,methodCachingProxyAspect,cacheWrappingFactory,methodCachingInterceptor,cacheRegistry,sqlMap,defaultRootBuilder,defaultTransitivityBuilder,abstractIbatisDao,ibatisPropertyDao,ibatisCodingSchemeDao,ibatisPickListDao,ibatisPickListEntryNodeDao,ibatisValueSetDefinitionDao,ibatisVSDefinitionEntryDao,ibatisVSPropertyDao,ibatisVSEntryStateDao,abstractSqlInterfaceDao,sqlInterfaceCodingSchemeDao,sqlImplementedMethodsDao,sqlInterfaceEntityDao,daoManager,ibatisEntityDao,ibatisCodedNodeGraphDao,ibatisAssociationDao,ibatisAssociationTargetDao,ibatisAssociationDataDao,ibatisVersionsDao,ibatisSystemReleaseDao,ibatisRevisionDao,ibatisNciHistoryDao,databaseServiceManager,extensionLoadingListenerRegistry,abstractService,daoManagerDaoCallbackService,authoringService,relationService,codingSchemeService,propertyService,entityService,codedNodeGraphService,associationService,associationTargetService,associationDataService,pickListDefinitionService,pickListEntryNodeService,valueSetDefinitionService,vsDefinitionEntryService,vsPropertyService,nciHistoryService,lexEvsJdbcTemplate,sqlMapClientTemplate,abstractResourceManagerVariableFactory,transactionManager,defaultPrefixResolver,hibernateRegistryDao,unPooledDataSource,validationQueryFactory,jdbcDriverClass,dsConnectionFactory,myClassLoader,pool,poolableConnectionFactory,loggerFactory,systemVariables,abstractSystemVariableFactory,dbUrl,dbPassword,dbUser,dbDriver,dbPrefix,dbConnections,dbcpDataSource,dataSource,persistenceSchemeVersion,defaultVersion20Scheme,persistenceScheme,primaryKeyIncrementer,mysqlTableBasedBigIntKeyIncrementer,sequenceBasedBigIntKeyIncrementer,defaultLexEvsDatabaseOperations,lexevsHistoryCreateScript,lexevsValueSetHistoryCreateScript,lexevsCodingSchemeSchemaCreateScript,lexevsCodingSchemeSchemaDropScript,lexevsCommonSchemaCreateScript,lexevsValueSetsSchemaCreateScript,lexevsNciHistorySchemaCreateScript,registryXmlToDatabaseTransfer,registrySessionFactory,prefixInterceptor,databaseRegistry,xmlRegistry,registry,cyclingCharDbPrefixGenerator,resourceManager,delegatingResourceManagingService,lexEvsResourceManagingService,lexEvsSchemaInstallationSetup,defaultDatabaseUtility,lexGridSchemaCheckFactory,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,databaseTypeFactory,lexEvsServiceLocator,loggingBean,codingSchemeRegisteringListener,entityBatchingIndexCreator,defaultLexEvsIndexOperations,luceneEntityIndexService,luceneMetadataIndexService,indexServiceManager,indexDaoManager,indexerService,luceneMetadataDao,luceneMetadataIndexCreator,baseMetaDataLoader,luceneIndexEntityDao,luceneEntity2009Dao,commonIndexLoaderCodeIndexer,abstractDirectoryFactory,commonIndexDirectory,commonIndexLocation,metadataIndexDirectory,metadataIndexLocation,defaultLuceneDirectoryCreator,luceneIndexMetadataFactory,luceneEntityIndexTemplate,luceneMetadataIndexTemplate,indexRegistry]; root of factory hierarchy
+2013-06-19 14:26:50,896 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'org.springframework.aop.config.internalAutoProxyCreator'
+2013-06-19 14:26:50,896 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.springframework.aop.config.internalAutoProxyCreator'
+2013-06-19 14:26:50,912 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'org.springframework.aop.config.internalAutoProxyCreator' to allow for resolving potential circular references
+2013-06-19 14:26:50,912 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.springframework.aop.config.internalAutoProxyCreator'
+2013-06-19 14:26:50,927 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 776] Unable to locate MessageSource with name 'messageSource': using default [org.springframework.context.support.DelegatingMessageSource@135cda0]
+2013-06-19 14:26:50,927 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 800] Unable to locate ApplicationEventMulticaster with name 'applicationEventMulticaster': using default [org.springframework.context.event.SimpleApplicationEventMulticaster@14ee2c5]
+2013-06-19 14:26:50,927 INFO  [org.springframework.beans.factory.support.DefaultListableBeanFactory : 555] Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@e6ace7: defining beans [org.springframework.aop.config.internalAutoProxyCreator,cacheConfigLocationFactory,ehCacheManager,methodCachingProxyAspect,cacheWrappingFactory,methodCachingInterceptor,cacheRegistry,sqlMap,defaultRootBuilder,defaultTransitivityBuilder,abstractIbatisDao,ibatisPropertyDao,ibatisCodingSchemeDao,ibatisPickListDao,ibatisPickListEntryNodeDao,ibatisValueSetDefinitionDao,ibatisVSDefinitionEntryDao,ibatisVSPropertyDao,ibatisVSEntryStateDao,abstractSqlInterfaceDao,sqlInterfaceCodingSchemeDao,sqlImplementedMethodsDao,sqlInterfaceEntityDao,daoManager,ibatisEntityDao,ibatisCodedNodeGraphDao,ibatisAssociationDao,ibatisAssociationTargetDao,ibatisAssociationDataDao,ibatisVersionsDao,ibatisSystemReleaseDao,ibatisRevisionDao,ibatisNciHistoryDao,databaseServiceManager,extensionLoadingListenerRegistry,abstractService,daoManagerDaoCallbackService,authoringService,relationService,codingSchemeService,propertyService,entityService,codedNodeGraphService,associationService,associationTargetService,associationDataService,pickListDefinitionService,pickListEntryNodeService,valueSetDefinitionService,vsDefinitionEntryService,vsPropertyService,nciHistoryService,lexEvsJdbcTemplate,sqlMapClientTemplate,abstractResourceManagerVariableFactory,transactionManager,defaultPrefixResolver,hibernateRegistryDao,unPooledDataSource,validationQueryFactory,jdbcDriverClass,dsConnectionFactory,myClassLoader,pool,poolableConnectionFactory,loggerFactory,systemVariables,abstractSystemVariableFactory,dbUrl,dbPassword,dbUser,dbDriver,dbPrefix,dbConnections,dbcpDataSource,dataSource,persistenceSchemeVersion,defaultVersion20Scheme,persistenceScheme,primaryKeyIncrementer,mysqlTableBasedBigIntKeyIncrementer,sequenceBasedBigIntKeyIncrementer,defaultLexEvsDatabaseOperations,lexevsHistoryCreateScript,lexevsValueSetHistoryCreateScript,lexevsCodingSchemeSchemaCreateScript,lexevsCodingSchemeSchemaDropScript,lexevsCommonSchemaCreateScript,lexevsValueSetsSchemaCreateScript,lexevsNciHistorySchemaCreateScript,registryXmlToDatabaseTransfer,registrySessionFactory,prefixInterceptor,databaseRegistry,xmlRegistry,registry,cyclingCharDbPrefixGenerator,resourceManager,delegatingResourceManagingService,lexEvsResourceManagingService,lexEvsSchemaInstallationSetup,defaultDatabaseUtility,lexGridSchemaCheckFactory,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,databaseTypeFactory,lexEvsServiceLocator,loggingBean,codingSchemeRegisteringListener,entityBatchingIndexCreator,defaultLexEvsIndexOperations,luceneEntityIndexService,luceneMetadataIndexService,indexServiceManager,indexDaoManager,indexerService,luceneMetadataDao,luceneMetadataIndexCreator,baseMetaDataLoader,luceneIndexEntityDao,luceneEntity2009Dao,commonIndexLoaderCodeIndexer,abstractDirectoryFactory,commonIndexDirectory,commonIndexLocation,metadataIndexDirectory,metadataIndexLocation,defaultLuceneDirectoryCreator,luceneIndexMetadataFactory,luceneEntityIndexTemplate,luceneMetadataIndexTemplate,indexRegistry]; root of factory hierarchy
+2013-06-19 14:26:50,927 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'org.springframework.aop.config.internalAutoProxyCreator'
+2013-06-19 14:26:50,927 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'cacheConfigLocationFactory'
+2013-06-19 14:26:50,927 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'cacheConfigLocationFactory'
+2013-06-19 14:26:50,927 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'org.springframework.transaction.config.internalTransactionAdvisor'
+2013-06-19 14:26:50,927 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.springframework.transaction.config.internalTransactionAdvisor'
+2013-06-19 14:26:50,943 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'org.springframework.transaction.config.internalTransactionAdvisor' to allow for resolving potential circular references
+2013-06-19 14:26:50,943 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0'
+2013-06-19 14:26:50,943 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0'
+2013-06-19 14:26:50,974 DEBUG [org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory : 172] Found AspectJ method: public java.lang.Object org.lexevs.cache.MethodCachingProxy.cacheMethod(org.aspectj.lang.ProceedingJoinPoint) throws java.lang.Throwable
+2013-06-19 14:26:50,990 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0' to allow for resolving potential circular references
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.springframework.transaction.config.internalTransactionAdvisor'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'cacheConfigLocationFactory' to allow for resolving potential circular references
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'systemVariables'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'systemVariables'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'org.springframework.transaction.config.internalTransactionAdvisor'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'loggerFactory'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'loggerFactory'
+2013-06-19 14:26:51,270 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'org.springframework.transaction.config.internalTransactionAdvisor'
+2013-06-19 14:26:51,286 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 67] gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:149): Rows count in getReportRows(): 12
+2013-06-19 14:26:51,458 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 299] Closed log: 2013-06-19 14:23:08.492: /local/content/cadsrsentinel/reports/Audits_20130619142308492.html
+2013-06-19 14:26:51,458 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 620] 
 Executing autoRun2() ...
 
 
-2013-06-19 13:24:22,983 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1948] Sent admin report to lhebel@scenpro.com
-2013-06-19 13:24:23,108 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1948] Sent admin report to davet@mail.nih.gov
-2013-06-19 13:24:23,233 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1959] Sent statistics report to azien@mail.nih.gov
-2013-06-19 13:24:23,233 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 299] Closed log: 2013-06-19 13:20:14.534: /local/content/cadsrsentinel/reports/RunLog_Auto_20130619132014534.html
+2013-06-19 14:27:08,436 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1951] Sent admin report to lhebel@scenpro.com
+2013-06-19 14:27:08,545 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1951] Sent admin report to davet@mail.nih.gov
+2013-06-19 14:27:08,670 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1962] Sent statistics report to azien@mail.nih.gov
+2013-06-19 14:27:08,686 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 299] Closed log: 2013-06-19 14:23:08.492: /local/content/cadsrsentinel/reports/RunLog_Auto_20130619142308492.html
