@@ -162,7 +162,7 @@ public class AutoProcessAlerts
     {
         Properties prop = new Properties();
 
-        _logger.info("\n\nLoading properties ...\n\n");
+        _logger.info("\n\nLoading properties b001 ...\n\n");
         FileInputStream in = new FileInputStream(propFile_);
         prop.loadFromXML(in);
         in.close();
