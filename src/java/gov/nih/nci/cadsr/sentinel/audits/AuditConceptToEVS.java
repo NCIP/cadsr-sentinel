@@ -21,11 +21,11 @@ import org.LexGrid.LexBIG.Exceptions.LBException;
 import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
 import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
-import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
-//import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
+//import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
+import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
 import org.LexGrid.commonTypes.Property;
 import org.LexGrid.concepts.Definition;
 import org.LexGrid.concepts.Entity;
@@ -63,9 +63,6 @@ public class AuditConceptToEVS extends AuditReport
         {
             rows[i] = msgs.get(i);
         }
-        
-        _logger.debug(rows[rows.length-1] + ": Rows count in getReportRows(): " + rows.length);
-        
         return rows;
     }
 
@@ -102,7 +99,8 @@ public class AuditConceptToEVS extends AuditReport
         for (int i = 0; i < props_.length; ++i)
         {
             String[] text = props_[i]._key.split("[.]");
-            if (text[2].equals("ALL"))
+//            if (text[2].equals("ALL"))
+            if (text != null && text.length == 2 && text[2].equals("ALL"))            
             {
                 if (text[3].equals("PROPERTY") && text[4].equals("DEFINITION"))
                     defProp = props_[i]._value;
@@ -131,7 +129,8 @@ public class AuditConceptToEVS extends AuditReport
         for (int i = 0; i < props_.length; ++i)
         {
             String[] text = props_[i]._key.split("[.]");
-            if (!text[2].equals("ALL"))
+//            if (!text[2].equals("ALL"))
+            if (text != null && text.length == 2 && text[2].equals("ALL"))            
             {
                 if (last == null)
                     last = text[2];
@@ -280,7 +279,7 @@ public class AuditConceptToEVS extends AuditReport
          * 
          * @param query_ the EVSQuery defined by the caCORE API
          */
-        abstract public CodedNodeSet search(LexBIGService service_);
+        abstract public CodedNodeSet search(LexEVSService service_);
 
         /**
          * Validate the Concept Code, Concept Name and Concept Definition.
@@ -331,14 +330,11 @@ public class AuditConceptToEVS extends AuditReport
         }
 
         @Override
-        public CodedNodeSet search(LexBIGService service_)
+        public CodedNodeSet search(LexEVSService service_)
         {
-        	_logger.debug("Service in MetaTh->EVSData->search(): " + service_);
-        	
         	CodedNodeSet cns = null;
         	try {
 				cns = service_.getNodeSet("NCI Metathesaurus", null, null);
-				_logger.debug("1. cns in MetaTh->EVSData->search(): " + cns);
 				cns = cns.restrictToMatchingProperties(
 								Constructors.createLocalNameList("conceptCode"), 
 								null, 
@@ -346,13 +342,10 @@ public class AuditConceptToEVS extends AuditReport
 								MatchAlgorithms.exactMatch.name(), 
 								null
 							);
-				_logger.debug("2. cns in MetaTh->EVSData->search(): " + cns);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
-        	_logger.debug("3. cns in MetaTh->EVSData->search(): " + cns);
-        	
 			return cns;
         }
 
@@ -510,14 +503,11 @@ public class AuditConceptToEVS extends AuditReport
         }
 
         @Override
-        public CodedNodeSet search(LexBIGService service_)
+        public CodedNodeSet search(LexEVSService service_)
         {
-        	_logger.debug("service in NonMetaTh->EVSData->search(): " + service_);
-        	
         	CodedNodeSet cns = null;
             try {
 				cns = service_.getNodeSet(_vocab._vocab, null, null);
-				_logger.debug("1. cns in NonMetaTh->NonEVSData->search(): " + cns);
 				cns = cns.restrictToMatchingProperties(
 								Constructors.createLocalNameList("conceptCode"), 
 								null, 
@@ -525,13 +515,9 @@ public class AuditConceptToEVS extends AuditReport
 								MatchAlgorithms.exactMatch.name(), 
 								null
 							);
-				_logger.debug("2. cns in NonMetaTh->EVSData->search(): " + cns);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-            
-            _logger.debug("3. cns in NonMetaTh->EVSData->search(): " + cns);
-            
 			return cns;
         }
 
@@ -606,8 +592,7 @@ public class AuditConceptToEVS extends AuditReport
                 Definition[] definitions = temp.definitions;
                 for (Definition def : definitions)
                 {
-                	//if (def.isIsPreferred()) {  // should be checked for null
-                	if (def != null && def.isIsPreferred()) {
+                	if (def.isIsPreferred() != null && def.isIsPreferred()) {
                 		srcFlag = false;
                 		org.LexGrid.commonTypes.Source[] sources = def.getSource();
                 		if (sources == null || sources.length == 0) {
@@ -678,20 +663,21 @@ public class AuditConceptToEVS extends AuditReport
         msgs.add(formatTitleMsg());
 
         // Get all the Concepts from the caDSR.
-        Vector<ConceptItem> concepts = _db.selectConcepts();
-        EVSVocab[] vocabs = parseProperties(_db.selectEVSVocabs());
+//        Vector<ConceptItem> concepts = _db.selectConcepts();
+        Vector<ConceptItem> concepts = selectConcepts();
+        EVSVocab[] vocabs = parseProperties(selectEVSVocabs());
 
         // Get the EVS URL and establish the application service.
-        String evsURL = _db.selectEvsUrl();
-        _logger.debug("evsURL in EVSConcept->validate(): " + evsURL);
-        _logger.debug("no. of concepts in EVSConcept->validate(): " + concepts.size());
+//        String evsURL = _db.selectEvsUrl();
+        String evsURL = "http://lexevsapi60-stage.nci.nih.gov/lexevsapi60";
         
-        LexBIGService service;
+        LexEVSService service;
         try
         {
-        	service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
-        	//service = (LexEVSService) ApplicationServiceProvider
-            //        .getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
+//        	service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
+        	service = (LexEVSService) ApplicationServiceProvider
+			        .getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
+			
         }
         catch (Exception ex)
         {
@@ -701,12 +687,7 @@ public class AuditConceptToEVS extends AuditReport
                 msgs.add(list[i].toString());
             return msgs;
         }
-        
-        if(service != null) 
-        	_logger.debug("Service in EVSConcept->validate() after service creation: " + service);
-        else 
-        	_logger.debug("Service in EVSConcept->validate() is null");
-        
+
         // Check each concept with EVS.
         String msg = null;
         String name = null;
@@ -769,10 +750,8 @@ public class AuditConceptToEVS extends AuditReport
                 EVSData ed = vocab._ed;
                 ed.reset();
                 ed._rec = rec;
-                
-                _logger.debug("Service in EVSConcept->validate() before search(): " + service);
+
                 CodedNodeSet cns = ed.search(service);
-                _logger.debug("cns in EVSConcept->validate() after search(): " + cns);
                 
                 try
                 {
@@ -873,9 +852,7 @@ public class AuditConceptToEVS extends AuditReport
     }
     
     public List<EVSConcept> resolveNodeSet(CodedNodeSet cns, boolean includeRetiredConcepts) throws Exception {
-    	_logger.debug("cns in resolveNodeSet(): " + cns);
-    	_logger.debug("includeRetiredConcepts in resolveNodeSet(): " + includeRetiredConcepts);
-    			
+		
 		if (!includeRetiredConcepts) {
 			cns.restrictToStatus(CodedNodeSet.ActiveOption.ACTIVE_ONLY, null);
 		}
@@ -887,15 +864,10 @@ public class AuditConceptToEVS extends AuditReport
 		
 		ResolvedConceptReferencesIterator results = cns.resolve(sortCriteria, null,new LocalNameList(), propTypes, true);
 		
-		_logger.debug("results in resolveNodeSet(): " + results.numberRemaining());
-		
 		return getEVSConcepts(results);
 	}
     
     private List<EVSConcept> getEVSConcepts(ResolvedConceptReferencesIterator rcRefIter) throws Exception {
-    	
-    	_logger.debug("results in getEVSConcepts(): " + rcRefIter.numberRemaining());
-    	
     	List<EVSConcept> evsConcepts = new ArrayList<EVSConcept>();
     	if (rcRefIter != null) {
     		while (rcRefIter.hasNext()) {
@@ -911,7 +883,6 @@ public class AuditConceptToEVS extends AuditReport
     private EVSConcept getEVSConcept(ResolvedConceptReference rcRef) {
 		EVSConcept evsConcept = new EVSConcept();
 		evsConcept.code = rcRef.getCode();
-		_logger.debug("evsConcept in getEVSConcept(): " + evsConcept.code);
 		
 		Entity entity = rcRef.getEntity();
 		evsConcept.preferredName = rcRef.getEntityDescription().getContent();
@@ -1019,4 +990,240 @@ public class AuditConceptToEVS extends AuditReport
     
     private static final int _maxMsgs = 200;
     private static final Logger _logger = Logger.getLogger(AuditConceptToEVS.class.getName());
+    
+    
+    
+	public static DBProperty[] selectEVSVocabs(){
+		
+		int x = 10;
+		DBProperty[] props = new DBProperty[66];
+		DBProperty prop = new DBProperty("NCI Thesaurus","EVS.VOCAB.02.DISPLAY");
+		props[0] = prop;
+		prop = new DBProperty("NCI Thesaurus","EVS.VOCAB.02.EVSNAME");
+		props[1] = prop;
+		prop = new DBProperty("NCI Thesaurus","EVS.VOCAB.02.EVSNAME");
+		props[2] = prop;
+		prop = new DBProperty("FULL_SYN","EVS.VOCAB.02.PROPERTY.NAMESEARCH");
+		props[3] = prop;
+		prop = new DBProperty("NCI_CONCEPT_CODE","EVS.VOCAB.02.VOCABCODETYPE");
+		props[4] = prop;
+		prop = new DBProperty("CTCAE","EVS.VOCAB.04.DISPLAY");
+		props[5] = prop;
+		prop = new DBProperty("Common Terminology Criteria for Adverse Events","EVS.VOCAB.04.EVSNAME");
+		props[6] = prop;
+		prop = new DBProperty("DEFINITION","EVS.VOCAB.04.PROPERTY.DEFINITION");
+		props[7] = prop;
+		prop = new DBProperty("Synonym","EVS.VOCAB.04.PROPERTY.NAMESEARCH");
+		props[8] = prop;
+		prop = new DBProperty("CTCAE_CODE","EVS.VOCAB.04.VOCABCODETYPE");
+		props[9] = prop;
+		prop = new DBProperty("GO","EVS.VOCAB.06.DISPLAY");
+		props[10] = prop;
+		prop = new DBProperty("Gene Ontology","EVS.VOCAB.06.EVSNAME");
+		props[11] = prop;
+		prop = new DBProperty("GO_CODE","EVS.VOCAB.06.VOCABCODETYPE");
+		props[12] = prop;
+		prop = new DBProperty("HGNC","EVS.VOCAB.08.DISPLAY");
+		props[13] = prop;
+		prop = new DBProperty("HUGO Gene Nomenclature Committee Ontology","EVS.VOCAB.08.EVSNAME");
+		props[14] = prop;
+		prop = new DBProperty("HUGO_CODE","EVS.VOCAB.08.VOCABCODETYPE");
+		props[15] = prop;
+		prop = new DBProperty("HL7","EVS.VOCAB.10.DISPLAY");
+		props[16] = prop;
+		prop = new DBProperty("HL7 Reference Information Model","EVS.VOCAB.10.EVSNAME");
+		props[17] = prop;
+		prop = new DBProperty("HL7_CODE","EVS.VOCAB.10.VOCABCODETYPE");
+		props[18] = prop;
+		prop = new DBProperty("ICD-9-CM","EVS.VOCAB.12.DISPLAY");
+		props[19] = prop;
+		prop = new DBProperty("ICD-9-CM","EVS.VOCAB.12.DISPLAY");
+		props[20] = prop;
+		prop = new DBProperty("International Classification of Diseases, Ninth Revision","EVS.VOCAB.12.EVSNAME");
+		props[21] = prop;
+		prop = new DBProperty("ICD-9_CM_CODE","EVS.VOCAB.12.VOCABCODETYPE");
+		props[22] = prop;
+		prop = new DBProperty("ICD-10_","EVS.VOCAB.14.DISPLAY");
+		props[23] = prop;
+		prop = new DBProperty("ICD-10","EVS.VOCAB.14.EVSNAME");
+		props[24] = prop;
+		prop = new DBProperty("ICD-10_CODE","EVS.VOCAB.14.VOCABCODETYPE");
+		props[25] = prop;
+		prop = new DBProperty("ICD-10-CM","EVS.VOCAB.16.DISPLAY");
+		props[26] = prop;
+		prop = new DBProperty("International Classification of Diseases, 10th Edition, Clinical Modification","EVS.VOCAB.16.EVSNAME");
+		props[27] = prop;
+		prop = new DBProperty("IDC-10_CM_CODE","EVS.VOCAB.16.VOCABCODETYPE");
+		props[28] = prop;
+		prop = new DBProperty("LOINC","EVS.VOCAB.18.DISPLAY");
+		props[29] = prop;
+		prop = new DBProperty("Logical Observation Identifier Names and Codes","EVS.VOCAB.18.EVSNAME");
+		props[30] = prop;
+		prop = new DBProperty("LOINC_CODE","EVS.VOCAB.18.VOCABCODETYPE");
+		props[31] = prop;
+		prop = new DBProperty("10382","EVS.VOCAB.20.ACCESSREQUIRED");
+		props[32] = prop;
+		prop = new DBProperty("MedDRA","EVS.VOCAB.20.DISPLAY");
+		props[33] = prop;
+		prop = new DBProperty("MedDRA (Medical Dictionary for Regulatory Activities Terminology)","EVS.VOCAB.20.EVSNAME");
+		props[34] = prop;
+		prop = new DBProperty("definition","EVS.VOCAB.20.PROPERTY.DEFINITION");
+		props[35] = prop;
+		prop = new DBProperty("MEDDRA_CODE","EVS.VOCAB.20.VOCABCODETYPE");
+		props[36] = prop;
+		prop = new DBProperty("MGED","EVS.VOCAB.22.DISPLAY");
+		props[37] = prop;
+		prop = new DBProperty("The MGED Ontology","EVS.VOCAB.22.EVSNAME");
+		props[38] = prop;
+		prop = new DBProperty("NCI_MO_CODE","EVS.VOCAB.22.VOCABCODETYPE");
+		props[39] = prop;
+		prop = new DBProperty("NCI Metathesaurus","VS.VOCAB.24.DISPLAY");
+		props[40] = prop;
+		prop = new DBProperty("NCI Metathesaurus","EVS.VOCAB.24.EVSNAME");
+		props[41] = prop;
+		prop = new DBProperty("NPO","EVS.VOCAB.28.DISPLAY");
+		props[42] = prop;
+		prop = new DBProperty("Nanoparticle Ontology","EVS.VOCAB.28.EVSNAME");
+		props[43] = prop;
+		prop = new DBProperty("NPO_CODE","EVS.VOCAB.28.VOCABCODETYPE");
+		props[44] = prop;
+		prop = new DBProperty("OBI","EVS.VOCAB.30.DISPLAY");
+		props[45] = prop;
+		prop = new DBProperty("Ontology for Biomedical Investigations","EVS.VOCAB.30.EVSNAME");
+		props[46] = prop;
+		prop = new DBProperty("OBI_CODE","EVS.VOCAB.30.VOCABCODETYPE");
+		props[47] = prop;
+		prop = new DBProperty("RadLex","EVS.VOCAB.32.DISPLAY");
+		props[48] = prop;
+		prop = new DBProperty("Radiology Lexicon","EVS.VOCAB.32.EVSNAME");
+		props[49] = prop;
+		prop = new DBProperty("RADLEX_CODE","EVS.VOCAB.32.VOCABCODETYPE");
+		props[50] = prop;
+		prop = new DBProperty("SNOMED","EVS.VOCAB.34.DISPLAY");
+		props[51] = prop;
+		prop = new DBProperty("SNOMED Clinical Terms","EVS.VOCAB.34.EVSNAM");
+		props[52] = prop;
+		prop = new DBProperty("SNOMED_CODE","EVS.VOCAB.34.VOCABCODETYPE");
+		props[53] = prop;
+		prop = new DBProperty("UMLS SemNet","EVS.VOCAB.36.DISPLAY");
+		props[54] = prop;
+		prop = new DBProperty("UMLS Semantic Network","EVS.VOCAB.36.EVSNAME");
+		props[55] = prop;
+		prop = new DBProperty("UMLS_SEMNET_CODE","EVS.VOCAB.36.VOCABCODETYPE");
+		props[56] = prop;
+		prop = new DBProperty("VA_NDFRT","EVS.VOCAB.38.DISPLAY");
+		props[57] = prop;
+		prop = new DBProperty("National Drug File - Reference Terminology","EVS.VOCAB.38.EVSNAME");
+		props[58] = prop;
+		prop = new DBProperty("MeSH_Definition","EVS.VOCAB.38.PROPERTY.DEFINITION");
+		props[59] = prop;
+		prop = new DBProperty("VA_NDF_CODE","EVS.VOCAB.38.VOCABCODETYPE");
+		props[60] = prop;
+		prop = new DBProperty("Zebrafish","EVS.VOCAB.40.DISPLAY");
+		props[61] = prop;
+		prop = new DBProperty("Zebrafish","EVS.VOCAB.40.EVSNAM");
+		props[62] = prop;
+		prop = new DBProperty("synonym","EVS.VOCAB.40.PROPERTY.NAMESEARCH");
+		props[63] = prop;
+		prop = new DBProperty("ZEBRAFISH_CODE","EVS.VOCAB.40.VOCABCODETYPE");
+		props[64] = prop;
+		prop = new DBProperty("DEFINITION","EVS.VOCAB.ALL.PROPERTY.DEFINITION");
+		props[65] = prop;
+		
+		return props;
+		
+
+		
+		
+//        String select = "select opt.value, opt.property from sbrext.tool_options_view_ext opt where opt.tool_name = 'CURATION' and ("
+//                + "opt.property like 'EVS.VOCAB.%.PROPERTY.NAMESEARCH' or "
+//                + "opt.property like 'EVS.VOCAB.%.EVSNAME' or "
+//                + "opt.property like 'EVS.VOCAB.%.DISPLAY' or "
+//                + "opt.property like 'EVS.VOCAB.%.PROPERTY.DEFINITION' or "
+//                + "opt.property like 'EVS.VOCAB.%.VOCABCODETYPE' or "
+//                + "opt.property like 'EVS.VOCAB.%.ACCESSREQUIRED' "
+//                + ") order by opt.property";
+//        
+//        DBProperty[] props = new DBProperty[rs._data.length];
+//        for (int i = 0; i < rs._data.length; ++i)
+//        {
+//            props[i] = new DBProperty(rs._data[i]._label, rs._data[i]._val);;
+//        }
+//        return props;
+		
+	}
+	
+	public static Vector<ConceptItem> selectConcepts(){
+		Vector<ConceptItem> conItems = new Vector<ConceptItem>();
+	
+//		conItems.add(parseConcept("CON_IDSEQ,CON_ID,VERSION,EVS_SOURCE,PREFERRED_NAME,LONG_NAME,DEFINITION_SOURCE,PREFERRED_DEFINITION"));
+		conItems.add(parseConcept("B918227F-B1E1-6EA7-E040-BB89AD434A76,3379200,1,UMLS_CUI,C1723325,(131)I-ch81C6,,No Value Exists"));
+		conItems.add(parseConcept("AD8D2096-2319-66E7-E040-BB89AD4364A0,3284213,1,NCI_META_CUI,CL409124,(CS).CD3+CD4+,,No Value Exists"));
+		conItems.add(parseConcept("AD8D2096-22F3-66E7-E040-BB89AD4364A0,3284211,1,NCI_META_CUI,CL409131,(CS).CD3+CD8A+,,No Value Exists"));
+		conItems.add(parseConcept("FD0F852B-0497-7140-E034-0003BA3F9857,2322161,1,NCI_META_CUI,CL225712,+1,,No value exists."));
+		conItems.add(parseConcept("F37D0428-D938-6787-E034-0003BA3F9857,2204580,1,NCI_META_CUI,CL209433,/week,No value exists.,No value exists."));
+		conItems.add(parseConcept("2CABC045-4CC8-1DB3-E044-0003BA3F9857,2615778,1,NCI_CONCEPT_CODE,C1072,1,1-Dimethylhydrazine,NCI, A clear, colorless, flammable, hygroscopic liquid with a fishy smell that emits toxic fumes of nitrogen oxides when heated to decomposition, and turns yellow upon contact with air. 1,1-Dimethylhydrazine is mainly used as a high-energy fuel in jets and rockets, but is also used in chemical synthesis, in photography and to control the growth of vegetation. This substance is also found in tobacco products. Exposure to 1,1-dimethylhydrazine results in irritation of skin, eyes and mucous membranes, and can affect liver and central nervous system. 1,1-Dimethylhydrazine is reasonably anticipated to be a human carcinogen. (NCI05)"));
+		conItems.add(parseConcept("AF1E934A-ACED-5C19-E040-BB89AD436F1A,3293855,1,UMLS_CUI,C0043867,1,24,25-trihydroxyergocalciferol,,No Value Exists"));
+		conItems.add(parseConcept("F37D0428-BF60-6787-E034-0003BA3F9857,2202926,1,NCI_CONCEPT_CODE,C957,10-Deacetyltaxol,NCI,An analog of paclitaxel with antineoplastic activity. 10-Deacetyltaxol binds to and stabilizes the resulting microtubules, thereby inhibiting microtubule disassembly which results in cell- cycle arrest at the G2/M phase and apoptosis."));
+		conItems.add(parseConcept("F37D0428-D9CC-6787-E034-0003BA3F9857,2204617,1,NCI_CONCEPT_CODE,C2250,10-Propargyl-10-Deazaaminopterin,NCI,A folate analogue inhibitor of dihydrofolate reductase (DHFR) exhibiting high affinity for reduced folate carrier-1 (RFC-1) with antineoplastic and immunosuppressive activities. Pralatrexate selectively enters cells expressing RFC-1; intracellularly, this agent is highly polyglutamylated and competes for the folate binding site of DHFR, blocking tetrahydrofolate synthesis, which may result in depletion of nucleotide precursors; inhibition of DNA, RNA and protein synthesis; and apoptotic tumor cell death. Efficient intracellular polyglutamylation of pralatrexate results in higher intracellular concentrations compared to non-polyglutamylated pralatrexate, which is more readily effuxed by the MRP (multidrug resistance protein) drug efflux pump. RFC-1, an oncofetal protein expressed at highest levels during embryonic development, may be over-expressed on the cell surfaces of various cancer cell types."));
+		conItems.add(parseConcept("2CBEBCC7-4863-4D0A-E044-0003BA3F9857,2619400,1,NCI_CONCEPT_CODE,C14567,101 Mouse,NCI,Inbr: 66. Genet: A^w. Origin: Dunn, 1936. (Jackson Labs/Festing)"));
+		conItems.add(parseConcept("2CBEBCD1-4280-4D0E-E044-0003BA3F9857,2619401,1,NCI_CONCEPT_CODE,C37318,101/H Mouse,NCI,definition pending"));
+		conItems.add(parseConcept("2CBEBCD7-5234-4D12-E044-0003BA3F9857,2619402,1,NCI_CONCEPT_CODE,C37319,101/Rl Mouse,NCI,definition pending"));
+		conItems.add(parseConcept("F37D0428-DA78-6787-E034-0003BA3F9857,2204660,1,NCI_CONCEPT_CODE,C13530,10p,NCI,Proximal (short) arm of chromosome 10"));
+		conItems.add(parseConcept("F37D0428-D9DC-6787-E034-0003BA3F9857,2204621,1,NCI_CONCEPT_CODE,C13531,10q,NCI,Distal (long) arm of chromosome 10"));
+		conItems.add(parseConcept("32BC687C-543F-59F8-E044-0003BA3F9857,2653825,1,NCI_CONCEPT_CODE,C67132,10th Grade Completion,NCI,Indicates that 10th grade is the highest level of educational achievement."));
+		conItems.add(parseConcept("AE2F8C5C-4E8C-B65D-E040-BB89AD435A1F,3288004,1,NCI_CONCEPT_CODE,C98262,10th Growth Percentile,NCI,An indication that an individual ranks the same or more than 10 percent of the reference population for a given attribute."));
+		conItems.add(parseConcept("84AD8CAD-B9E8-FCC0-E040-BB89AD4326A3,3070942,1,RADLEX_CODE,C13616,11p15,NCI,A chromosome band present on 11p"));
+		conItems.add(parseConcept("F37D0428-C974-6787-E034-0003BA3F9857,2203571,1,NCI_CONCEPT_CODE,C13389,11q,NCI,Distal (long) arm of chromosome 11"));
+		conItems.add(parseConcept("7D3EEEA8-98B8-1554-E040-BB89AD431463,2988113,1,RADLEX_CODE,C13390,11q23,NCI,A chromosome band present on 11q"));
+		conItems.add(parseConcept("32BC6880-031F-59FC-E044-0003BA3F9857,2653826,1,NCI_CONCEPT_CODE,C67133,11th Grade Completion,NCI,Indicates that 11th grade is the highest level of educational achievement."));
+		conItems.add(parseConcept("6FB37056-20A9-9C64-E040-BB89AD431A26,2923201,1,NCI_CONCEPT_CODE,C41441,12-Allyldeoxoartemisinin,NCI,A semi-synthetic analogue of Artemisinin - a sesquiterpene lactone extracted from the dry leaves of Artemisia Annua (sweet wormwood) used as anti-malaria agent. Limited data is available on Artemisinin antineoplastic activity."));
+		conItems.add(parseConcept("2CBEBCDC-7A29-4D19-E044-0003BA3F9857,2619403,1,NCI_CONCEPT_CODE,C15151,129 Mouse,NCI,Inbr and colour depends on substrain (see below). Origin: Dunn 1928 from crosses of coat colour stocks from English fanciers and a chinchilla stock from Castle. This strain has a common origin with strain 101. Most substrains carry the white-bellied agouti gene AW though only a subset have the agouti pattern as many carry albino or chinchilla and/or the pink-eyed dilution gene, p, which is derived from Asian mice of the Mus musculus type (see also strains SJL, P/J and FS/Ei). (Jackson Labs/Festing)"));
+		conItems.add(parseConcept("2CBEBCE2-020A-4D1F-E044-0003BA3F9857,2619404,1,NCI_CONCEPT_CODE,C37320,129/Sv Mouse,NCI,Derived by Dunn (1928) from a mouse/chinchilla cross, the 129/Sv substrain has been recognized as a member of the Parental subgroup of substrains. Strain 129/SvJ was genetically contaminated in 1978 by an unknown strain and differs from other 129 substrains at 25% of SSLP genetic markers, therefore a nomenclature re-designation of 129cX/Sv has been suggested."));
+		conItems.add(parseConcept("2CBEBCE6-938C-4D23-E044-0003BA3F9857,2619405,1,NCI_CONCEPT_CODE,C37321,129P1/Re Mouse,NCI,definition pending"));
+		conItems.add(parseConcept("2CBEBCEB-3DD6-4D27-E044-0003BA3F9857,2619406,1,NCI_CONCEPT_CODE,C37322,129P1/ReJ Mouse,NCI,definition pending"));
+		conItems.add(parseConcept("2CBEBCEF-6DC2-4D2B-E044-0003BA3F9857,2619407,1,NCI_CONCEPT_CODE,C37323,129P1/ReJLacFib Mouse,NCI,definition pending"));
+			
+		
+		
+		return conItems;
+		
+		
+		
+//		String select = "SELECT con_idseq, con_id, version, evs_source, preferred_name, long_name, definition_source, preferred_definition "
+//	            + "FROM sbrext.concepts_view_ext WHERE asl_name NOT LIKE 'RETIRED%' "
+//	            + "ORDER BY upper(long_name) ASC";
+//        list = new Vector<ConceptItem>();
+//        while (rs.next())
+//        {
+//            ConceptItem rec = new ConceptItem();
+//            rec._idseq = rs.getString(1);
+//            rec._publicID = rs.getString(2);
+//            rec._version = rs.getString(3);
+//            rec._evsSource = rs.getString(4);
+//            rec._preferredName = rs.getString(5);
+//            rec._longName = rs.getString(6);
+//            rec._definitionSource = rs.getString(7);
+//            rec._preferredDefinition = rs.getString(8);
+//            list.add(rec);
+//        }
+		
+
+
+	}
+	
+	private static ConceptItem parseConcept(String conceptText){
+
+		String[] conceptArray = conceptText.split(",");
+		ConceptItem rec = new ConceptItem();
+		rec._idseq = conceptArray[0];
+		rec._publicID = conceptArray[1];
+		rec._version = conceptArray[2];
+		rec._evsSource = conceptArray[3];
+		rec._preferredName = conceptArray[4];
+		rec._longName = conceptArray[5];
+		rec._definitionSource = conceptArray[6];
+		rec._preferredDefinition = conceptArray[7];
+		return rec;
+	}
 }
