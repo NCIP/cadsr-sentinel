@@ -592,7 +592,7 @@ public class AuditConceptToEVS extends AuditReport
                 Definition[] definitions = temp.definitions;
                 for (Definition def : definitions)
                 {
-                	if (def.isIsPreferred() != null && def.isIsPreferred()) {
+                	if (def != null && def.isIsPreferred() != null && def.isIsPreferred()) {
                 		srcFlag = false;
                 		org.LexGrid.commonTypes.Source[] sources = def.getSource();
                 		if (sources == null || sources.length == 0) {
