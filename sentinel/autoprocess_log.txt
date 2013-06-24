@@ -1,0 +1,231 @@
+2013-06-19 14:26:50,646 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-tx-2.0.xsd]: class path resource [springxsds/spring-tx-2.0.xsd]
+2013-06-19 14:26:50,646 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-util-2.0.xsd] against system root URL
+java.net.MalformedURLException: unknown protocol: classpath
+	at java.net.URL.<init>(URL.java:574)
+	at java.net.URL.<init>(URL.java:464)
+	at java.net.URL.<init>(URL.java:413)
+	at org.springframework.beans.factory.xml.ResourceEntityResolver.resolveEntity(ResourceEntityResolver.java:79)
+	at org.apache.xerces.util.EntityResolverWrapper.resolveEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLEntityManager.resolveEntity(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaLoader.resolveDocument(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaValidator.findSchemaGrammar(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaValidator.handleStartElement(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaValidator.emptyElement(Unknown Source)
+	at org.apache.xerces.impl.XMLNSDocumentScannerImpl.scanStartElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.DocumentBuilderImpl.parse(Unknown Source)
+	at org.springframework.beans.factory.xml.DefaultDocumentLoader.loadDocument(DefaultDocumentLoader.java:75)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadBeanDefinitions(XmlBeanDefinitionReader.java:388)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:334)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:302)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:143)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:178)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:149)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:212)
+	at org.springframework.context.support.AbstractXmlApplicationContext.loadBeanDefinitions(AbstractXmlApplicationContext.java:126)
+	at org.springframework.context.support.AbstractXmlApplicationContext.loadBeanDefinitions(AbstractXmlApplicationContext.java:92)
+	at org.springframework.context.support.AbstractRefreshableApplicationContext.refreshBeanFactory(AbstractRefreshableApplicationContext.java:130)
+	at org.springframework.context.support.AbstractApplicationContext.obtainFreshBeanFactory(AbstractApplicationContext.java:467)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:397)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:139)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:83)
+	at org.lexevs.locator.LexEvsServiceLocator.getInstance(LexEvsServiceLocator.java:79)
+	at org.LexGrid.LexBIG.Impl.helpers.DefaultCodeToReturnResolver.doBuildResolvedConceptReference(DefaultCodeToReturnResolver.java:65)
+	at org.LexGrid.LexBIG.Impl.helpers.DefaultCodeToReturnResolver.buildResolvedConceptReference(DefaultCodeToReturnResolver.java:130)
+	at org.LexGrid.LexBIG.Impl.helpers.ResolvedConceptReferencesIteratorImpl.next(ResolvedConceptReferencesIteratorImpl.java:185)
+	at org.LexGrid.LexBIG.Impl.helpers.ResolvedConceptReferencesIteratorImpl.next(ResolvedConceptReferencesIteratorImpl.java:134)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getEVSConcepts(AuditConceptToEVS.java:902)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.resolveNodeSet(AuditConceptToEVS.java:892)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.validate(AuditConceptToEVS.java:780)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getReportRows(AuditConceptToEVS.java:60)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1219)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1895)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:613)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:149)
+2013-06-19 14:26:50,662 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-util-2.0.xsd]: class path resource [springxsds/spring-util-2.0.xsd]
+2013-06-19 14:26:50,662 DEBUG [org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader : 87] Loading bean definitions
+2013-06-19 14:26:50,662 INFO  [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 315] Loading XML bean definitions from class path resource [lexevsCache.xml]
+2013-06-19 14:26:50,662 DEBUG [org.springframework.beans.factory.xml.DefaultDocumentLoader : 72] Using JAXP provider [org.apache.xerces.jaxp.DocumentBuilderFactoryImpl]
+2013-06-19 14:26:50,662 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-beans-2.0.xsd] against system root URL
+java.net.MalformedURLException: unknown protocol: classpath
+	at java.net.URL.<init>(URL.java:574)
+	at java.net.URL.<init>(URL.java:464)
+	at java.net.URL.<init>(URL.java:413)
+	at org.springframework.beans.factory.xml.ResourceEntityResolver.resolveEntity(ResourceEntityResolver.java:79)
+	at org.apache.xerces.util.EntityResolverWrapper.resolveEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLEntityManager.resolveEntity(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaLoader.resolveDocument(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaValidator.findSchemaGrammar(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaValidator.handleStartElement(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaValidator.startElement(Unknown Source)
+	at org.apache.xerces.impl.XMLNSDocumentScannerImpl.scanStartElement(Unknown Source)
+	at org.apache.xerces.impl.XMLNSDocumentScannerImpl$NSContentDispatcher.scanRootElementHook(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.DocumentBuilderImpl.parse(Unknown Source)
+	at org.springframework.beans.factory.xml.DefaultDocumentLoader.loadDocument(DefaultDocumentLoader.java:75)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadBeanDefinitions(XmlBeanDefinitionReader.java:388)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:334)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:302)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:143)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:178)
+	at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.importBeanDefinitionResource(DefaultBeanDefinitionDocumentReader.java:186)
+	at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.parseDefaultElement(DefaultBeanDefinitionDocumentReader.java:147)
+	at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.parseBeanDefinitions(DefaultBeanDefinitionDocumentReader.java:132)
+	at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.registerBeanDefinitions(DefaultBeanDefinitionDocumentReader.java:93)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.registerBeanDefinitions(XmlBeanDefinitionReader.java:493)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadBeanDefinitions(XmlBeanDefinitionReader.java:390)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:334)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:302)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:143)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:178)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:149)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:212)
+	at org.springframework.context.support.AbstractXmlApplicationContext.loadBeanDefinitions(AbstractXmlApplicationContext.java:126)
+	at org.springframework.context.support.AbstractXmlApplicationContext.loadBeanDefinitions(AbstractXmlApplicationContext.java:92)
+	at org.springframework.context.support.AbstractRefreshableApplicationContext.refreshBeanFactory(AbstractRefreshableApplicationContext.java:130)
+	at org.springframework.context.support.AbstractApplicationContext.obtainFreshBeanFactory(AbstractApplicationContext.java:467)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:397)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:139)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:83)
+	at org.lexevs.locator.LexEvsServiceLocator.getInstance(LexEvsServiceLocator.java:79)
+	at org.LexGrid.LexBIG.Impl.helpers.DefaultCodeToReturnResolver.doBuildResolvedConceptReference(DefaultCodeToReturnResolver.java:65)
+	at org.LexGrid.LexBIG.Impl.helpers.DefaultCodeToReturnResolver.buildResolvedConceptReference(DefaultCodeToReturnResolver.java:130)
+	at org.LexGrid.LexBIG.Impl.helpers.ResolvedConceptReferencesIteratorImpl.next(ResolvedConceptReferencesIteratorImpl.java:185)
+	at org.LexGrid.LexBIG.Impl.helpers.ResolvedConceptReferencesIteratorImpl.next(ResolvedConceptReferencesIteratorImpl.java:134)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getEVSConcepts(AuditConceptToEVS.java:902)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.resolveNodeSet(AuditConceptToEVS.java:892)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.validate(AuditConceptToEVS.java:780)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getReportRows(AuditConceptToEVS.java:60)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1219)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1895)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:613)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:149)
+2013-06-19 14:26:50,662 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-beans-2.0.xsd]: class path resource [springxsds/spring-beans-2.0.xsd]
+2013-06-19 14:26:50,677 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 89] Could not resolve XML entity [classpath:springxsds/spring-aop-2.0.xsd] against system root URL
+java.net.MalformedURLException: unknown protocol: classpath
+	at java.net.URL.<init>(URL.java:574)
+	at java.net.URL.<init>(URL.java:464)
+	at java.net.URL.<init>(URL.java:413)
+	at org.springframework.beans.factory.xml.ResourceEntityResolver.resolveEntity(ResourceEntityResolver.java:79)
+	at org.apache.xerces.util.EntityResolverWrapper.resolveEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLEntityManager.resolveEntity(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaLoader.resolveDocument(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaValidator.findSchemaGrammar(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaValidator.handleStartElement(Unknown Source)
+	at org.apache.xerces.impl.xs.XMLSchemaValidator.emptyElement(Unknown Source)
+	at org.apache.xerces.impl.XMLNSDocumentScannerImpl.scanStartElement(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl$FragmentContentDispatcher.dispatch(Unknown Source)
+	at org.apache.xerces.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
+	at org.apache.xerces.jaxp.DocumentBuilderImpl.parse(Unknown Source)
+	at org.springframework.beans.factory.xml.DefaultDocumentLoader.loadDocument(DefaultDocumentLoader.java:75)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadBeanDefinitions(XmlBeanDefinitionReader.java:388)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:334)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:302)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:143)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:178)
+	at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.importBeanDefinitionResource(DefaultBeanDefinitionDocumentReader.java:186)
+	at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.parseDefaultElement(DefaultBeanDefinitionDocumentReader.java:147)
+	at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.parseBeanDefinitions(DefaultBeanDefinitionDocumentReader.java:132)
+	at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.registerBeanDefinitions(DefaultBeanDefinitionDocumentReader.java:93)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.registerBeanDefinitions(XmlBeanDefinitionReader.java:493)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadBeanDefinitions(XmlBeanDefinitionReader.java:390)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:334)
+	at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:302)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:143)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:178)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:149)
+	at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:212)
+	at org.springframework.context.support.AbstractXmlApplicationContext.loadBeanDefinitions(AbstractXmlApplicationContext.java:126)
+	at org.springframework.context.support.AbstractXmlApplicationContext.loadBeanDefinitions(AbstractXmlApplicationContext.java:92)
+	at org.springframework.context.support.AbstractRefreshableApplicationContext.refreshBeanFactory(AbstractRefreshableApplicationContext.java:130)
+	at org.springframework.context.support.AbstractApplicationContext.obtainFreshBeanFactory(AbstractApplicationContext.java:467)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:397)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:139)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:83)
+	at org.lexevs.locator.LexEvsServiceLocator.getInstance(LexEvsServiceLocator.java:79)
+	at org.LexGrid.LexBIG.Impl.helpers.DefaultCodeToReturnResolver.doBuildResolvedConceptReference(DefaultCodeToReturnResolver.java:65)
+	at org.LexGrid.LexBIG.Impl.helpers.DefaultCodeToReturnResolver.buildResolvedConceptReference(DefaultCodeToReturnResolver.java:130)
+	at org.LexGrid.LexBIG.Impl.helpers.ResolvedConceptReferencesIteratorImpl.next(ResolvedConceptReferencesIteratorImpl.java:185)
+	at org.LexGrid.LexBIG.Impl.helpers.ResolvedConceptReferencesIteratorImpl.next(ResolvedConceptReferencesIteratorImpl.java:134)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getEVSConcepts(AuditConceptToEVS.java:902)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.resolveNodeSet(AuditConceptToEVS.java:892)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.validate(AuditConceptToEVS.java:780)
+	at gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS.getReportRows(AuditConceptToEVS.java:60)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.createAuditReports(AutoProcessAlerts.java:1219)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.getResources(AutoProcessAlerts.java:1895)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.autoRun(AutoProcessAlerts.java:613)
+	at gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:149)
+2013-06-19 14:26:50,677 DEBUG [org.springframework.beans.factory.xml.ResourceEntityResolver : 103] Found XML entity [classpath:springxsds/spring-aop-2.0.xsd]: class path resource [springxsds/spring-aop-2.0.xsd]
+2013-06-19 14:26:50,677 DEBUG [org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader : 87] Loading bean definitions
+2013-06-19 14:26:50,677 DEBUG [org.springframework.beans.factory.xml.DefaultNamespaceHandlerResolver : 156] Loaded NamespaceHandler mappings: {http://www.springframework.org/schema/p=org.springframework.beans.factory.xml.SimplePropertyNamespaceHandler, http://www.compass-project.org/schema/spring-core-config=org.compass.spring.config.CompassNamespaceHandler, http://www.springframework.org/schema/util=org.springframework.beans.factory.xml.UtilNamespaceHandler, http://www.springframework.org/schema/jee=org.springframework.ejb.config.JeeNamespaceHandler, http://www.springframework.org/schema/aop=org.springframework.aop.config.AopNamespaceHandler, http://www.springframework.org/schema/jdbc=org.springframework.jdbc.config.JdbcNamespaceHandler, http://www.springframework.org/schema/security=org.springframework.security.config.SecurityNamespaceHandler, http://www.springframework.org/schema/tx=org.springframework.transaction.config.TxNamespaceHandler, http://www.springframework.org/schema/task=org.springframework.scheduling.config.TaskNamespaceHandler, http://www.springframework.org/schema/lang=org.springframework.scripting.config.LangNamespaceHandler, http://www.springframework.org/schema/context=org.springframework.context.config.ContextNamespaceHandler}
+2013-06-19 14:26:50,709 DEBUG [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 185] Loaded 7 bean definitions from location pattern [classpath:lexevsCache.xml]
+2013-06-19 14:26:50,709 DEBUG [org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader : 188] Imported 7 bean definitions from URL location [classpath:lexevsCache.xml]
+2013-06-19 14:26:50,709 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityPropertyInsertListener#1eb59b1]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityPropertyUpdateListener#4dabd7]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityPropertyRemoveListener#14cecee]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.SystemResourceRefreshingListener#1573137]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityInsertListener#16020ed]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityUpdateListener#11cc36]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.LuceneEntityRemoveListener#762acf]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.HistoryTableReplicatingListener#1f4a968]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.NullEntityNamespaceListener#19e0684]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.NullAssociationNamespaceListener#1bdedf8]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.InvalidPropertyLinkListener#5264dc]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.DuplicatePropertyIdListener#15bd8eb]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.service.listener.DefaultLanguageAddingListener#fe4dd2]
+2013-06-19 14:26:50,724 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 417] Neither XML 'id' nor 'name' specified - using generated bean name [org.lexevs.dao.database.key.incrementer.RandomGuidKeyIncrementer#572554]
+2013-06-19 14:26:50,756 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 1397] Using generated bean name [util:constant#148ff04] for nested custom element 'util:constant'
+2013-06-19 14:26:50,756 DEBUG [org.springframework.beans.factory.xml.BeanDefinitionParserDelegate : 1397] Using generated bean name [util:constant#15e7f0b] for nested custom element 'util:constant'
+2013-06-19 14:26:50,756 INFO  [org.springframework.beans.factory.support.DefaultListableBeanFactory : 618] Overriding bean definition for bean 'cacheConfigLocationFactory': replacing [Generic bean: class [org.lexevs.cache.CacheConfigLocationFactory]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [lexevsCache.xml]] with [Generic bean: class [org.lexevs.cache.CacheConfigLocationFactory]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [lexevsDao.xml]]
+2013-06-19 14:26:50,756 DEBUG [org.springframework.beans.factory.xml.XmlBeanDefinitionReader : 185] Loaded 133 bean definitions from location pattern [lexevsDao.xml]
+2013-06-19 14:26:50,756 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 470] Bean factory for org.springframework.context.support.ClassPathXmlApplicationContext@7ee722: org.springframework.beans.factory.support.DefaultListableBeanFactory@e6ace7: defining beans [org.springframework.aop.config.internalAutoProxyCreator,cacheConfigLocationFactory,ehCacheManager,methodCachingProxyAspect,cacheWrappingFactory,methodCachingInterceptor,cacheRegistry,sqlMap,defaultRootBuilder,defaultTransitivityBuilder,abstractIbatisDao,ibatisPropertyDao,ibatisCodingSchemeDao,ibatisPickListDao,ibatisPickListEntryNodeDao,ibatisValueSetDefinitionDao,ibatisVSDefinitionEntryDao,ibatisVSPropertyDao,ibatisVSEntryStateDao,abstractSqlInterfaceDao,sqlInterfaceCodingSchemeDao,sqlImplementedMethodsDao,sqlInterfaceEntityDao,daoManager,ibatisEntityDao,ibatisCodedNodeGraphDao,ibatisAssociationDao,ibatisAssociationTargetDao,ibatisAssociationDataDao,ibatisVersionsDao,ibatisSystemReleaseDao,ibatisRevisionDao,ibatisNciHistoryDao,databaseServiceManager,extensionLoadingListenerRegistry,abstractService,daoManagerDaoCallbackService,authoringService,relationService,codingSchemeService,propertyService,entityService,codedNodeGraphService,associationService,associationTargetService,associationDataService,pickListDefinitionService,pickListEntryNodeService,valueSetDefinitionService,vsDefinitionEntryService,vsPropertyService,nciHistoryService,lexEvsJdbcTemplate,sqlMapClientTemplate,abstractResourceManagerVariableFactory,transactionManager,defaultPrefixResolver,hibernateRegistryDao,unPooledDataSource,validationQueryFactory,jdbcDriverClass,dsConnectionFactory,myClassLoader,pool,poolableConnectionFactory,loggerFactory,systemVariables,abstractSystemVariableFactory,dbUrl,dbPassword,dbUser,dbDriver,dbPrefix,dbConnections,dbcpDataSource,dataSource,persistenceSchemeVersion,defaultVersion20Scheme,persistenceScheme,primaryKeyIncrementer,mysqlTableBasedBigIntKeyIncrementer,sequenceBasedBigIntKeyIncrementer,defaultLexEvsDatabaseOperations,lexevsHistoryCreateScript,lexevsValueSetHistoryCreateScript,lexevsCodingSchemeSchemaCreateScript,lexevsCodingSchemeSchemaDropScript,lexevsCommonSchemaCreateScript,lexevsValueSetsSchemaCreateScript,lexevsNciHistorySchemaCreateScript,registryXmlToDatabaseTransfer,registrySessionFactory,prefixInterceptor,databaseRegistry,xmlRegistry,registry,cyclingCharDbPrefixGenerator,resourceManager,delegatingResourceManagingService,lexEvsResourceManagingService,lexEvsSchemaInstallationSetup,defaultDatabaseUtility,lexGridSchemaCheckFactory,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,databaseTypeFactory,lexEvsServiceLocator,loggingBean,codingSchemeRegisteringListener,entityBatchingIndexCreator,defaultLexEvsIndexOperations,luceneEntityIndexService,luceneMetadataIndexService,indexServiceManager,indexDaoManager,indexerService,luceneMetadataDao,luceneMetadataIndexCreator,baseMetaDataLoader,luceneIndexEntityDao,luceneEntity2009Dao,commonIndexLoaderCodeIndexer,abstractDirectoryFactory,commonIndexDirectory,commonIndexLocation,metadataIndexDirectory,metadataIndexLocation,defaultLuceneDirectoryCreator,luceneIndexMetadataFactory,luceneEntityIndexTemplate,luceneMetadataIndexTemplate,indexRegistry]; root of factory hierarchy
+2013-06-19 14:26:50,896 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'org.springframework.aop.config.internalAutoProxyCreator'
+2013-06-19 14:26:50,896 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.springframework.aop.config.internalAutoProxyCreator'
+2013-06-19 14:26:50,912 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'org.springframework.aop.config.internalAutoProxyCreator' to allow for resolving potential circular references
+2013-06-19 14:26:50,912 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.springframework.aop.config.internalAutoProxyCreator'
+2013-06-19 14:26:50,927 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 776] Unable to locate MessageSource with name 'messageSource': using default [org.springframework.context.support.DelegatingMessageSource@135cda0]
+2013-06-19 14:26:50,927 DEBUG [org.springframework.context.support.ClassPathXmlApplicationContext : 800] Unable to locate ApplicationEventMulticaster with name 'applicationEventMulticaster': using default [org.springframework.context.event.SimpleApplicationEventMulticaster@14ee2c5]
+2013-06-19 14:26:50,927 INFO  [org.springframework.beans.factory.support.DefaultListableBeanFactory : 555] Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@e6ace7: defining beans [org.springframework.aop.config.internalAutoProxyCreator,cacheConfigLocationFactory,ehCacheManager,methodCachingProxyAspect,cacheWrappingFactory,methodCachingInterceptor,cacheRegistry,sqlMap,defaultRootBuilder,defaultTransitivityBuilder,abstractIbatisDao,ibatisPropertyDao,ibatisCodingSchemeDao,ibatisPickListDao,ibatisPickListEntryNodeDao,ibatisValueSetDefinitionDao,ibatisVSDefinitionEntryDao,ibatisVSPropertyDao,ibatisVSEntryStateDao,abstractSqlInterfaceDao,sqlInterfaceCodingSchemeDao,sqlImplementedMethodsDao,sqlInterfaceEntityDao,daoManager,ibatisEntityDao,ibatisCodedNodeGraphDao,ibatisAssociationDao,ibatisAssociationTargetDao,ibatisAssociationDataDao,ibatisVersionsDao,ibatisSystemReleaseDao,ibatisRevisionDao,ibatisNciHistoryDao,databaseServiceManager,extensionLoadingListenerRegistry,abstractService,daoManagerDaoCallbackService,authoringService,relationService,codingSchemeService,propertyService,entityService,codedNodeGraphService,associationService,associationTargetService,associationDataService,pickListDefinitionService,pickListEntryNodeService,valueSetDefinitionService,vsDefinitionEntryService,vsPropertyService,nciHistoryService,lexEvsJdbcTemplate,sqlMapClientTemplate,abstractResourceManagerVariableFactory,transactionManager,defaultPrefixResolver,hibernateRegistryDao,unPooledDataSource,validationQueryFactory,jdbcDriverClass,dsConnectionFactory,myClassLoader,pool,poolableConnectionFactory,loggerFactory,systemVariables,abstractSystemVariableFactory,dbUrl,dbPassword,dbUser,dbDriver,dbPrefix,dbConnections,dbcpDataSource,dataSource,persistenceSchemeVersion,defaultVersion20Scheme,persistenceScheme,primaryKeyIncrementer,mysqlTableBasedBigIntKeyIncrementer,sequenceBasedBigIntKeyIncrementer,defaultLexEvsDatabaseOperations,lexevsHistoryCreateScript,lexevsValueSetHistoryCreateScript,lexevsCodingSchemeSchemaCreateScript,lexevsCodingSchemeSchemaDropScript,lexevsCommonSchemaCreateScript,lexevsValueSetsSchemaCreateScript,lexevsNciHistorySchemaCreateScript,registryXmlToDatabaseTransfer,registrySessionFactory,prefixInterceptor,databaseRegistry,xmlRegistry,registry,cyclingCharDbPrefixGenerator,resourceManager,delegatingResourceManagingService,lexEvsResourceManagingService,lexEvsSchemaInstallationSetup,defaultDatabaseUtility,lexGridSchemaCheckFactory,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,databaseTypeFactory,lexEvsServiceLocator,loggingBean,codingSchemeRegisteringListener,entityBatchingIndexCreator,defaultLexEvsIndexOperations,luceneEntityIndexService,luceneMetadataIndexService,indexServiceManager,indexDaoManager,indexerService,luceneMetadataDao,luceneMetadataIndexCreator,baseMetaDataLoader,luceneIndexEntityDao,luceneEntity2009Dao,commonIndexLoaderCodeIndexer,abstractDirectoryFactory,commonIndexDirectory,commonIndexLocation,metadataIndexDirectory,metadataIndexLocation,defaultLuceneDirectoryCreator,luceneIndexMetadataFactory,luceneEntityIndexTemplate,luceneMetadataIndexTemplate,indexRegistry]; root of factory hierarchy
+2013-06-19 14:26:50,927 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'org.springframework.aop.config.internalAutoProxyCreator'
+2013-06-19 14:26:50,927 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'cacheConfigLocationFactory'
+2013-06-19 14:26:50,927 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'cacheConfigLocationFactory'
+2013-06-19 14:26:50,927 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'org.springframework.transaction.config.internalTransactionAdvisor'
+2013-06-19 14:26:50,927 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.springframework.transaction.config.internalTransactionAdvisor'
+2013-06-19 14:26:50,943 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'org.springframework.transaction.config.internalTransactionAdvisor' to allow for resolving potential circular references
+2013-06-19 14:26:50,943 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0'
+2013-06-19 14:26:50,943 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0'
+2013-06-19 14:26:50,974 DEBUG [org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory : 172] Found AspectJ method: public java.lang.Object org.lexevs.cache.MethodCachingProxy.cacheMethod(org.aspectj.lang.ProceedingJoinPoint) throws java.lang.Throwable
+2013-06-19 14:26:50,990 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0' to allow for resolving potential circular references
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 458] Finished creating instance of bean 'org.springframework.transaction.config.internalTransactionAdvisor'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 504] Eagerly caching bean 'cacheConfigLocationFactory' to allow for resolving potential circular references
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'systemVariables'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'systemVariables'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'org.springframework.transaction.config.internalTransactionAdvisor'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 214] Creating shared instance of singleton bean 'loggerFactory'
+2013-06-19 14:26:51,255 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 430] Creating instance of bean 'loggerFactory'
+2013-06-19 14:26:51,270 DEBUG [org.springframework.beans.factory.support.DefaultListableBeanFactory : 242] Returning cached instance of singleton bean 'org.springframework.transaction.config.internalTransactionAdvisor'
+2013-06-19 14:26:51,286 DEBUG [gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS : 67] gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts.main(AutoProcessAlerts.java:149): Rows count in getReportRows(): 12
+2013-06-19 14:26:51,458 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 299] Closed log: 2013-06-19 14:23:08.492: /local/content/cadsrsentinel/reports/Audits_20130619142308492.html
+2013-06-19 14:26:51,458 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 620] 
+Executing autoRun2() ...
+
+
+2013-06-19 14:27:08,436 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1951] Sent admin report to lhebel@scenpro.com
+2013-06-19 14:27:08,545 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1951] Sent admin report to davet@mail.nih.gov
+2013-06-19 14:27:08,670 INFO  [gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts : 1962] Sent statistics report to azien@mail.nih.gov
+2013-06-19 14:27:08,686 INFO  [gov.nih.nci.cadsr.sentinel.tool.AlertOutput : 299] Closed log: 2013-06-19 14:23:08.492: /local/content/cadsrsentinel/reports/RunLog_Auto_20130619142308492.html

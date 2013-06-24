@@ -1,0 +1,15 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<!-- $Header: /share/content/gforge/sentinel/sentinel/conf/template.CleanOCR.xml,v 1.1 2009-07-24 15:36:32 davet Exp $
+       $Name: not supported by cvs2svn $
+ -->
+
+<properties>
+    
+        <!-- Specify the caDSR database being used by the Sentinel Tool.
+        -->
+        <entry key="DSurl">@CADSR.DS.FULLURL@</entry>
+        <entry key="DSusername">@CADSR.DS.USER@</entry>
+        <entry key="DSpassword">@CADSR.DS.PSWD@</entry>
+
+</properties>
