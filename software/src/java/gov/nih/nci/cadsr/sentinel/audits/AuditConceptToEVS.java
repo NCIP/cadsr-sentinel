@@ -669,7 +669,7 @@ public class AuditConceptToEVS extends AuditReport
 
         // Get the EVS URL and establish the application service.
 //        String evsURL = _db.selectEvsUrl();
-        String evsURL = "http://lexevsapi60-stage.nci.nih.gov/lexevsapi60";
+        String evsURL = "http://lexevsapi60.nci.nih.gov/lexevsapi60";
         
         LexEVSService service;
         try
