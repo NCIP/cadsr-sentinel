@@ -663,9 +663,11 @@ public class AuditConceptToEVS extends AuditReport
         msgs.add(formatTitleMsg());
 
         // Get all the Concepts from the caDSR.
-//        Vector<ConceptItem> concepts = _db.selectConcepts();
-        Vector<ConceptItem> concepts = selectConcepts();
-        EVSVocab[] vocabs = parseProperties(selectEVSVocabs());
+        Vector<ConceptItem> concepts = _db.selectConcepts();
+        EVSVocab[] vocabs = parseProperties(_db.selectEVSVocabs());
+
+        //Vector<ConceptItem> concepts = selectConcepts();
+        //EVSVocab[] vocabs = parseProperties(selectEVSVocabs());
 
         // Get the EVS URL and establish the application service.
         String evsURL = _db.selectEvsUrl();
