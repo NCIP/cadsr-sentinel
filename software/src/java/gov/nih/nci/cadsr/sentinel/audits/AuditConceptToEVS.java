@@ -99,8 +99,8 @@ public class AuditConceptToEVS extends AuditReport
         for (int i = 0; i < props_.length; ++i)
         {
             String[] text = props_[i]._key.split("[.]");
-//            if (text[2].equals("ALL"))
-            if (text != null && text.length == 2 && text[2].equals("ALL"))            
+            if (text[2].equals("ALL"))
+//            if (text != null && text.length == 2 && text[2].equals("ALL"))            
             {
                 if (text[3].equals("PROPERTY") && text[4].equals("DEFINITION"))
                     defProp = props_[i]._value;
@@ -129,8 +129,8 @@ public class AuditConceptToEVS extends AuditReport
         for (int i = 0; i < props_.length; ++i)
         {
             String[] text = props_[i]._key.split("[.]");
-//            if (!text[2].equals("ALL"))
-            if (text != null && text.length == 2 && text[2].equals("ALL"))            
+            if (!text[2].equals("ALL"))
+//          if (text != null && text.length == 2 && text[2].equals("ALL"))            
             {
                 if (last == null)
                     last = text[2];
