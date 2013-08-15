@@ -18,16 +18,21 @@ public class ConceptItem
     public ConceptItem()
     {
     }
+    
+    /**
+     * 
+     */
+    public String _idseq;  //con_idseq same as ac_idseq in administrative component
 
     /**
      * 
      */
-    public String _idseq;
+    public String _conteidseq;  //conte_idseq is context id same in administrative component
 
     /**
      * 
      */
-    public String _publicID;
+    public String _publicID;  //con_id is the public id
 
     /**
      * 
@@ -58,4 +63,14 @@ public class ConceptItem
      * 
      */
     public String _preferredDefinition;
+    
+    /**
+     * 
+     */
+    public String _origin;
+    
+    /**
+     * 
+     */
+    public String _workflow_status;
 }

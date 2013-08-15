@@ -278,10 +278,13 @@
                 </tr><tr>
                     <td class="td1"><p class="bstd">&nbsp;</p></td>
                     <td class="td1"><label for="SubjectTextArea" /><html:textarea styleId="SubjectTextArea" styleClass="std" property="propIntro" rows="6" cols="80"></html:textarea></td>
-                </tr><tr>
+                </tr>
+                <!-- 
+                <tr>
                     <td>&nbsp;</td>
                     <td class="td1"><p><a target="_blank" href="/cadsrsentinel/html/samples.html"><bean:message key="edit.emailx" /></a></p></td>
                 </tr>
+                 -->
             </table>
         </td></tr></table></div>
 

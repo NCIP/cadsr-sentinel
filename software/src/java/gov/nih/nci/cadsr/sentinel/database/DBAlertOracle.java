@@ -21,10 +21,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -3845,7 +3847,7 @@ public class DBAlertOracle implements DBAlert
             DBProperty[] props = new DBProperty[rs._data.length];
             for (int i = 0; i < rs._data.length; ++i)
             {
-                props[i] = new DBProperty(rs._data[i]._label, rs._data[i]._val);;
+                props[i] = new DBProperty(rs._data[i]._label, rs._data[i]._val);
             }
             return props;
         }
@@ -3861,8 +3863,9 @@ public class DBAlertOracle implements DBAlert
     public Vector<ConceptItem> selectConcepts()
     {
         // Get the context names and id's.
-        String select = "SELECT con_idseq, con_id, version, evs_source, preferred_name, long_name, definition_source, preferred_definition "
+        String select = "SELECT con_idseq, conte_idseq, con_id, version, evs_source, preferred_name, long_name, definition_source, preferred_definition, origin, asl_name "
             + "FROM sbrext.concepts_view_ext WHERE asl_name NOT LIKE 'RETIRED%' "
+            //+ "and ROWNUM <= 20 "
             + "ORDER BY upper(long_name) ASC";
 
         Statement stmt = null;
@@ -3879,14 +3882,17 @@ public class DBAlertOracle implements DBAlert
             while (rs.next())
             {
                 ConceptItem rec = new ConceptItem();
-                rec._idseq = rs.getString(1);
-                rec._publicID = rs.getString(2);
-                rec._version = rs.getString(3);
-                rec._evsSource = rs.getString(4);
-                rec._preferredName = rs.getString(5);
-                rec._longName = rs.getString(6);
-                rec._definitionSource = rs.getString(7);
-                rec._preferredDefinition = rs.getString(8);
+                rec._idseq = rs.getString(1);      //con_idseq same as ac_idseq
+                rec._conteidseq = rs.getString(2); //conte_idseq is context id
+                rec._publicID = rs.getString(3);   //con_id is public id
+                rec._version = rs.getString(4);
+                rec._evsSource = rs.getString(5);
+                rec._preferredName = rs.getString(6);
+                rec._longName = rs.getString(7);
+                rec._definitionSource = rs.getString(8);
+                rec._preferredDefinition = rs.getString(9);
+                rec._origin = rs.getString(10);
+                rec._workflow_status = rs.getString(11);
                 list.add(rec);
             }
         }
@@ -3904,7 +3910,7 @@ public class DBAlertOracle implements DBAlert
         }
         return list;
     }
-
+    
     /**
      * Retrieve the valid context list. The method getGroups() must be called
      * first. Once this method is used the internal copy is deleted to reclaim

@@ -5,28 +5,40 @@
 
 package gov.nih.nci.cadsr.sentinel.audits;
 
+import gov.nih.nci.cadsr.sentinel.database.DBAlertOracleMetadata;
 import gov.nih.nci.cadsr.sentinel.database.DBProperty;
 import gov.nih.nci.cadsr.sentinel.tool.ConceptItem;
 import gov.nih.nci.system.applicationservice.ApplicationException;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
+import gov.nih.nci.cadsr.sentinel.database.DBAlertOracle;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
-import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
-import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
+import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.NCIChangeEventList;
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
+import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.DataModel.NCIHistory.NCIChangeEvent;
 import org.LexGrid.LexBIG.Exceptions.LBException;
 import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
 import org.LexGrid.LexBIG.Exceptions.LBParameterException;
+import org.LexGrid.LexBIG.History.HistoryService;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
-//import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
+import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
 import org.LexGrid.commonTypes.Property;
 import org.LexGrid.concepts.Definition;
 import org.LexGrid.concepts.Entity;
@@ -37,10 +49,10 @@ import org.apache.log4j.Logger;
  * This class compares the caDSR Concepts table to the referenced EVS Concepts. If the concept code or name is not
  * valid an appropriate message is returned. Concepts which match EVS are not reported.
  * 
- * @author lhebel
+ * @author Archana Sahu
  *
  */
-public class AuditConceptToEVS extends AuditReport
+public class caDSRConceptCleanupEVS extends AuditReport
 {
 
     /* (non-Javadoc)
@@ -49,7 +61,7 @@ public class AuditConceptToEVS extends AuditReport
     @Override
     public String getTitle()
     {
-        return "caDSR / EVS Concept Inconsistencies";
+        return "NCI Thesaurus Concept cleanup";
     }
 
     /* (non-Javadoc)
@@ -65,6 +77,7 @@ public class AuditConceptToEVS extends AuditReport
             rows[i] = msgs.get(i);
         }
         return rows;
+        
     }
 
     /* (non-Javadoc)
@@ -131,7 +144,7 @@ public class AuditConceptToEVS extends AuditReport
         {
             String[] text = props_[i]._key.split("[.]");
             if (!text[2].equals("ALL"))
-//          if (text != null && text.length == 2 && text[2].equals("ALL"))            
+//            if (text != null && text.length == 2 && text[2].equals("ALL"))            
             {
                 if (last == null)
                     last = text[2];
@@ -405,13 +418,6 @@ public class AuditConceptToEVS extends AuditReport
                         break;
                     }
                 }
-                // The caDSR definition source is missing and EVS has possible definitions
-                if (defFlag)
-                    _msg += formatMsg(_MSG002);
-                
-                // EVS has no definitions for this term and the caDSR contains definition text
-                else if (_rec._preferredDefinition.length() > 0)
-                    _msg += formatMsg(_MSG003);
             }
             else
             {
@@ -459,36 +465,6 @@ public class AuditConceptToEVS extends AuditReport
                 // Did we find everything?
                 if (full == 3)
                     return;
-
-                if (defCol)
-                {
-                    // No definitions exist in EVS and the caDSR contains a definition source [{0}]
-                    _msg += formatMsg(_MSG004, _rec._definitionSource);
-                    return;
-                }
-
-                if (srcFlag)
-                {
-                    // Definition Source [{0}] does not exist for this Concept
-                    if (defFlag)
-                        _msg += formatMsg(_MSG005, _rec._definitionSource);
-                    
-                    // Definition matches source [{0}] but was expecting source to be [{1}]
-                    else if (defSource != null)
-                        _msg += formatMsg(_MSG006, defSource, _rec._definitionSource);
-                    
-                    // Definition matches unnamed source but was expecting source to be [{0}]
-                    else
-                        _msg += formatMsg(_MSG007, _rec._definitionSource);
-                }
-
-                // Definition does not match EVS. [{0}]
-                else if (defFlag)
-                    _msg += formatMsg(_MSG008, _rec._definitionSource);
-                
-                // Definition and Source found for concept but Definition matches source [{0}] and expecting source [{1}]
-                else
-                    _msg += formatMsg(_MSG009, defSource, _rec._definitionSource);
             }
         }
     }
@@ -551,10 +527,7 @@ public class AuditConceptToEVS extends AuditReport
                         _flag = false;
                         break;
                     }
-                        
-                    // In the off chance none of the current defined attributes contain the name, perhaps
-                    //  an attribute was removed from the Curation Tool options after a concept was
-                    // copied from EVS.
+                    
                     collection = temp.properties;
                     for (int n = 0; n < collection.size(); ++n)
                     {
@@ -568,8 +541,6 @@ public class AuditConceptToEVS extends AuditReport
                                 break;
                             }
 
-                            // Name matches on property {0} but expected to match on property {1}
-                            _msg += formatMsg(_MSG010, prop.getPropertyName(),  ((_vocab._preferredNameProp == null) ? "(default)" : _vocab._preferredNameProp));
                             _flag = false;
                             break;
                         }
@@ -580,70 +551,11 @@ public class AuditConceptToEVS extends AuditReport
             }
             catch (ClassCastException ex)
             {
-                // Mislabeled, should be a MetaThesaurus Concept
-                _msg += formatMsg(_MSG011);
                 _flag = false;
                 _logger.warn(ex.toString());
                 
                 // Can't continue if this exception occurs.
                 return;
-            }
-
-            boolean srcFlag = true;
-            boolean defFlag = true;
-            for (int i = 0; i < _cons.size() && srcFlag && defFlag; ++i)
-            {
-            	EVSConcept temp = (EVSConcept) _cons.get(i);
-                Definition[] definitions = temp.definitions;
-                for (Definition def : definitions)
-                {
-                	if (def != null && def.isIsPreferred() != null && def.isIsPreferred()) {
-                		srcFlag = false;
-                		org.LexGrid.commonTypes.Source[] sources = def.getSource();
-                		if (sources == null || sources.length == 0) {
-                			if  (_rec._definitionSource != null && _rec._definitionSource.length() > 0)
-                                _msg += formatMsg(_MSG012, _rec._definitionSource);
-                		}
-                		else {
-                			if  (_rec._definitionSource == null || _rec._definitionSource.length() == 0)
-                                _msg += formatMsg(_MSG013, sources[0].getContent());
-                            else
-                            {
-                            	boolean srcExists = false;
-                            	for (org.LexGrid.commonTypes.Source src: sources) {
-                            		if (src.getContent().equals(_rec._definitionSource)) {
-                            			srcExists = true;
-                            			break;
-                            		}
-                            	}
-                            	
-                            	if (!srcExists) {
-                            		_msg += formatMsg(_MSG014, _rec._definitionSource, sources[0].getContent());
-                            	}   
-                            }
-                		}
-                		
-                		if (def.getValue().getContent().equalsIgnoreCase(_rec._preferredDefinition)) {
-                			defFlag = false;
-                		}
-                	}
-                }
-            }
-            if (srcFlag)
-            {
-                // No definitions exist in EVS for property [{0}] can not compare definitions
-                if (_rec._preferredDefinition.length() > 0)
-                    _msg += formatMsg(_MSG015, _vocab._preferredDefinitionProp);
-            }
-            else if (defFlag)
-            {
-                // Definition does not match EVS
-                if (_rec._definitionSource == null)
-                    _msg += formatMsg(_MSG016);
-                
-                // Definition does not match EVS [{0}]
-                else
-                    _msg += formatMsg(_MSG017, _rec._definitionSource);
             }
         }
     }
@@ -652,6 +564,7 @@ public class AuditConceptToEVS extends AuditReport
     	  public String preferredName;
     	  public String code;
     	  public List synonyms;
+    	  public String status;
     	  public List<org.LexGrid.commonTypes.Property> properties;
     	  public Definition[] definitions;
     }
@@ -667,47 +580,44 @@ public class AuditConceptToEVS extends AuditReport
         Vector<String> msgs = new Vector<String>();
         msgs.add(formatTitleMsg());
 
-        // Get all the Concepts from the caDSR.
-        Vector<ConceptItem> concepts = _db.selectConcepts();
+        DBAlertOracleMetadata meta = new DBAlertOracleMetadata();
+        Vector<ConceptItem> concepts = meta.selectEVSConcepts("NCI Thesaurus", _db.getConnection());
         EVSVocab[] vocabs = parseProperties(_db.selectEVSVocabs());
-       
+     
+        //Vector<ConceptItem> concepts = selectConcepts(); //Used Just for TESTING
+        //System.out.println("No of Concepts (validate): " + concepts.size());
+        
         // Get the EVS URL and establish the application service.
         //String evsURL = _db.selectEvsUrl();
-        
+       
         //LexEVSService service;
         LexBIGService service;
         try
         {
         	service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
-        	//service = (LexEVSService) ApplicationServiceProvider
-			//        .getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
+        	//service = (LexEVSService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
 			
         }
         catch (Exception ex)
         {
-            //msgs.add("EVS API URL " + evsURL + " " + ex.toString());
             StackTraceElement[] list = ex.getStackTrace();
             for (int i = 0; i < list.length; ++i)
                 msgs.add(list[i].toString());
             return msgs;
         }
-
+        
         // Check each concept with EVS.
-        String msg = null;
         String name = null;
+        EVSConcept evsconcept = null;
         int count = 0;
         for (ConceptItem rec : concepts)
         {
             // Reset loop variables.
-            msg = "";
+            evsconcept = null;
+            
             if (rec._preferredDefinition.toLowerCase().startsWith("no value exists"))
                 rec._preferredDefinition = "";
 
-            // Show status messages when debugging.
-            if ((count % 100) == 0)
-            {
-                _logger.debug("Completed " + count + " out of " + concepts.size() + " (" + (count * 100 / concepts.size()) + "%) . Message/Failure count " + msgs.size() + " (" + String.valueOf(msgs.size() * 100 / concepts.size()) + "%)");
-            }
             ++count;
 
             EVSVocab vocab = null;
@@ -716,13 +626,10 @@ public class AuditConceptToEVS extends AuditReport
                 // Missing EVS Source
                 if (rec._evsSource == null || rec._evsSource.length() == 0)
                 {
-                    msg += formatMsg(_MSG020);
                     break;
                 }
 
                 // Determine the desired vocabulary using the EVS source value in caDSR.
-                // This translation should be in the tool options table or the data content of the EVS
-                // source column should use the standard vocabulary abbreviation.
                 for (int i = 0; i < vocabs.length; ++i)
                 {
                     if (rec._evsSource.equals(vocabs[i]._source))
@@ -731,43 +638,44 @@ public class AuditConceptToEVS extends AuditReport
                         break;
                     }
                 }
+                
                 if (vocab == null)
                 {
                     if (rec._evsSource.equals(vocabs[0]._source2))
                         vocab = vocabs[0];
                 }
-
+                
                 // Unknown EVS Source {0}
                 if (vocab == null)
                 {
-                    msg += formatMsg(_MSG021, rec._evsSource);
                     break;
                 }
                 
                 // Missing Concept Code
                 if (rec._preferredName== null || rec._preferredName.length() == 0)
                 {
-                    msg += formatMsg(_MSG022);
                     break;
                 }
 
                 EVSData ed = vocab._ed;
                 ed.reset();
                 ed._rec = rec;
-
+                //System.out.println(rec._preferredName + " : " + vocab._display + " : " + vocab._source + " : " + vocab._vocab);
+                
                 CodedNodeSet cns = ed.search(service);
                 
                 try
                 {
                     // Get the attributes for the concept code. 
                     ed._cons = resolveNodeSet(cns, true);
+                    if (ed._cons != null && ed._cons.size() > 0)
+                    	evsconcept = (EVSConcept) ed._cons.get(0);
                 }
                 catch (ApplicationException ex)
                 {
                     // Invalid concept code
                     if (ex.toString().indexOf("Invalid concept code") > -1)
                     {
-                        msg += formatMsg(_MSG023);
                         _logger.warn(ex.toString());
                         break;
                     }
@@ -775,7 +683,6 @@ public class AuditConceptToEVS extends AuditReport
                     // Invalid concept ID
                     else if (ex.toString().indexOf("Invalid conceptID") > -1)
                     {
-                        msg += formatMsg(_MSG024);
                         _logger.warn(ex.toString());
                         break;
                     }
@@ -783,33 +690,27 @@ public class AuditConceptToEVS extends AuditReport
                     // An unexpected exception occurred so record it and terminate the validation.
                     else
                     {
-                        msg += formatMsg(ex.toString());
-                        // msgs.add(msg);
-                        // _logger.error(ex.toString());
-                        // return msgs;
                         break;
                     }
                 }
                 catch (Exception ex)
                 {
-                    msgs.add(ex.toString());
-                    StackTraceElement[] list = ex.getStackTrace();
-                    for (int i = 0; i < list.length; ++i)
-                        msgs.add(list[i].toString());
-                    return msgs;
+                   msgs.add(ex.toString());
+                   StackTraceElement[] list = ex.getStackTrace();
+                   for (int i = 0; i < list.length; ++i)
+                     msgs.add(list[i].toString());
+                   return msgs;
                 }
 
                 // Failed to retrieve EVS concept
                 if (ed._cons.size() == 0)
                 {
-                    msg += formatMsg(_MSG025);
                     break;
                 }
-                    
+                 
                 // Missing Concept Long Name, recommend using [{0}]
                 if (rec._longName == null || rec._longName.length() == 0)
                 {
-                    msg += formatMsg(_MSG026, ed.recommendName());
                     break;
                 }
 
@@ -821,33 +722,19 @@ public class AuditConceptToEVS extends AuditReport
                 ed.validate();
                 flag = ed._flag;
                 name = ed._name;
-                msg += ed._msg;
                 
-                // The name of the concept in the caDSR doesn't match anything in EVS for this concept code.
-                if (flag)
-                {
-                    // Concept name does not match EVS
-                    if (name == null)
-                        msg += formatMsg(_MSG018);
-                    
-                    // Concept name does not match EVS, expected [{0}]
-                    else
-                        msg += formatMsg(_MSG019, name);
-                }
-
                 break;
             }
-
-            // If something happened during the validation, record the message and continue with the next concept.
-            if (msg.length() > 0)
-            {
-                msg = formatMsg(rec, vocab, msg);
-                msgs.add(msg);
-                if (msgs.size() >= _maxMsgs)
-                {
-                    msgs.add(formatMaxMsg());
-                    break;
-                }
+            
+            //need to compare 4 fields with EVS here and display message accordingly
+            String cleanup_msg = compareconceptWithEVS(rec, evsconcept, meta);
+            if (cleanup_msg.length() > 0) {
+            	msgs.add(cleanup_msg);
+	            if (msgs.size() >= _maxMsgs)
+	            {
+	            	msgs.add(formatMaxMsg());
+	            	break;
+	            }
             }
         }
 
@@ -891,6 +778,12 @@ public class AuditConceptToEVS extends AuditReport
 		Entity entity = rcRef.getEntity();
 		evsConcept.preferredName = rcRef.getEntityDescription().getContent();
 		evsConcept.definitions = entity.getDefinition();
+		
+		if(entity.getIsActive())
+			evsConcept.status = "ACTIVE";
+		else 
+			evsConcept.status = "RETIRED";
+		
 		setPropsAndSyns(evsConcept, entity);
 		
 		return evsConcept;
@@ -943,6 +836,28 @@ public class AuditConceptToEVS extends AuditReport
             + ((msg_.charAt(0) == '\n') ? msg_.substring(1) : msg_);
     }
     
+    private String formatCeanupMsg(ConceptItem rec_, ConceptItem evsConcept, ConceptItem updatedrec, String msg_)
+    {
+    	return  rec_._preferredName + AuditReport._ColSeparator 
+    			+ "Workflow Status: " + rec_._workflow_status 
+    			+ "<br>Long Name: " + rec_._longName  
+    			+ "<br>Definition Source: " + rec_._definitionSource
+    			+ "<br>Preferred Definition: " + rec_._preferredDefinition
+    			+ AuditReport._ColSeparator 
+    			+ "Retirement Status: " + evsConcept._workflow_status 
+    			+ "<br>Preferred Name: " + evsConcept._longName  
+    			+ "<br>Definition Source: " + evsConcept._definitionSource
+    			+ "<br>EVS Definition: " + evsConcept._preferredDefinition
+    			+ AuditReport._ColSeparator 
+    			+ "Workflow Status: " + updatedrec._workflow_status 
+    			+ "<br>Long Name: " + updatedrec._longName  
+    			+ "<br>Definition Source: " + updatedrec._definitionSource
+    			+ "<br>Preferred Definition: " + updatedrec._preferredDefinition
+    			+ AuditReport._ColSeparator 
+    	        + ((msg_.charAt(0) == '\n') ? msg_.substring(1) : msg_);
+    	        
+    }
+    
     private String formatMaxMsg()
     {
         return "*** Maximum Messages ***" + AuditReport._ColSeparator
@@ -950,238 +865,206 @@ public class AuditConceptToEVS extends AuditReport
         + "***" + AuditReport._ColSeparator
         + "***" + AuditReport._ColSeparator
         + "***" + AuditReport._ColSeparator
-        + "The Error Message maximum limit [" + _maxMsgs + "] has been reached, report truncated.";
+        + "The Message maximum limit [" + _maxMsgs + "] has been reached, report truncated.";
     }
     
     private String formatTitleMsg()
     {
-        return "Concept" + AuditReport._ColSeparator
-        + "Public ID" + AuditReport._ColSeparator
-        + "Version" + AuditReport._ColSeparator
-        + "Vocabulary" + AuditReport._ColSeparator
-        + "Concept Code" + AuditReport._ColSeparator
-        + "Message";
+    	return  "Concept Code" + AuditReport._ColSeparator
+    	        + "caDSR Details (Before)" + AuditReport._ColSeparator
+    	        + "EVS Details" + AuditReport._ColSeparator
+    	        + "caDSR Details (After)" + AuditReport._ColSeparator
+    	        + "Message";
     }
     
     private static final String preferredName = "Preferred_Name";
+    private static final int _maxMsgs = 200;
+    private static final Logger _logger = Logger.getLogger(caDSRConceptCleanupEVS.class.getName());
     
-    private static final String _MSG001 = "Mislabeled as a MetaThesaurus Concept.";
-    private static final String _MSG002 = "The caDSR definition source is missing and EVS has possible definitions.";
-    private static final String _MSG003 = "EVS has no definitions for this term and the caDSR contains definition text.";
-    private static final String _MSG004 = "No definitions exist in EVS and the caDSR contains a definition source [{0}].";
-    private static final String _MSG005 = "Definition Source [{0}] does not exist for this Concept.";
-    private static final String _MSG006 = "Definition matches source [{0}] but was expecting source to be [{1}]";
-    private static final String _MSG007 = "Definition matches unnamed source but was expecting source to be [{0}]";
-    private static final String _MSG008 = "Definition does not match EVS. [{0}]";
-    private static final String _MSG009 = "Definition and Source found for concept but Definition matches source [{0}] and expecting source [{1}]";
-    private static final String _MSG010 = "Name matches on property [{0}] but expected to match on property [{1}]";
-    private static final String _MSG011 = "Mislabeled, should be a MetaThesaurus Concept.";
-    private static final String _MSG012 = "The EVS definition source is missing, caDSR is [{0}].";
-    private static final String _MSG013 = "The caDSR definition source is missing, EVS is [{0}].";
-    private static final String _MSG014 = "The caDSR definition source [{0}] does not match EVS [{1}]";
-    private static final String _MSG015 = "No definitions exist in EVS for property [{0}] can not compare definitions.";
-    private static final String _MSG016 = "Definition does not match EVS.";
-    private static final String _MSG017 = "Definition does not match EVS [{0}].";
-    private static final String _MSG018 = "Concept name does not match EVS";
-    private static final String _MSG019 = "Concept name does not match EVS, expected [{0}].";
-    private static final String _MSG020 = "Missing EVS Source";
-    private static final String _MSG021 = "Unknown EVS Source [{0}]";
-    private static final String _MSG022 = "Missing Concept Code";
-    private static final String _MSG023 = "Invalid concept code.";
-    private static final String _MSG024 = "Invalid concept ID.";
-    private static final String _MSG025 = "Failed to retrieve EVS concept";
-    private static final String _MSG026 = "Missing Concept Long Name, recommend using [{0}]";
+	public String compareconceptWithEVS(ConceptItem rec, EVSConcept evsconcept, DBAlertOracleMetadata meta) {
     
-    private static final int _maxMsgs = 500;
-    private static final Logger _logger = Logger.getLogger(AuditConceptToEVS.class.getName());
-    
-    
-	public static DBProperty[] selectEVSVocabs(){
-		
-		int x = 10;
-		DBProperty[] props = new DBProperty[66];
-		DBProperty prop = new DBProperty("NCI Thesaurus","EVS.VOCAB.02.DISPLAY");
-		props[0] = prop;
-		prop = new DBProperty("NCI Thesaurus","EVS.VOCAB.02.EVSNAME");
-		props[1] = prop;
-		prop = new DBProperty("NCI Thesaurus","EVS.VOCAB.02.EVSNAME");
-		props[2] = prop;
-		prop = new DBProperty("FULL_SYN","EVS.VOCAB.02.PROPERTY.NAMESEARCH");
-		props[3] = prop;
-		prop = new DBProperty("NCI_CONCEPT_CODE","EVS.VOCAB.02.VOCABCODETYPE");
-		props[4] = prop;
-		prop = new DBProperty("CTCAE","EVS.VOCAB.04.DISPLAY");
-		props[5] = prop;
-		prop = new DBProperty("Common Terminology Criteria for Adverse Events","EVS.VOCAB.04.EVSNAME");
-		props[6] = prop;
-		prop = new DBProperty("DEFINITION","EVS.VOCAB.04.PROPERTY.DEFINITION");
-		props[7] = prop;
-		prop = new DBProperty("Synonym","EVS.VOCAB.04.PROPERTY.NAMESEARCH");
-		props[8] = prop;
-		prop = new DBProperty("CTCAE_CODE","EVS.VOCAB.04.VOCABCODETYPE");
-		props[9] = prop;
-		prop = new DBProperty("GO","EVS.VOCAB.06.DISPLAY");
-		props[10] = prop;
-		prop = new DBProperty("Gene Ontology","EVS.VOCAB.06.EVSNAME");
-		props[11] = prop;
-		prop = new DBProperty("GO_CODE","EVS.VOCAB.06.VOCABCODETYPE");
-		props[12] = prop;
-		prop = new DBProperty("HGNC","EVS.VOCAB.08.DISPLAY");
-		props[13] = prop;
-		prop = new DBProperty("HUGO Gene Nomenclature Committee Ontology","EVS.VOCAB.08.EVSNAME");
-		props[14] = prop;
-		prop = new DBProperty("HUGO_CODE","EVS.VOCAB.08.VOCABCODETYPE");
-		props[15] = prop;
-		prop = new DBProperty("HL7","EVS.VOCAB.10.DISPLAY");
-		props[16] = prop;
-		prop = new DBProperty("HL7 Reference Information Model","EVS.VOCAB.10.EVSNAME");
-		props[17] = prop;
-		prop = new DBProperty("HL7_CODE","EVS.VOCAB.10.VOCABCODETYPE");
-		props[18] = prop;
-		prop = new DBProperty("ICD-9-CM","EVS.VOCAB.12.DISPLAY");
-		props[19] = prop;
-		prop = new DBProperty("ICD-9-CM","EVS.VOCAB.12.DISPLAY");
-		props[20] = prop;
-		prop = new DBProperty("International Classification of Diseases, Ninth Revision","EVS.VOCAB.12.EVSNAME");
-		props[21] = prop;
-		prop = new DBProperty("ICD-9_CM_CODE","EVS.VOCAB.12.VOCABCODETYPE");
-		props[22] = prop;
-		prop = new DBProperty("ICD-10_","EVS.VOCAB.14.DISPLAY");
-		props[23] = prop;
-		prop = new DBProperty("ICD-10","EVS.VOCAB.14.EVSNAME");
-		props[24] = prop;
-		prop = new DBProperty("ICD-10_CODE","EVS.VOCAB.14.VOCABCODETYPE");
-		props[25] = prop;
-		prop = new DBProperty("ICD-10-CM","EVS.VOCAB.16.DISPLAY");
-		props[26] = prop;
-		prop = new DBProperty("International Classification of Diseases, 10th Edition, Clinical Modification","EVS.VOCAB.16.EVSNAME");
-		props[27] = prop;
-		prop = new DBProperty("IDC-10_CM_CODE","EVS.VOCAB.16.VOCABCODETYPE");
-		props[28] = prop;
-		prop = new DBProperty("LOINC","EVS.VOCAB.18.DISPLAY");
-		props[29] = prop;
-		prop = new DBProperty("Logical Observation Identifier Names and Codes","EVS.VOCAB.18.EVSNAME");
-		props[30] = prop;
-		prop = new DBProperty("LOINC_CODE","EVS.VOCAB.18.VOCABCODETYPE");
-		props[31] = prop;
-		prop = new DBProperty("10382","EVS.VOCAB.20.ACCESSREQUIRED");
-		props[32] = prop;
-		prop = new DBProperty("MedDRA","EVS.VOCAB.20.DISPLAY");
-		props[33] = prop;
-		prop = new DBProperty("MedDRA (Medical Dictionary for Regulatory Activities Terminology)","EVS.VOCAB.20.EVSNAME");
-		props[34] = prop;
-		prop = new DBProperty("definition","EVS.VOCAB.20.PROPERTY.DEFINITION");
-		props[35] = prop;
-		prop = new DBProperty("MEDDRA_CODE","EVS.VOCAB.20.VOCABCODETYPE");
-		props[36] = prop;
-		prop = new DBProperty("MGED","EVS.VOCAB.22.DISPLAY");
-		props[37] = prop;
-		prop = new DBProperty("The MGED Ontology","EVS.VOCAB.22.EVSNAME");
-		props[38] = prop;
-		prop = new DBProperty("NCI_MO_CODE","EVS.VOCAB.22.VOCABCODETYPE");
-		props[39] = prop;
-		prop = new DBProperty("NCI Metathesaurus","VS.VOCAB.24.DISPLAY");
-		props[40] = prop;
-		prop = new DBProperty("NCI Metathesaurus","EVS.VOCAB.24.EVSNAME");
-		props[41] = prop;
-		prop = new DBProperty("NPO","EVS.VOCAB.28.DISPLAY");
-		props[42] = prop;
-		prop = new DBProperty("Nanoparticle Ontology","EVS.VOCAB.28.EVSNAME");
-		props[43] = prop;
-		prop = new DBProperty("NPO_CODE","EVS.VOCAB.28.VOCABCODETYPE");
-		props[44] = prop;
-		prop = new DBProperty("OBI","EVS.VOCAB.30.DISPLAY");
-		props[45] = prop;
-		prop = new DBProperty("Ontology for Biomedical Investigations","EVS.VOCAB.30.EVSNAME");
-		props[46] = prop;
-		prop = new DBProperty("OBI_CODE","EVS.VOCAB.30.VOCABCODETYPE");
-		props[47] = prop;
-		prop = new DBProperty("RadLex","EVS.VOCAB.32.DISPLAY");
-		props[48] = prop;
-		prop = new DBProperty("Radiology Lexicon","EVS.VOCAB.32.EVSNAME");
-		props[49] = prop;
-		prop = new DBProperty("RADLEX_CODE","EVS.VOCAB.32.VOCABCODETYPE");
-		props[50] = prop;
-		prop = new DBProperty("SNOMED","EVS.VOCAB.34.DISPLAY");
-		props[51] = prop;
-		prop = new DBProperty("SNOMED Clinical Terms","EVS.VOCAB.34.EVSNAM");
-		props[52] = prop;
-		prop = new DBProperty("SNOMED_CODE","EVS.VOCAB.34.VOCABCODETYPE");
-		props[53] = prop;
-		prop = new DBProperty("UMLS SemNet","EVS.VOCAB.36.DISPLAY");
-		props[54] = prop;
-		prop = new DBProperty("UMLS Semantic Network","EVS.VOCAB.36.EVSNAME");
-		props[55] = prop;
-		prop = new DBProperty("UMLS_SEMNET_CODE","EVS.VOCAB.36.VOCABCODETYPE");
-		props[56] = prop;
-		prop = new DBProperty("VA_NDFRT","EVS.VOCAB.38.DISPLAY");
-		props[57] = prop;
-		prop = new DBProperty("National Drug File - Reference Terminology","EVS.VOCAB.38.EVSNAME");
-		props[58] = prop;
-		prop = new DBProperty("MeSH_Definition","EVS.VOCAB.38.PROPERTY.DEFINITION");
-		props[59] = prop;
-		prop = new DBProperty("VA_NDF_CODE","EVS.VOCAB.38.VOCABCODETYPE");
-		props[60] = prop;
-		prop = new DBProperty("Zebrafish","EVS.VOCAB.40.DISPLAY");
-		props[61] = prop;
-		prop = new DBProperty("Zebrafish","EVS.VOCAB.40.EVSNAM");
-		props[62] = prop;
-		prop = new DBProperty("synonym","EVS.VOCAB.40.PROPERTY.NAMESEARCH");
-		props[63] = prop;
-		prop = new DBProperty("ZEBRAFISH_CODE","EVS.VOCAB.40.VOCABCODETYPE");
-		props[64] = prop;
-		prop = new DBProperty("DEFINITION","EVS.VOCAB.ALL.PROPERTY.DEFINITION");
-		props[65] = prop;
-		
-		return props;
-	}
-	
+	    boolean neededDisplay = false;
+	    boolean updateLongName = false, updateDefn = false, updateDefnSrc = false, updateStatus = false;
+	    String evsDefn = "";
+    	String evsDefnSrc = "";
+	    
+    	//System.out.println("=======" + rec._preferredName + "=======");
+    	
+	    if (evsconcept != null) {
+	    	Definition[] defs = evsconcept.definitions;
+	    	//System.out.println("No of EVS definitions: " + defs.length);
+	    	
+	        if (rec._longName != null && !rec._longName.isEmpty() && !rec._longName.equalsIgnoreCase(evsconcept.preferredName)) {
+	        	neededDisplay = true;
+	        	updateLongName = true;
+	        }	
+	      
+	        if (rec._definitionSource != null && !rec._definitionSource.isEmpty() ) { //There is some definition src
+	        	evsDefn = "";
+	        	evsDefnSrc = "";
+	        	boolean srcMatches = false;
+	        	//find matching definition for this definition source in EVS
+                for (Definition def : defs) {
+                	evsDefn = def.getValue().getContent();
+                    //Each definition in NCIt will only have once source.
+                	org.LexGrid.commonTypes.Source[] sources = def.getSource();
+                	org.LexGrid.commonTypes.Source defSource = sources[0];
+                	evsDefnSrc = defSource.getContent();
+                    //System.out.println("EVS Definition and source (with caDSR having source):" + evsDefn + ": "+ evsDefnSrc);
+                    if (evsDefnSrc.equals(rec._definitionSource)) {
+    	           		srcMatches = true;
+    	           		break;
+    	           	}
+                }
+                if (srcMatches) { //found matching definition source in EVS
+                	//System.out.println("Matched Definition and source :" + evsDefn + ": "+ evsDefnSrc);
+                	//if preferred definition doesn't match with EVS, update definition
+                	if (!rec._preferredDefinition.equalsIgnoreCase(evsDefn) ) { 
+	            		neededDisplay = true;
+	            		updateDefn = true;
+	            	} 
+                }
+	        } else { //no definition src for this concept in caDSR
+	        	//Find the NCI definition and source (NCI) and update both in caDSR
+	        	evsDefn = "";
+	        	evsDefnSrc = "";
+	        	boolean isNCISrc = false;
+	        	for (Definition def : defs) {
+	        		evsDefn = def.getValue().getContent();
+                    //Each definition in NCIt will only have once source.
+                	org.LexGrid.commonTypes.Source[] sources = def.getSource();
+                	org.LexGrid.commonTypes.Source defSource = sources[0];
+                	evsDefnSrc = defSource.getContent();
+                    //System.out.println("EVS Definition and source (with caDSR having NO source):" + evsDefn + ": "+ evsDefnSrc);
+                    if (evsDefnSrc.equals("NCI")) {
+                    	isNCISrc = true;
+    	           		break;
+    	           	}
+                }
+	        	if (isNCISrc) { //found NCI definition in EVS, update both definition and source in caDSR
+                	//System.out.println("NCI Definition and source :" + evsDefn + ": "+ evsDefnSrc);
+                	neededDisplay = true;
+	            	updateDefn = true;
+	            	updateDefnSrc = true;
+                }
+	        }
+	        
+	        if (evsconcept.status.equalsIgnoreCase("RETIRED")) {
+	        	neededDisplay = true;
+	        	updateStatus = true;
+	        }      
+	    } 
+	    
+	    //System.out.println("ALL BOOLEANS: " + neededDisplay +  " : " + updateLongName + " : " + updateDefn + " : " + updateStatus + "  : " + updateDefnSrc);
+	    
+	    String cleanup_msg = "";
+	    // Continue with the next concept if there is no change between EVS and caDSR concepts
+	    if (neededDisplay && (updateLongName || updateDefn ||  updateStatus || updateDefnSrc))
+	    {
+	    	if (updateDefn)
+	    		cleanup_msg = "Conflict with caDSR and EVS Definition";
+	    	if (updateDefnSrc)
+	    		cleanup_msg += ", Conflict with caDSR and EVS Definition Source";
+	    	if (updateLongName)
+	    		cleanup_msg += "\nConflict with caDSR and EVS Concept Name";
+	    	if (updateStatus)
+	    		cleanup_msg += "\nConflict with caDSR and EVS Retirement Status";
+	    	
+	    	//System.out.println("DSR Definition:" + rec._preferredDefinition + ": Definition Source:" + rec._definitionSource+ ": Long Name:" + rec._longName +  " : Workflow Status : RELEASED");
+	    	//System.out.println("EVS Definition:" + evsDefn + ": Definition Source:" + evsDefnSrc + ": Preferred Name:" + evsconcept.preferredName + " : Status : " + evsconcept.status);
+	    	//System.out.println("=======" + cleanup_msg + "=======");
+	    	
+	    	ConceptItem evsrec = new ConceptItem();
+	        evsrec._preferredName = evsconcept.code;
+	        evsrec._longName = evsconcept.preferredName;
+	        evsrec._preferredDefinition = evsDefn;
+	        evsrec._definitionSource = evsDefnSrc;
+	        if (evsconcept.status.equalsIgnoreCase("RETIRED"))
+	        		evsrec._workflow_status = "RETIRED";
+	        else evsrec._workflow_status = rec._workflow_status;
+	        
+	        ConceptItem updatedrec = new ConceptItem();
+	        boolean updated = false;
+	        try
+	        {
+	        	updated = meta.updateCADSRConcept(rec, evsrec, updateLongName, updateDefn, updateStatus, updateDefnSrc, _db.getConnection()); 
+	        	if (updated) {
+	        		cleanup_msg += " - caDSR database updated successfully";
+	        		updatedrec = meta.findConceptDetails(rec._preferredName, rec._origin, _db.getConnection());
+	        	}
+	        	else {
+	        		cleanup_msg += " - caDSR database update failed"; 
+	        	}
+	        }
+	        catch (Exception ex)
+	        {
+	        	cleanup_msg += ex.toString();
+	        	_logger.error(ex.toString());
+	        }
+	        
+	        //System.out.println("Update or not: " + updated);
+	        cleanup_msg = formatCeanupMsg(rec, evsrec, updatedrec, cleanup_msg);
+	    }
+	    
+        return cleanup_msg;
+    }
+	 
 	public static Vector<ConceptItem> selectConcepts(){
 		Vector<ConceptItem> conItems = new Vector<ConceptItem>();
 	
-//		conItems.add(parseConcept("CON_IDSEQ,CON_ID,VERSION,EVS_SOURCE,PREFERRED_NAME,LONG_NAME,DEFINITION_SOURCE,PREFERRED_DEFINITION"));
-		conItems.add(parseConcept("B918227F-B1E1-6EA7-E040-BB89AD434A76,3379200,1,UMLS_CUI,C1723325,(131)I-ch81C6,,No Value Exists"));
-		conItems.add(parseConcept("AD8D2096-2319-66E7-E040-BB89AD4364A0,3284213,1,NCI_META_CUI,CL409124,(CS).CD3+CD4+,,No Value Exists"));
-		conItems.add(parseConcept("AD8D2096-22F3-66E7-E040-BB89AD4364A0,3284211,1,NCI_META_CUI,CL409131,(CS).CD3+CD8A+,,No Value Exists"));
-		conItems.add(parseConcept("FD0F852B-0497-7140-E034-0003BA3F9857,2322161,1,NCI_META_CUI,CL225712,+1,,No value exists."));
-		conItems.add(parseConcept("F37D0428-D938-6787-E034-0003BA3F9857,2204580,1,NCI_META_CUI,CL209433,/week,No value exists.,No value exists."));
-		conItems.add(parseConcept("2CABC045-4CC8-1DB3-E044-0003BA3F9857,2615778,1,NCI_CONCEPT_CODE,C1072,1,1-Dimethylhydrazine,NCI, A clear, colorless, flammable, hygroscopic liquid with a fishy smell that emits toxic fumes of nitrogen oxides when heated to decomposition, and turns yellow upon contact with air. 1,1-Dimethylhydrazine is mainly used as a high-energy fuel in jets and rockets, but is also used in chemical synthesis, in photography and to control the growth of vegetation. This substance is also found in tobacco products. Exposure to 1,1-dimethylhydrazine results in irritation of skin, eyes and mucous membranes, and can affect liver and central nervous system. 1,1-Dimethylhydrazine is reasonably anticipated to be a human carcinogen. (NCI05)"));
-		conItems.add(parseConcept("AF1E934A-ACED-5C19-E040-BB89AD436F1A,3293855,1,UMLS_CUI,C0043867,1,24,25-trihydroxyergocalciferol,,No Value Exists"));
-		conItems.add(parseConcept("F37D0428-BF60-6787-E034-0003BA3F9857,2202926,1,NCI_CONCEPT_CODE,C957,10-Deacetyltaxol,NCI,An analog of paclitaxel with antineoplastic activity. 10-Deacetyltaxol binds to and stabilizes the resulting microtubules, thereby inhibiting microtubule disassembly which results in cell- cycle arrest at the G2/M phase and apoptosis."));
-		conItems.add(parseConcept("F37D0428-D9CC-6787-E034-0003BA3F9857,2204617,1,NCI_CONCEPT_CODE,C2250,10-Propargyl-10-Deazaaminopterin,NCI,A folate analogue inhibitor of dihydrofolate reductase (DHFR) exhibiting high affinity for reduced folate carrier-1 (RFC-1) with antineoplastic and immunosuppressive activities. Pralatrexate selectively enters cells expressing RFC-1; intracellularly, this agent is highly polyglutamylated and competes for the folate binding site of DHFR, blocking tetrahydrofolate synthesis, which may result in depletion of nucleotide precursors; inhibition of DNA, RNA and protein synthesis; and apoptotic tumor cell death. Efficient intracellular polyglutamylation of pralatrexate results in higher intracellular concentrations compared to non-polyglutamylated pralatrexate, which is more readily effuxed by the MRP (multidrug resistance protein) drug efflux pump. RFC-1, an oncofetal protein expressed at highest levels during embryonic development, may be over-expressed on the cell surfaces of various cancer cell types."));
-		conItems.add(parseConcept("2CBEBCC7-4863-4D0A-E044-0003BA3F9857,2619400,1,NCI_CONCEPT_CODE,C14567,101 Mouse,NCI,Inbr: 66. Genet: A^w. Origin: Dunn, 1936. (Jackson Labs/Festing)"));
-		conItems.add(parseConcept("2CBEBCD1-4280-4D0E-E044-0003BA3F9857,2619401,1,NCI_CONCEPT_CODE,C37318,101/H Mouse,NCI,definition pending"));
-		conItems.add(parseConcept("2CBEBCD7-5234-4D12-E044-0003BA3F9857,2619402,1,NCI_CONCEPT_CODE,C37319,101/Rl Mouse,NCI,definition pending"));
-		conItems.add(parseConcept("F37D0428-DA78-6787-E034-0003BA3F9857,2204660,1,NCI_CONCEPT_CODE,C13530,10p,NCI,Proximal (short) arm of chromosome 10"));
-		conItems.add(parseConcept("F37D0428-D9DC-6787-E034-0003BA3F9857,2204621,1,NCI_CONCEPT_CODE,C13531,10q,NCI,Distal (long) arm of chromosome 10"));
-		conItems.add(parseConcept("32BC687C-543F-59F8-E044-0003BA3F9857,2653825,1,NCI_CONCEPT_CODE,C67132,10th Grade Completion,NCI,Indicates that 10th grade is the highest level of educational achievement."));
-		conItems.add(parseConcept("AE2F8C5C-4E8C-B65D-E040-BB89AD435A1F,3288004,1,NCI_CONCEPT_CODE,C98262,10th Growth Percentile,NCI,An indication that an individual ranks the same or more than 10 percent of the reference population for a given attribute."));
-		conItems.add(parseConcept("84AD8CAD-B9E8-FCC0-E040-BB89AD4326A3,3070942,1,RADLEX_CODE,C13616,11p15,NCI,A chromosome band present on 11p"));
-		conItems.add(parseConcept("F37D0428-C974-6787-E034-0003BA3F9857,2203571,1,NCI_CONCEPT_CODE,C13389,11q,NCI,Distal (long) arm of chromosome 11"));
-		conItems.add(parseConcept("7D3EEEA8-98B8-1554-E040-BB89AD431463,2988113,1,RADLEX_CODE,C13390,11q23,NCI,A chromosome band present on 11q"));
-		conItems.add(parseConcept("32BC6880-031F-59FC-E044-0003BA3F9857,2653826,1,NCI_CONCEPT_CODE,C67133,11th Grade Completion,NCI,Indicates that 11th grade is the highest level of educational achievement."));
-		conItems.add(parseConcept("6FB37056-20A9-9C64-E040-BB89AD431A26,2923201,1,NCI_CONCEPT_CODE,C41441,12-Allyldeoxoartemisinin,NCI,A semi-synthetic analogue of Artemisinin - a sesquiterpene lactone extracted from the dry leaves of Artemisia Annua (sweet wormwood) used as anti-malaria agent. Limited data is available on Artemisinin antineoplastic activity."));
-		conItems.add(parseConcept("2CBEBCDC-7A29-4D19-E044-0003BA3F9857,2619403,1,NCI_CONCEPT_CODE,C15151,129 Mouse,NCI,Inbr and colour depends on substrain (see below). Origin: Dunn 1928 from crosses of coat colour stocks from English fanciers and a chinchilla stock from Castle. This strain has a common origin with strain 101. Most substrains carry the white-bellied agouti gene AW though only a subset have the agouti pattern as many carry albino or chinchilla and/or the pink-eyed dilution gene, p, which is derived from Asian mice of the Mus musculus type (see also strains SJL, P/J and FS/Ei). (Jackson Labs/Festing)"));
-		conItems.add(parseConcept("2CBEBCE2-020A-4D1F-E044-0003BA3F9857,2619404,1,NCI_CONCEPT_CODE,C37320,129/Sv Mouse,NCI,Derived by Dunn (1928) from a mouse/chinchilla cross, the 129/Sv substrain has been recognized as a member of the Parental subgroup of substrains. Strain 129/SvJ was genetically contaminated in 1978 by an unknown strain and differs from other 129 substrains at 25% of SSLP genetic markers, therefore a nomenclature re-designation of 129cX/Sv has been suggested."));
-		conItems.add(parseConcept("2CBEBCE6-938C-4D23-E044-0003BA3F9857,2619405,1,NCI_CONCEPT_CODE,C37321,129P1/Re Mouse,NCI,definition pending"));
-		conItems.add(parseConcept("2CBEBCEB-3DD6-4D27-E044-0003BA3F9857,2619406,1,NCI_CONCEPT_CODE,C37322,129P1/ReJ Mouse,NCI,definition pending"));
-		conItems.add(parseConcept("2CBEBCEF-6DC2-4D2B-E044-0003BA3F9857,2619407,1,NCI_CONCEPT_CODE,C37323,129P1/ReJLacFib Mouse,NCI,definition pending"));
+		//conItems.add(parseConcept("CON_IDSEQ,CONTE_IDSEQ,CON_ID,VERSION,EVS_SOURCE,PREFERRED_NAME,LONG_NAME,DEFINITION_SOURCE,ORIGIN,ASL_NAME,PREFERRED_DEFINITION"));
 			
+		//Diff in definition -- insert a row in definition table -- TESTED just updating concept - works fine
+		//conItems.add(parseConcept("F37D0428-B53C-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202277:1:NCI_CONCEPT_CODE:C20754:ACRBP Gene:NCI:NCI Thesaurus:RELEASED:The protein encoded by this gene is similar to proacrosin binding protein sp32 precursor found in mouse, guinea pig, and pig. This protein is located in the sperm acrosome and is thought to function as a binding protein to proacrosin for packaging and condensation of the acrosin zymogen in the acrosomal matrix. This protein is a member of the cancer/testis family of antigens and it is found to be immunogenic. In normal tissues, this mRNA is expressed only in testis, whereas it is detected in a range of different tumor types such as bladder, breast, lung, liver, and colon. (LocusLink)"));
+
+		//Diff in long name -- insert a row in designation table -- WORKED long name inserted into DESIGNATIONS table
+		//conItems.add(parseConcept("F37D0428-B538-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202276:1:NCI_CONCEPT_CODE:C20985:Ablation:NCI:NCI Thesaurus:RELEASED:Removal, separation, detachment, extirpation, or eradication of a body part, pathway, or function by surgery, chemical destruction, morbid process, or noxious substance."));
+		
+		//Diff in long name -- insert a row in designation table -- WORKED long name inserted into DESIGNATIONS table
+		//conItems.add(parseConcept("F37D0428-B5C4-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202311:1:NCI_CONCEPT_CODE:C241:Analgesics:NCI-GLOSS:NCI Thesaurus:RELEASED:Drugs that reduce pain. These drugs include aspirin, acetaminophen, and ibuprofen."));
+
+		//Diff in definition -- insert a row in definition table -- WORKED definition inserted into DEFINITIONS table
+		//conItems.add(parseConcept("F37D0428-B5D0-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202314:1:NCI_CONCEPT_CODE:C3167:Acute Lymphoblastic Leukemia:NCI:NCI Thesaurus:RELEASED:Leukemia with an acute onset, characterized by the presence of lymphoblasts in the bone marrow and the peripheral blood. It includes the acute B lymphoblastic leukemia and acute T lymphoblastic leukemia."));
+		
+		//Diff in both definition and definition source -- insert a row in definition table--database update failed because of single quote in definition -- WORKED fine
+		//conItems.add(parseConcept("F37D0428-B610-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202330:1:NCI_CONCEPT_CODE:C29878:Family Cancer History::NCI Thesaurus:RELEASED:A chronological record of cancer and cancer-related events and problems of family members and ancestors."));
+		
+		//Diff in both definition and definition source  - worked fine
+		//conItems.add(parseConcept("F37D0428-B60C-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202329:1:NCI_CONCEPT_CODE:C28745:Subsegmental Lymph Node::NCI Thesaurus:RELEASED:The lymph nodes around the subsegmental bronchi."));
+
+		//Diff in both definition and long name -- insert a row in both designation and definition table - worked fine
+		//conItems.add(parseConcept("F37D0428-B5EC-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202321:1:NCI_CONCEPT_CODE:C900:ATRA:NCI:NCI Thesaurus:RELEASED:A naturally-occurring acid of retinol.  Vitamin A acid binds to and activates retinoic acid receptors (RARs), thereby inducing changes in gene expression that lead to cell differentiation, decreased cell proliferation, and inhibition of carcinogenesis.  This agent also inhibits telomerase, resulting in telomere shortening and eventual apoptosis of some cancer cell types.  The oral form of vitamin A acid has teratogenic and embryotoxic properties.(NCI04)"));
+		
+		//Diff in both definition and long name -- insert a row in both designation and definition table
+		//conItems.add(parseConcept("F37D0428-B5CC-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202313:1:NCI_CONCEPT_CODE:C225:Alpha Interferon:NCI:NCI Thesaurus:RELEASED:A class of naturally-isolated or recombinant therapeutic peptides used as antiviral and anti-tumour agents.  Alpha interferons are cytokines produced by nucleated cells (predominantly natural killer (NK) leukocytes) upon exposure to live or inactivated virus, double-stranded RNA or bacterial products.  These agents bind to specific cell-surface receptors, resulting in the transcription and translation of genes containing an interferon-specific response element.  The proteins so produced mediate many complex effects, including antiviral effects (viral protein synthesis), antiproliferative effects (cellular growth inhibition and alteration of cellular differentiation), anticancer effects (interference with oncogene expression), and immune-modulating effects (natural killer cell activation, alteration of cell surface antigen expression, and augmentation of lymphocyte and macrophage cytotoxicity). (NCI04)"));
+				
+		//Diff in both definition and definition source -- insert a row in definition table
+		//conItems.add(parseConcept("F37D0428-B5B8-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202308:1:NCI_CONCEPT_CODE:C16342:Biomarker::NCI Thesaurus:RELEASED:Measurable and quantifiable biological parameters (e.g., specific enzyme concentration, specific hormone concentration, specific gene phenotype distribution in a population, presence of biological substances) which serve as indices for health- and physiology-related assessments, such as disease risk, psychiatric disorders, environmental exposure and its effects, disease diagnosis, metabolic processes, substance abuse, pregnancy, cell line development, epidemiologic studies, etc"));
+
+		//EVS Defn: blank or null; both definition and long name need modification, don't try it now.
+		//conItems.add(parseConcept("F37D0428-B67C-6787-E034-0003BA3F9857:2202357:D9344734-8CAF-4378-E034-0003BA12F5E7:1:NCI_CONCEPT_CODE:C15393:Limb Perfusion:NCI-GLOSS:NCI Thesaurus:RELEASED:(per-FYOO-zhun) A technique that may be used to deliver anticancer drugs directly to an arm or leg. The flow of blood to and from the limb is temporarily stopped with a tourniquet, and anticancer drugs are put directly into the blood of the limb. This allows the person to receive a high dose of drugs in the area where the cancer occurred.  Also called isolated limb perfusion."));
+		
 		return conItems;
 	}
-	
+	 
 	private static ConceptItem parseConcept(String conceptText){
 
-		String[] conceptArray = conceptText.split(",");
+		String[] conceptArray = conceptText.split(":");
+		//System.out.println(conceptArray[0] + "  " + conceptArray[1] + "  " + conceptArray[4] + " " + conceptArray[5]+ "  " + conceptArray[6] + "  " + conceptArray[7] + "  " + conceptArray[10]);
+		
 		ConceptItem rec = new ConceptItem();
 		rec._idseq = conceptArray[0];
-		rec._publicID = conceptArray[1];
-		rec._version = conceptArray[2];
-		rec._evsSource = conceptArray[3];
-		rec._preferredName = conceptArray[4];
-		rec._longName = conceptArray[5];
-		rec._definitionSource = conceptArray[6];
-		rec._preferredDefinition = conceptArray[7];
+		rec._conteidseq = conceptArray[1];
+		rec._publicID = conceptArray[2];
+		rec._version = conceptArray[3];
+		rec._evsSource = conceptArray[4];
+		rec._preferredName = conceptArray[5];
+		rec._longName = conceptArray[6];
+		rec._definitionSource = conceptArray[7];
+		rec._origin = conceptArray[8];
+		rec._workflow_status = conceptArray[9];
+		rec._preferredDefinition = conceptArray[10];
+		
 		return rec;
 	}
 }
