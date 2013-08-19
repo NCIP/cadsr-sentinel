@@ -3865,6 +3865,7 @@ public class DBAlertOracle implements DBAlert
         // Get the context names and id's.
         String select = "SELECT con_idseq, conte_idseq, con_id, version, evs_source, preferred_name, long_name, definition_source, preferred_definition, origin, asl_name "
             + "FROM sbrext.concepts_view_ext WHERE asl_name NOT LIKE 'RETIRED%' "
+        	+ "and origin NOT LIKE 'NCI Thesaurus' "  //'NCI Thesaurus' concepts are handled by 'NCI Thesaurus Concept cleanup'
             //+ "and ROWNUM <= 20 "
             + "ORDER BY upper(long_name) ASC";
 
