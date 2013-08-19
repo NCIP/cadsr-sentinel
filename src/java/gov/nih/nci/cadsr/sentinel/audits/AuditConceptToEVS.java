@@ -333,6 +333,7 @@ public class AuditConceptToEVS extends AuditReport
         @Override
         public CodedNodeSet search(LexBIGService service_)
         {
+        	//System.out.println("In MetaTh : " + _rec._preferredName + " : " + _rec._evsSource + " : " + _rec._origin);
         	CodedNodeSet cns = null;
         	try {
         		CodingSchemeVersionOrTag cvt = new CodingSchemeVersionOrTag();
@@ -347,6 +348,7 @@ public class AuditConceptToEVS extends AuditReport
 							);
 			} catch (Exception e) {
 				e.printStackTrace();
+				//System.out.println("in search :" + e.getMessage());
 			}
 			
 			return cns;
@@ -754,8 +756,14 @@ public class AuditConceptToEVS extends AuditReport
                 EVSData ed = vocab._ed;
                 ed.reset();
                 ed._rec = rec;
-
+              
+                //System.out.println(rec._preferredName + " : " + vocab._display + " : " + vocab._source + " : " + vocab._vocab);
+                
                 CodedNodeSet cns = ed.search(service);
+                if (cns == null) { //didn't find corresponding EVS concept, not a valid code
+                	msg += formatMsg(_MSG023);
+                    break;
+                }
                 
                 try
                 {

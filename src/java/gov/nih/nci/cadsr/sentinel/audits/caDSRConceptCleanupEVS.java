@@ -615,8 +615,8 @@ public class caDSRConceptCleanupEVS extends AuditReport
             // Reset loop variables.
             evsconcept = null;
             
-            if (rec._preferredDefinition.toLowerCase().startsWith("no value exists"))
-                rec._preferredDefinition = "";
+            //if (rec._preferredDefinition.toLowerCase().startsWith("no value exists"))
+            //    rec._preferredDefinition = "";
 
             ++count;
 
@@ -969,18 +969,18 @@ public class caDSRConceptCleanupEVS extends AuditReport
 	    		cleanup_msg += "\nConflict with caDSR and EVS Concept Name";
 	    	if (updateStatus)
 	    		cleanup_msg += "\nConflict with caDSR and EVS Retirement Status";
-	    	
-	    	//System.out.println("DSR Definition:" + rec._preferredDefinition + ": Definition Source:" + rec._definitionSource+ ": Long Name:" + rec._longName +  " : Workflow Status : RELEASED");
-	    	//System.out.println("EVS Definition:" + evsDefn + ": Definition Source:" + evsDefnSrc + ": Preferred Name:" + evsconcept.preferredName + " : Status : " + evsconcept.status);
-	    	//System.out.println("=======" + cleanup_msg + "=======");
-	    	
+	    	/*
+	    	System.out.println("DSR Definition:" + rec._preferredDefinition + ": Definition Source:" + rec._definitionSource+ ": Long Name:" + rec._longName +  " : Workflow Status : RELEASED");
+	    	System.out.println("EVS Definition:" + evsDefn + ": Definition Source:" + evsDefnSrc + ": Preferred Name:" + evsconcept.preferredName + " : Status : " + evsconcept.status);
+	    	System.out.println("=======" + cleanup_msg + "=======");
+	    	*/
 	    	ConceptItem evsrec = new ConceptItem();
 	        evsrec._preferredName = evsconcept.code;
 	        evsrec._longName = evsconcept.preferredName;
 	        evsrec._preferredDefinition = evsDefn;
 	        evsrec._definitionSource = evsDefnSrc;
-	        if (evsconcept.status.equalsIgnoreCase("RETIRED"))
-	        		evsrec._workflow_status = "RETIRED";
+	        if (evsconcept.status.equalsIgnoreCase("RETIRED"))  //if the concept has been retired in EVS, set the status to 'RETIRED ARCHIVED' in caDSR
+	        		evsrec._workflow_status = "RETIRED ARCHIVED";
 	        else evsrec._workflow_status = rec._workflow_status;
 	        
 	        ConceptItem updatedrec = new ConceptItem();
@@ -1035,7 +1035,16 @@ public class caDSRConceptCleanupEVS extends AuditReport
 		//Diff in both definition and long name -- insert a row in both designation and definition table - worked fine
 		//conItems.add(parseConcept("F37D0428-B5EC-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202321:1:NCI_CONCEPT_CODE:C900:ATRA:NCI:NCI Thesaurus:RELEASED:A naturally-occurring acid of retinol.  Vitamin A acid binds to and activates retinoic acid receptors (RARs), thereby inducing changes in gene expression that lead to cell differentiation, decreased cell proliferation, and inhibition of carcinogenesis.  This agent also inhibits telomerase, resulting in telomere shortening and eventual apoptosis of some cancer cell types.  The oral form of vitamin A acid has teratogenic and embryotoxic properties.(NCI04)"));
 		
-		//Diff in both definition and long name -- insert a row in both designation and definition table
+		//definition with No Value Exists and definition source is NCI == Tested == no updates = #of defn = 0 in evs 
+		//conItems.add(parseConcept("6FB37056-1FF8-9C64-E040-BB89AD431A26:D9344734-8CAF-4378-E034-0003BA12F5E7:2922847:1:NCI_CONCEPT_CODE:C56075:Face Pain Adverse Event:NCI:NCI Thesaurus:RELEASED: ")); //No Value Exists
+
+		//definition with "No Value Exists" and definition source is null == Tested == sent "" to definitions table
+		//conItems.add(parseConcept("C6EA955C-6A0F-D52A-E040-BB89AD435890:D9344734-8CAF-4378-E034-0003BA12F5E7:3553583:1:NCI_CONCEPT_CODE:C97273:Afatinib Dimaleate::NCI Thesaurus:RELEASED: ")); //No Value Exists
+
+		//definition with "No Value Exists" and definition source is null 
+		conItems.add(parseConcept("3E5C4DDC-D3CC-3094-E044-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2693379:1:NCI_CONCEPT_CODE:C39271:West Nile Virus Pathway::NCI Thesaurus:RELEASED::")); //No Value Exists
+
+		//Diff in both definition and long name -- insert a row in both designation and definition table ****
 		//conItems.add(parseConcept("F37D0428-B5CC-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202313:1:NCI_CONCEPT_CODE:C225:Alpha Interferon:NCI:NCI Thesaurus:RELEASED:A class of naturally-isolated or recombinant therapeutic peptides used as antiviral and anti-tumour agents.  Alpha interferons are cytokines produced by nucleated cells (predominantly natural killer (NK) leukocytes) upon exposure to live or inactivated virus, double-stranded RNA or bacterial products.  These agents bind to specific cell-surface receptors, resulting in the transcription and translation of genes containing an interferon-specific response element.  The proteins so produced mediate many complex effects, including antiviral effects (viral protein synthesis), antiproliferative effects (cellular growth inhibition and alteration of cellular differentiation), anticancer effects (interference with oncogene expression), and immune-modulating effects (natural killer cell activation, alteration of cell surface antigen expression, and augmentation of lymphocyte and macrophage cytotoxicity). (NCI04)"));
 				
 		//Diff in both definition and definition source -- insert a row in definition table
@@ -1050,6 +1059,7 @@ public class caDSRConceptCleanupEVS extends AuditReport
 	private static ConceptItem parseConcept(String conceptText){
 
 		String[] conceptArray = conceptText.split(":");
+		//System.out.println("#of attributes for this concept: " + conceptArray.length);
 		//System.out.println(conceptArray[0] + "  " + conceptArray[1] + "  " + conceptArray[4] + " " + conceptArray[5]+ "  " + conceptArray[6] + "  " + conceptArray[7] + "  " + conceptArray[10]);
 		
 		ConceptItem rec = new ConceptItem();
