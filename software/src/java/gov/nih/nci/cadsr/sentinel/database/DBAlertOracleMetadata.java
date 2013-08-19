@@ -228,9 +228,13 @@ public class DBAlertOracleMetadata extends DBAlertOracle
             int rc1 = 0;
             int rc2 = 0;
             if (updateLongName) {
-            	rc1 = insertAltName(rec._idseq, rec._conteidseq, rec._longName, "Prior Preferred Name", "ENGLISH", oraConn);
-            	//System.out.println ("After calling insertAltName: " + rc1);
-            	success = success && (rc1==1);
+            	//If the same preferred name already exists in designation, skip adding it.
+            	if (!ifAltenateNameExists(rec._idseq, rec._conteidseq, rec._longName, "Prior Preferred Name", oraConn)) {
+            		rc1 = insertAltName(rec._idseq, rec._conteidseq, rec._longName, "Prior Preferred Name", "ENGLISH", oraConn);
+            		//System.out.println ("After calling insertAltName: " + rc1);
+            		success = success && (rc1==1);
+            	}
+            	else success=true; //just skip adding new alternate designation
             }
             if (updateDefn) {
             	rc2 = insertAltDef(rec._idseq, rec._conteidseq, rec._preferredDefinition, "Prior Preferred Definition", "ENGLISH", oraConn);
@@ -363,6 +367,57 @@ public class DBAlertOracleMetadata extends DBAlertOracle
         }
         
         return rc;
+    }
+    
+    //
+    public boolean ifAltenateNameExists(String ac_idSeq, String conte_idseq, String prior_longName, String type, java.sql.Connection oraConn)
+    {
+        String select = "select NAME from sbr.designations_view "
+            + "where AC_IDSEQ = ? and CONTE_IDSEQ = ? and NAME = ? and DETL_NAME= ?";
+
+        String name = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try
+        {
+            pstmt = oraConn.prepareStatement(select);
+            pstmt.setString(1, ac_idSeq);
+            pstmt.setString(2, conte_idseq);
+            pstmt.setString(3, prior_longName);
+            pstmt.setString(4, type);
+            rs = pstmt.executeQuery();
+            if (rs.next()) 
+                name = rs.getString(1);
+        }
+        catch (SQLException ex)
+        {
+            // Ooops...
+        	//System.out.println("caught exception while finding to designation: " + ex.toString());
+        	int _errorCode;
+        	String _errorMsg;
+            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
+            _errorMsg = _errorCode + ": " + select
+                + "\n\n" + ex.toString();
+            _logger.error(_errorMsg);
+        }
+        finally
+        {
+        	if (rs != null)
+            {
+                try { rs.close(); } catch(Exception ex) { }
+            }
+        	if (pstmt != null)
+            {
+                try { pstmt.close(); } catch(Exception ex) {_logger.error(ex.toString()); }
+            }
+        }
+        
+        //System.out.println ("Name in ifAltenateNameExists: " + name);
+        
+        if (name != null)
+			return true;
+		else
+			return false;
     }
 	 
 }
