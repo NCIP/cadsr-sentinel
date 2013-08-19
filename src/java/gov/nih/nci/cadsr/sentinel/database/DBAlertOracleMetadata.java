@@ -244,9 +244,8 @@ public class DBAlertOracleMetadata extends DBAlertOracle
         {
             // It's bad...
         	oraConn.rollback();
-        	int _errorCode;
+        	int _errorCode = -1;
         	String _errorMsg;
-            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + update + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
             //System.out.println("Rolled back update/insert concept: " + _errorMsg);
@@ -295,9 +294,8 @@ public class DBAlertOracleMetadata extends DBAlertOracle
         {
         	//System.out.println("caught exception while inserting to designations: " + ex.toString());
         	oraConn.rollback();
-        	int _errorCode;
+        	int _errorCode = -1;
         	String _errorMsg;
-            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + insert+ "\n\n" + ex.toString();
             _logger.error(_errorMsg);
             rc = _errorCode;
@@ -347,9 +345,8 @@ public class DBAlertOracleMetadata extends DBAlertOracle
         {
         	//System.out.println("caught exception while inserting into definitions: " + ex.toString());
         	oraConn.rollback();
-        	int _errorCode;
+        	int _errorCode = -1;
         	String _errorMsg;
-            _errorCode = DBAlertUtil.getSQLErrorCode(ex);
             _errorMsg = _errorCode + ": " + insert + "\n\n" + ex.toString();
             _logger.error(_errorMsg);
             rc = _errorCode;
