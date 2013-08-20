@@ -10,14 +10,9 @@ import gov.nih.nci.cadsr.sentinel.database.DBProperty;
 import gov.nih.nci.cadsr.sentinel.tool.ConceptItem;
 import gov.nih.nci.system.applicationservice.ApplicationException;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
-import gov.nih.nci.cadsr.sentinel.database.DBAlertOracle;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Vector;
 
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
@@ -44,6 +39,7 @@ import org.LexGrid.concepts.Definition;
 import org.LexGrid.concepts.Entity;
 import org.LexGrid.concepts.Presentation;
 import org.apache.log4j.Logger;
+
 
 /**
  * This class compares the caDSR Concepts table to the referenced EVS Concepts. If the concept code or name is not
@@ -76,8 +72,8 @@ public class caDSRConceptCleanupEVS extends AuditReport
         {
             rows[i] = msgs.get(i);
         }
+       
         return rows;
-        
     }
 
     /* (non-Javadoc)
@@ -583,13 +579,16 @@ public class caDSRConceptCleanupEVS extends AuditReport
         DBAlertOracleMetadata meta = new DBAlertOracleMetadata();
         Vector<ConceptItem> concepts = meta.selectEVSConcepts("NCI Thesaurus", _db.getConnection());
         EVSVocab[] vocabs = parseProperties(_db.selectEVSVocabs());
-     
+        
         //Vector<ConceptItem> concepts = selectConcepts(); //Used Just for TESTING
         //System.out.println("No of Concepts (validate): " + concepts.size());
         
         // Get the EVS URL and establish the application service.
         //String evsURL = _db.selectEvsUrl();
-       
+        
+        int numConceptsUpdate = meta.getMaxNumMsgs(_maxMsgs, concepts.size()); //check property
+        //System.out.println("Maximum limit on concepts to update through metadata clenup: " + numConceptsUpdate);
+        
         //LexEVSService service;
         LexBIGService service;
         try
@@ -730,9 +729,9 @@ public class caDSRConceptCleanupEVS extends AuditReport
             String cleanup_msg = compareconceptWithEVS(rec, evsconcept, meta);
             if (cleanup_msg.length() > 0) {
             	msgs.add(cleanup_msg);
-	            if (msgs.size() >= _maxMsgs)
+	            if (msgs.size() >= numConceptsUpdate) //_maxMsgs)
 	            {
-	            	msgs.add(formatMaxMsg());
+	            	msgs.add(formatMaxMsg(numConceptsUpdate));
 	            	break;
 	            }
             }
@@ -858,14 +857,14 @@ public class caDSRConceptCleanupEVS extends AuditReport
     	        
     }
     
-    private String formatMaxMsg()
+    private String formatMaxMsg(int limit)
     {
         return "*** Maximum Messages ***" + AuditReport._ColSeparator
         + "***" + AuditReport._ColSeparator
         + "***" + AuditReport._ColSeparator
         + "***" + AuditReport._ColSeparator
         + "***" + AuditReport._ColSeparator
-        + "The Message maximum limit [" + _maxMsgs + "] has been reached, report truncated.";
+        + "The Message maximum limit [" + limit + "] has been reached, report truncated.";
     }
     
     private String formatTitleMsg()
@@ -1042,10 +1041,13 @@ public class caDSRConceptCleanupEVS extends AuditReport
 		//conItems.add(parseConcept("C6EA955C-6A0F-D52A-E040-BB89AD435890:D9344734-8CAF-4378-E034-0003BA12F5E7:3553583:1:NCI_CONCEPT_CODE:C97273:Afatinib Dimaleate::NCI Thesaurus:RELEASED: ")); //No Value Exists
 
 		//definition with "No Value Exists" and definition source is null 
-		conItems.add(parseConcept("3E5C4DDC-D3CC-3094-E044-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2693379:1:NCI_CONCEPT_CODE:C39271:West Nile Virus Pathway::NCI Thesaurus:RELEASED::")); //No Value Exists
+		//conItems.add(parseConcept("3E5C4DDC-D3CC-3094-E044-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2693379:1:NCI_CONCEPT_CODE:C39271:West Nile Virus Pathway::NCI Thesaurus:RELEASED::")); //No Value Exists
+
+		//Diff in both definition and long name -- insert a row in both designation and definition table -- Tested worked fine -- 
+		//conItems.add(parseConcept("F37D0428-BBD4-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202699:1:NCI_CONCEPT_CODE:C15195:Brachytherapy:NCI-GLOSS:NCI Thesaurus:RELEASED:(ray-dee-AY-shun) A procedure in which radioactive material sealed in needles, seeds, wires, or catheters is placed directly into or near a tumor. Also called brachytherapy, internal radiation, or interstitial radiation."));
 
 		//Diff in both definition and long name -- insert a row in both designation and definition table ****
-		//conItems.add(parseConcept("F37D0428-B5CC-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202313:1:NCI_CONCEPT_CODE:C225:Alpha Interferon:NCI:NCI Thesaurus:RELEASED:A class of naturally-isolated or recombinant therapeutic peptides used as antiviral and anti-tumour agents.  Alpha interferons are cytokines produced by nucleated cells (predominantly natural killer (NK) leukocytes) upon exposure to live or inactivated virus, double-stranded RNA or bacterial products.  These agents bind to specific cell-surface receptors, resulting in the transcription and translation of genes containing an interferon-specific response element.  The proteins so produced mediate many complex effects, including antiviral effects (viral protein synthesis), antiproliferative effects (cellular growth inhibition and alteration of cellular differentiation), anticancer effects (interference with oncogene expression), and immune-modulating effects (natural killer cell activation, alteration of cell surface antigen expression, and augmentation of lymphocyte and macrophage cytotoxicity). (NCI04)"));
+		conItems.add(parseConcept("F37D0428-B5CC-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202313:1:NCI_CONCEPT_CODE:C225:Alpha Interferon:NCI:NCI Thesaurus:RELEASED:A class of naturally-isolated or recombinant therapeutic peptides used as antiviral and anti-tumour agents.  Alpha interferons are cytokines produced by nucleated cells (predominantly natural killer (NK) leukocytes) upon exposure to live or inactivated virus, double-stranded RNA or bacterial products.  These agents bind to specific cell-surface receptors, resulting in the transcription and translation of genes containing an interferon-specific response element.  The proteins so produced mediate many complex effects, including antiviral effects (viral protein synthesis), antiproliferative effects (cellular growth inhibition and alteration of cellular differentiation), anticancer effects (interference with oncogene expression), and immune-modulating effects (natural killer cell activation, alteration of cell surface antigen expression, and augmentation of lymphocyte and macrophage cytotoxicity). (NCI04)"));
 				
 		//Diff in both definition and definition source -- insert a row in definition table
 		//conItems.add(parseConcept("F37D0428-B5B8-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202308:1:NCI_CONCEPT_CODE:C16342:Biomarker::NCI Thesaurus:RELEASED:Measurable and quantifiable biological parameters (e.g., specific enzyme concentration, specific hormone concentration, specific gene phenotype distribution in a population, presence of biological substances) which serve as indices for health- and physiology-related assessments, such as disease risk, psychiatric disorders, environmental exposure and its effects, disease diagnosis, metabolic processes, substance abuse, pregnancy, cell line development, epidemiologic studies, etc"));

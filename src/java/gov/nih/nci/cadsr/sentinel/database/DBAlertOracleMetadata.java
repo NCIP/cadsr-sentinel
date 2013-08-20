@@ -2,6 +2,8 @@ package gov.nih.nci.cadsr.sentinel.database;
 
 import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.ConceptItem;
+import gov.nih.nci.cadsr.sentinel.util.SentinelToolProperties;
+
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -419,5 +421,31 @@ public class DBAlertOracleMetadata extends DBAlertOracle
 		else
 			return false;
     }
-	 
+    
+    /**
+     * Get the Maximum number of concepts to update through metadata cleanup effort
+     * 
+     * @param staticLimit defined in class
+     * @param total number of concepts found in database
+     * 
+     * @return the maximum number of concepts to update
+     */
+    public int getMaxNumMsgs(int staticLimit, int totalConcepts)
+    {
+    	String max_msg = SentinelToolProperties.getFactory().getProperty("TOOL.METADATA.MAXMSG");
+    	System.out.println("max_msg from property in DBAlertOracleMetadata : " + max_msg);
+    	int numConceptstoUpdate = -1;
+    
+	    if (max_msg != null ) {
+	    	numConceptstoUpdate = Integer.parseInt(max_msg);
+	    	if (numConceptstoUpdate == 0)
+	    		numConceptstoUpdate = totalConcepts; // 0 means update all concepts at once, otherwise set the user-defined limit
+	    }
+	    else //if max_msg is null (that means not set properly through property file), set it to staticLimit defined in caDSRConceptCleanupEVS class
+	    	numConceptstoUpdate = staticLimit; 
+	    
+	    System.out.println("numConceptsUpdate: " + numConceptstoUpdate);
+	    
+	    return numConceptstoUpdate;
+    }
 }
