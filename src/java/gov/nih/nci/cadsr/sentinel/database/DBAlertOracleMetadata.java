@@ -433,9 +433,9 @@ public class DBAlertOracleMetadata extends DBAlertOracle
     public int getMaxNumMsgs(int staticLimit, int totalConcepts)
     {
     	String max_msg = SentinelToolProperties.getFactory().getProperty("TOOL.METADATA.MAXMSG");
-    	System.out.println("max_msg from property in DBAlertOracleMetadata : " + max_msg);
+    	//System.out.println("max_msg from property in DBAlertOracleMetadata : " + max_msg);
+    	
     	int numConceptstoUpdate = -1;
-    
 	    if (max_msg != null ) {
 	    	numConceptstoUpdate = Integer.parseInt(max_msg);
 	    	if (numConceptstoUpdate == 0)
@@ -444,7 +444,7 @@ public class DBAlertOracleMetadata extends DBAlertOracle
 	    else //if max_msg is null (that means not set properly through property file), set it to staticLimit defined in caDSRConceptCleanupEVS class
 	    	numConceptstoUpdate = staticLimit; 
 	    
-	    System.out.println("numConceptsUpdate: " + numConceptstoUpdate);
+	    //System.out.println("numConceptsUpdate: " + numConceptstoUpdate);
 	    
 	    return numConceptstoUpdate;
     }
