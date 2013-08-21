@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -58,7 +59,7 @@ public class SentinelToolProperties implements Serializable {
 	
 	private Properties loadProps() throws IOException {
 		try {
-			FileInputStream propFile = new FileInputStream("project.properties");
+			FileInputStream propFile = new FileInputStream("/local/content/cadsrsentinel/config/sentinel.properties");
 			props = new Properties(System.getProperties());
 			props.load(propFile);
 		} catch (Exception e) {
@@ -68,12 +69,12 @@ public class SentinelToolProperties implements Serializable {
 		return props;
 	}
 	
-	public static void main(String[] args)
-	        throws Exception {
-
+	public static void main(String[] args) throws Exception 
+	{  
 	        // set up new properties object
 	        FileInputStream propFile =
-	            new FileInputStream("project.properties");
+	            new FileInputStream("/local/content/cadsrsentinel/config/sentinel.properties");
+	        
 	        Properties p =
 	            new Properties(System.getProperties());
 	        p.load(propFile);
