@@ -4,6 +4,7 @@ import gov.nih.nci.cadsr.sentinel.tool.AlertRec;
 import gov.nih.nci.cadsr.sentinel.tool.ConceptItem;
 import gov.nih.nci.cadsr.sentinel.util.SentinelToolProperties;
 
+import java.io.FileInputStream;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Vector;
 import org.apache.log4j.Logger;
 
@@ -432,20 +434,36 @@ public class DBAlertOracleMetadata extends DBAlertOracle
      */
     public int getMaxNumMsgs(int staticLimit, int totalConcepts)
     {
-    	String max_msg = SentinelToolProperties.getFactory().getProperty("TOOL.METADATA.MAXMSG");
-    	//System.out.println("max_msg from property in DBAlertOracleMetadata : " + max_msg);
-    	
     	int numConceptstoUpdate = -1;
-	    if (max_msg != null ) {
-	    	numConceptstoUpdate = Integer.parseInt(max_msg);
-	    	if (numConceptstoUpdate == 0)
-	    		numConceptstoUpdate = totalConcepts; // 0 means update all concepts at once, otherwise set the user-defined limit
-	    }
-	    else //if max_msg is null (that means not set properly through property file), set it to staticLimit defined in caDSRConceptCleanupEVS class
+    	
+    	try {
+    		FileInputStream propFile = new FileInputStream("/local/content/cadsrsentinel/config/sentinel.properties");
+	        
+	        Properties p = new Properties(System.getProperties());
+	        p.load(propFile);
+	        System.setProperties(p);  // set the system properties
+	        
+	        //System.out.println("Metadata Property: " + System.getProperty("TOOL.METADATA.MAXMSG"));
+	    	//String max_msg = SentinelToolProperties.getFactory().getProperty("TOOL.METADATA.MAXMSG");
+	    	//System.out.println("max_msg from property in DBAlertOracleMetadata : " + max_msg);
+	    	
+	        String max_msg = System.getProperty("TOOL.METADATA.MAXMSG");
+		    if (max_msg != null ) {
+		    	numConceptstoUpdate = Integer.parseInt(max_msg);
+		    	if (numConceptstoUpdate == 0)
+		    		numConceptstoUpdate = totalConcepts; // 0 means update all concepts at once, otherwise set the user-defined limit
+		    }
+		    else //if max_msg is null (that means not set properly through property file), set it to staticLimit defined in caDSRConceptCleanupEVS class
+		    	numConceptstoUpdate = staticLimit; 
+		    
+		    //System.out.println("numConceptsUpdate: " + numConceptstoUpdate);
+    
+	    } catch (Exception e) {
 	    	numConceptstoUpdate = staticLimit; 
-	    
-	    //System.out.println("numConceptsUpdate: " + numConceptstoUpdate);
-	    
+	    	_logger.error("Unable to load properties from sentinel.properties : " + e);
+		}
+    	_logger.info("Number of concepts to update (set as property): " + numConceptstoUpdate);	  
+    	
 	    return numConceptstoUpdate;
     }
 }
