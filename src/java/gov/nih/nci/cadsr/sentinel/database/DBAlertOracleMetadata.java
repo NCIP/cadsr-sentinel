@@ -169,11 +169,16 @@ public class DBAlertOracleMetadata extends DBAlertOracle
     	PreparedStatement pstmt = null;
     	int rc = 0;
     	boolean success = false;
-         
+    	Date now = new Date();
+        Timestamp today = new Timestamp(now.getTime());
+        String today_str = AlertRec.dateToString(today, false);
+        String change_note = "Updated caDSR information to match EVS";
+        
         String update = "update sbrext.concepts_view_ext set" ;
         boolean hasParam = false;
         if (updateLongName) {
         	update += " LONG_NAME = ?";
+        	change_note += " concept name ";
         	hasParam = true;
         }
         if(updateDefnSrc){
@@ -181,6 +186,7 @@ public class DBAlertOracleMetadata extends DBAlertOracle
             	update += ", ";
             }
             update += " DEFINITION_SOURCE = ?";
+            change_note += " definition source ";
             hasParam = true;
         }
         if (updateDefn){
@@ -188,6 +194,7 @@ public class DBAlertOracleMetadata extends DBAlertOracle
             	update += ", ";
             }
             update += " PREFERRED_DEFINITION = ?";
+            change_note += " definition ";
             hasParam = true;
         }
         if(updateStatus){
@@ -195,13 +202,11 @@ public class DBAlertOracleMetadata extends DBAlertOracle
             	update += ", ";
             }
             update += " ASL_NAME = ?";
+            change_note += " retirement status ";
         }
         update += ", CHANGE_NOTE = ? where PREFERRED_NAME = ? and EVS_SOURCE like 'NCI_CONCEPT_CODE' and ORIGIN like 'NCI Thesaurus'";
-     
-        Date now = new Date();
-        Timestamp today = new Timestamp(now.getTime());
-        String today_str = AlertRec.dateToString(today, false);
-        String change_note = "Updated caDSR information to match EVS on " + today_str + " by sentinel cleanup script";
+        change_note += "on " + today_str + " by sentinel cleanup script";
+        
         //System.out.println ("Update Stmt: " + change_note + " : " + update);
        
         try
@@ -442,10 +447,7 @@ public class DBAlertOracleMetadata extends DBAlertOracle
 	        Properties p = new Properties(System.getProperties());
 	        p.load(propFile);
 	        System.setProperties(p);  // set the system properties
-	        
 	        //System.out.println("Metadata Property: " + System.getProperty("TOOL.METADATA.MAXMSG"));
-	    	//String max_msg = SentinelToolProperties.getFactory().getProperty("TOOL.METADATA.MAXMSG");
-	    	//System.out.println("max_msg from property in DBAlertOracleMetadata : " + max_msg);
 	    	
 	        String max_msg = System.getProperty("TOOL.METADATA.MAXMSG");
 		    if (max_msg != null ) {
@@ -459,7 +461,7 @@ public class DBAlertOracleMetadata extends DBAlertOracle
 		    //System.out.println("numConceptsUpdate: " + numConceptstoUpdate);
     
 	    } catch (Exception e) {
-	    	numConceptstoUpdate = staticLimit; 
+	    	numConceptstoUpdate = staticLimit; //set it to staticLimit defined in caDSRConceptCleanupEVS class
 	    	_logger.error("Unable to load properties from sentinel.properties : " + e);
 		}
     	_logger.info("Number of concepts to update (set as property): " + numConceptstoUpdate);	  

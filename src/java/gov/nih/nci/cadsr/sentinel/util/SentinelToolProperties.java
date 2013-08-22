@@ -1,16 +1,14 @@
 package gov.nih.nci.cadsr.sentinel.util;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Properties;
 
 /**
  * class to read a properties file
  * 
- * @author Archana Sahu
+ * @author yuma
  */
 public class SentinelToolProperties implements Serializable {
 
@@ -35,7 +33,7 @@ public class SentinelToolProperties implements Serializable {
 		}
 		return SentinelToolProperties;
 	}
-/*
+
 	private Properties loadProps() throws IOException {
 		try {
 			ClassLoader cl = this.getClass().getClassLoader();
@@ -52,36 +50,9 @@ public class SentinelToolProperties implements Serializable {
 
 		return props;
 	}
-*/
+
 	public String getProperty(String key) {
 		return props.getProperty(key);
 	}
-	
-	private Properties loadProps() throws IOException {
-		try {
-			FileInputStream propFile = new FileInputStream("/local/content/cadsrsentinel/config/sentinel.properties");
-			props = new Properties(System.getProperties());
-			props.load(propFile);
-		} catch (Exception e) {
-			throw new IOException("Unable to get properties in loadProps() : " + e);
-		} 
-		
-		return props;
-	}
-	
-	public static void main(String[] args) throws Exception 
-	{  
-	        // set up new properties object
-	        FileInputStream propFile =
-	            new FileInputStream("/local/content/cadsrsentinel/config/sentinel.properties");
-	        
-	        Properties p =
-	            new Properties(System.getProperties());
-	        p.load(propFile);
 
-	        // set the system properties
-	        System.setProperties(p);
-	        // display new properties
-	        System.getProperties().list(System.out);
-	}
 }
