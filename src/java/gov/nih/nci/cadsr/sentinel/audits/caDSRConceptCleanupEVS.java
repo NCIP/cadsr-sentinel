@@ -11,8 +11,12 @@ import gov.nih.nci.cadsr.sentinel.tool.ConceptItem;
 import gov.nih.nci.system.applicationservice.ApplicationException;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
@@ -726,7 +730,7 @@ public class caDSRConceptCleanupEVS extends AuditReport
             }
             
             //need to compare 4 fields with EVS here and display message accordingly
-            String cleanup_msg = compareconceptWithEVS(rec, evsconcept, meta);
+            String cleanup_msg = compareconceptWithEVS(rec, evsconcept, meta, service);
             if (cleanup_msg.length() > 0) {
             	msgs.add(cleanup_msg);
 	            if (msgs.size() >= numConceptsUpdate) //_maxMsgs)
@@ -780,7 +784,7 @@ public class caDSRConceptCleanupEVS extends AuditReport
 		
 		if(entity.getIsActive())
 			evsConcept.status = "ACTIVE";
-		else 
+		else
 			evsConcept.status = "RETIRED";
 		
 		setPropsAndSyns(evsConcept, entity);
@@ -880,7 +884,7 @@ public class caDSRConceptCleanupEVS extends AuditReport
     private static final int _maxMsgs = 200;
     private static final Logger _logger = Logger.getLogger(caDSRConceptCleanupEVS.class.getName());
     
-	public String compareconceptWithEVS(ConceptItem rec, EVSConcept evsconcept, DBAlertOracleMetadata meta) {
+	public String compareconceptWithEVS(ConceptItem rec, EVSConcept evsconcept, DBAlertOracleMetadata meta, LexBIGService _service) {
     
 	    boolean neededDisplay = false;
 	    boolean updateLongName = false, updateDefn = false, updateDefnSrc = false, updateStatus = false;
@@ -973,20 +977,25 @@ public class caDSRConceptCleanupEVS extends AuditReport
 	    	System.out.println("EVS Definition:" + evsDefn + ": Definition Source:" + evsDefnSrc + ": Preferred Name:" + evsconcept.preferredName + " : Status : " + evsconcept.status);
 	    	System.out.println("=======" + cleanup_msg + "=======");
 	    	*/
+	    	
+	    	String[] ret_info = null;
 	    	ConceptItem evsrec = new ConceptItem();
 	        evsrec._preferredName = evsconcept.code;
 	        evsrec._longName = evsconcept.preferredName;
 	        evsrec._preferredDefinition = evsDefn;
 	        evsrec._definitionSource = evsDefnSrc;
-	        if (evsconcept.status.equalsIgnoreCase("RETIRED"))  //if the concept has been retired in EVS, set the status to 'RETIRED ARCHIVED' in caDSR
-	        		evsrec._workflow_status = "RETIRED ARCHIVED";
+	        if (evsconcept.status.equalsIgnoreCase("RETIRED"))  {//if the concept has been retired in EVS, set the status to 'RETIRED ARCHIVED' in caDSR
+	        	evsrec._workflow_status = "RETIRED ARCHIVED";
+		        //get the retirement date and replacement concept here
+		        ret_info = getRetirementDate(rec._preferredName, rec._origin, _service);
+	        }
 	        else evsrec._workflow_status = rec._workflow_status;
 	        
 	        ConceptItem updatedrec = new ConceptItem();
 	        boolean updated = false;
 	        try
 	        {
-	        	updated = meta.updateCADSRConcept(rec, evsrec, updateLongName, updateDefn, updateStatus, updateDefnSrc, _db.getConnection()); 
+	        	updated = meta.updateCADSRConcept(rec, evsrec, updateLongName, updateDefn, updateStatus, updateDefnSrc, ret_info, _db.getConnection()); 
 	        	if (updated) {
 	        		cleanup_msg += " - caDSR database updated successfully";
 	        		updatedrec = meta.findConceptDetails(rec._preferredName, rec._origin, _db.getConnection());
@@ -1046,15 +1055,19 @@ public class caDSRConceptCleanupEVS extends AuditReport
 		//Diff in both definition and long name -- insert a row in both designation and definition table -- Tested worked fine -- 
 		//conItems.add(parseConcept("F37D0428-BBD4-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202699:1:NCI_CONCEPT_CODE:C15195:Brachytherapy:NCI-GLOSS:NCI Thesaurus:RELEASED:(ray-dee-AY-shun) A procedure in which radioactive material sealed in needles, seeds, wires, or catheters is placed directly into or near a tumor. Also called brachytherapy, internal radiation, or interstitial radiation."));
 
-		//Diff in both definition and long name -- insert a row in both designation and definition table ****
-		conItems.add(parseConcept("F37D0428-B5CC-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202313:1:NCI_CONCEPT_CODE:C225:Alpha Interferon:NCI:NCI Thesaurus:RELEASED:A class of naturally-isolated or recombinant therapeutic peptides used as antiviral and anti-tumour agents.  Alpha interferons are cytokines produced by nucleated cells (predominantly natural killer (NK) leukocytes) upon exposure to live or inactivated virus, double-stranded RNA or bacterial products.  These agents bind to specific cell-surface receptors, resulting in the transcription and translation of genes containing an interferon-specific response element.  The proteins so produced mediate many complex effects, including antiviral effects (viral protein synthesis), antiproliferative effects (cellular growth inhibition and alteration of cellular differentiation), anticancer effects (interference with oncogene expression), and immune-modulating effects (natural killer cell activation, alteration of cell surface antigen expression, and augmentation of lymphocyte and macrophage cytotoxicity). (NCI04)"));
+		//Diff in both definition and long name -- insert a row in both designation and definition table -- Tested ---
+		//conItems.add(parseConcept("F37D0428-B5CC-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202313:1:NCI_CONCEPT_CODE:C225:Alpha Interferon:NCI:NCI Thesaurus:RELEASED:A class of naturally-isolated or recombinant therapeutic peptides used as antiviral and anti-tumour agents.  Alpha interferons are cytokines produced by nucleated cells (predominantly natural killer (NK) leukocytes) upon exposure to live or inactivated virus, double-stranded RNA or bacterial products.  These agents bind to specific cell-surface receptors, resulting in the transcription and translation of genes containing an interferon-specific response element.  The proteins so produced mediate many complex effects, including antiviral effects (viral protein synthesis), antiproliferative effects (cellular growth inhibition and alteration of cellular differentiation), anticancer effects (interference with oncogene expression), and immune-modulating effects (natural killer cell activation, alteration of cell surface antigen expression, and augmentation of lymphocyte and macrophage cytotoxicity). (NCI04)"));
 				
 		//Diff in both definition and definition source -- insert a row in definition table
 		//conItems.add(parseConcept("F37D0428-B5B8-6787-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2202308:1:NCI_CONCEPT_CODE:C16342:Biomarker::NCI Thesaurus:RELEASED:Measurable and quantifiable biological parameters (e.g., specific enzyme concentration, specific hormone concentration, specific gene phenotype distribution in a population, presence of biological substances) which serve as indices for health- and physiology-related assessments, such as disease risk, psychiatric disorders, environmental exposure and its effects, disease diagnosis, metabolic processes, substance abuse, pregnancy, cell line development, epidemiologic studies, etc"));
 
-		//EVS Defn: blank or null; both definition and long name need modification, don't try it now.
+		//EVS Defn: blank or null; both definition and long name need modification
 		//conItems.add(parseConcept("F37D0428-B67C-6787-E034-0003BA3F9857:2202357:D9344734-8CAF-4378-E034-0003BA12F5E7:1:NCI_CONCEPT_CODE:C15393:Limb Perfusion:NCI-GLOSS:NCI Thesaurus:RELEASED:(per-FYOO-zhun) A technique that may be used to deliver anticancer drugs directly to an arm or leg. The flow of blood to and from the limb is temporarily stopped with a tourniquet, and anticancer drugs are put directly into the blood of the limb. This allows the person to receive a high dose of drugs in the area where the cancer occurred.  Also called isolated limb perfusion."));
 		
+		//EVS Retirement status changed -- Tested
+		//conItems.add(parseConcept("290D9A3A-4378-66FC-E044-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2594262:1:NCI_CONCEPT_CODE:C28365:Irradiated:NCI-GLOSS:NCI Thesaurus:RELEASED:Treated with radiation"));
+		conItems.add(parseConcept("F62111B6-56C9-4D8B-E034-0003BA3F9857:D9344734-8CAF-4378-E034-0003BA12F5E7:2222832:1:NCI_CONCEPT_CODE:C43713:Synonym:NCI:NCI Thesaurus:RELEASED:Synonyms are ways of referring to a concept that are valid alternatives to the preferred name that NCI uses to refer to the concept."));
+
 		return conItems;
 	}
 	 
@@ -1079,4 +1092,34 @@ public class caDSRConceptCleanupEVS extends AuditReport
 		
 		return rec;
 	}
+	
+	private String[] getRetirementDate(String conCode, String vocabName, LexBIGService lbSvc){
+		
+		String[] ret_info = new String[2];
+		
+		try {
+			HistoryService hs = lbSvc.getHistoryService(vocabName);
+
+			Date startDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse("2005-01-01");
+			Date endDate = new Date();
+			NCIChangeEventList cel = hs.getEditActionList(Constructors.createConceptReference(conCode, null),startDate,endDate);
+			cel.getEntryCount();
+			Iterator<NCIChangeEvent> celIter = (Iterator<NCIChangeEvent>) cel.iterateEntry();
+			while (celIter.hasNext()){
+				NCIChangeEvent ce = celIter.next();
+				if (ce.getEditaction().name().equals("RETIRE")){
+					ret_info[0] = ce.getEditDate().toLocaleString();
+					ret_info[1] = ce.getReferencecode();
+					//System.out.println("Retirement date "+ ret_info[0]);
+					//System.out.println("Reference concept " + ret_info[1]);
+				}
+			}
+		} catch (Exception ex) {
+			_logger.error("getRetirementDate for " + conCode + "  throws Exception = " + ex.toString());
+			//System.out.println("getRetirementDate for " + conCode + "  throws Exception = " + ex);
+		}
+		
+		return ret_info;
+    }
+			
 }

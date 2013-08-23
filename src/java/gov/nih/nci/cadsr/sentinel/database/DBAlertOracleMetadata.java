@@ -164,7 +164,7 @@ public class DBAlertOracleMetadata extends DBAlertOracle
      *
      * @return boolean (true if the caDSR database updated successfully)
      */
-    public boolean updateCADSRConcept(ConceptItem rec, ConceptItem evsrec, boolean updateLongName, boolean updateDefn, boolean updateStatus, boolean updateDefnSrc, java.sql.Connection oraConn) throws SQLException
+    public boolean updateCADSRConcept(ConceptItem rec, ConceptItem evsrec, boolean updateLongName, boolean updateDefn, boolean updateStatus, boolean updateDefnSrc, String[] retr_info, java.sql.Connection oraConn) throws SQLException
     {
     	PreparedStatement pstmt = null;
     	int rc = 0;
@@ -197,17 +197,23 @@ public class DBAlertOracleMetadata extends DBAlertOracle
             change_note += " definition ";
             hasParam = true;
         }
+        
         if(updateStatus){
             if(hasParam){
             	update += ", ";
             }
-            update += " ASL_NAME = ?";
-            change_note += " retirement status ";
+            update += " ASL_NAME = ?, END_DATE=?";
+            change_note += " retirement status";
+            if (retr_info != null && retr_info.length == 2 && !retr_info[0].isEmpty())  //retirement data
+            	change_note += ", concept was retired on " + retr_info[0];
+            if (retr_info != null && retr_info.length == 2 && retr_info[1] != null && !retr_info[1].isEmpty() && !retr_info[1].equals("null")) //replacement concept
+            	change_note += ", replaced with " + retr_info[1];
+            change_note += ". Updated ";
         }
         update += ", CHANGE_NOTE = ? where PREFERRED_NAME = ? and EVS_SOURCE like 'NCI_CONCEPT_CODE' and ORIGIN like 'NCI Thesaurus'";
         change_note += "on " + today_str + " by sentinel cleanup script";
-        
-        //System.out.println ("Update Stmt: " + change_note + " : " + update);
+        //System.out.println ("Change note: " + change_note);
+        //System.out.println ("Update Stmt: " + update);
        
         try
         {
@@ -223,8 +229,10 @@ public class DBAlertOracleMetadata extends DBAlertOracle
             	pstmt.setString(index++, evsrec._definitionSource);
             if (updateDefn)
 				pstmt.setString(index++, evsrec._preferredDefinition);
-        	if(updateStatus)
+        	if(updateStatus) {
             	pstmt.setString(index++, evsrec._workflow_status);
+            	pstmt.setDate(index++, new java.sql.Date(new java.util.Date().getTime()));
+        	}
             pstmt.setString(index++, change_note);
             pstmt.setString(index, evsrec._preferredName);
             
