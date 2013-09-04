@@ -1,3 +1,10 @@
+/*L
+ * Copyright ScenPro Inc, SAIC-F
+ *
+ * Distributed under the OSI-approved BSD 3-Clause License.
+ * See http://ncip.github.com/cadsr-sentinal/LICENSE.txt for details.
+ */
+
 // Copyright (c) 2004 ScenPro, Inc.
 
 // $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/database/DBAlertOracle.java,v 1.22 2009-07-24 15:33:33 davet Exp $

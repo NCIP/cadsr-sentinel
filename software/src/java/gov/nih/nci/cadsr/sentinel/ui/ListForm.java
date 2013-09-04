@@ -1,3 +1,10 @@
+/*L
+ * Copyright ScenPro Inc, SAIC-F
+ *
+ * Distributed under the OSI-approved BSD 3-Clause License.
+ * See http://ncip.github.com/cadsr-sentinal/LICENSE.txt for details.
+ */
+
 // Copyright (c) 2004 ScenPro, Inc.
 
 // $Header: /share/content/gforge/sentinel/sentinel/src/gov/nih/nci/cadsr/sentinel/ui/ListForm.java,v 1.3 2008-05-20 21:41:20 hebell Exp $

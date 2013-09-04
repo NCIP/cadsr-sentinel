@@ -1,3 +1,10 @@
+/*L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-sentinal/LICENSE.txt for details.
+L*/
+
 /* Copyright 2007, ScenPro, Inc
 
     $Header: /share/content/gforge/sentinel/sentinel/db-sql/recipients.sql,v 1.1 2007-07-19 15:26:46 hebell Exp $

@@ -1,3 +1,10 @@
+/*L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-sentinal/LICENSE.txt for details.
+L*/
+
 update sbrext.concepts_view_ext set evs_source = 'NCI_CONCEPT_CODE' WHERE preferred_name like 'C%' and (evs_source like 'RADLEX_CODE' or  evs_source like 'CTCAE_CODE');
 
 

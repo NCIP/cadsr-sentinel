@@ -1,3 +1,10 @@
+<%--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-sentinal/LICENSE.txt for details.
+L--%>
+
 <!-- Copyright ScenPro, Inc. 2005
      $Header: /share/content/gforge/sentinel/sentinel/WebRoot/jsp/logon.jsp,v 1.9 2009-04-08 17:56:18 hebell Exp $
      $Name: not supported by cvs2svn $
