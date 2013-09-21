@@ -3,6 +3,8 @@ Welcome to the caDSR Sentinal Project!
 
 The caDSR Sentinel Tool allows users who have a caDSR account to create and manage Alert Definitions for content in the caDSR. Alert Definitions are a set of rules that are periodically evaluated against the caDSR.
 
+The caDSR Sentinal is developed in Java and requires Apache Ant for building.
+
 The caDSR Sentinal is distributed under the BSD 3-Clause License.
 Please see the NOTICE and LICENSE files for details.
 
