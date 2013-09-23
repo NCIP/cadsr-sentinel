@@ -15,11 +15,7 @@ You will find more details about the caDSR Sentinal in the following links:
  * [Issue Tracker] (https://gforge.nci.nih.gov/tracker/?group_id=32)
  * [Installation Package] (http://gforge.nci.nih.gov/frs/?group_id=32)
  * [Documentation] (https://gforge.nci.nih.gov/docman/?group_id=32)
- 
- 
-An NCI hosted instance of caDSR Sentinal is publicly available at:
-
-[Production Instance] (http://cadsrsentinel.nci.nih.gov) 
+ * [NCI Instance] (http://cadsrsentinel.nci.nih.gov) 
 
 
 Please join us in further developing and improving the caDSR Sentinal project.
