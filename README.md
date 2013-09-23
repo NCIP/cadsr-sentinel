@@ -1,14 +1,14 @@
-Welcome to the caDSR Sentinal Project!
+Welcome to the caDSR Sentinel Project!
 =====================================
 
 The caDSR Sentinel Tool allows users who have a caDSR account to create and manage Alert Definitions for content in the caDSR. Alert Definitions are a set of rules that are periodically evaluated against the caDSR.
 
-The caDSR Sentinal is developed in Java and requires Apache Ant for building.
+The caDSR Sentinel is developed in Java and requires Apache Ant for building.
 
-The caDSR Sentinal is distributed under the BSD 3-Clause License.
+The caDSR Sentinel is distributed under the BSD 3-Clause License.
 Please see the NOTICE and LICENSE files for details.
 
-You will find more details about the caDSR Sentinal in the following links:
+You will find more details about the caDSR Sentinel in the following links:
 
  * [Community Wiki] (https://wiki.nci.nih.gov/x/PIEI)
  * [Code Repository] (https://github.com/NCIP/cadsr-sentinal)
@@ -18,4 +18,4 @@ You will find more details about the caDSR Sentinal in the following links:
  * [NCI Instance] (http://cadsrsentinel.nci.nih.gov) 
 
 
-Please join us in further developing and improving the caDSR Sentinal project.
+Please join us in further developing and improving the caDSR Sentinel project.
