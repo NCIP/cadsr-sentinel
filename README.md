@@ -13,7 +13,7 @@ You will find more details about the caDSR Sentinal in the following links:
  * [Community Wiki] (https://wiki.nci.nih.gov/x/PIEI)
  * [Code Repository] (https://github.com/NCIP/cadsr-sentinal)
  * [Issue Tracker] (https://gforge.nci.nih.gov/tracker/?group_id=32)
- * [Downloads] (http://gforge.nci.nih.gov/frs/?group_id=32)
+ * [Installation Package] (http://gforge.nci.nih.gov/frs/?group_id=32)
  * [Documentation] (https://gforge.nci.nih.gov/docman/?group_id=32)
  
  
