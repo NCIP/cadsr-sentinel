@@ -1,0 +1,109 @@
+<!--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-sentinal/LICENSE.txt for details.
+L-->
+
+<!-- Copyright NCI 2005
+    $Header: /share/content/gforge/sentinel/sentinel/build.xml,v 1.160 2009-07-24 15:48:49 davet Exp $
+    $Name: not supported by cvs2svn $
+-->
+<project name="MetadatCleanup" default="package" basedir=".">
+	<description>
+        Builds a jar for metadatacleanup task to synchronize caDSR database with NCIt.
+    </description>
+	<!-- set global properties for this build -->
+	<tstamp />
+
+	<property name="root.dir" location="${basedir}/src/web/WebRoot" />
+	<property name="artifacts.dir" location="${basedir}/deployment-artifacts" />
+	<property name="doc.dir" location="${artifacts.dir}/javadoc" />
+	<property name="temp.dir" location="${basedir}/tmp" />
+	<property name="tr.dir" location="${artifacts.dir}/test-results" />
+	<property name="odi.dir" location="${artifacts.dir}/ospack" />
+	<property name="web.dir" location="${root.dir}/WEB-INF" />
+	<property name="classes.dir" location="${web.dir}/classes" />
+	<property name="wlib.dir" location="${basedir}/lib" />
+	<property name="jsp.dir" location="${root.dir}/jsp" />
+	<property name="prop.dir" location="${classes.dir}/gov/nih/nci/cadsr/sentinel" />
+	<property name="src.dir" location="${basedir}/src/java" />
+	<property name="lib.dir" location="${basedir}/lib" />
+	<property name="dtd.dir" location="${basedir}/src/resources/dtd" />
+	<property name="conf.dir" location="${basedir}/conf" />
+
+
+	<path id="libpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<fileset dir="${wlib.dir}" includes="**/*.jar" />
+	</path>
+	<property file="project.properties" />
+
+	<property name="appl.version" value="${application.release}.${DSTAMP}${TSTAMP}" />
+	<filter token="appl.version" value="${appl.version}" />
+	
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="libpath" />
+
+	<target name="clean" description="Deletes all project build artifacts and temporary files.">
+		<echo>Remove old artifacts ...</echo>
+		<delete dir="${classes.dir}" />
+		<delete dir="${artifacts.dir}" />
+		<delete file="${web.dir}/web.xml" />
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}/jsp" />
+		<mkdir dir="${artifacts.dir}" />
+		<mkdir dir="${artifacts.dir}/bin" />
+
+	</target>
+	
+   
+	<target name="-compile" depends="clean" description="Compiles the project source.">
+		<echo>Compiling project source, debug is ${JDEBUG} ...</echo>
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" tempdir="${temp.dir}" debug="${JDEBUG}">
+			<compilerarg line="-deprecation" />
+			<compilerarg line="-Xlint:unchecked" />
+			<classpath refid="libpath" />
+		</javac>
+		<copy todir="${classes.dir}">
+			<fileset dir="${basedir}/src/resources/sdkapi" includes="**/*" />
+		</copy>
+	</target>
+
+	<target name="-cjsp" description="Compiles the project JSP files to verify syntax.">
+		<echo>Compiling JSP files to verify syntax ...</echo>
+		<jspc srcdir="${jsp.dir}" destdir="${classes.dir}" compiler="jasper41" verbose="1" failonerror="no">
+			<classpath refid="libpath" />
+			<include name="**/*.jsp" />
+		</jspc>
+		<javac srcdir="${classes.dir}/jsp" destdir="${classes.dir}" encoding="Cp1252">
+			<classpath refid="libpath" />
+			<include name="**/*.java" />
+		</javac>
+		<delete dir="${classes.dir}/jsp" />
+		<delete dir="${classes.dir}/org" />
+	</target>
+
+	<target name="-build-jar" depends="-compile" description="Package code into a jar file">
+		<jar destfile="${artifacts.dir}/bin/metadata.jar" basedir="${classes.dir}">
+		</jar>
+	</target>
+
+	<target name="package" depends="-build-jar" description="Package all libraries into one jar">
+		<jar destfile="${artifacts.dir}/metadatacleanup.jar">
+			<fileset dir="${classes.dir}" />
+			<restrict>
+				<name name="**/*.class" />
+				<archives>
+					<zips>
+						<fileset dir="${lib.dir}" includes="**/*.jar" />
+					</zips>
+				</archives>
+			</restrict>
+			<manifest>
+				<attribute name="Main-Class" value="gov/nih/nci/cadsr/sentinel/tool/AutoProcessAlerts" />
+				
+			</manifest>
+		</jar>
+	</target>
+
+</project>

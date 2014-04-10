@@ -1,0 +1,432 @@
+/*** Eclipse Class Decompiler plugin, copyright (c) 2012 Chao Chen (cnfree2000@hotmail.com) ***/
+package org.LexGrid.LexBIG.Impl.helpers;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
+import org.LexGrid.LexBIG.Exceptions.LBParameterException;
+import org.LexGrid.LexBIG.Exceptions.LBResourceUnavailableException;
+import org.LexGrid.LexBIG.Extensions.Query.Filter;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
+import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
+import org.LexGrid.LexBIG.Utility.logging.LgLoggerIF;
+import org.LexGrid.annotations.LgClientSideSafe;
+import org.lexevs.locator.LexEvsServiceLocator;
+import org.lexevs.logging.LoggerFactory;
+import org.lexevs.system.constants.SystemVariables;
+import org.lexevs.system.service.SystemResourceService;
+
+@LgClientSideSafe
+public class ResolvedConceptReferencesIteratorImpl implements
+		ResolvedConceptReferencesIterator, Cloneable {
+	private static final long serialVersionUID = 5609297086069631237L;
+	private int pos_ = 0;
+	private long lastRead_;
+	private CodeHolder codesToReturn_;
+	private Boolean[] filterCheck_;
+	private LocalNameList restrictToProperties_;
+	private CodedNodeSet.PropertyType[] restrictToPropertyTypes_;
+	private Filter[] filters_;
+	private transient CleanUpThread cuti_;
+	private transient Thread cut_;
+	private boolean resolveEntities_;
+	int maxSizeSystemLimit = 0;
+	private boolean isExhausted = false;
+
+	private CodeToReturnResolver codeToReturnResolver = new DefaultCodeToReturnResolver();
+	private ResolvedConceptReferenceList ref;
+
+	private LgLoggerIF getLogger() {
+		return LoggerFactory.getLogger();
+	}
+
+	public ResolvedConceptReferencesIteratorImpl() {
+	}
+
+	public ResolvedConceptReferencesIteratorImpl(CodeHolder codes,
+			LocalNameList restrictToProperties,
+			CodedNodeSet.PropertyType[] restrictToPropertyTypes,
+			Filter[] filters, boolean resolveEntities) {
+		try {
+			this.codesToReturn_ = codes.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+		this.filters_ = filters;
+		this.lastRead_ = System.currentTimeMillis();
+		this.restrictToProperties_ = restrictToProperties;
+		this.restrictToPropertyTypes_ = restrictToPropertyTypes;
+		this.resolveEntities_ = resolveEntities;
+
+		this.maxSizeSystemLimit = LexEvsServiceLocator.getInstance()
+				.getSystemResourceService().getSystemVariables()
+				.getMaxResultSize();
+
+		this.cuti_ = new CleanUpThread();
+		this.cut_ = new Thread(this.cuti_);
+		this.cut_.setDaemon(true);
+		this.cut_.start();
+	}
+
+	public ResolvedConceptReference next()
+			throws LBResourceUnavailableException, LBInvocationException {
+		ResolvedConceptReferenceList rcrl = next(1);
+		if (rcrl.getResolvedConceptReferenceCount() == 0) {
+			return null;
+		}
+		return rcrl.getResolvedConceptReference(0);
+	}
+
+	@LgClientSideSafe
+	public ResolvedConceptReferenceList next(int maxToReturn)
+			throws LBResourceUnavailableException, LBInvocationException {
+		if (this.codesToReturn_ == null) {
+			throw new LBResourceUnavailableException(
+					"This iterator is no longer valid.");
+		}
+		try {
+			this.lastRead_ = System.currentTimeMillis();
+
+			if (maxToReturn == 0) {
+				return new ResolvedConceptReferenceList();
+			}
+
+			if (this.pos_ == this.codesToReturn_.getAllCodes().size())
+				return new ResolvedConceptReferenceList();
+			int max;
+			int max;
+			if (maxToReturn < 0) {
+				max = this.pos_ + 100;
+			} else
+				max = ((maxToReturn > this.maxSizeSystemLimit) ? this.maxSizeSystemLimit
+						: maxToReturn)
+						+ this.pos_;
+
+			if (max > this.codesToReturn_.getAllCodes().size()) {
+				max = this.codesToReturn_.getAllCodes().size();
+			}
+
+			ResolvedConceptReferenceList resolvedRefs = new ResolvedConceptReferenceList();
+
+			while (this.pos_ < max) {
+				ResolvedConceptReferenceList returnedRefs = this.codeToReturnResolver
+						.buildResolvedConceptReference(
+								getCodeToReturnFromCodeHolder(this.pos_, max),
+								this.restrictToProperties_,
+								this.restrictToPropertyTypes_, this.filters_,
+								this.resolveEntities_);
+
+				compactCodesToReturn(this.pos_, max);
+
+				for (ResolvedConceptReference ref : returnedRefs
+						.getResolvedConceptReference()) {
+					if (ref != null) {
+						resolvedRefs.addResolvedConceptReference(ref);
+					} else if (max < this.codesToReturn_.getAllCodes().size()) {
+						++max;
+					}
+
+					this.pos_ += 1;
+				}
+			}
+
+			return resolvedRefs;
+		} catch (LBInvocationException e) {
+			throw e;
+		} catch (Exception e) {
+			String id = getLogger()
+					.error("Implementation problem in the resolved concept reference iterator",
+							e);
+			throw new LBInvocationException("Unexpected system error: "
+					+ e.getMessage(), id);
+		}
+	}
+
+	public ResolvedConceptReferenceList get(int start, int end)
+			throws LBResourceUnavailableException, LBInvocationException,
+			LBParameterException {
+		if (this.codesToReturn_ == null) {
+			throw new LBResourceUnavailableException(
+					"This iterator is no longer valid.");
+		}
+		ResolvedConceptReferenceList rcrl = new ResolvedConceptReferenceList();
+		try {
+			this.lastRead_ = System.currentTimeMillis();
+
+			if (start > end) {
+				throw new LBParameterException("Start must be less than end");
+			}
+
+			if (start == end) {
+				return rcrl;
+			}
+			if (start < 0) {
+				start = 0;
+			}
+
+			if (end - start > this.maxSizeSystemLimit) {
+				throw new LBParameterException(
+						"The requested result size exceeds the system limited maximum result size of "
+								+ this.maxSizeSystemLimit);
+			}
+
+			if (end > this.codesToReturn_.getNumberOfCodes()) {
+				end = this.codesToReturn_.getNumberOfCodes();
+			}
+
+			if (start >= this.codesToReturn_.getNumberOfCodes()) {
+				throw new LBParameterException(
+						"Start postion is greater than available results.");
+			}
+
+			if ((this.filters_ != null) && (this.filters_.length > 0)) {
+				if (this.filterCheck_ == null) {
+					this.filterCheck_ = new Boolean[this.codesToReturn_
+							.getNumberOfCodes()];
+				}
+
+				int trueCount = 0;
+				int realStart = 0;
+				for (; realStart < this.codesToReturn_.getNumberOfCodes(); ++realStart) {
+					if (this.filterCheck_[realStart] == null) {
+						ResolvedConceptReference rcr = this.codeToReturnResolver
+								.buildResolvedConceptReference(
+										getCodeToReturnFromCodeHolder(realStart),
+										this.restrictToProperties_,
+										this.restrictToPropertyTypes_,
+										this.filters_, this.resolveEntities_);
+
+						if (rcr == null)
+							this.filterCheck_[realStart] = new Boolean(false);
+						else {
+							this.filterCheck_[realStart] = new Boolean(true);
+						}
+					}
+					if (this.filterCheck_[realStart].booleanValue()) {
+						++trueCount;
+					}
+
+					if (trueCount == start + 1) {
+						break;
+					}
+				}
+
+				if (realStart == this.codesToReturn_.getNumberOfCodes()) {
+					throw new LBParameterException(
+							"Start postion is greater than available results.");
+				}
+
+				int max = realStart - start + end;
+				if (max > this.codesToReturn_.getNumberOfCodes()) {
+					max = this.codesToReturn_.getNumberOfCodes();
+				}
+
+				for (int i = realStart; i < max; ++i) {
+					ResolvedConceptReference rcr = this.codeToReturnResolver
+							.buildResolvedConceptReference(
+									getCodeToReturnFromCodeHolder(i),
+									this.restrictToProperties_,
+									this.restrictToPropertyTypes_,
+									this.filters_, this.resolveEntities_);
+
+					if (rcr == null) {
+						if (max + 1 < this.codesToReturn_.getNumberOfCodes()) {
+							++max;
+						}
+
+						this.filterCheck_[i] = new Boolean(false);
+					} else {
+						rcrl.addResolvedConceptReference(rcr);
+						this.filterCheck_[i] = new Boolean(true);
+					}
+				}
+			} else {
+				ResolvedConceptReferenceList returnList = this.codeToReturnResolver
+						.buildResolvedConceptReference(
+								getCodeToReturnFromCodeHolder(start, end),
+								this.restrictToProperties_,
+								this.restrictToPropertyTypes_, this.filters_,
+								this.resolveEntities_);
+
+				compactCodesToReturn(start, end);
+
+				return returnList;
+			}
+		} catch (LBInvocationException e) {
+			throw e;
+		} catch (LBParameterException e) {
+			throw e;
+		} catch (Exception e) {
+			String id = getLogger()
+					.error("Implementation problem in the resolved concept reference iterator",
+							e);
+			throw new LBInvocationException("Unexpected system error", id);
+		}
+		return rcrl;
+	}
+
+	@LgClientSideSafe
+  public boolean hasNext()
+    throws LBResourceUnavailableException
+  {
+    if (this.isExhausted) {
+      return false;
+    }
+
+    if (this.codesToReturn_ == null) {
+      throw new LBResourceUnavailableException("This iterator is no longer valid.");
+    }
+
+    this.lastRead_ = System.currentTimeMillis();
+
+    boolean answer = false;
+
+    if ((this.filters_ != null) && (this.filters_.length > 0)) {
+      for (int i = this.pos_; i < this.codesToReturn_.getNumberOfCodes(); this.pos_ += 1)
+      {
+        try {
+          ResolvedConceptReference rcr = this.codeToReturnResolver.buildResolvedConceptReference(getCodeToReturnFromCodeHolder(i), this.restrictToProperties_, this.restrictToPropertyTypes_, this.filters_, this.resolveEntities_);
+
+          if (rcr != null) {
+            answer = true;
+            break label145:
+          }
+        } catch (LBInvocationException e) {
+          getLogger().error("Unexected Error determining hasNext", e);
+          answer = true;
+        }
+        ++i;
+      }
+
+    }
+    else
+    {
+      label145: answer = this.pos_ < this.codesToReturn_.getNumberOfCodes();
+    }
+
+    if (!(answer)) {
+      this.isExhausted = true;
+      release();
+    }
+    return answer;
+  }
+
+	public void release() {
+		if (this.cuti_ != null) {
+			this.cuti_.continueRunning = false;
+			this.cut_.interrupt();
+		}
+		releaseResources();
+	}
+
+	public ResolvedConceptReferencesIterator scroll(int maxToReturn)
+			throws LBResourceUnavailableException, LBInvocationException {
+		if (!(hasNext())) {
+			return null;
+		}
+		this.ref = next(maxToReturn);
+		return this;
+	}
+
+	public ResolvedConceptReferenceList getNext() {
+		ResolvedConceptReferenceList next = this.ref;
+		this.ref = null;
+		return next;
+	}
+
+	public int numberRemaining() throws LBResourceUnavailableException {
+		if (this.codesToReturn_ == null) {
+			throw new LBResourceUnavailableException(
+					"This iterator is no longer valid.");
+		}
+
+		if ((this.filters_ != null) && (this.filters_.length > 0)) {
+			return -1;
+		}
+		return (this.codesToReturn_.getNumberOfCodes() - this.pos_);
+	}
+
+	@LgClientSideSafe
+	private CodeToReturn getCodeToReturnFromCodeHolder(int position) {
+		return ((CodeToReturn) this.codesToReturn_.getAllCodes().get(position));
+	}
+
+	@LgClientSideSafe
+	private List<CodeToReturn> getCodeToReturnFromCodeHolder(int start, int end) {
+		List returnList = new ArrayList();
+		for (int i = start; i < end; ++i) {
+			returnList.add(this.codesToReturn_.getAllCodes().get(i));
+		}
+		return returnList;
+	}
+
+	@LgClientSideSafe
+	private void compactCodesToReturn(int start, int end) {
+		for (int i = start; i < end; ++i)
+			((CodeToReturn) this.codesToReturn_.getAllCodes().get(i)).compact();
+	}
+
+	private void releaseResources() {
+		this.codesToReturn_ = null;
+		this.cuti_ = null;
+		this.filters_ = null;
+		this.filterCheck_ = null;
+		this.restrictToProperties_ = null;
+		this.restrictToPropertyTypes_ = null;
+	}
+
+	public Object clone() throws CloneNotSupportedException {
+		ResolvedConceptReferencesIteratorImpl clone = new ResolvedConceptReferencesIteratorImpl();
+		clone.codesToReturn_ = this.codesToReturn_;
+		clone.codeToReturnResolver = this.codeToReturnResolver;
+		clone.cut_ = this.cut_;
+		clone.cuti_ = this.cuti_;
+		clone.filterCheck_ = this.filterCheck_;
+		clone.filters_ = this.filters_;
+		clone.lastRead_ = this.lastRead_;
+		clone.maxSizeSystemLimit = this.maxSizeSystemLimit;
+		clone.pos_ = this.pos_;
+		clone.ref = this.ref;
+		clone.resolveEntities_ = this.resolveEntities_;
+		clone.restrictToProperties_ = this.restrictToProperties_;
+		clone.restrictToPropertyTypes_ = this.restrictToPropertyTypes_;
+
+		return clone;
+	}
+
+	public class CleanUpThread implements Runnable {
+		boolean continueRunning;
+
+		public CleanUpThread() {
+			this.continueRunning = true;
+		}
+
+		public void run() {
+			int idleTimeMillis = LexEvsServiceLocator.getInstance()
+					.getSystemResourceService().getSystemVariables()
+					.getIteratorIdleTime() * 60 * 1000;
+			do {
+				if (!(this.continueRunning))
+					return;
+				try {
+					Thread.sleep(60000L);
+				} catch (InterruptedException e) {
+					if (!(this.continueRunning)) {
+						ResolvedConceptReferencesIteratorImpl.this
+								.releaseResources();
+						return;
+					}
+				}
+			}
+
+			while (System.currentTimeMillis()
+					- ResolvedConceptReferencesIteratorImpl.this.lastRead_ <= idleTimeMillis);
+
+			ResolvedConceptReferencesIteratorImpl.this.releaseResources();
+			return;
+		}
+	}
+}

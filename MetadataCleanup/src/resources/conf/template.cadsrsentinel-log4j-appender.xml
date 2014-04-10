@@ -1,0 +1,21 @@
+<!--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-sentinal/LICENSE.txt for details.
+L-->
+
+    <!-- ============================ -->
+    <!-- Setup the sentinel  Appender -->
+    <!-- ============================ -->
+
+    <appender name="CADSRSENTINEL_FILE" class="org.jboss.logging.appender.RollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler" />
+        <param name="File" value="@TOOL.LOG.DIR@/cadsrsentinel_log.txt" />
+        <param name="Append" value="true" />
+        <param name="MaxFileSize" value="200KB" />
+        <param name="MaxBackupIndex" value="3" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c : %L] %m%n" />
+        </layout>
+    </appender>
