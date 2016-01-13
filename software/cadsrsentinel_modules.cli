@@ -49,6 +49,6 @@ if (outcome != success) of /subsystem=logging/size-rotating-file-handler=SENTINE
 end-if
 
 
-if (outcome!= success) of /subsystem=logging/logger=gov.nih.nci.cadsr.cadsrsentinel:read-resource
+if (outcome!= success) of /subsystem=logging/logger=gov.nih.nci.cadsr.sentinel:read-resource
 /subsystem=logging/logger=gov.nih.nci.cadsr.sentinel:add(use-parent-handlers=false,handlers=["SENTINEL"])
 end-if
