@@ -1,0 +1,3 @@
+connect
+
+deploy --force /local/content/cadsr-sentinel/jboss/deployment-artifacts/cadsrsentinel.war

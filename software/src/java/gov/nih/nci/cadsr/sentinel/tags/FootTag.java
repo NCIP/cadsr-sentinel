@@ -74,7 +74,8 @@ public class FootTag extends TagSupport
         		api.setPrivacyUrl(privacyUrl);
         	}
         	
-            String jboss = Version.getInstance().getMajor() + "." + Version.getInstance().getMinor() + "." + Version.getInstance().getRevision();
+            String jboss = "8.2.0";
+            		//Version.getInstance().getMajor() + "." + Version.getInstance().getMinor() + "." + Version.getInstance().getRevision();
             MessageResources msgs = (MessageResources) pageContext
                 .findAttribute(Globals.MESSAGES_KEY);
             JspWriter out = pageContext.getOut();

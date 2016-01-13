@@ -219,22 +219,12 @@ L-->
         <copy tofile="${artifacts.dir}/sql/load_options.sql" filtering="true">
             <fileset file="${basedir}/src/resources/conf/template.load_options.sql" />
         </copy>
-        <copy tofile="${artifacts.dir}/jboss/sentinel-oracle-ds.xml" filtering="true">
-            <fileset file="${basedir}/src/resources/conf/template.sentinel-oracle-ds.xml" />
+        <copy tofile="${artifacts.dir}/jboss/cadsrsentinel_modules.cli" filtering="true">
+            <fileset file="${basedir}/cadsrsentinel_modules.cli" />
         </copy>
-        <copy tofile="${artifacts.dir}/jboss/cadsr-oracle-ds.xml" filtering="true">
-            <fileset file="${basedir}/src/resources/conf/template.cadsr-oracle-ds.xml" />
+        <copy tofile="${artifacts.dir}/jboss/cadsrsentinel_setup_deploy.cli" filtering="true">
+            <fileset file="${basedir}/cadsrsentinel_setup_deploy.cli" />
         </copy>
-        <copy tofile="${artifacts.dir}/jboss/cadsrsentinel-log4j-appender.xml" filtering="true">
-            <fileset file="${basedir}/src/resources/conf/template.cadsrsentinel-log4j-appender.xml" />
-        </copy>
-        <copy tofile="${artifacts.dir}/jboss/cadsrsentinel-log4j-category.xml" filtering="true">
-            <fileset file="${basedir}/src/resources/conf/template.cadsrsentinel-log4j-category.xml" />
-        </copy>
-		<copy tofile="${artifacts.dir}/jboss/jboss-log4j.xml" filtering="true">
-			<fileset file="${basedir}/src/resources/conf/template.cadsrsentinel-jboss-log4j.xml" />
-		</copy> 
-
         <copy todir="${artifacts.dir}/dtd" filtering="true">
             <fileset dir="${dtd.dir}" includes="**/*.*" />
         </copy>
@@ -264,7 +254,7 @@ L-->
             <fileset dir="${basedir}/src/resources/sdkapi" includes="**/*" />
         </copy>
 		<copy todir="${artifacts.dir}/jboss">
-			<fileset file="${lib.dir}/ojdbc14.jar" />
+			<fileset file="${lib.dir}/ojdbc6.jar" />
 		</copy>
         <copy tofile="${classes.dir}/project.properties" filtering="true">
             <fileset file="project.properties" />

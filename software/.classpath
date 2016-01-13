@@ -34,7 +34,7 @@
 	<classpathentry kind="lib" path="lib/jakarta-oro.jar"/>
 	<classpathentry kind="lib" path="lib/jasper-compiler.jar"/>
 	<classpathentry kind="lib" path="lib/jasper-runtime.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-system.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-system.jar" sourcepath="lib/jboss-system.jar"/>
 	<classpathentry kind="lib" path="lib/jdom-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.1.jar"/>
 	<classpathentry kind="lib" path="lib/lexbig.jar"/>
