@@ -86,7 +86,7 @@ public class FootTag extends TagSupport
                     + "&nbsp;(" + jboss + "/" + System.getProperty("java.version") + ")"
                     + "</span></td></tr>\n"
                     + "<tr>\n<td class=\"nciftrtable\">\n"
-                    + "<a href=\"mailto:ncicb@pop.nci.nih.gov?subject=caDSR%20Sentinel%20Tool\"><img border=\"0\" src=\"/cadsrsentinel/images/email_icon.gif\" alt=\"Email NCI Help Desk\" title=\"Email NCI Help Desk\"></a>\n"
+                    + "<a href=\"mailto:ncicbiit@mail.nih.gov?subject=caDSR%20Sentinel%20Tool\"><img border=\"0\" src=\"/cadsrsentinel/images/email_icon.gif\" alt=\"Email NCI Help Desk\" title=\"Email NCI Help Desk\"></a>\n"
                     + "<a target=\"_blank\" href=\"http://www.cancer.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_nci.gif\" alt=\"National Cancer Institute Logo\" title=\"National Cancer Institute\"></a>\n"
                     + "<a target=\"_blank\" href=\"http://www.dhhs.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_hhs.gif\" alt=\"Department of Health and Human Services Logo\" title=\"Department of Health and Human Services\"></a>\n"
                     + "<a target=\"_blank\" href=\"http://www.nih.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_nih.gif\" alt=\"National Institutes of Health Logo\" title=\"National Institutes of Health\"></a>\n"
