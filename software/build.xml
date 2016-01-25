@@ -207,6 +207,18 @@ L-->
             <fileset file="build.xml" />
             <fileset file="${PROP.FILE}" />
         </copy>
+    	<filter token="connectionUrl" value="${connectionUrl}"/>
+    			<echo>connectionUrl = ${connectionUrl}</echo>
+    			<filter token="systemAccountName" value="${systemAccountName}"/>
+    			<echo>systemAccountName = ${systemAccountName}</echo>
+    			<filter token="systemAccountPassword" value="${systemAccountPassword}"/>
+    			<echo>systemAccountPassword not echoed</echo>
+    			<filter token="logLevel" value="${logLevel}"/>
+    			<echo>logLevel = ${logLevel}</echo>
+    			<filter token="host" value="${host}"/>
+    			<echo>logLevel = ${host}</echo>
+		<filter token="buildDateTime" value="${buildDateTime}" />
+    	
         <copy tofile="${prop.dir}/DSRAlert.properties" filtering="true">
             <fileset file="${basedir}/src/resources/conf/template.DSRAlert.properties" />
         </copy>

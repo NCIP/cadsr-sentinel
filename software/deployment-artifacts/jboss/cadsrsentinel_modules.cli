@@ -17,10 +17,10 @@ if (outcome != success) of /subsystem=datasources/data-source=SentinelDS:read-re
 data-source add \
     --name=SentinelDS \
     --driver-name=oracle \
-    --connection-url=jdbc:oracle:thin:@@connectionUrl@ \
+    --connection-url=jdbc:oracle:thin:@ncidb-d110-d:1551:DSRDEV \
     --jndi-name=java:jboss/datasources/SentinelDS \
-    --user-name=@systemAccountName@ \
-    --password=@systemAccountPassword@ \
+    --user-name=SENTINEL \
+    --password=sentinel0412 \
     --use-ccm=true \
     --max-pool-size=100 \
     --blocking-timeout-wait-millis=5000 
@@ -30,10 +30,10 @@ if (outcome != success) of /subsystem=datasources/data-source=caDSRDS:read-resou
 data-source add \
     --name=caDSRDS \
     --driver-name=oracle \
-    --connection-url=jdbc:oracle:thin:@@connectionUrl@ \
+    --connection-url=jdbc:oracle:thin:@ncidb-d110-d:1551:DSRDEV \
     --jndi-name=java:jboss/datasources/caDSRDS \
-    --user-name=@systemAccountName@ \
-    --password=@systemAccountPassword@ \
+    --user-name=SENTINEL \
+    --password=sentinel0412 \
     --use-ccm=true \
     --max-pool-size=100 \
     --blocking-timeout-wait-millis=5000 
@@ -42,7 +42,7 @@ end-if
 if (outcome != success) of /subsystem=logging/size-rotating-file-handler=SENTINEL:read-resource
 /subsystem=logging:write-attribute(name=use-deployment-logging-config, value=false)
 /subsystem=logging:write-attribute(name=add-logging-api-dependencies,value=true)
-/subsystem=logging/size-rotating-file-handler=SENTINEL:add(level=@logLevel@, file={"relative-to"=>"jboss.server.log.dir", "path"=>"cadsrsentinel.log"}, append=false, autoflush=true)
+/subsystem=logging/size-rotating-file-handler=SENTINEL:add(level=DEBUG, file={"relative-to"=>"jboss.server.log.dir", "path"=>"cadsrsentinel.log"}, append=false, autoflush=true)
 /subsystem=logging/size-rotating-file-handler=SENTINEL:write-attribute(name="formatter", value="%d [%t] %-5p [%c : %L] %m%n") 
 /subsystem=logging/size-rotating-file-handler=SENTINEL:write-attribute(name="rotate-size", value="1m")
 /subsystem=logging/size-rotating-file-handler=SENTINEL:write-attribute(name="max-backup-index", value="10")
