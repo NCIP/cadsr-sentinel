@@ -18,6 +18,8 @@ import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import gov.nih.nci.cadsr.sentinel.ui.AlertPlugIn;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -75,6 +77,10 @@ public class FootTag extends TagSupport
         	}
         	
             String jboss = "8.2.0";
+            /*Properties p = new Properties();
+            InputStream in = InputStream.class.getResourceAsStream("/org/jboss/version.properties");      
+            p.load(in);            
+            jboss = p.getProperty("version.major");*/
             		//Version.getInstance().getMajor() + "." + Version.getInstance().getMinor() + "." + Version.getInstance().getRevision();
             MessageResources msgs = (MessageResources) pageContext
                 .findAttribute(Globals.MESSAGES_KEY);
