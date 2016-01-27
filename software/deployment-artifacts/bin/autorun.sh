@@ -5,18 +5,19 @@ echo "\$Header: /share/content/gforge/sentinel/sentinel/scripts/autorun.sh,v 1.1
 echo "\$Name: not supported by cvs2svn $"
 
 DATE=`date +%Y%m%d`
-JAVA_HOME=/usr/jdk1.6.0_45
+JAVA_HOME=/usr/java8
 BASE_DIR=/local/content/cadsrsentinel/bin
-
+ 
 export JAVA_HOME BASE_DIR
-
-ORACLE_HOME=/app/oracle/product/dbhome/9.2.0
-PATH=$ORACLE_HOME/bin:$PATH
-LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
-TNS_ADMIN=$ORACLE_HOME/network/admin
-JAVA_PARMS='-Xms512m -Xmx512m -XX:PermSize=64m'
-
-export JAVA_PARMS ORACLE_HOME TNS_ADMIN PATH LD_LIBRARY_PATH
+ 
+#ORACLE_HOME=/app/oracle/product/dbhome/9.2.0
+#PATH=$ORACLE_HOME/bin:$PATH
+#LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
+#TNS_ADMIN=$ORACLE_HOME/network/admin
+JAVA_PARMS='-Xms512m -Xmx512m -XX:MaxMetaspaceSize=64m'
+ 
+#export JAVA_PARMS ORACLE_HOME TNS_ADMIN PATH LD_LIBRARY_PATH
+export JAVA_PARMS
 
 echo "Executing new job as `id`"
 echo "Executing on `date`"
