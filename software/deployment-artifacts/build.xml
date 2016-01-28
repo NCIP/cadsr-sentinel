@@ -308,6 +308,9 @@ L-->
                 <include name="gov/nih/nci/cadsr/sentinel/database/*.class" />
                 <include name="gov/nih/nci/cadsr/sentinel/audits/*.class" />
                 <include name="gov/nih/nci/cadsr/sentinel/daily/*.class" />
+                <include name="gov/nih/nci/cadsr/sentinel/tags/*.class" />
+                <include name="gov/nih/nci/cadsr/sentinel/ui/*.class" />
+                <include name="gov/nih/nci/cadsr/sentinel/util/*.class" />
             </fileset>
             <manifest>
                 <attribute name="Built-By" value="Anthill"/>
