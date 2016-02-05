@@ -20,7 +20,7 @@ data-source add \
     --connection-url=jdbc:oracle:thin:@@connectionUrl@ \
     --jndi-name=java:jboss/datasources/SentinelDS \
     --user-name=@systemAccountName@ \
-    --password=@systemAccountPassword@ \
+    --password=sentinel0412 \
     --use-ccm=true \
     --max-pool-size=100 \
     --blocking-timeout-wait-millis=5000 
@@ -33,7 +33,7 @@ data-source add \
     --connection-url=jdbc:oracle:thin:@@connectionUrl@ \
     --jndi-name=java:jboss/datasources/caDSRDS \
     --user-name=@systemAccountName@ \
-    --password=@systemAccountPassword@ \
+    --password=sentinel0412 \
     --use-ccm=true \
     --max-pool-size=100 \
     --blocking-timeout-wait-millis=5000 
