@@ -142,6 +142,7 @@ public class CleanStrings
             String sql = _sqlUpdate.replace("$table$", list_[0]);
             sql = sql.replace("$sets$", sets.substring(comma.length()));
             sql = sql.replace("$wheres$", wheres.substring(or.length()));
+            _logger.info("do update sql : "+sql);
             _logger.debug(sql);
 
             // Execute the UPDATE
@@ -183,6 +184,7 @@ public class CleanStrings
                 unions += union + sql.replace("$col$", list_[cnt]);
             }
             sql = unions.substring(union.length());
+            _logger.info(" --- do select sql:" + sql);
             _logger.debug(sql);
 
             // Execute the SELECT
@@ -282,6 +284,7 @@ public class CleanStrings
                 {
                     // For every table/column set do the cleanup.
                     String tabCol = _propList.getProperty(prop);
+                    _logger.info("Processing [" + prop + "] [" + tabCol + "]");
                     _logger.debug("Processing [" + prop + "] [" + tabCol + "]");
                     String[] parts = tabCol.split(" ");
                     if (parts.length < 2)

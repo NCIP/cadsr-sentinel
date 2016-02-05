@@ -207,16 +207,21 @@ L-->
             <fileset file="build.xml" />
             <fileset file="${PROP.FILE}" />
         </copy>
+    	<property name="connectionUrl" value="${CADSR.DS.URL}" />
+    	<property name="systemAccountName" value="${CADSR.DS.USER}" />
+    	<property name="systemAccountPassword" value="${CADSR.DS.PSWD}" />
+    	<property name="logLevel" value="${CADSR.DS.PSWD}" />
+    	
     	<filter token="connectionUrl" value="${connectionUrl}"/>
     			<echo>connectionUrl = ${connectionUrl}</echo>
     			<filter token="systemAccountName" value="${systemAccountName}"/>
     			<echo>systemAccountName = ${systemAccountName}</echo>
     			<filter token="systemAccountPassword" value="${systemAccountPassword}"/>
     			<echo>systemAccountPassword not echoed</echo>
-    			<filter token="logLevel" value="${logLevel}"/>
+    			<filter token="logLevel" value="DEBUG"/>
     			<echo>logLevel = ${logLevel}</echo>
     			<filter token="host" value="${host}"/>
-    			<echo>logLevel = ${host}</echo>
+    			<echo>host = ${host}</echo>
 		<filter token="buildDateTime" value="${buildDateTime}" />
     	
         <copy tofile="${prop.dir}/DSRAlert.properties" filtering="true">
