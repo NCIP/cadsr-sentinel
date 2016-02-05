@@ -210,7 +210,6 @@ L-->
     	<property name="connectionUrl" value="${CADSR.DS.URL}" />
     	<property name="systemAccountName" value="${CADSR.DS.USER}" />
     	<property name="systemAccountPassword" value="${CADSR.DS.PSWD}" />
-    	<property name="logLevel" value="${CADSR.DS.PSWD}" />
     	
     	<filter token="connectionUrl" value="${connectionUrl}"/>
     			<echo>connectionUrl = ${connectionUrl}</echo>
