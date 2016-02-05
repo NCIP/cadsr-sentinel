@@ -209,7 +209,7 @@ L-->
         </copy>
     	<property name="connectionUrl" value="${CADSR.DS.URL}" />
     	<property name="systemAccountName" value="${CADSR.DS.USER}" />
-    	<property name="systemAccountPassword" value="${CADSR.DS.PSWD}" />
+    	<property name="systemAccountPassword" value="sentinel0412" />
     	
     	<filter token="connectionUrl" value="${connectionUrl}"/>
     			<echo>connectionUrl = ${connectionUrl}</echo>
