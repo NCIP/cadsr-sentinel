@@ -45,9 +45,9 @@ echo $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nc
 
 $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.daily.CleanOCR $BASE_DIR/log4j.xml $BASE_DIR/CleanOCR.xml
 
-#echo $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts $BASE_DIR/log4j.xml true $BASE_DIR/cadsrsentinel.xml
+echo $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts $BASE_DIR/log4j.xml true $BASE_DIR/cadsrsentinel.xml
 
-#$JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts $BASE_DIR/log4j.xml true $BASE_DIR/cadsrsentinel.xml
+$JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts $BASE_DIR/log4j.xml true $BASE_DIR/cadsrsentinel.xml
 
 
 
