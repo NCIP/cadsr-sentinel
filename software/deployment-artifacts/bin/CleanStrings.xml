@@ -22,15 +22,15 @@ L-->
         <!-- Use "select" to see the records that will be updated, use "update" to clean up the data -->
         <entry key="action">update</entry>
 
-        <entry key="table.ac"    >sbr.admin_components_view long_name preferred_definition</entry>
+        <!-- <entry key="table.ac"    >sbr.admin_components_view long_name preferred_definition</entry> -->
         <entry key="table.csi"   >sbr.class_scheme_items_view csi_name description comments</entry>
         <entry key="table.cs"    >sbr.classification_schemes_view long_name preferred_definition change_note</entry>
         <entry key="table.conte" >sbr.contexts_view description</entry>
-        <entry key="table.de"    >sbr.data_elements_view long_name preferred_definition change_note question</entry>
+        <!--  <entry key="table.de"    >sbr.data_elements_view long_name preferred_definition change_note question</entry> -->
         <entry key="table.dec"   >sbr.data_element_concepts_view long_name preferred_definition change_note</entry>
         <entry key="table.defs"  >sbr.definitions_view definition</entry>
         <entry key="table.des"   >sbr.designations_view name</entry>
-        <entry key="table.vd"    >sbr.value_domains_view long_name preferred_definition change_note</entry>
+        <!-- <entry key="table.vd"    >sbr.value_domains_view long_name preferred_definition change_note</entry>  -->
         <entry key="table.vm"    >sbr.value_meanings_view long_name description comments preferred_definition change_note definition_source</entry>
         <entry key="table.oc"    >sbrext.object_classes_view_ext long_name preferred_definition change_note</entry>
         <entry key="table.prop"  >sbrext.properties_view_ext long_name preferred_definition change_note</entry>
