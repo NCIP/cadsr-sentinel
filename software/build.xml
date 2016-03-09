@@ -252,6 +252,9 @@ L-->
         <copy tofile="${artifacts.dir}/bin/cadsrsentinel.xml" filtering="true">
             <fileset file="${basedir}/src/resources/conf/template.cadsrsentinel.xml" />
         </copy>
+        <copy tofile="${artifacts.dir}/bin/metadatacleanup.xml" filtering="true">
+            <fileset file="${basedir}/src/resources/conf/template.metadatacleanup.xml" />
+        </copy>    	
         <copy tofile="${artifacts.dir}/bin/CleanStrings.xml" filtering="true">
             <fileset file="${basedir}/src/resources/conf/template.CleanStrings.xml" />
         </copy>
