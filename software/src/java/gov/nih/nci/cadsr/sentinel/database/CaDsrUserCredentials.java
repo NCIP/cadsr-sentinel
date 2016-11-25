@@ -174,7 +174,7 @@ public class CaDsrUserCredentials
     public void validateCredentials(String applUser_, String applPswd_, String localUser_, String localPswd_) throws Exception
     {
         initialize(applUser_, applPswd_);
-        _logger.info("Inside validate Credentials");
+        _logger.debug("Inside validate Credentials - applUser_: "+applUser_+" :: localUser_: "+localUser_);
         String msg;
         if (isLocked(localUser_))
         {

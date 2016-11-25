@@ -112,7 +112,7 @@ values ('SENTINEL', 'URN', 'https://cadsrsentinel-dev.nci.nih.gov/cadsrsentinel/
 'The URN for the Sentinel Tool referencing this caDSR database.');
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)
-values ('SENTINEL', 'VERSION', '4.0.4-it-11.201602151459',
+values ('SENTINEL', 'VERSION', '4.0.5.201611250911',
 'The version identification for the current Sentinel Tool.');
 
 insert into sbrext.tool_options_view_ext (tool_name, property, value, description)

@@ -1849,7 +1849,7 @@ public class AutoProcessAlerts
             _style = "";
         }  */
     	try {
-    		FileInputStream propFile = new FileInputStream("/priv-file-repo/lexevsdb/bin/SentinelToolTestScript/metadata.properties");
+    		FileInputStream propFile = new FileInputStream("/local/content/cadsrsentinel/bin/metadata.properties");
 	        
 	        Properties p = new Properties(System.getProperties());
 	        p.load(propFile);
