@@ -339,6 +339,8 @@ public class CaDsrUserCredentials
         }
         catch (SQLException ex)
         {
+        	_logger.debug("SQLException user: " + obj_.getConnectionUser() + " Pswd: " + obj_.getConnectionPswd());
+        	_logger.info("SQLException user: " + obj_.getConnectionUser() + " Pswd: " + obj_.getConnectionPswd());
             exceptionMessage(obj_, ex, null);
         }
         catch (NamingException ex)
@@ -347,6 +349,8 @@ public class CaDsrUserCredentials
         }
         catch (Exception ex)
         {
+        	_logger.debug("Exception user: " + obj_.getConnectionUser() + " Pswd: " + obj_.getConnectionPswd());
+        	_logger.info("Exception user: " + obj_.getConnectionUser() + " Pswd: " + obj_.getConnectionPswd());        	
             exceptionMessage(obj_, ex, null);
         }
         finally
