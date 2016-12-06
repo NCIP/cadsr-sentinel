@@ -600,7 +600,8 @@ public class caDSRConceptCleanupEVS extends AuditReport
         //System.out.println("No of Concepts (validate): " + concepts.size());
         
         // Get the EVS URL and establish the application service.
-        //String evsURL = _db.selectEvsUrl();
+        String evsURL = _db.selectEvsUrl();
+        _logger.debug("caDSRConceptCleanupEVS API URL " + evsURL);
         
         int numConceptsUpdate = meta.getMaxNumMsgs(_maxMsgs, concepts.size()); //check property
         //System.out.println("Maximum limit on concepts to update through metadata clenup: " + numConceptsUpdate);
@@ -610,7 +611,7 @@ public class caDSRConceptCleanupEVS extends AuditReport
         try
         {
         	//service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
-        	service = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl("https://lexevsapi6.nci.nih.gov/lexevsapi64", "EvsServiceInfo");
+        	service = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
 			
         }
         catch (Exception ex)

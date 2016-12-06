@@ -8289,7 +8289,7 @@ public class DBAlertOracle implements DBAlert
      */
     public String selectEvsUrl()
     {
-        String select = "select value from sbrext.tool_options_view_ext where tool_name = 'EVS' and property = 'URL'";
+        String select = "select value from sbrext.tool_options_view_ext where tool_name = 'LexEVSAPI' and property = 'ACCESS-URL'";
 
         String[] list = getBasicData0(select);
 
