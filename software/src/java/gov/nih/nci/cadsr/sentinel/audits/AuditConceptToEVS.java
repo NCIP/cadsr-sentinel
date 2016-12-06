@@ -379,7 +379,6 @@ public class AuditConceptToEVS extends AuditReport
         @Override
         public void validate()
         {
-        	_logger.debug("In validate 1");
         	// The search returns a list of results so process all.
             for (int i = 0; i < _cons.size(); ++i)
             {
@@ -557,7 +556,6 @@ public class AuditConceptToEVS extends AuditReport
         @Override
         public void validate()
         {
-        	_logger.debug("In validate 2");
             try
             {
                 for (int i = 0; i < _cons.size(); ++i)
@@ -609,7 +607,6 @@ public class AuditConceptToEVS extends AuditReport
 
             boolean srcFlag = true;
             boolean defFlag = true;
-            _logger.debug("In validate 2: before for");
             for (int i = 0; i < _cons.size() && srcFlag && defFlag; ++i)
             {
             	EVSConcept temp = (EVSConcept) _cons.get(i);
@@ -682,7 +679,6 @@ public class AuditConceptToEVS extends AuditReport
      */
     private Vector<String> validate()
     {
-    	_logger.debug("In validate 3");
         // Seed message list with column headings.
         Vector<String> msgs = new Vector<String>();
         msgs.add(formatTitleMsg());
@@ -698,14 +694,13 @@ public class AuditConceptToEVS extends AuditReport
         LexBIGService service;
         try
         {
-        	//service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
-        	service = (LexBIGService) ApplicationServiceProvider
-			        .getApplicationServiceFromUrl("https://lexevsapi6.nci.nih.gov/lexevsapi64", "EvsServiceInfo");
+        	service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
+        	//service = (LexEVSService) ApplicationServiceProvider
+			//        .getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
 			
         }
         catch (Exception ex)
         {
-        	_logger.debug("In validate 3: Exception - "+ex.toString());
             //msgs.add("EVS API URL " + evsURL + " " + ex.toString());
             StackTraceElement[] list = ex.getStackTrace();
             for (int i = 0; i < list.length; ++i)
