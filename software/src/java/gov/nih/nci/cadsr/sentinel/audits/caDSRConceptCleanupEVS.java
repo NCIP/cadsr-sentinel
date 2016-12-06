@@ -609,8 +609,8 @@ public class caDSRConceptCleanupEVS extends AuditReport
         LexBIGService service;
         try
         {
-        	service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
-        	//service = (LexEVSService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
+        	//service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
+        	service = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl("https://lexevsapi6.nci.nih.gov/lexevsapi64", "EvsServiceInfo");
 			
         }
         catch (Exception ex)
