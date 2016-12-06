@@ -688,8 +688,7 @@ public class AuditConceptToEVS extends AuditReport
         EVSVocab[] vocabs = parseProperties(_db.selectEVSVocabs());
        
         // Get the EVS URL and establish the application service.
-        String evsURL = _db.selectEvsUrl();
-    	_logger.info("AuditConceptToEVS API URL " + evsURL);       
+        String evsURL = _db.selectEvsUrl();       
         //LexEVSService service;
         LexBIGService service;
         try
@@ -701,7 +700,6 @@ public class AuditConceptToEVS extends AuditReport
         catch (Exception ex)
         {
             //msgs.add("EVS API URL " + evsURL + " " + ex.toString());
-        	_logger.info("EVS API URL " + evsURL + " " + ex.toString());
             StackTraceElement[] list = ex.getStackTrace();
             for (int i = 0; i < list.length; ++i)
                 msgs.add(list[i].toString());
