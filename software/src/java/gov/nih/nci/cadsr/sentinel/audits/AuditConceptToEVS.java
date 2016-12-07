@@ -699,6 +699,7 @@ public class AuditConceptToEVS extends AuditReport
         }
         catch (Exception ex)
         {
+        	_logger.debug("In validate 3: Exception - "+ex.toString());
             //msgs.add("EVS API URL " + evsURL + " " + ex.toString());
             StackTraceElement[] list = ex.getStackTrace();
             for (int i = 0; i < list.length; ++i)
