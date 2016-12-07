@@ -920,6 +920,7 @@ public class DBAlertOracle implements DBAlert
      */
     public AlertRec[] selectAlerts(String user_)
     {
+    	_logger.error("In selectAlerts user - begin");
         // Define the SQL Select
         String select = "select a.al_idseq, a.name, a.last_auto_run, a.auto_freq_unit, a.al_status, a.auto_freq_value, a.created_by, u.name "
             + "from sbrext.sn_alert_view_ext a, sbr.user_accounts_view u "
@@ -970,6 +971,7 @@ public class DBAlertOracle implements DBAlert
                 rec.setSummary(select);
                 results.add(rec);
             }
+            _logger.error("In selectAlerts user - end");
         }
         catch (SQLException ex)
         {
@@ -5089,6 +5091,7 @@ public class DBAlertOracle implements DBAlert
      */
     public AlertRec[] selectAlerts(Timestamp target_)
     {
+    	_logger.error("In selectAlerts timestamp - begin");
         String select = "select al_idseq, name, created_by "
             + "from sbrext.sn_alert_view_ext " + "where al_status <> 'I' AND "
             + "(auto_freq_unit = 'D' OR "
@@ -5178,6 +5181,7 @@ public class DBAlertOracle implements DBAlert
         }
         finally
         {
+        	_logger.error("In selectAlerts timestamp - end");
             closeCursors(pstmt, rs);
         }
         return recs;

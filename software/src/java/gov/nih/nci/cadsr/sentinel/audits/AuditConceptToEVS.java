@@ -694,7 +694,7 @@ public class AuditConceptToEVS extends AuditReport
         try
         {
         	//service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
-        	service = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl("https://lexevsapi6.nci.nih.gov/lexevsapi64", "EvsServiceInfo");        	
+        	service = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");        	
 			
         }
         catch (Exception ex)

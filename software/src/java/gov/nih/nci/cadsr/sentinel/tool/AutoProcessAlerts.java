@@ -1786,11 +1786,12 @@ public class AutoProcessAlerts
      */
     private AlertRec[] getAlertList()
     {
+    	_logger.error("In ALertLIst begin");    	
         AlertRec recs[] = null;
 
         // Get the eligible Alerts.
         recs = _db.selectAlerts(_today);
-
+        _logger.error("In ALertLIst end");
         // Did we get anything?
         if (recs != null && (recs.length == 0 || recs[0] == null))
             recs = null;
