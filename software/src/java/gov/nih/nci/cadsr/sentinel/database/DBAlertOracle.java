@@ -230,6 +230,10 @@ public class DBAlertOracle implements DBAlert
         {">=", "<", "<", ">"},
         {">=", "<", ">=", "<"}
     };
+    
+    private static final String _TOOLNAME      = "SENTINEL";
+    
+    private static final String _EVSACCESSURL      = "LexEVSAPI-URL";    
 
     private static final String _CONTEXT      = "CONTEXT";
 
@@ -8289,7 +8293,7 @@ public class DBAlertOracle implements DBAlert
      */
     public String selectEvsUrl()
     {
-        String select = "select value from sbrext.tool_options_view_ext where tool_name = 'LexEVSAPI' and property = 'ACCESS-URL'";
+        String select = "select value from sbrext.tool_options_view_ext where tool_name = '"+_TOOLNAME+"' and property = '"+_EVSACCESSURL+"'";
 
         String[] list = getBasicData0(select);
 

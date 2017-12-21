@@ -693,7 +693,6 @@ public class AuditConceptToEVS extends AuditReport
         LexBIGService service;
         try
         {
-        	//service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
         	service = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");        	
 			
         }
