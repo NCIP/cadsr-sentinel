@@ -15,9 +15,9 @@ L-->
     
         <!-- Specify the caDSR database being used by the Sentinel Tool.
         -->
-        <entry key="DSurl">ncidb-dsr-d.nci.nih.gov:1551:dsrdev.NCI.NIH.GOV</entry>
-        <entry key="DSusername">sentinel</entry>
-        <entry key="DSpassword">sentinel0412</entry>
+        <entry key="DSurl">@@-dburl-@@</entry>
+        <entry key="DSusername">@@-credentials-@@</entry>
+        <entry key="DSpassword">@@-credentials-@@</entry>
         
         <entry key="audit.0.title">Table Row Counts</entry>
         <entry key="audit.0.class">gov.nih.nci.cadsr.sentinel.audits.AuditSummary</entry>

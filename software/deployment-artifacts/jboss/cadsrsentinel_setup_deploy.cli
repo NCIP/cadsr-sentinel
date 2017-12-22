@@ -1,3 +1,0 @@
-connect
-
-deploy --force /local/content/cadsrsentinel/bin/cadsrsentinel.war
