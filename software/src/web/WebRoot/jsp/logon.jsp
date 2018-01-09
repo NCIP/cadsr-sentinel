@@ -55,7 +55,6 @@ L--%>
     <html:form method="post" action="/logon" focus="userid">
 
     <table class="secttable"><colgroup></colgroup><tbody class="secttbody" /><tr><td align="center">
-	<a name="skip" id="skip"></a>
         <dtags:head key="logon.title" />
         <bean:message key="logon.back" />
         <table summary=<bean:message key="logon.credits" />

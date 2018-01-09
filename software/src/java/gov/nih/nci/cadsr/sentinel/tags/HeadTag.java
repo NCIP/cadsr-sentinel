@@ -68,7 +68,7 @@ public class HeadTag extends TagSupport
               + "</table>\n"
               + "<table class=\"secttable\"><colgroup><col /></colgroup><tbody class=\"secttbody\" />\n"
               + "<tr><td><a target=\"_blank\" href=\"https://cbiit.nci.nih.gov/ncip/biomedical-informatics-resources/interoperability-and-semantics/metadata-and-models\"><img style=\"border: 0px solid black\" title=\"NCICB caDSR\" src=\"/cadsrsentinel/images/caDSR_logo2_contrast.png\" alt=\"caDSR Logo\"></a></td></tr>\n"
-              + "<tr><td align=\"center\"><p class=\"ttl18\">" + msgs.getMessage(_key) + "</p></td></tr>\n"
+              + "<tr><td align=\"center\"><a name=\"skip\" id=\"skip\"></a><p class=\"ttl18\">" + msgs.getMessage(_key) + "</p></td></tr>\n"
               + "</table>\n"
               );
 
