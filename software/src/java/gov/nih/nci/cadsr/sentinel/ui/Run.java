@@ -94,7 +94,7 @@ public class Run extends Action
             
             // Run the alert and report.
             AlertPlugIn var = (AlertPlugIn) request_.getSession().getServletContext().getAttribute(DBAlert._DATASOURCE); 
-            pa.manualRun(var, rec, start, end);
+            pa.manualRun(var.getDataSource(), var.getUser(), rec, start, end);
 
             // Tell the user we have submitted the Alert.
             request_.setAttribute(Constants._ACTRUN, ub.getWorking().getName());
