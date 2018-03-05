@@ -410,6 +410,10 @@ L-->
             </manifest>
         </war>
         <!-- <delete file="${jsp.dir}/cvsdeploy.txt" /> -->
+    	<!-- This is to delete UI only jars from Tools directory -->
+        <delete>
+            <fileset dir="${artifacts.dir}/bin" includes="**/struts*.jar"/>
+        </delete>
     </target>
 
     <target name="build-product" depends="-build-war,-build-jar,test,-prop-check" description="Builds all project binaries.">
@@ -507,7 +511,9 @@ L-->
             <fileset dir="${artifacts.dir}/dtd" includes="**/*.*"/>
         </copy>
         <delete>
-           <fileset dir="${toolBin.dir}" includes="**/*.*"/>
+           <fileset dir="${toolBin.dir}">
+           	  <include name="**/.jar,**/.xml"/>
+           </fileset>
         </delete>
         <copy todir="${toolBin.dir}">
             <fileset dir="${artifacts.dir}/bin" includes="**/*.*">
@@ -535,7 +541,9 @@ L-->
             <fileset dir="${artifacts.dir}/dtd" includes="**/*.*"/>
         </copy>
         <copy todir="${toolBin.dir}">
-            <fileset dir="${artifacts.dir}/bin" includes="**/*.*" />
+            <fileset dir="${artifacts.dir}/bin" includes="**/*.*">
+            	<exclude name="**/struts*.jar"/>
+            </fileset>
         </copy>
     	<echo>Deploying war files to web server ...</echo>
         <copy tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz">
