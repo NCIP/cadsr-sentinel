@@ -307,7 +307,7 @@ L-->
         <echo>Building distributable JAR files ...</echo>
         <delete file="${artifacts.dir}/bin/cadsrsentinel.jar" />
         <delete file="${artifacts.dir}/gforge/cadsrsentinelapi.jar" />
-        <cvs command="status -v" output="${classes.dir}/cvsdeploy.txt" />
+        <!--cvs command="status -v" output="${classes.dir}/cvsdeploy.txt" /-->
         <jar destfile="${artifacts.dir}/bin/cadsrsentinel.jar">
             <fileset dir="${classes.dir}">
                 <include name="cvsdeploy.txt" />
@@ -506,8 +506,13 @@ L-->
         <copy todir="${toolDtd.dir}">
             <fileset dir="${artifacts.dir}/dtd" includes="**/*.*"/>
         </copy>
+        <delete>
+           <fileset dir="${toolBin.dir}" includes="**/*.*"/>
+        </delete>
         <copy todir="${toolBin.dir}">
-            <fileset dir="${artifacts.dir}/bin" includes="**/*.*" />
+            <fileset dir="${artifacts.dir}/bin" includes="**/*.*">
+            	<exclude name="**/struts*.jar"/>
+            </fileset>
         </copy>
     	<if>
     		<equals arg1="${unix.os}" arg2="true"/>
