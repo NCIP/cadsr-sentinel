@@ -6,6 +6,7 @@ if [ $tag != 'origin/master'  ] && [ $tag != 'master' ]; then
 #this is for branch checkout for now
 	git checkout $tag
 fi
+git pull
 
 # Function to check if wildfly is up #
 function wait_for_server() {
