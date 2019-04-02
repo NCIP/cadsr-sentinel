@@ -1,0 +1,24 @@
+version: '2'
+services:
+  server:
+    container_name: cadsr-sentinel11
+    image: cadsr-sentinel11
+    build: ./
+    ports:
+     - "8086:8080"
+    environment:
+      CADSR.DS.TNS.HOST: $CADSR_DS_HOST
+      CADSR.DS.TNS.PORT: $CADSR_DS_PORT
+      CADSR.DS.USER: $CADSR_DS_USER
+      CADSR.DS.PSWD: $CADSR_DS_PSWD
+      CADSR.DS.TNS.SID: $CADSR_DS_TNS_SID
+      tag: $tag
+      tier: $tier
+      TIER.UPPER: $TIER_UPPER
+      JBOSS_MODULES_SYSTEM_PKGS: $JBOSS_MODULES_SYSTEM_PKGS
+      JAVA_OPTS: $JAVA_OPTS
+      JBOSS.SERVER.DIR: $JBOSS_SERVER_DIR
+      TOOL.BASE.DIR: $TOOL_BASE_DIR
+      TOOL.ROOT.DIR: $TOOL_ROOT_DIR
+      JDEBUG: $JDEBUG
+      
