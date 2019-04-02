@@ -21,6 +21,7 @@ echo "=> build application and copy artifacts to /local/content/sentinel"
 ant -file build.xml build-product
 
 cp deployment-artifacts/cadsrsentinel.war /local/content/cadsrsentinel/bin
+cp software/lib/ojdbc7-12.1.0.1.jar /local/content/cadsrsentinel/bin
 
 echo "=> starting wildfly in background"
 /opt/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 &
