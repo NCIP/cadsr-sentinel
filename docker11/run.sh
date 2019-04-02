@@ -1,5 +1,6 @@
 #~/bin/sh
 echo "we are in the /usr/src/sentinel/cadsr-sentinel directory"
+echo "$tag: " $tag
 git pull
 if [ $tag != 'origin/master'  ] && [ $tag != 'master' ]; then
 #  git checkout tags/$tag
@@ -40,7 +41,6 @@ wait_for_server
 
 echo "=> deploying"
 /opt/wildfly/bin/jboss-cli.sh --file=cadsrsentinel_modules11.cli
-/opt/wildfly/bin/jboss-cli.sh --file=cadsrsentinel_setup_deploy.cli
 
 echo "=> shutting wildfly down"
 /opt/wildfly/bin/jboss-cli.sh --connect controller=localhost:19990 command=:shutdown
