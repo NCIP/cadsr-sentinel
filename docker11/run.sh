@@ -1,6 +1,6 @@
 #~/bin/sh
 echo "we are in the /usr/src/sentinel/cadsr-sentinel directory"
-echo "$tag: " $tag
+echo "tag: " $tag
 git pull
 if [ $tag != 'origin/master'  ] && [ $tag != 'master' ]; then
 #  git checkout tags/$tag
@@ -17,12 +17,13 @@ function wait_for_server() {
 }
 
 cd software
-
+echo "we are in the /usr/src/sentinel/cadsr-sentinel/software directory"
 echo "=> build application and copy artifacts to /local/content/sentinel"
+
 ant -file build.xml build-product
 
 cp deployment-artifacts/cadsrsentinel.war /local/content/cadsrsentinel/bin
-cp software/lib/ojdbc7-12.1.0.1.jar /local/content/cadsrsentinel/bin
+cp lib/ojdbc7-12.1.0.1.jar /local/content/cadsrsentinel/bin
 
 echo "=> starting wildfly in background"
 /opt/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 &
