@@ -2,7 +2,9 @@
 echo "we are in the /usr/src/sentinel/cadsr-sentinel directory"
 git pull
 if [ $tag != 'origin/master'  ] && [ $tag != 'master' ]; then
-  git checkout tags/$tag
+#  git checkout tags/$tag
+#this is for branch checkout for now
+	git checkout $tag
 fi
 
 # Function to check if wildfly is up #
