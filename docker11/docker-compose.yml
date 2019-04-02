@@ -12,7 +12,7 @@ services:
       CADSR.DS.USER: $CADSR_DS_USER
       CADSR.DS.PSWD: $CADSR_DS_PSWD
       CADSR.DS.TNS.SID: $CADSR_DS_TNS_SID
-      tag: $tag
+      tag: $BRANCH_OR_TAG
       tier: $tier
       TIER.UPPER: $TIER_UPPER
       JBOSS_MODULES_SYSTEM_PKGS: $JBOSS_MODULES_SYSTEM_PKGS
