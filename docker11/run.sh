@@ -40,9 +40,6 @@ echo "=> reloading wildfly"
 echo "=> Waiting for the server to reload"
 wait_for_server
 
-echo "=> deploying"
-/opt/wildfly/bin/jboss-cli.sh --file=cadsrsentinel_modules11.cli
-
 echo "=> shutting wildfly down"
 /opt/wildfly/bin/jboss-cli.sh --connect controller=localhost:19990 command=:shutdown
 
