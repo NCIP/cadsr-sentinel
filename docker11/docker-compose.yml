@@ -14,6 +14,7 @@ services:
       CADSR.DS.TNS.SID: $CADSR_DS_TNS_SID
       tag: $tag
       tier: $tiername
+      tiername: $tiername
       TIER.UPPER: $TIER_UPPER
       JBOSS_MODULES_SYSTEM_PKGS: $JBOSS_MODULES_SYSTEM_PKGS
       JAVA_OPTS: $JAVA_OPTS
