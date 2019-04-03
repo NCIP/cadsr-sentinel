@@ -1,24 +1,24 @@
-connect
+connect localhost:19990
 
 #1 add the jdbc module it doesn't matter if it's already there
+module add --name=com.oracle.jdbc7 --resources=/local/content/cadsrsentinel/bin/ojdbc7-12.1.0.2.0.jar --dependencies=javax.api,javax.transaction.api
+
 # configure datasource
 # is the driver in standalone.xml?
 # if not, add
-if (outcome != success) of /subsystem=datasources/jdbc-driver=oracle:read-resource
+if (outcome != success) of /subsystem=datasources/jdbc-driver=oracle:read-resource 
     /subsystem=datasources/jdbc-driver=oracle:add( \
     driver-name=oracle, \
-    driver-module-name=com.oracle.jdbc6, \
-    driver-xa-datasource-class-name=oracle.jdbc.driver.OracleDriver) {allow-resource-service-restart=true}
+    driver-module-name=com.oracle.jdbc7, \
+    driver-class-name=oracle.jdbc.driver.OracleDriver, \
+    driver-xa-datasource-class-name=oracle.jdbc.xa.client.OracleXADataSource \
+    ) {allow-resource-service-restart=true}
 end-if
 
 # is the db connection in standalone.xml?
 # if yes remove
  if (outcome == success) of /subsystem=datasources/data-source=SentinelDS:read-resource
 data-source remove --name=SentinelDS
-end-if
-
- if (outcome == success) of /subsystem=datasources/data-source=caDSRDS:read-resource
-data-source remove --name=caDSRDS
 end-if
 
 
@@ -28,21 +28,8 @@ if (outcome != success) of /subsystem=datasources/data-source=SentinelDS:read-re
 data-source add \
     --name=SentinelDS \
     --driver-name=oracle \
-    --connection-url=jdbc:oracle:thin:@@connectionUrl@ \
+    --connection-url=jdbc:oracle:thin:@@connectionUrl@  \
     --jndi-name=java:jboss/datasources/SentinelDS \
-    --user-name=@systemAccountName@ \
-    --password=@systemAccountPassword@ \
-    --use-ccm=true \
-    --max-pool-size=100 \
-    --blocking-timeout-wait-millis=5000 
-end-if
-
-if (outcome != success) of /subsystem=datasources/data-source=caDSRDS:read-resource
-data-source add \
-    --name=caDSRDS \
-    --driver-name=oracle \
-    --connection-url=jdbc:oracle:thin:@@connectionUrl@ \
-    --jndi-name=java:jboss/datasources/caDSRDS \
     --user-name=@systemAccountName@ \
     --password=@systemAccountPassword@ \
     --use-ccm=true \
@@ -63,3 +50,5 @@ end-if
 if (outcome!= success) of /subsystem=logging/logger=gov.nih.nci.cadsr.sentinel:read-resource
 /subsystem=logging/logger=gov.nih.nci.cadsr.sentinel:add(use-parent-handlers=false,handlers=["SENTINEL"])
 end-if
+
+deploy --force /local/content/cadsrsentinel/bin/cadsrsentinel.war

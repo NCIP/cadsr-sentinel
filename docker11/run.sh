@@ -32,7 +32,7 @@ echo "=> Waiting for the server to boot"
 wait_for_server
 
 echo "=> deploying modules"
-/opt/wildfly/bin/jboss-cli.sh --file=cadsrsentinel_modules11.cli
+/opt/wildfly/bin/jboss-cli.sh --file=deployment-artifacts/jboss/cadsrsentinel_modules.cli
 
 echo "=> reloading wildfly"
 /opt/wildfly/bin/jboss-cli.sh --connect controller=localhost:19990 command=:reload
