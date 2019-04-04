@@ -21,15 +21,34 @@ end-if
 data-source remove --name=SentinelDS
 end-if
 
+# if yes remove
+ if (outcome == success) of /subsystem=datasources/data-source=caDSRDS:read-resource
+data-source remove --name=caDSRDS
+end-if
 
 # is the db connection in standalone.xml?
 # if not, add
-if (outcome != success) of /subsystem=datasources/data-source=SentinelDS:read-resource
+if (outcome != success) of /subsystem=datasources/data-source=SENTINEL:read-resource
 data-source add \
-    --name=SentinelDS \
+    --name=SENTINEL \
     --driver-name=oracle \
     --connection-url=jdbc:oracle:thin:@@connectionUrl@  \
-    --jndi-name=java:jboss/datasources/SentinelDS \
+    --jndi-name=java:jboss/datasources/SENTINEL \
+    --user-name=@systemAccountName@ \
+    --password=@systemAccountPassword@ \
+    --use-ccm=true \
+    --max-pool-size=100 \
+    --blocking-timeout-wait-millis=5000 
+end-if
+
+# is the db connection in standalone.xml?
+# if not, add
+if (outcome != success) of /subsystem=datasources/data-source=caDSRDS:read-resource
+data-source add \
+    --name=caDSRDS \
+    --driver-name=oracle \
+    --connection-url=jdbc:oracle:thin:@@connectionUrl@  \
+    --jndi-name=java:jboss/datasources/caDSRDS \
     --user-name=@systemAccountName@ \
     --password=@systemAccountPassword@ \
     --use-ccm=true \
