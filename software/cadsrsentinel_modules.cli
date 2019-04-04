@@ -28,12 +28,12 @@ end-if
 
 # is the db connection in standalone.xml?
 # if not, add
-if (outcome != success) of /subsystem=datasources/data-source=SENTINEL:read-resource
+if (outcome != success) of /subsystem=datasources/data-source=SentinelDS:read-resource
 data-source add \
-    --name=SENTINEL \
+    --name=SentinelDS \
     --driver-name=oracle \
     --connection-url=jdbc:oracle:thin:@@connectionUrl@  \
-    --jndi-name=java:jboss/datasources/SENTINEL \
+    --jndi-name=java:jboss/datasources/SentinelDS \
     --user-name=@systemAccountName@ \
     --password=@systemAccountPassword@ \
     --use-ccm=true \
