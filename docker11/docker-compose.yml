@@ -15,7 +15,9 @@ services:
       tag: $tag
       tier: $tiername
       tiername: $tiername
+      TIER: $TIER
       TIER.UPPER: $TIER_UPPER
+      TIER.NAME: $TIER_NAME
       JBOSS_MODULES_SYSTEM_PKGS: $JBOSS_MODULES_SYSTEM_PKGS
       JAVA_OPTS: $JAVA_OPTS
       TOOL.BASE.DIR: $TOOL_BASE_DIR
