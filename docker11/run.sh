@@ -20,7 +20,8 @@ cd software
 echo "we are in the /usr/src/sentinel/cadsr-sentinel/software directory"
 echo "=> build application and copy artifacts to /local/content/sentinel"
 
-ant -file build.xml -Ddebug=false -DBRANCH_OR_TAG=${BRANCH_OR_TAG} -Dtiername=${tiername} -DCADSR.DS.USER=${CADSR.DS.USER} -DCADSR.DS.PSWD=${CADSR.DS.SWD} -DCADSR.DS.TNS.HOST=${CADSR.DS.HOST} -DTOOL.BASE.DIR=${TOOL_BASE_DIR} -DTEST=false -DCADSR.DS.TNS.SID=${CADSR.DS.TNS.SID} -DJDEBUG=off -DCADSR.DS.TNS.PORT=${CADSR.DS.TNS.PORT} build-product
+echo "ant -file build.xml -Ddebug=false -DBRANCH_OR_TAG=${BRANCH_OR_TAG} -Dtiername=${tiername} -DCADSR.DS.USER=${CADSR.DS.USER} -DCADSR.DS.PSWD=${CADSR.DS.SWD} -DCADSR.DS.TNS.HOST=${CADSR.DS.HOST} -DTOOL.BASE.DIR=${TOOL_BASE_DIR} -DTEST=false -DCADSR.DS.TNS.SID=${CADSR.DS.TNS.SID} -DJDEBUG=off -DCADSR.DS.TNS.PORT=${CADSR.DS.TNS.PORT} build-product"
+ant -file build.xml -Ddebug=false -DBRANCH_OR_TAG=${BRANCH_OR_TAG} -Dtiername=${tiername} -DCADSR.DS.USER=${CADSR.DS.USER} -DCADSR.DS.PSWD=${CADSR.DS.PSWD} -DCADSR.DS.TNS.HOST=${CADSR.DS.HOST} -DTOOL.BASE.DIR=${TOOL_BASE_DIR} -DTEST=false -DCADSR.DS.TNS.SID=${CADSR.DS.TNS.SID} -DJDEBUG=off -DCADSR.DS.TNS.PORT=${CADSR.DS.TNS.PORT} build-product
 
 cp deployment-artifacts/cadsrsentinel.war /local/content/cadsrsentinel/bin
 cp lib/ojdbc7-12.1.0.2.0.jar /local/content/cadsrsentinel/bin
