@@ -17,7 +17,6 @@ package gov.nih.nci.cadsr.sentinel.tool;
 import gov.nih.nci.cadsr.sentinel.audits.AuditReport;
 import gov.nih.nci.cadsr.sentinel.database.DBAlert;
 import gov.nih.nci.cadsr.sentinel.database.DBAlertUtil;
-import gov.nih.nci.cadsr.sentinel.ui.AlertPlugIn;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -838,10 +837,11 @@ public class AutoProcessAlerts
      * @param end_
      *        The end of the date range.
      */
-    public void manualRun(AlertPlugIn api_, AlertRec rec_, Timestamp start_, Timestamp end_)
+    public void manualRun(DataSource dsManual_, String userNameManual_, AlertRec rec_, Timestamp start_, Timestamp end_)
     {
         AlertThread at = new AlertThread(rec_);
-        _api = api_;
+        _dsManual = dsManual_;
+        _userNameManual = userNameManual_;
         _start = start_;
         _end = end_;
         _id = "Manual " + rec_.getCreator();
@@ -1785,16 +1785,21 @@ public class AutoProcessAlerts
      * @return The list of alerts.
      */
     private AlertRec[] getAlertList()
-    {
+    {    	
         AlertRec recs[] = null;
+    	try {
 
         // Get the eligible Alerts.
         recs = _db.selectAlerts(_today);
-
+        } catch (Exception ex) {
+        	_logger.error("In AlertList Exception: "+_db+" today: "+_today);
+        	ex.printStackTrace();
+        }        
         // Did we get anything?
         if (recs != null && (recs.length == 0 || recs[0] == null))
             recs = null;
         return recs;
+
     }
 
     /**
@@ -1857,11 +1862,11 @@ public class AutoProcessAlerts
         {
             _db = DBAlertUtil.factory();
             int rc = -1;
-            if (_api != null)
+            if ((_dsManual != null) && (_userNameManual != null))
             {
-                DataSource ds = _api.getDataSource();
+                DataSource ds = _dsManual;
                 _dsurl = ds.getClass().getName() + " " + ds.toString();
-                rc = _db.open(ds, _api.getUser());
+                rc = _db.open(ds, _userNameManual);
             }
             else if (_dsurl != null)
                 rc = _db.open(_dsurl, _user, _pswd);
@@ -2443,7 +2448,8 @@ public class AutoProcessAlerts
     
     private int _urlRunCalls;
 
-    private AlertPlugIn _api;
+    private DataSource _dsManual;
+    private String _userNameManual;
 
     private String[] _audits;
 

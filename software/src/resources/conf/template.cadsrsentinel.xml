@@ -46,8 +46,8 @@ L-->
         <entry key="audit.8.title">caDSR / EVS Concept inconsistencies</entry>
         <entry key="audit.8.class">gov.nih.nci.cadsr.sentinel.audits.AuditConceptToEVS</entry>
         
-        <entry key="audit.9.title">NCI Thesaurus Concept cleanup</entry>
-        <entry key="audit.9.class">gov.nih.nci.cadsr.sentinel.audits.caDSRConceptCleanupEVS</entry>
+<!--         <entry key="audit.9.title">NCI Thesaurus Concept cleanup</entry>
+        <entry key="audit.9.class">gov.nih.nci.cadsr.sentinel.audits.caDSRConceptCleanupEVS</entry>  -->
 
         <!--  The audit/statistics report classes
         <entry key="audit.0.title">LexEVS Vocabularies</entry>

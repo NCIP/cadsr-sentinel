@@ -5,18 +5,19 @@ echo "\$Header: /share/content/gforge/sentinel/sentinel/scripts/autorun.sh,v 1.1
 echo "\$Name: not supported by cvs2svn $"
 
 DATE=`date +%Y%m%d`
-JAVA_HOME=/usr/jdk1.6.0_45
+JAVA_HOME=/usr/java8
 BASE_DIR=/local/content/cadsrsentinel/bin
-
+ 
 export JAVA_HOME BASE_DIR
-
-ORACLE_HOME=/app/oracle/product/dbhome/9.2.0
-PATH=$ORACLE_HOME/bin:$PATH
-LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
-TNS_ADMIN=$ORACLE_HOME/network/admin
-JAVA_PARMS='-Xms512m -Xmx512m -XX:PermSize=64m'
-
-export JAVA_PARMS ORACLE_HOME TNS_ADMIN PATH LD_LIBRARY_PATH
+ 
+#ORACLE_HOME=/app/oracle/product/dbhome/9.2.0
+#PATH=$ORACLE_HOME/bin:$PATH
+#LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
+#TNS_ADMIN=$ORACLE_HOME/network/admin
+JAVA_PARMS='-Xms1024m -Xmx2048m -XX:MaxMetaspaceSize=512m'
+ 
+#export JAVA_PARMS ORACLE_HOME TNS_ADMIN PATH LD_LIBRARY_PATH
+export JAVA_PARMS
 
 echo "Executing new job as `id`"
 echo "Executing on `date`"
@@ -32,6 +33,10 @@ done
 
 export CP
 
+echo $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts $BASE_DIR/log4j.xml true $BASE_DIR/cadsrsentinel.xml
+
+$JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts $BASE_DIR/log4j.xml true $BASE_DIR/cadsrsentinel.xml
+
 echo $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.daily.SimpleSQL $BASE_DIR/log4j.xml $BASE_DIR/SimpleSQL.xml
 
 $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.daily.SimpleSQL $BASE_DIR/log4j.xml $BASE_DIR/SimpleSQL.xml
@@ -43,10 +48,3 @@ $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cad
 echo $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.daily.CleanOCR $BASE_DIR/log4j.xml $BASE_DIR/CleanOCR.xml
 
 $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.daily.CleanOCR $BASE_DIR/log4j.xml $BASE_DIR/CleanOCR.xml
-
-echo $JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts $BASE_DIR/log4j.xml true $BASE_DIR/cadsrsentinel.xml
-
-$JAVA_HOME/bin/java -client $JAVA_PARMS -classpath $BASE_DIR:$CP gov.nih.nci.cadsr.sentinel.tool.AutoProcessAlerts $BASE_DIR/log4j.xml true $BASE_DIR/cadsrsentinel.xml
-
-
-

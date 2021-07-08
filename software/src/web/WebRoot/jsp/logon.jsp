@@ -19,14 +19,7 @@ L--%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
-        <title><bean:message key="logon.title" /></title>
-        
-        <div style="position:absolute;">
- 			<a href="#skip">
-  			<img src="/cadsrsentinel/images/skipnav.gif" border="0" height="1" width="1" alt="Skip Navigation" title="Skip Navigation" />
-	 		</a>
-		</div>
-		
+        <title><bean:message key="logon.title" /></title>       		
         <html:base />
         <meta http-equiv="Content-Language" content="en-us">
         <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=WINDOWS-1252">
@@ -36,6 +29,12 @@ L--%>
     </head>
 
 <body>
+
+    <div style="position:absolute;">
+		<a href="#skip">
+		<img src="/cadsrsentinel/images/skipnav.gif" border="0" height="1" width="1" alt="Skip Navigation" title="Skip Navigation" />
+ 		</a>
+	</div>
 
     <script type="text/javascript">
         function cmdLogon()
@@ -52,16 +51,13 @@ L--%>
             window.open("<%=api.getHelpUrl()%>", "_blank");
         }
     </script>
-
-	<a name="skip" id="skip"></a>
 	
     <html:form method="post" action="/logon" focus="userid">
 
     <table class="secttable"><colgroup></colgroup><tbody class="secttbody" /><tr><td align="center">
-
         <dtags:head key="logon.title" />
         <bean:message key="logon.back" />
-        <table summary=<bean:message key="logon.credits" />>
+        <table summary=<bean:message key="logon.credits" />
             <tr>
                 <td valign="middle"><label for="logUserId"><bean:message key="logon.userid" /></label></td>
                 <td valign="middle"><html:text property="userid" styleClass="std" style="width: 3.75in" styleId="logUserId"/></td>

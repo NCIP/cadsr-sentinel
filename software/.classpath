@@ -17,7 +17,7 @@
 	<classpathentry kind="lib" path="lib/commons-beanutils-1.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/commons-chain-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-digester-1.6.jar"/>
 	<classpathentry kind="lib" path="lib/commons-discovery-0.2.jar"/>
@@ -34,24 +34,18 @@
 	<classpathentry kind="lib" path="lib/jakarta-oro.jar"/>
 	<classpathentry kind="lib" path="lib/jasper-compiler.jar"/>
 	<classpathentry kind="lib" path="lib/jasper-runtime.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-system.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-system.jar" sourcepath="lib/jboss-system.jar"/>
 	<classpathentry kind="lib" path="lib/jdom-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.1.jar"/>
 	<classpathentry kind="lib" path="lib/lexbig.jar"/>
-	<classpathentry kind="lib" path="lib/lexevs-client-framework.jar"/>
 	<classpathentry kind="lib" path="lib/lexevs-core.jar"/>
-	<classpathentry kind="lib" path="lib/lexevsapi60-beans.jar"/>
 	<classpathentry kind="lib" path="lib/LexEVSSecurity.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.14.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-2.4.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-regex-2.4.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-snowball-2.4.0.jar"/>
 	<classpathentry kind="lib" path="lib/mail.jar"/>
 	<classpathentry kind="lib" path="lib/nls_charset12.jar"/>
-	<classpathentry kind="lib" path="lib/ojdbc14.jar"/>
 	<classpathentry kind="lib" path="lib/sdk-client-framework.jar"/>
 	<classpathentry kind="lib" path="lib/stax-api-1.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/struts-core-1.3.5.jar"/>
+	<classpathentry kind="lib" path="lib/struts-core-1.3.5.jar" sourcepath="/var/folders/yj/3cwmd3dj3r377lgl2tz4pq0nt4dlkj/T/decompiler/source/struts-core-1.3.5-sources.jar"/>
 	<classpathentry kind="lib" path="lib/struts-el-1.3.5.jar"/>
 	<classpathentry kind="lib" path="lib/struts-extras-1.3.5.jar"/>
 	<classpathentry kind="lib" path="lib/struts-faces-1.3.5.jar"/>
@@ -64,12 +58,8 @@
 	<classpathentry kind="lib" path="lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/aspectjrt-1.6.8.jar"/>
 	<classpathentry kind="lib" path="lib/aspectjweaver-1.6.8.jar"/>
-	<classpathentry kind="lib" path="lib/commons-dbcp-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/compass-2.2.0.jar"/>
 	<classpathentry kind="lib" path="lib/lexevs-tree-2.0.6.jar"/>
-	<classpathentry kind="lib" path="lib/lexevsapi60-orm.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-analyzers-2.4.1.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-queries-2.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/sdk-grid-remoting.jar"/>
 	<classpathentry kind="lib" path="lib/sdk-security.jar"/>
 	<classpathentry kind="lib" path="lib/spring-aop-3.0.5.RELEASE.jar"/>
@@ -87,5 +77,22 @@
 	<classpathentry kind="lib" path="lib/spring-test-3.0.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/spring-tx-3.0.5.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/spring-web-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-common-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-phonetic-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-codecs-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-join-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-queries-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-queryparser-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-sandbox-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-test-framework-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-dbcp-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/kryo-serializers-0.37.jar"/>
+	<classpathentry kind="lib" path="lib/minlog-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/kryo-2.21.jar"/>
+	<classpathentry kind="lib" path="lib/lexevsapi65-beans.jar"/>
+	<classpathentry kind="lib" path="lib/lexevsapi65-framework.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

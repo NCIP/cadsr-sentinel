@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
+import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
@@ -31,6 +33,7 @@ import org.LexGrid.LexBIG.Exceptions.LBParameterException;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.Utility.Constructors;
+import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
 //import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
@@ -345,14 +348,16 @@ public class AuditConceptToEVS extends AuditReport
         	try {
         		CodingSchemeVersionOrTag cvt = new CodingSchemeVersionOrTag();
 				cvt.setTag("PRODUCTION");
-				cns = service_.getNodeSet("NCI Metathesaurus", cvt, null);
-				cns = cns.restrictToMatchingProperties(
+				cns = service_.getNodeSet("NCI Metathesaurus", cvt, null);				
+				ConceptReferenceList crefs = ConvenienceMethods.createConceptReferenceList(new String[]{_rec._preferredName},"NCI Metathesaurus");
+                cns.restrictToCodes(crefs);				                
+				/*cns = cns.restrictToMatchingProperties(
 								Constructors.createLocalNameList("conceptCode"), 
 								null, 
 								_rec._preferredName, 
 								MatchAlgorithms.exactMatch.name(), 
 								null
-							);
+							);*/
 			} catch (Exception e) {
 				e.printStackTrace();
 				//System.out.println("in search :" + e.getMessage());
@@ -522,13 +527,15 @@ public class AuditConceptToEVS extends AuditReport
             	CodingSchemeVersionOrTag cvt = new CodingSchemeVersionOrTag();
 				cvt.setTag("PRODUCTION");
 				cns = service_.getNodeSet(_rec._origin, cvt, null);
-				cns = cns.restrictToMatchingProperties(
+				ConceptReferenceList crefs = ConvenienceMethods.createConceptReferenceList(new String[]{_rec._preferredName},_vocab._vocab);
+                cns.restrictToCodes(crefs);				
+				/*cns = cns.restrictToMatchingProperties(
 								Constructors.createLocalNameList("conceptCode"), 
 								null, 
 								_rec._preferredName, 
 								MatchAlgorithms.exactMatch.name(), 
 								null
-							);
+							);*/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -681,15 +688,12 @@ public class AuditConceptToEVS extends AuditReport
         EVSVocab[] vocabs = parseProperties(_db.selectEVSVocabs());
        
         // Get the EVS URL and establish the application service.
-        //String evsURL = _db.selectEvsUrl();
-        
+        String evsURL = _db.selectEvsUrl();       
         //LexEVSService service;
         LexBIGService service;
         try
         {
-        	service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
-        	//service = (LexEVSService) ApplicationServiceProvider
-			//        .getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
+        	service = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");        	
 			
         }
         catch (Exception ex)
@@ -764,7 +768,7 @@ public class AuditConceptToEVS extends AuditReport
                 ed.reset();
                 ed._rec = rec;
               
-                //System.out.println(rec._preferredName + " : " + vocab._display + " : " + vocab._source + " : " + vocab._vocab);
+                _logger.debug(rec._preferredName + " : " + vocab._display + " : " + vocab._source + " : " + vocab._vocab);
                 
                 CodedNodeSet cns = ed.search(service);
                 if (cns == null) { //didn't find corresponding EVS concept, not a valid code
@@ -776,6 +780,8 @@ public class AuditConceptToEVS extends AuditReport
                 {
                     // Get the attributes for the concept code. 
                     ed._cons = resolveNodeSet(cns, true);
+                    //ResolvedConceptReferenceList cnList = cns.resolveToList(null, null, null, 100);
+                    //_logger.debug("Concepts count : "+cnList.getResolvedConceptReferenceCount());
                 }
                 catch (ApplicationException ex)
                 {

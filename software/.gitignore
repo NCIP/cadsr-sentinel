@@ -1,0 +1,4 @@
+/bin/
+/deployment-artifacts/
+.DS_Store
+*.DS_Store

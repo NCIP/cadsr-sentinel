@@ -27,11 +27,11 @@ L-->
     </init-param>
     <init-param>
       <param-name>jbossDataSource</param-name>
-      <param-value>jdbc/sentinel</param-value>
+      <param-value>jboss/datasources/SentinelDS</param-value>
     </init-param>
     <init-param>
       <param-name>jbossAuthenticate</param-name>
-      <param-value>jdbc/caDSR</param-value>
+      <param-value>jboss/datasources/caDSRDS</param-value>
     </init-param>
     <init-param>
       <param-name>DSusername</param-name>

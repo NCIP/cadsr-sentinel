@@ -230,6 +230,10 @@ public class DBAlertOracle implements DBAlert
         {">=", "<", "<", ">"},
         {">=", "<", ">=", "<"}
     };
+    
+    private static final String _TOOLNAME      = "SENTINEL";
+    
+    private static final String _EVSACCESSURL      = "LexEVSAPI-URL";    
 
     private static final String _CONTEXT      = "CONTEXT";
 
@@ -5190,7 +5194,7 @@ public class DBAlertOracle implements DBAlert
      *        The vector.
      * @return The string array.
      */
-    private String[] paste(Vector<String> list_)
+    private String[] pasteString(Vector<String> list_)
     {
         String temp[] = new String[list_.size()];
         for (int ndx = 0; ndx < temp.length; ++ndx)
@@ -5204,7 +5208,7 @@ public class DBAlertOracle implements DBAlert
      * @param list_ The vector.
      * @return The Timestamp array.
      */
-    private Timestamp[] paste(Vector<Timestamp> list_)
+    private Timestamp[] pasteTimestamp(Vector<Timestamp> list_)
     {
         Timestamp temp[] = new Timestamp[list_.size()];
         for (int ndx = 0; ndx < temp.length; ++ndx)
@@ -5265,12 +5269,12 @@ public class DBAlertOracle implements DBAlert
             {
                 if (!oldrec.isEquivalent(rec))
                 {
-                    clist = paste(changes);
-                    olist = paste(oval);
-                    nlist = paste(nval);
-                    dlist = paste(dval);
-                    tlist = paste(tabl);
-                    blist = paste(chgby);
+                    clist = pasteString(changes);
+                    olist = pasteString(oval);
+                    nlist = pasteString(nval);
+                    dlist = pasteTimestamp(dval);
+                    tlist = pasteString(tabl);
+                    blist = pasteString(chgby);
                     oldrec.setChanges(clist, olist, nlist, dlist, tlist, blist);
                     data.add(oldrec);
 
@@ -5309,12 +5313,12 @@ public class DBAlertOracle implements DBAlert
         }
         if (oldrec != null)
         {
-            clist = paste(changes);
-            olist = paste(oval);
-            nlist = paste(nval);
-            dlist = paste(dval);
-            tlist = paste(tabl);
-            blist = paste(chgby);
+            clist = pasteString(changes);
+            olist = pasteString(oval);
+            nlist = pasteString(nval);
+            dlist = pasteTimestamp(dval);
+            tlist = pasteString(tabl);
+            blist = pasteString(chgby);
             oldrec.setChanges(clist, olist, nlist, dlist, tlist, blist);
             data.add(oldrec);
         }
@@ -8289,7 +8293,7 @@ public class DBAlertOracle implements DBAlert
      */
     public String selectEvsUrl()
     {
-        String select = "select value from sbrext.tool_options_view_ext where tool_name = 'EVS' and property = 'URL'";
+        String select = "select value from sbrext.tool_options_view_ext where tool_name = '"+_TOOLNAME+"' and property = '"+_EVSACCESSURL+"'";
 
         String[] list = getBasicData0(select);
 

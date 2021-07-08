@@ -58,16 +58,17 @@ public class HeadTag extends TagSupport
             JspWriter out = pageContext.getOut();
            out.print(
 
-              "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#A90101\">\n"
-              + "<tr bgcolor=\"#A90101\">\n"
-              + "<td valign=\"center\" align=\"left\"><a href=\"http://www.cancer.gov\" target=\"_blank\" alt=\"NCI Logo\">\n"
-              + "<img src=\"/cadsrsentinel/images/brandtype.gif\" border=\"0\" alt=\"Brand Type\"></a></td>\n"
-              + "<td valign=\"center\" align=\"right\"><a href=\"http://www.cancer.gov\" target=\"_blank\" alt=\"NCI Logo\">\n"
-              + "<img src=\"/cadsrsentinel/images/tagline_nologo.gif\" border=\"0\" alt=\"Tagline Nologo\"></a></td></tr>\n"
+              "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n"
+              + "<tr>\n"
+              + "<td width=\"25%\" valign=\"center\" align=\"left\"><a href=\"https://www.cancer.gov\" target=\"_blank\" alt=\"NCI Logo\">\n"
+              + "<img src=\"/cadsrsentinel/images/CBIIT-36px-Logo-COLOR_contrast.png\" border=\"0\" alt=\"Brand Type\"></a></td>"
+              + "<td align=\"center\"><img style=\"border: 0px solid black\" title=\"NCICB caDSR\" src=\"/cadsrsentinel/images/sentinel_banner_2.gif\" alt=\"Sentinel Banner\"></td>\n"
+              + "<td align=\"right\"><a target=\"_blank\" href=\"https://www.nih.gov\">U.S. National Institutes of Health</a></td></tr>\n"
+              + "<td valign=\"center\" align=\"right\"><a href=\"https://www.cancer.gov\" target=\"_blank\" alt=\"NCI Logo\">\n"              
               + "</table>\n"
               + "<table class=\"secttable\"><colgroup><col /></colgroup><tbody class=\"secttbody\" />\n"
-              + "<tr><td><a target=\"_blank\" href=\"http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr\"><img style=\"border: 0px solid black\" title=\"NCICB caDSR\" src=\"/cadsrsentinel/images/sentinel_banner.gif\" alt=\"Sentinel Banner\"></a></td></tr>\n"
-              + "<tr><td align=\"center\"><p class=\"ttl18\">" + msgs.getMessage(_key) + "</p></td></tr>\n"
+              + "<tr><td><a target=\"_blank\" href=\"https://cbiit.nci.nih.gov/ncip/biomedical-informatics-resources/interoperability-and-semantics/metadata-and-models\"><img style=\"border: 0px solid black\" title=\"NCICB caDSR\" src=\"/cadsrsentinel/images/caDSR_logo2_contrast.png\" alt=\"caDSR Logo\"></a></td></tr>\n"
+              + "<tr><td align=\"center\"><a name=\"skip\" id=\"skip\"></a><p class=\"ttl18\">" + msgs.getMessage(_key) + "</p></td></tr>\n"
               + "</table>\n"
               );
 

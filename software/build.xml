@@ -207,6 +207,22 @@ L-->
             <fileset file="build.xml" />
             <fileset file="${PROP.FILE}" />
         </copy>
+    	<property name="connectionUrl" value="${CADSR.DS.URL}" />
+    	<property name="systemAccountName" value="${CADSR.DS.USER}" />
+    	<property name="systemAccountPassword" value="${CADSR.DS.PSWD}" />
+    	
+    	<filter token="connectionUrl" value="${connectionUrl}"/>
+    			<echo>connectionUrl = ${connectionUrl}</echo>
+    			<filter token="systemAccountName" value="${systemAccountName}"/>
+    			<echo>systemAccountName = ${systemAccountName}</echo>
+    			<filter token="systemAccountPassword" value="${systemAccountPassword}"/>
+    			<echo>systemAccountPassword not echoed</echo>
+    			<filter token="logLevel" value="DEBUG"/>
+    			<echo>logLevel = ${logLevel}</echo>
+    			<filter token="host" value="${host}"/>
+    			<echo>host = ${host}</echo>
+		<filter token="buildDateTime" value="${buildDateTime}" />
+    	
         <copy tofile="${prop.dir}/DSRAlert.properties" filtering="true">
             <fileset file="${basedir}/src/resources/conf/template.DSRAlert.properties" />
         </copy>
@@ -219,32 +235,26 @@ L-->
         <copy tofile="${artifacts.dir}/sql/load_options.sql" filtering="true">
             <fileset file="${basedir}/src/resources/conf/template.load_options.sql" />
         </copy>
-        <copy tofile="${artifacts.dir}/jboss/sentinel-oracle-ds.xml" filtering="true">
-            <fileset file="${basedir}/src/resources/conf/template.sentinel-oracle-ds.xml" />
+        <copy tofile="${artifacts.dir}/jboss/cadsrsentinel_modules.cli" filtering="true">
+            <fileset file="${basedir}/cadsrsentinel_modules.cli" />
         </copy>
-        <copy tofile="${artifacts.dir}/jboss/cadsr-oracle-ds.xml" filtering="true">
-            <fileset file="${basedir}/src/resources/conf/template.cadsr-oracle-ds.xml" />
+        <copy tofile="${artifacts.dir}/jboss/cadsrsentinel_setup_deploy.cli" filtering="true">
+            <fileset file="${basedir}/cadsrsentinel_setup_deploy.cli" />
         </copy>
-        <copy tofile="${artifacts.dir}/jboss/cadsrsentinel-log4j-appender.xml" filtering="true">
-            <fileset file="${basedir}/src/resources/conf/template.cadsrsentinel-log4j-appender.xml" />
-        </copy>
-        <copy tofile="${artifacts.dir}/jboss/cadsrsentinel-log4j-category.xml" filtering="true">
-            <fileset file="${basedir}/src/resources/conf/template.cadsrsentinel-log4j-category.xml" />
-        </copy>
-		<copy tofile="${artifacts.dir}/jboss/jboss-log4j.xml" filtering="true">
-			<fileset file="${basedir}/src/resources/conf/template.cadsrsentinel-jboss-log4j.xml" />
-		</copy> 
-
         <copy todir="${artifacts.dir}/dtd" filtering="true">
             <fileset dir="${dtd.dir}" includes="**/*.*" />
         </copy>
         <copy todir="${artifacts.dir}/bin" filtering="true">
             <fileset file="${basedir}/src/resources/scripts/autorun.sh" />
             <fileset file="${basedir}/src/resources/scripts/autorun.cmd" />
+            <fileset file="${basedir}/src/resources/scripts/metadatacleanupscript.sh" />        	
         </copy>
         <copy tofile="${artifacts.dir}/bin/cadsrsentinel.xml" filtering="true">
             <fileset file="${basedir}/src/resources/conf/template.cadsrsentinel.xml" />
         </copy>
+        <copy tofile="${artifacts.dir}/bin/metadatacleanup.xml" filtering="true">
+            <fileset file="${basedir}/src/resources/conf/template.metadatacleanup.xml" />
+        </copy>    	
         <copy tofile="${artifacts.dir}/bin/CleanStrings.xml" filtering="true">
             <fileset file="${basedir}/src/resources/conf/template.CleanStrings.xml" />
         </copy>
@@ -264,7 +274,7 @@ L-->
             <fileset dir="${basedir}/src/resources/sdkapi" includes="**/*" />
         </copy>
 		<copy todir="${artifacts.dir}/jboss">
-			<fileset file="${lib.dir}/ojdbc14.jar" />
+			<fileset file="${lib.dir}/ojdbc6.jar" />
 		</copy>
         <copy tofile="${classes.dir}/project.properties" filtering="true">
             <fileset file="project.properties" />
@@ -274,6 +284,7 @@ L-->
     		<equals arg1="${unix.os}" arg2="true"/>
     		<then>
     			<chmod file="${artifacts.dir}/bin/autorun.sh" perm="ugo+rx" />
+    			<chmod file="${artifacts.dir}/bin/metadatacleanupscript.sh" perm="ugo+rx" />
     		</then>
     	</if>    	
     </target>
@@ -296,7 +307,7 @@ L-->
         <echo>Building distributable JAR files ...</echo>
         <delete file="${artifacts.dir}/bin/cadsrsentinel.jar" />
         <delete file="${artifacts.dir}/gforge/cadsrsentinelapi.jar" />
-        <cvs command="status -v" output="${classes.dir}/cvsdeploy.txt" />
+        <!--cvs command="status -v" output="${classes.dir}/cvsdeploy.txt" /-->
         <jar destfile="${artifacts.dir}/bin/cadsrsentinel.jar">
             <fileset dir="${classes.dir}">
                 <include name="cvsdeploy.txt" />
@@ -306,6 +317,9 @@ L-->
                 <include name="gov/nih/nci/cadsr/sentinel/database/*.class" />
                 <include name="gov/nih/nci/cadsr/sentinel/audits/*.class" />
                 <include name="gov/nih/nci/cadsr/sentinel/daily/*.class" />
+                <include name="gov/nih/nci/cadsr/sentinel/tags/*.class" />
+                <include name="gov/nih/nci/cadsr/sentinel/ui/*.class" />
+                <include name="gov/nih/nci/cadsr/sentinel/util/*.class" />
             </fileset>
             <manifest>
                 <attribute name="Built-By" value="Anthill"/>
@@ -396,6 +410,10 @@ L-->
             </manifest>
         </war>
         <!-- <delete file="${jsp.dir}/cvsdeploy.txt" /> -->
+    	<!-- This is to delete UI only jars from Tools directory -->
+        <delete>
+            <fileset dir="${artifacts.dir}/bin" includes="**/struts*.jar"/>
+        </delete>
     </target>
 
     <target name="build-product" depends="-build-war,-build-jar,test,-prop-check" description="Builds all project binaries.">
@@ -492,8 +510,15 @@ L-->
         <copy todir="${toolDtd.dir}">
             <fileset dir="${artifacts.dir}/dtd" includes="**/*.*"/>
         </copy>
+        <delete>
+           <fileset dir="${toolBin.dir}">
+           	  <include name="**/.jar,**/.xml"/>
+           </fileset>
+        </delete>
         <copy todir="${toolBin.dir}">
-            <fileset dir="${artifacts.dir}/bin" includes="**/*.*" />
+            <fileset dir="${artifacts.dir}/bin" includes="**/*.*">
+            	<exclude name="**/struts*.jar"/>
+            </fileset>
         </copy>
     	<if>
     		<equals arg1="${unix.os}" arg2="true"/>
@@ -516,7 +541,9 @@ L-->
             <fileset dir="${artifacts.dir}/dtd" includes="**/*.*"/>
         </copy>
         <copy todir="${toolBin.dir}">
-            <fileset dir="${artifacts.dir}/bin" includes="**/*.*" />
+            <fileset dir="${artifacts.dir}/bin" includes="**/*.*">
+            	<exclude name="**/struts*.jar"/>
+            </fileset>
         </copy>
     	<echo>Deploying war files to web server ...</echo>
         <copy tofile="${JBOSS.DEPLOY.DIR}/cadsrsentinel.waz">

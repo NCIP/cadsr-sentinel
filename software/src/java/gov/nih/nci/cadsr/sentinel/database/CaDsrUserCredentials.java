@@ -107,7 +107,7 @@ public class CaDsrUserCredentials
 
     private Logger _logger = Logger.getLogger(CaDsrUserCredentials.class);
     
-    private static String _jndiName = "java:/jdbc/caDSR";
+    private static String _jndiName = "java:jboss/datasources/caDSRDS";//"java:/jdbc/caDSR";
     
     private static final String CHECKOPTIONS = "select COUNT(*) from sbrext.tool_options_view_ext "
         + "where tool_name = 'caDSR' and property in ('LOCKOUT.TIMER', 'LOCKOUT.THRESHOLD')";
@@ -174,12 +174,13 @@ public class CaDsrUserCredentials
     public void validateCredentials(String applUser_, String applPswd_, String localUser_, String localPswd_) throws Exception
     {
         initialize(applUser_, applPswd_);
-
+        _logger.debug("Inside validate Credentials - applUser_: "+applUser_+" :: localUser_: "+localUser_);
         String msg;
         if (isLocked(localUser_))
         {
             msg = "User is locked " + localUser_;
             _logger.info(msg);
+            System.out.println("msg: "+msg);
             throw new Exception(msg);
         }
         else if (!isValidCredentials(localUser_, localPswd_))
@@ -338,6 +339,8 @@ public class CaDsrUserCredentials
         }
         catch (SQLException ex)
         {
+        	_logger.debug("SQLException user: " + obj_.getConnectionUser() + " Pswd: " + obj_.getConnectionPswd());
+        	_logger.info("SQLException user: " + obj_.getConnectionUser() + " Pswd: " + obj_.getConnectionPswd());
             exceptionMessage(obj_, ex, null);
         }
         catch (NamingException ex)
@@ -346,6 +349,8 @@ public class CaDsrUserCredentials
         }
         catch (Exception ex)
         {
+        	_logger.debug("Exception user: " + obj_.getConnectionUser() + " Pswd: " + obj_.getConnectionPswd());
+        	_logger.info("Exception user: " + obj_.getConnectionUser() + " Pswd: " + obj_.getConnectionPswd());        	
             exceptionMessage(obj_, ex, null);
         }
         finally

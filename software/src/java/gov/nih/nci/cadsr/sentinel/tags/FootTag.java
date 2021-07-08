@@ -18,6 +18,8 @@ import gov.nih.nci.cadsr.sentinel.tool.Constants;
 import gov.nih.nci.cadsr.sentinel.ui.AlertPlugIn;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -68,13 +70,18 @@ public class FootTag extends TagSupport
         		if (msgnum == 0){
         			privacyUrl = db.selectPrivacyNoticeUrl();
         		}else {
-        			privacyUrl = "http://www.nih.gov/about/privacy.htm";
+        			privacyUrl = "https://www.nih.gov/about/privacy.htm";
         		}
         		db.close();
         		api.setPrivacyUrl(privacyUrl);
         	}
         	
-            String jboss = Version.getInstance().getMajor() + "." + Version.getInstance().getMinor() + "." + Version.getInstance().getRevision();
+            String jboss = "8.2.0";
+            /*Properties p = new Properties();
+            InputStream in = InputStream.class.getResourceAsStream("/org/jboss/version.properties");      
+            p.load(in);            
+            jboss = p.getProperty("version.major");*/
+            		//Version.getInstance().getMajor() + "." + Version.getInstance().getMinor() + "." + Version.getInstance().getRevision();
             MessageResources msgs = (MessageResources) pageContext
                 .findAttribute(Globals.MESSAGES_KEY);
             JspWriter out = pageContext.getOut();
@@ -85,11 +92,11 @@ public class FootTag extends TagSupport
                     + "&nbsp;(" + jboss + "/" + System.getProperty("java.version") + ")"
                     + "</span></td></tr>\n"
                     + "<tr>\n<td class=\"nciftrtable\">\n"
-                    + "<a href=\"mailto:ncicb@pop.nci.nih.gov?subject=caDSR%20Sentinel%20Tool\"><img border=\"0\" src=\"/cadsrsentinel/images/email_icon.gif\" alt=\"Email NCI Help Desk\" title=\"Email NCI Help Desk\"></a>\n"
-                    + "<a target=\"_blank\" href=\"http://www.cancer.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_nci.gif\" alt=\"National Cancer Institute Logo\" title=\"National Cancer Institute\"></a>\n"
-                    + "<a target=\"_blank\" href=\"http://www.dhhs.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_hhs.gif\" alt=\"Department of Health and Human Services Logo\" title=\"Department of Health and Human Services\"></a>\n"
-                    + "<a target=\"_blank\" href=\"http://www.nih.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_nih.gif\" alt=\"National Institutes of Health Logo\" title=\"National Institutes of Health\"></a>\n"
-                    + "<a target=\"_blank\" href=\"http://www.usa.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_usagov.gif\" alt=\"USA.gov\" title=\"USA.gov\"></a>\n"
+                    + "<a href=\"mailto:NCIAppSupport@nih.gov?subject=caDSR%20Sentinel%20Tool\"><img border=\"0\" src=\"/cadsrsentinel/images/email_icon.gif\" alt=\"Email NCI Help Desk\" title=\"Email NCI Help Desk\"></a>\n"
+                    + "<a target=\"_blank\" href=\"https://www.cancer.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_nci.gif\" alt=\"National Cancer Institute Logo\" title=\"National Cancer Institute\"></a>\n"
+                    + "<a target=\"_blank\" href=\"https://www.dhhs.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_hhs.gif\" alt=\"Department of Health and Human Services Logo\" title=\"Department of Health and Human Services\"></a>\n"
+                    + "<a target=\"_blank\" href=\"https://www.nih.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_nih.gif\" alt=\"National Institutes of Health Logo\" title=\"National Institutes of Health\"></a>\n"
+                    + "<a target=\"_blank\" href=\"https://www.usa.gov/\"><img border=\"0\" src=\"/cadsrsentinel/images/footer_usagov.gif\" alt=\"USA.gov\" title=\"USA.gov\"></a>\n"
                     + "<a target=\"_blank\" href=\""+privacyUrl+"\">Privacy Notice</a>\n"
                     + "</td>\n</tr>\n</table>\n");
         }

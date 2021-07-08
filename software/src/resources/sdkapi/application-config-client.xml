@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-sentinal/LICENSE.txt for details.
-L-->
-
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
       <bean id="EvsServiceInfo" class="java.util.HashMap" singleton="false">
@@ -14,7 +6,7 @@ L-->
                   <map>
                         <entry key="APPLICATION_SERVICE_BEAN" value-ref="LexEVSApplicationService"/>
                         <entry key="AUTHENTICATION_SERVICE_BEAN" value-ref="EvsAuthenticationProvider"/>
-                        <entry key="APPLICATION_SERVICE_URL" value="http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService"/>
+                        <entry key="APPLICATION_SERVICE_URL" value="https://lexevsapi65.nci.nih.gov/lexevsapi65/http/applicationService"/>
                         <entry key="APPLICATION_SERVICE_CONFIG" value-ref="LexEVSApplicationServiceConfig"/>
                   </map>
             </constructor-arg>
@@ -24,13 +16,9 @@ L-->
             <property name="proxyFactory">
                   <ref bean="DistributedProxyHelper"/>
             </property>
-              <property name="dataServiceProxyHelper">
-                  <ref bean="DataServiceProxyHelper"/>
-            </property>       
       </bean>
       
       <bean id="DistributedProxyHelper" class="org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl" singleton="false"/>
-      <bean id="DataServiceProxyHelper" class="org.LexGrid.LexBIG.caCore.client.proxy.DataServiceProxyHelperImpl" singleton="false"/>
       
       <bean id="LexEVSApplicationService" class="org.springframework.aop.framework.ProxyFactoryBean">      
             <property name="interceptorNames">
@@ -46,7 +34,7 @@ L-->
       </bean>     
       
        <bean id="AppService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean" singleton="false">
-            <property name="serviceUrl" value="http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService"/>
+            <property name="serviceUrl" value="https://lexevsapi65.nci.nih.gov/lexevsapi65/http/applicationService"/>
             <property name="serviceInterface" value="org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService"/>
             <property name="httpInvokerRequestExecutor">
                  <bean class="org.LexGrid.LexBIG.caCore.client.proxy.ProxyUnwrappingHttpInvokerRequestExecutor">
@@ -58,7 +46,7 @@ L-->
       <bean id="EvsAuthenticationProvider" class="org.acegisecurity.providers.rcp.RemoteAuthenticationProvider">
             <property name="remoteAuthenticationManager">
                   <bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-                      <property name="serviceUrl" value="http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService"/>
+                      <property name="serviceUrl" value="https://lexevsapi65.nci.nih.gov/lexevsapi65/http/applicationService"/>
                       <property name="serviceInterface" value="org.acegisecurity.providers.rcp.RemoteAuthenticationManager"/>
                   </bean>
             </property>
@@ -78,16 +66,10 @@ L-->
 						
 						&lt;bean id=&quot;DistributedProxyHelper&quot; class=&quot;org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl&quot; singleton=&quot;false&quot;&gt;
 	  					&lt;/bean&gt;
-						
-						&lt;bean id=&quot;DataServiceProxyHelper&quot; class=&quot;org.LexGrid.LexBIG.caCore.client.proxy.DataServiceProxyHelperImpl&quot; singleton=&quot;false&quot;&gt;
-	  					&lt;/bean&gt;
 
                         &lt;bean id=&quot;interceptor&quot; class=&quot;org.LexGrid.LexBIG.caCore.client.proxy.LexEVSApplicationServiceProxy&quot;&gt;
                               &lt;property name=&quot;proxyFactory&quot;&gt;
                                     &lt;ref bean=&quot;DistributedProxyHelper&quot;/&gt;
-                              &lt;/property&gt;
-                               &lt;property name=&quot;dataServiceProxyHelper&quot;&gt;
-                                    &lt;ref bean=&quot;DataServiceProxyHelper&quot;/&gt;
                               &lt;/property&gt;
                         &lt;/bean&gt;
                         &lt;bean id=&quot;applicationService&quot; class=&quot;org.springframework.aop.framework.ProxyFactoryBean&quot;&gt;

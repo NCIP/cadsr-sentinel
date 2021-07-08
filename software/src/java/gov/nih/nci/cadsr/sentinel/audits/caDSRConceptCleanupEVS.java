@@ -42,6 +42,7 @@ import org.LexGrid.LexBIG.History.HistoryService;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.Utility.Constructors;
+import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.Utility.LBConstants.MatchAlgorithms;
 import org.LexGrid.LexBIG.caCore.interfaces.LexEVSService;
@@ -358,13 +359,15 @@ public class caDSRConceptCleanupEVS extends AuditReport
         		CodingSchemeVersionOrTag cvt = new CodingSchemeVersionOrTag();
 				cvt.setTag("PRODUCTION");
 				cns = service_.getNodeSet("NCI Metathesaurus", cvt, null);
-				cns = cns.restrictToMatchingProperties(
+				/*cns = cns.restrictToMatchingProperties(
 								Constructors.createLocalNameList("conceptCode"), 
 								null, 
 								_rec._preferredName, 
 								MatchAlgorithms.exactMatch.name(), 
 								null
-							);
+							);*/
+				ConceptReferenceList crefs = ConvenienceMethods.createConceptReferenceList(new String[]{_rec._preferredName},"NCI Metathesaurus");
+                cns.restrictToCodes(crefs);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -496,13 +499,15 @@ public class caDSRConceptCleanupEVS extends AuditReport
             	CodingSchemeVersionOrTag cvt = new CodingSchemeVersionOrTag();
 				cvt.setTag("PRODUCTION");
 				cns = service_.getNodeSet(_rec._origin, cvt, null);
-				cns = cns.restrictToMatchingProperties(
+				/*cns = cns.restrictToMatchingProperties(
 								Constructors.createLocalNameList("conceptCode"), 
 								null, 
 								_rec._preferredName, 
 								MatchAlgorithms.exactMatch.name(), 
 								null
-							);
+							);*/
+				ConceptReferenceList crefs = ConvenienceMethods.createConceptReferenceList(new String[]{_rec._preferredName},_vocab._vocab);
+				cns.restrictToCodes(crefs);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -595,7 +600,8 @@ public class caDSRConceptCleanupEVS extends AuditReport
         //System.out.println("No of Concepts (validate): " + concepts.size());
         
         // Get the EVS URL and establish the application service.
-        //String evsURL = _db.selectEvsUrl();
+        String evsURL = _db.selectEvsUrl();
+        _logger.debug("caDSRConceptCleanupEVS API URL " + evsURL);
         
         int numConceptsUpdate = meta.getMaxNumMsgs(_maxMsgs, concepts.size()); //check property
         //System.out.println("Maximum limit on concepts to update through metadata clenup: " + numConceptsUpdate);
@@ -604,8 +610,7 @@ public class caDSRConceptCleanupEVS extends AuditReport
         LexBIGService service;
         try
         {
-        	service = (LexBIGService)ApplicationServiceProvider.getApplicationService("EvsServiceInfo");
-        	//service = (LexEVSService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
+        	service = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
 			
         }
         catch (Exception ex)
@@ -715,6 +720,7 @@ public class caDSRConceptCleanupEVS extends AuditReport
                 // Failed to retrieve EVS concept
                 if (ed._cons.size() == 0)
                 {
+                    _logger.debug("Failed to retrieve concept");                	
                     break;
                 }
                  
